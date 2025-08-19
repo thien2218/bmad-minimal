@@ -107,13 +107,31 @@
 			"folderTypes": ["tasks", "templates", "checklists", "data"],
 			"pattern": ".bmad-core/{folderType}/{name}",
 			"loadPolicy": "Only load files when user requests specific command execution",
-			"onUnresolvablePath": "ask_user"
+			"onUnresolvablePath": "ask_user",
+			"examples": [
+				{
+					"userPhrase": "draft story",
+					"action": "execute_dependency_task",
+					"targets": ["tasks/create-next-story.md"]
+				},
+				{
+					"userPhrase": "make a new prd",
+					"action": "compose_tasks_and_templates",
+					"targets": ["tasks/create-doc.md", "templates/prd-tmpl.md"]
+				}
+			]
 		},
 		"requestMapping": {
 			"purpose": "Map user phrases to QA commands and dependency targets",
 			"strategy": "flexible-match",
 			"askForClarificationIfNoClearMatch": true,
-			"clarifyAfterAttempts": 2
+			"clarifyAfterAttempts": 2,
+			"examples": [
+				{
+					"input": "create-doc.md",
+					"resolvedPath": ".bmad-core/tasks/create-doc.md"
+				}
+			]
 		},
 		"elicitDefaults": {
 			"elicitRequired": true,
@@ -138,7 +156,7 @@
 			"prefix": "*",
 			"description": "Execute qa-gate task to write/update quality gate decision",
 			"parameters": ["story"],
-			"targets": ["tasks/qa-gate.md"]
+			"targets": ["tasks/qa-gate.md", "template/qa-gate-tmpl.yaml"]
 		},
 		{
 			"name": "nfr-assess",
@@ -153,7 +171,7 @@
 			"description": "Adaptive, risk-aware comprehensive review. Produces QA Results update in story file + gate file.",
 			"parameters": ["story"],
 			"notes": "Gate file location: qa.qaLocation/gates/{epic}.{story}-{slug}.yml. Executes review-story task and creates gate decision.",
-			"targets": ["tasks/review-story.md"]
+			"targets": ["tasks/review-story.md", "template/story-tmpl.yaml"]
 		},
 		{
 			"name": "risk-profile",

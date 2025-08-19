@@ -94,31 +94,9 @@
 			"basePath": ".bmad-core",
 			"folderTypes": ["tasks", "templates", "checklists"],
 			"pattern": ".bmad-core/{folderType}/{name}",
-			"onUnresolvablePath": "ask_user"
-		},
-		"requestMapping": {
-			"purpose": "Map user phrases to actions and dependency targets",
-			"strategy": "flexible-match",
-			"askForClarificationIfNoClearMatch": true,
-			"clarifyAfterAttempts": 2
-		},
-		"elicitDefaults": {
-			"elicitRequired": true,
-			"responseFormat": "choice",
-			"allowedResponseFormats": ["choice", "plain", "json"],
-			"timeoutSeconds": 120,
-			"maxRetries": 2,
-			"onTimeout": "remindUser"
-		},
-		"onMissingDependency": "ask_user",
-		"examples": {
-			"pathResolution": [
-				{
-					"input": "create-doc.md",
-					"resolvedPath": ".bmad-core/tasks/create-doc.md"
-				}
-			],
-			"requestMapping": [
+			"loadPolicy": "Only load files when user requests specific command execution",
+			"onUnresolvablePath": "ask_user",
+			"examples": [
 				{
 					"userPhrase": "draft story",
 					"action": "execute_dependency_task",
@@ -130,7 +108,28 @@
 					"targets": ["tasks/create-doc.md", "templates/prd-tmpl.md"]
 				}
 			]
-		}
+		},
+		"requestMapping": {
+			"purpose": "Map user phrases to actions and dependency targets",
+			"strategy": "flexible-match",
+			"askForClarificationIfNoClearMatch": true,
+			"clarifyAfterAttempts": 2,
+			"examples": [
+				{
+					"input": "create-doc.md",
+					"resolvedPath": ".bmad-core/tasks/create-doc.md"
+				}
+			]
+		},
+		"elicitDefaults": {
+			"elicitRequired": true,
+			"responseFormat": "choice",
+			"allowedResponseFormats": ["choice", "plain", "json"],
+			"timeoutSeconds": 120,
+			"maxRetries": 2,
+			"onTimeout": "remindUser"
+		},
+		"onMissingDependency": "ask_user"
 	},
 
 	"commands": [

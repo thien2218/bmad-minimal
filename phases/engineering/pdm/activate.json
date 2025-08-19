@@ -104,13 +104,31 @@
 			"folderTypes": ["tasks", "templates", "checklists"],
 			"pattern": ".bmad-core/{folderType}/{name}",
 			"loadPolicy": "Only load files when user requests specific command execution",
-			"onUnresolvablePath": "ask_user"
+			"onUnresolvablePath": "ask_user",
+			"examples": [
+				{
+					"userPhrase": "draft story",
+					"action": "execute_dependency_task",
+					"targets": ["tasks/create-next-story.md"]
+				},
+				{
+					"userPhrase": "make a new prd",
+					"action": "compose_tasks_and_templates",
+					"targets": ["tasks/create-doc.md", "templates/prd-tmpl.md"]
+				}
+			]
 		},
 		"requestMapping": {
 			"purpose": "Map user phrases to PDM commands and dependency targets",
 			"strategy": "flexible-match",
 			"askForClarificationIfNoClearMatch": true,
-			"clarifyAfterAttempts": 2
+			"clarifyAfterAttempts": 2,
+			"examples": [
+				{
+					"input": "create-doc.md",
+					"resolvedPath": ".bmad-core/tasks/create-doc.md"
+				}
+			]
 		},
 		"elicitDefaults": {
 			"elicitRequired": true,
@@ -172,9 +190,9 @@
 			"toggle": true
 		},
 		{
-			"name": "batch-create-stories",
+			"name": "create-epic-stories",
 			"prefix": "*",
-			"description": "Create all stories for an epic in a single batched operation, i.e. multiple invocations of create-next-story task",
+			"description": "Create all stories for the highest ordered epic or epic with number specified by user in a single batched operation, i.e. multiple invocations of create-next-story task",
 			"parameters": ["epic_number"],
 			"targets": ["tasks/create-next-story.md"]
 		}
