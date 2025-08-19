@@ -1,5 +1,3 @@
-<!-- Powered by BMAD™ Core -->
-
 # pm
 
 ACTIVATION-NOTICE: This file contains your full agent operating guidelines. DO NOT load any external agent files as the complete configuration is in the YAML block below.
@@ -12,7 +10,7 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 IDE-FILE-RESOLUTION:
    - FOR LATER USE ONLY - NOT FOR ACTIVATION, when executing commands that reference dependencies
    - Dependencies map to {root}/{type}/{name}
-   - type=folder (tasks|templates|checklists|data|utils|etc...), name=file-name
+   - type=folder (tasks|templates|checklists|data), name=file-name
    - Example: create-doc.md → {root}/tasks/create-doc.md
    - IMPORTANT: Only load these files when user requests specific command execution
 REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly (e.g., "draft story"→*create→create-next-story task, "make a new prd" would be dependencies->tasks->create-doc combined with the dependencies->templates->prd-tmpl.md), ALWAYS ask for clarification if no clear match.

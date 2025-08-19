@@ -17,13 +17,13 @@
 
 8. **"Yes, And..." Building**: They give idea, you "yes and" it, they "yes and" back - alternate
 9. **Brainwriting/Round Robin**: They suggest idea, you build on it, ask them to build on yours
-10. **Random Stimulation**: Give one random prompt/word, ask them to make connections
+10.   **Random Stimulation**: Give one random prompt/word, ask them to make connections
 
 ## Deep Exploration
 
 11. **Five Whys**: Ask "why" and wait for their answer before asking next "why"
 12. **Morphological Analysis**: Ask them to list parameters first, then explore combinations together
-13. **Provocation Technique (PO)**: Give one provocative statement, ask them to extract useful ideas
+13. **Provocation Technique (PDM)**: Give one provocative statement, ask them to extract useful ideas
 
 ## Advanced Techniques
 
