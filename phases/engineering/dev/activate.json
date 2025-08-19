@@ -92,7 +92,7 @@
 		"resolvePaths": {
 			"purpose": "Resolve dependency file paths for IDE-triggered actions; do not auto-activate on startup except explicit load",
 			"basePath": ".bmad-core",
-			"folderTypes": ["tasks", "templates", "checklists", "data"],
+			"folderTypes": ["tasks", "templates", "checklists"],
 			"pattern": ".bmad-core/{folderType}/{name}",
 			"onUnresolvablePath": "ask_user"
 		},

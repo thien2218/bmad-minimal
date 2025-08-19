@@ -65,7 +65,6 @@ dependencies:
    data:
       - technical-preferences.md
    tasks:
-      - correct-course.md
       - create-deep-research-prompt.md
       - create-doc.md
       - execute-checklist.md
