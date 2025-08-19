@@ -1,0 +1,25 @@
+{
+	"rules": [
+		{
+			"id": "QA-R001",
+			"title": "QA Results write-permission",
+			"description": "When reviewing stories, only update the 'QA Results' section of story files. Do not modify any other sections.",
+			"severity": "hard",
+			"actionOnViolation": "revert_changes_and_notify"
+		},
+		{
+			"id": "QA-R002",
+			"title": "Present choices as numbered lists",
+			"description": "When presenting selectable options, always present a numbered list and accept selection by number.",
+			"severity": "soft",
+			"actionOnViolation": "warn_and_reformat"
+		},
+		{
+			"id": "QA-R003",
+			"title": "Follow dependency tasks literally",
+			"description": "Treat dependency tasks as executable workflows and follow instructions exactly unless they fall into disallowed policy scope.",
+			"severity": "hard",
+			"actionOnViolation": "abort_and_report"
+		}
+	]
+}
