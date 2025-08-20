@@ -25,7 +25,7 @@ sections:
   - id: status
     title: Status
     type: choice
-    choices: [Draft, Approved, InProgress, Review, Done]
+    choices: [Draft, Approved, In Progress, Blocked, Review, Done]
     instruction: Select the current status of the story
     owner: product-development-master
     editors: [product-development-master, developer]

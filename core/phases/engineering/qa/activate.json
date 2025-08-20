@@ -159,13 +159,6 @@
 			"targets": ["tasks/qa-gate.md", "template/qa-gate-tmpl.yaml"]
 		},
 		{
-			"name": "nfr-assess",
-			"prefix": "*",
-			"description": "Execute nfr-assess task to validate non-functional requirements",
-			"parameters": ["story"],
-			"targets": ["tasks/nfr-assess.md"]
-		},
-		{
 			"name": "review",
 			"prefix": "*",
 			"description": "Adaptive, risk-aware comprehensive review. Produces QA Results update in story file + gate file.",
@@ -199,7 +192,6 @@
 	"dependencies": {
 		"data": ["technical-preferences.md"],
 		"tasks": [
-			"nfr-assess.md",
 			"qa-gate.md",
 			"review-story.md",
 			"risk-profile.md",

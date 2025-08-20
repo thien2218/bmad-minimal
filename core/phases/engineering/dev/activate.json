@@ -153,104 +153,21 @@
 		{
 			"name": "develop-story",
 			"prefix": "*",
-			"description": "Implements the active story via formal workflow",
+			"description": "Execute develop-story task on the highest ordered Approved story or the story specified by the user",
+			"parameters": ["story"],
 			"preconditions": {
 				"storyStatusMustBe": "Approved"
 			},
-			"steps": [
-				{
-					"id": "develop-s1",
-					"instruction": "Check if story status is 'Approved'",
-					"input": "Status of story file",
-					"output": null,
-					"critical": true,
-					"onFail": {
-						"action": "abort",
-						"notifyUser": "Tell user the reason behind this halt."
-					}
-				},
-				{
-					"id": "develop-s2",
-					"instruction": "Read first or next task",
-					"input": "A story file WITH status 'Approved' with full list of tasks/subtasks",
-					"output": null
-				},
-				{
-					"id": "develop-s3",
-					"instruction": "Write test cases' description specifying what logic is expected for each test case",
-					"input": "Understanding of requirements and expected logic",
-					"output": "Test cases' description with clear expectations"
-				},
-				{
-					"id": "develop-s4",
-					"instruction": "Write test cases (implementable with mocks)",
-					"input": "Test cases' description",
-					"output": "Test cases' logical implementations with mocks"
-				},
-				{
-					"id": "develop-s5",
-					"instruction": "Implement the task and its subtasks",
-					"input": "Task/subtasks and tests",
-					"output": "Implemented code (unvalidated)"
-				},
-				{
-					"id": "develop-s6",
-					"instruction": "Repeat steps 2-5 if at least one task/subtask isn't completed",
-					"when": "incomplete_tasks_exist"
-				},
-				{
-					"id": "develop-s7",
-					"instruction": "Execute validations",
-					"input": "Implemented feature which hasn't been tested",
-					"output": "Status of the story after testing against completion checklist and blocking conditions",
-					"critical": true,
-					"onFail": {
-						"action": "fix_and_retry",
-						"note": "If test case(s) fail and the cause is not from incorrect implementation of the test case(s), fix the corresponding task."
-					}
-				},
-				{
-					"id": "develop-s8",
-					"instruction": "Mark the task/subtasks checkbox [x]",
-					"input": "All tasks/subtasks validated implementations",
-					"output": "Updated story file",
-					"when": "all_tests_pass"
-				}
-			]
+			"targets": ["tasks/develop-story.md"]
 		}
 	],
 
-	"config": {
-		"storyFileAllowedSections": [
-			"Tasks / Subtasks Checkboxes",
-			"Dev Agent Record",
-			"Dev Agent Record/Checkboxes",
-			"Dev Agent Record/Debug Log References",
-			"Dev Agent Record/Completion Notes List",
-			"File List",
-			"Change Log",
-			"Status",
-			"Agent Model Used"
-		],
-		"blockingConditions": [
-			"Unapproved dependencies needed (confirm with user)",
-			"Ambiguity remains after story check",
-			"Three consecutive implementation/fix failures",
-			"Missing configuration",
-			"Failing regression"
-		],
-		"completionChecklist": [
-			"All Tasks and Subtasks marked [x] and have tests",
-			"Validations and full regression pass",
-			"File List is complete",
-			"Run task: execute-checklist on checklist: story-dod-checklist",
-			"Set story status: 'Blocking' if at least one blocking condition is met, 'Ready for Review' otherwise",
-			"HALT"
-		]
-	},
-
 	"dependencies": {
-		"tasks": ["execute-checklist.md", "validate-next-story.md"],
+		"tasks": [
+			"execute-checklist.md",
+			"validate-next-story.md",
+			"develop-story.md"
+		],
 		"checklists": ["story-dod-checklist.md"]
 	}
 }
