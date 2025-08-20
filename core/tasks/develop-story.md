@@ -16,7 +16,7 @@ required:
 
 ## Prerequisites
 
--  Story status must be "Approved".
+-  Story status must be "WIP".
 
 ## SEQUENTIAL Task Execution (Do not proceed until current Task is complete)
 
@@ -26,9 +26,9 @@ required:
 -  Extract key configurations: `devStoryLocation`, `qa.*`, `workflow.*`
 -  Resolve and load the target story file using `story_id` and `story_path`
 
-### 1. Check if story status is "Approved"
+### 1. Check if story status is "WIP"
 
--  If status is not `Approved`, HALT and inform the user why execution cannot proceed.
+-  If status is not `WIP`, HALT and inform the user why execution cannot proceed.
 
 ### 2. Read first or next task
 

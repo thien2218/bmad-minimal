@@ -11,15 +11,6 @@ workflow:
   mode: interactive
   elicitation: advanced-elicitation
 
-agent_config:
-  editable_sections:
-    - Status
-    - Epic Overview
-    - Scope Boundary
-    - Requirements Mapping
-    - Story Breakdown
-    - Dependencies
-
 sections:
   - id: status
     title: Status

@@ -192,8 +192,15 @@
 		{
 			"name": "create-epic-stories",
 			"prefix": "*",
-			"description": "Create all stories for the highest ordered epic or epic with number specified by user in a single batched operation, i.e. multiple iterations of create-next-story task",
-			"parameters": ["epic_number"],
+			"description": "Create all stories for the highest ordered epic or the epic specified by user in a single batched operation (multiple iterations of create-next-story).",
+			"parameters": ["epic"],
+			"targets": ["tasks/create-next-story.md"]
+		},
+		{
+			"name": "create-story",
+			"prefix": "*",
+			"description": "Create the next story for the highest ordered epic or the one specified by user.",
+			"parameters": ["epic"],
 			"targets": ["tasks/create-next-story.md"]
 		}
 	],

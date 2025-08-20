@@ -171,6 +171,19 @@
 			]
 		},
 		{
+			"name": "assess-testing",
+			"prefix": "*",
+			"description": "Assess testing strategy for stories in an epic or specified list and populate QA Assessment. Set status to Draft when ready.",
+			"parameters": ["epic", "stories"],
+			"notes": "Only operate on stories with Status = 'QA Assessment'. If 'stories' omitted, process all stories in epic; otherwise use comma-separated list (e.g., '1.1,1.3').",
+			"targets": [
+				"tasks/assess-testing.md",
+				"templates/story-tmpl.yaml",
+				"tasks/test-design.md",
+				"tasks/trace-requirements.md"
+			]
+		},
+		{
 			"name": "risk-profile",
 			"prefix": "*",
 			"description": "Execute risk-profile task to generate risk assessment matrix",
@@ -202,6 +215,7 @@
 		"tasks": [
 			"qa-gate.md",
 			"review-story.md",
+			"assess-testing.md",
 			"risk-profile.md",
 			"test-design.md",
 			"trace-requirements.md"

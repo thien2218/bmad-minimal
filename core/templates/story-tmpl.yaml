@@ -11,24 +11,14 @@ workflow:
   mode: interactive
   elicitation: advanced-elicitation
 
-agent_config:
-  editable_sections:
-    - Status
-    - Story
-    - Acceptance Criteria
-    - Tasks / Subtasks
-    - Dev Notes
-    - Testing
-    - Change Log
-
 sections:
   - id: status
     title: Status
     type: choice
-    choices: [Draft, Approved, In Progress, Blocked, Review, Done]
+    choices: [Dev Feedback, QA Assessment, Draft, WIP, Blocked, Review, Done]
     instruction: Select the current status of the story
     owner: product-development-master
-    editors: [product-development-master, developer]
+    editors: [product-development-master, developer, qa-agent]
 
   - id: priority
     title: Priority
@@ -49,6 +39,35 @@ sections:
     elicit: true
     owner: product-development-master
     editors: [product-development-master]
+
+  - id: dev-feasibility
+    title: Dev Feasibility
+    type: paragraphs
+    instruction: |
+      Developer-only section to assess technical feasibility and call out risks or blockers.
+      Keep it concise and actionable. Cover:
+      - Ambiguities or missing info
+      - Technical risks or constraints
+      - Dependencies not reflected in Tasks/Subtasks
+      - Suggested adjustments to scope or sequencing
+      - Readiness signal: Feasible | Concerns | Blocked (with 1–2 line reason)
+    owner: developer
+    editors: [developer]
+
+  - id: qa-assessment
+    title: QA Assessment
+    type: paragraphs
+    instruction: |
+      QA-only section to assess testing strategy readiness and quality risks.
+      Cover:
+      - Testability: controllability/observability/debuggability
+      - Proposed test levels and priorities (unit/integration/e2e, P0–P3)
+      - Gaps vs acceptance criteria and NFRs
+      - Security/performance/reliability concerns for testing
+      - Readiness signal: Ready for Draft | Needs Changes (with 1–2 line reason)
+      After completing this assessment for stories in status 'QA Assessment', you may set Status to 'Draft' to hand off for review.
+    owner: qa-agent
+    editors: [qa-agent]
 
   - id: acceptance-criteria
     title: Acceptance Criteria

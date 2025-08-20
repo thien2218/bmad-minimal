@@ -78,7 +78,7 @@ ALWAYS cite source documents: `[Source: architecture/{filename}.md#{section}]`
 ### 5. Populate Story Template with Full Context
 
 -  Create new story file: `{devStoryLocation}/{epicNum}.{storyNum}.story.md` using Story Template
--  Fill in basic story information: Title, Status (Draft), Priority (1–5) from Epic (if absent, elicit from user), Story statement, Acceptance Criteria from Epic
+-  Fill in basic story information: Title, Status (`Dev Feedback`), Priority (1–5) from Epic (if absent, elicit from user), Story statement, Acceptance Criteria from Epic
 -  **`Dev Notes` section (CRITICAL):**
    -  CRITICAL: This section MUST contain ONLY information extracted from architecture documents. NEVER invent or assume technical details.
    -  Include ALL relevant technical details from Steps 2-3, organized by category:
@@ -99,12 +99,13 @@ ALWAYS cite source documents: `[Source: architecture/{filename}.md#{section}]`
    -  Link tasks to ACs where applicable (e.g., `Task 1 (AC: 1, 3)`)
 -  Add notes on project structure alignment or discrepancies found in Step 4
 
-### 6. Story Draft Completion and Review
+### 6. Story Draft Completion and Handoffs
 
 -  Review all sections for completeness and accuracy
 -  Verify all source references are included for technical details
 -  Ensure tasks align with both epic requirements and architecture constraints
--  Update status to "Draft" and save the story file
+-  Set Status to `Dev Feedback` and save the story file
+-  After Dev Feasibility is completed and PDM has updated the story based on feedback (if needed), set Status to `QA Assessment` to hand off for QA testing strategy assessment
 -  Execute `{root}/tasks/execute-checklist` `{root}/checklists/story-draft-checklist`
 -  Provide summary to user including:
    -  Story created: `{devStoryLocation}/{epicNum}.{storyNum}.story.md`
