@@ -13,15 +13,28 @@ workflow:
 
 agent_config:
   editable_sections:
+    - Status
     - Epic Overview
-    - Story List
-    - Change Log
+    - Scope Boundary
+    - Requirements Mapping
+    - Story Breakdown
+    - Dependencies
 
 sections:
+  - id: status
+    title: Status
+    type: choice
+    choices: [Review, InProgress, Approved]
+    instruction: Select the current status of the story
+    owner: product-development-master
+    editors: [product-development-master]
+
   - id: epic-overview
     title: Epic Overview
     instruction: |
       Define the epic's purpose, scope, and completion criteria. This provides the foundation for story generation and ensures alignment with PRD goals.
+    owner: product-development-master
+    editors: [product-development-master]
     sections:
       - id: epic-goal
         title: Epic Goal
@@ -62,6 +75,8 @@ sections:
     instruction: |
       Clearly define epic boundaries to guide story creation and prevent scope creep.
     elicit: true
+    owner: product-development-master
+    editors: [product-development-master]
     sections:
       - id: in-scope
         title: In Scope
@@ -89,6 +104,8 @@ sections:
     title: Requirements Mapping
     instruction: |
       Map this epic to specific PRD requirements for traceability and story context.
+    owner: product-development-master
+    editors: [product-development-master]
     sections:
       - id: functional-requirements
         title: Functional Requirements Addressed
@@ -112,51 +129,12 @@ sections:
         template: "- **{{nfr_id}}:** {{requirement_summary}} - {{acceptance_threshold}}"
         elicit: true
 
-  - id: technical-context
-    title: Technical Context
-    instruction: |
-      Provide technical guidance from architecture document for story implementation.
-    sections:
-      - id: architecture-alignment
-        title: Architecture Alignment
-        type: bullet-list
-        instruction: |
-          Reference relevant architecture decisions:
-          - Components being implemented/modified
-          - Architectural patterns to follow
-          - Technology stack elements in use
-          - Security and error handling patterns
-        template: "- **{{architecture_element}}:** {{epic_application}}"
-        elicit: true
-
-      - id: integration-requirements
-        title: Integration Requirements
-        type: bullet-list
-        instruction: |
-          Document integration points for this epic:
-          - Internal component interactions
-          - External API integrations
-          - Database schema changes
-          - Message/event handling
-        template: "- **{{integration_type}}:** {{integration_details}}"
-        elicit: true
-
-      - id: testing-context
-        title: Testing Context
-        type: bullet-list
-        instruction: |
-          Define testing requirements from architecture:
-          - Unit testing standards and coverage
-          - Integration testing needs
-          - End-to-end testing scope
-          - Performance/security testing requirements
-        template: "- **{{test_type}}:** {{test_requirements}}"
-        elicit: true
-
   - id: story-breakdown
     title: Story Breakdown
     instruction: |
       Define the complete list of stories for this epic with proper sequencing for story generation.
+    owner: product-development-master
+    editors: [product-development-master]
     sections:
       - id: story-list
         title: Story List
@@ -187,6 +165,8 @@ sections:
     instruction: |
       Document dependencies that impact story creation and sequencing.
     elicit: true
+    owner: product-development-master
+    editors: [product-development-master]
     sections:
       - id: epic-dependencies
         title: Epic Dependencies
@@ -207,48 +187,3 @@ sections:
           - Shared technical foundations between stories
           - Database or infrastructure prerequisites
         template: "- **Story {{story_id}}** depends on **Story {{prerequisite_story_id}}:** {{dependency_reason}}"
-
-  - id: change-log
-    title: Change Log
-    type: table
-    columns: [Date, Version, Description, Author]
-    instruction: Track document versions and changes
-    owner: product-development-master
-    editors: [product-development-master]
-
-  - id: next-steps
-    title: Next Steps
-    instruction: |
-      Generate prompts for story creation and development handoff.
-    sections:
-      - id: story-creation-prompt
-        title: Story Creation Prompt
-        instruction: |
-          Create a prompt template for generating individual stories from this epic:
-          - Reference this epic document and prerequisites
-          - Include story-specific context
-          - Provide technical guidance for story completion
-        template: |
-          Create Story {{epic_number}}.{{story_number}} using the story template with this context:
-
-          **Epic:** {{epic_title}} (Epic {{epic_number}})
-          **Story:** {{story_title}}
-          **Epic Goal:** {{epic_goal_summary}}
-          **Technical Context:** Reference architecture document sections: {{relevant_architecture_sections}}
-          **Requirements:** This story addresses {{story_requirements_mapping}}
-          **Dependencies:** {{story_dependencies}}
-
-          Use the epic document ({{epic_document_path}}) and architecture document (docs/architecture.md) for complete context.
-
-      - id: development-handoff
-        title: Development Handoff
-        instruction: |
-          Provide essential information for development team epic kickoff:
-          - Architecture document sections to review
-          - First story to implement
-          - Key technical decisions from epic context
-        template: |
-          **Architecture Focus:** Review {{architecture_sections_to_study}}
-          **Starting Story:** {{first_story_id}} - {{first_story_title}}
-          **Technical Priorities:** {{key_technical_considerations}}
-          **Testing Standards:** {{testing_approach_summary}}
