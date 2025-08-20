@@ -133,6 +133,9 @@ sections:
     title: Story Breakdown
     instruction: |
       Define the complete list of stories for this epic with proper sequencing for story generation.
+      Include a priority for each story (integer 1–5, where 1 = highest priority).
+      Order stories primarily by dependencies (no story should depend on a later story),
+      then by priority (1 first) to deliver highest-value work earlier when safe.
     owner: product-development-master
     editors: [product-development-master]
     sections:
@@ -145,8 +148,9 @@ sections:
           - Stories build upon previous stories
           - Include story title and brief goal
           - Note any direct dependencies
+          - Include Priority (1–5, 1 = highest)
           - Size appropriately for AI agent execution (2-4 hours of work)
-        template: "{{story_number}}: **{{story_title}}** - {{story_goal}} {{dependency_note}}"
+        template: "{{story_number}}: **{{story_title}}** - {{story_goal}} {{dependency_note}} [Priority: {{priority}}]"
         elicit: true
 
       - id: story-sequencing-rationale

@@ -78,7 +78,7 @@ ALWAYS cite source documents: `[Source: architecture/{filename}.md#{section}]`
 ### 5. Populate Story Template with Full Context
 
 -  Create new story file: `{devStoryLocation}/{epicNum}.{storyNum}.story.md` using Story Template
--  Fill in basic story information: Title, Status (Draft), Story statement, Acceptance Criteria from Epic
+-  Fill in basic story information: Title, Status (Draft), Priority (1–5) from Epic (if absent, elicit from user), Story statement, Acceptance Criteria from Epic
 -  **`Dev Notes` section (CRITICAL):**
    -  CRITICAL: This section MUST contain ONLY information extracted from architecture documents. NEVER invent or assume technical details.
    -  Include ALL relevant technical details from Steps 2-3, organized by category:
@@ -95,6 +95,7 @@ ALWAYS cite source documents: `[Source: architecture/{filename}.md#{section}]`
    -  Generate detailed, sequential list of technical tasks based ONLY on: Epic Requirements, Story AC, Reviewed Architecture Information
    -  Each task must reference relevant architecture documentation
    -  Include unit testing as explicit subtasks based on the Testing Strategy
+   -  Assign a Difficulty (1–10) to each task and subtask reflecting complexity and uncertainty
    -  Link tasks to ACs where applicable (e.g., `Task 1 (AC: 1, 3)`)
 -  Add notes on project structure alignment or discrepancies found in Step 4
 

@@ -156,6 +156,7 @@ sections:
       - Each story should be a "vertical slice" delivering complete functionality aside from early enabler stories for project foundation
       - No story should depend on work from a later story or epic
       - Identify and note any direct prerequisite stories
+      - Record a Priority (1–5, 1 = highest) for each story and, after satisfying dependencies, order by priority to deliver highest value earlier where safe
       - Focus on "what" and "why" not "how" (leave technical implementation to Architect) yet be precise enough to support a logical sequential order of operations from story to story.
       - Ensure each story delivers clear user or business value, try to avoid enablers and build them into stories that deliver value.
       - Size stories for AI agent execution: Each story must be completable by a single AI agent in one focused session without context overflow

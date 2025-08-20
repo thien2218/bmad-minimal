@@ -30,6 +30,14 @@ sections:
     owner: product-development-master
     editors: [product-development-master, developer]
 
+  - id: priority
+    title: Priority
+    type: choice
+    choices: [1, 2, 3, 4, 5]
+    instruction: "Story priority (1 = highest). Used by PDM for sequencing."
+    owner: product-development-master
+    editors: [product-development-master]
+
   - id: story
     title: Story
     type: template-text
@@ -56,13 +64,14 @@ sections:
     instruction: |
       Break down the story into specific tasks and subtasks needed for implementation.
       Reference applicable acceptance criteria numbers where relevant.
+      Assign a Difficulty for each task and subtask (integer 1–10) capturing both complexity and uncertainty.
     template: |
-      - [ ] Task 1 (AC: # if applicable)
-        - [ ] Subtask1.1...
-      - [ ] Task 2 (AC: # if applicable)
-        - [ ] Subtask 2.1...
-      - [ ] Task 3 (AC: # if applicable)
-        - [ ] Subtask 3.1...
+      - [ ] Task 1 (AC: # if applicable) [Diff: 1-10]
+        - [ ] Subtask 1.1... [Diff: 1-10]
+      - [ ] Task 2 (AC: # if applicable) [Diff: 1-10]
+        - [ ] Subtask 2.1... [Diff: 1-10]
+      - [ ] Task 3 (AC: # if applicable) [Diff: 1-10]
+        - [ ] Subtask 3.1... [Diff: 1-10]
     elicit: true
     owner: product-development-master
     editors: [product-development-master, developer]

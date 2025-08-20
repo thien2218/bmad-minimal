@@ -71,7 +71,7 @@ Create a focused epic following this structure:
 
 #### Stories
 
-List 1-3 focused stories that complete the epic:
+List 1-3 focused stories that complete the epic. For each story, specify a Priority (1–5, 1 = highest). Sequence stories primarily by dependencies, then by priority to deliver highest value earlier when safe:
 
 1. **Story 1:** {{Story title and brief description}}
 2. **Story 2:** {{Story title and brief description}}
@@ -119,7 +119,7 @@ Before finalizing the epic, ensure:
 **Completeness Check:**
 
 -  [ ] Epic goal is clear and achievable
--  [ ] Stories are properly scoped
+-  [ ] Stories are properly scoped and prioritized (1–5)
 -  [ ] Success criteria are measurable
 -  [ ] Dependencies are identified
 
