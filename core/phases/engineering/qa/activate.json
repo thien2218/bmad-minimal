@@ -156,7 +156,7 @@
 			"prefix": "*",
 			"description": "Execute qa-gate task to write/update quality gate decision",
 			"parameters": ["story"],
-			"targets": ["tasks/qa-gate.md", "template/qa-gate-tmpl.yaml"]
+			"targets": ["tasks/qa-gate.md", "templates/qa-gate-tmpl.yaml"]
 		},
 		{
 			"name": "review",
@@ -164,7 +164,11 @@
 			"description": "Adaptive, risk-aware comprehensive review. Produces QA Results update in story file + gate file.",
 			"parameters": ["story"],
 			"notes": "Gate file location: qa.qaLocation/gates/{epic}.{story}-{slug}.yml. Executes review-story task and creates gate decision.",
-			"targets": ["tasks/review-story.md", "template/story-tmpl.yaml"]
+			"targets": [
+				"tasks/review-story.md",
+				"templates/story-tmpl.yaml",
+				"templates/qa-gate-tmpl.yaml"
+			]
 		},
 		{
 			"name": "risk-profile",
@@ -190,7 +194,11 @@
 	],
 
 	"dependencies": {
-		"data": ["technical-preferences.md"],
+		"data": [
+			"technical-preferences.md",
+			"test-levels-framework.md",
+			"test-priorities-matrix.md"
+		],
 		"tasks": [
 			"qa-gate.md",
 			"review-story.md",
