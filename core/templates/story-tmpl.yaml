@@ -15,7 +15,7 @@ sections:
   - id: status
     title: Status
     type: choice
-    choices: [Dev Feedback, QA Assessment, Draft, WIP, Blocked, Review, Done]
+    choices: [Dev Feedback, Draft, WIP, Blocked, Review, Done]
     instruction: Select the current status of the story
     owner: product-development-master
     editors: [product-development-master, developer, qa-agent]
@@ -53,21 +53,6 @@ sections:
       - Readiness signal: Feasible | Concerns | Blocked (with 1–2 line reason)
     owner: developer
     editors: [developer]
-
-  - id: qa-assessment
-    title: QA Assessment
-    type: paragraphs
-    instruction: |
-      QA-only section to assess testing strategy readiness and quality risks.
-      Cover:
-      - Testability: controllability/observability/debuggability
-      - Proposed test levels and priorities (unit/integration/e2e, P0–P3)
-      - Gaps vs acceptance criteria and NFRs
-      - Security/performance/reliability concerns for testing
-      - Readiness signal: Ready for Draft | Needs Changes (with 1–2 line reason)
-      After completing this assessment for stories in status 'QA Assessment', you may set Status to 'Draft' to hand off for review.
-    owner: qa-agent
-    editors: [qa-agent]
 
   - id: acceptance-criteria
     title: Acceptance Criteria

@@ -105,7 +105,7 @@ ALWAYS cite source documents: `[Source: architecture/{filename}.md#{section}]`
 -  Verify all source references are included for technical details
 -  Ensure tasks align with both epic requirements and architecture constraints
 -  Set Status to `Dev Feedback` and save the story file
--  After Dev Feasibility is completed and PDM has updated the story based on feedback (if needed), set Status to `QA Assessment` to hand off for QA testing strategy assessment
+-  After Dev Feasibility is completed and PDM has updated the story based on feedback (if needed), set Status to `Draft` to hand off for human review, refinement and finalizing
 -  Execute `{root}/tasks/execute-checklist` `{root}/checklists/story-draft-checklist`
 -  Provide summary to user including:
    -  Story created: `{devStoryLocation}/{epicNum}.{storyNum}.story.md`
