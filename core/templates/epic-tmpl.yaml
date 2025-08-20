@@ -11,10 +11,6 @@ workflow:
   mode: interactive
   elicitation: advanced-elicitation
 
-prerequisites:
-  - docs/prd.md (Product Requirements Document)
-  - docs/architecture.md (Architecture Document)
-
 agent_config:
   editable_sections:
     - Epic Overview
@@ -217,8 +213,8 @@ sections:
     type: table
     columns: [Date, Version, Description, Author]
     instruction: Track document versions and changes
-    owner: scrum-master
-    editors: [scrum-master, product-owner]
+    owner: product-development-master
+    editors: [product-development-master]
 
   - id: next-steps
     title: Next Steps

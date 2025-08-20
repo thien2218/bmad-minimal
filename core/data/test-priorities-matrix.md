@@ -8,119 +8,119 @@ Guide for prioritizing test scenarios based on risk, criticality, and business i
 
 **Criteria:**
 
-- Revenue-impacting functionality
-- Security-critical paths
-- Data integrity operations
-- Regulatory compliance requirements
-- Previously broken functionality (regression prevention)
+-  Revenue-impacting functionality
+-  Security-critical paths
+-  Data integrity operations
+-  Regulatory compliance requirements
+-  Previously broken functionality (regression prevention)
 
 **Examples:**
 
-- Payment processing
-- Authentication/authorization
-- User data creation/deletion
-- Financial calculations
-- GDPR/privacy compliance
+-  Payment processing
+-  Authentication/authorization
+-  User data creation/deletion
+-  Financial calculations
+-  GDPR/privacy compliance
 
 **Testing Requirements:**
 
-- Comprehensive coverage at all levels
-- Both happy and unhappy paths
-- Edge cases and error scenarios
-- Performance under load
+-  Comprehensive coverage at all levels
+-  Both happy and unhappy paths
+-  Edge cases and error scenarios
+-  Performance under load
 
 ### P1 - High (Should Test)
 
 **Criteria:**
 
-- Core user journeys
-- Frequently used features
-- Features with complex logic
-- Integration points between systems
-- Features affecting user experience
+-  Core user journeys
+-  Frequently used features
+-  Features with complex logic
+-  Integration points between systems
+-  Features affecting user experience
 
 **Examples:**
 
-- User registration flow
-- Search functionality
-- Data import/export
-- Notification systems
-- Dashboard displays
+-  User registration flow
+-  Search functionality
+-  Data import/export
+-  Notification systems
+-  Dashboard displays
 
 **Testing Requirements:**
 
-- Primary happy paths required
-- Key error scenarios
-- Critical edge cases
-- Basic performance validation
+-  Primary happy paths required
+-  Key error scenarios
+-  Critical edge cases
+-  Basic performance validation
 
 ### P2 - Medium (Nice to Test)
 
 **Criteria:**
 
-- Secondary features
-- Admin functionality
-- Reporting features
-- Configuration options
-- UI polish and aesthetics
+-  Secondary features
+-  Admin functionality
+-  Reporting features
+-  Configuration options
+-  UI polish and aesthetics
 
 **Examples:**
 
-- Admin settings panels
-- Report generation
-- Theme customization
-- Help documentation
-- Analytics tracking
+-  Admin settings panels
+-  Report generation
+-  Theme customization
+-  Help documentation
+-  Analytics tracking
 
 **Testing Requirements:**
 
-- Happy path coverage
-- Basic error handling
-- Can defer edge cases
+-  Happy path coverage
+-  Basic error handling
+-  Can defer edge cases
 
 ### P3 - Low (Test if Time Permits)
 
 **Criteria:**
 
-- Rarely used features
-- Nice-to-have functionality
-- Cosmetic issues
-- Non-critical optimizations
+-  Rarely used features
+-  Nice-to-have functionality
+-  Cosmetic issues
+-  Non-critical optimizations
 
 **Examples:**
 
-- Advanced preferences
-- Legacy feature support
-- Experimental features
-- Debug utilities
+-  Advanced preferences
+-  Legacy feature support
+-  Experimental features
+-  Debug utilities
 
 **Testing Requirements:**
 
-- Smoke tests only
-- Can rely on manual testing
-- Document known limitations
+-  Smoke tests only
+-  Can rely on manual testing
+-  Document known limitations
 
 ## Risk-Based Priority Adjustments
 
 ### Increase Priority When:
 
-- High user impact (affects >50% of users)
-- High financial impact (>$10K potential loss)
-- Security vulnerability potential
-- Compliance/legal requirements
-- Customer-reported issues
-- Complex implementation (>500 LOC)
-- Multiple system dependencies
+-  High user impact (affects >50% of users)
+-  High financial impact (>$10K potential loss)
+-  Security vulnerability potential
+-  Compliance/legal requirements
+-  Customer-reported issues
+-  Complex implementation (>500 LOC)
+-  Multiple system dependencies
 
 ### Decrease Priority When:
 
-- Feature flag protected
-- Gradual rollout planned
-- Strong monitoring in place
-- Easy rollback capability
-- Low usage metrics
-- Simple implementation
-- Well-isolated component
+-  Feature flag protected
+-  Gradual rollout planned
+-  Strong monitoring in place
+-  Easy rollback capability
+-  Low usage metrics
+-  Simple implementation
+-  Well-isolated component
 
 ## Test Coverage by Priority
 
@@ -165,8 +165,8 @@ Is it revenue-critical?
 
 Review and adjust priorities based on:
 
-- Production incident patterns
-- User feedback and complaints
-- Usage analytics
-- Test failure history
-- Business priority changes
+-  Production incident patterns
+-  User feedback and complaints
+-  Usage analytics
+-  Test failure history
+-  Business priority changes

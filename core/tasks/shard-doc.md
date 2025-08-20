@@ -4,9 +4,9 @@
 
 ## Purpose
 
-- Split a large document into multiple smaller documents based on level 2 sections
-- Create a folder structure to organize the sharded documents
-- Maintain all content integrity including code blocks, diagrams, and markdown formatting
+-  Split a large document into multiple smaller documents based on level 2 sections
+-  Create a folder structure to organize the sharded documents
+-  Maintain all content integrity including code blocks, diagrams, and markdown formatting
 
 ## Primary Method: Automatic with markdown-tree
 
@@ -52,10 +52,10 @@ Then proceed with the manual method below ONLY if markdownExploder is false.]]
    ```
 
 3. **What it does**:
-   - Automatically splits the document by level 2 sections
-   - Creates properly named files
-   - Adjusts heading levels appropriately
-   - Handles all edge cases with code blocks and special markdown
+   -  Automatically splits the document by level 2 sections
+   -  Creates properly named files
+   -  Adjusts heading levels appropriately
+   -  Handles all edge cases with code blocks and special markdown
 
 If the user has @kayvan/markdown-tree-parser installed, use it and skip the manual process below.
 
@@ -67,9 +67,9 @@ If the user has @kayvan/markdown-tree-parser installed, use it and skip the manu
 
 1. Identify Document and Target Location
 
-- Determine which document to shard (user-provided path)
-- Create a new folder under `docs/` with the same name as the document (without extension)
-- Example: `docs/prd.md` → create folder `docs/prd/`
+-  Determine which document to shard (user-provided path)
+-  Create a new folder under `docs/` with the same name as the document (without extension)
+-  Example: `docs/prd.md` → create folder `docs/prd/`
 
 2. Parse and Extract Sections
 
@@ -78,13 +78,13 @@ CRITICAL AEGNT SHARDING RULES:
 1. Read the entire document content
 2. Identify all level 2 sections (## headings)
 3. For each level 2 section:
-   - Extract the section heading and ALL content until the next level 2 section
-   - Include all subsections, code blocks, diagrams, lists, tables, etc.
-   - Be extremely careful with:
-     - Fenced code blocks (```) - ensure you capture the full block including closing backticks and account for potential misleading level 2's that are actually part of a fenced section example
-     - Mermaid diagrams - preserve the complete diagram syntax
-     - Nested markdown elements
-     - Multi-line content that might contain ## inside code blocks
+   -  Extract the section heading and ALL content until the next level 2 section
+   -  Include all subsections, code blocks, diagrams, lists, tables, etc.
+   -  Be extremely careful with:
+      -  Fenced code blocks (```) - ensure you capture the full block including closing backticks and account for potential misleading level 2's that are actually part of a fenced section example
+      -  Mermaid diagrams - preserve the complete diagram syntax
+      -  Nested markdown elements
+      -  Multi-line content that might contain ## inside code blocks
 
 CRITICAL: Use proper parsing that understands markdown context. A ## inside a code block is NOT a section header.]]
 
@@ -93,13 +93,15 @@ CRITICAL: Use proper parsing that understands markdown context. A ## inside a co
 For each extracted section:
 
 1. **Generate filename**: Convert the section heading to lowercase-dash-case
-   - Remove special characters
-   - Replace spaces with dashes
-   - Example: "## Tech Stack" → `tech-stack.md`
+
+   -  Remove special characters
+   -  Replace spaces with dashes
+   -  Example: "## Tech Stack" → `tech-stack.md`
 
 2. **Adjust heading levels**:
-   - The level 2 heading becomes level 1 (# instead of ##) in the sharded new document
-   - All subsection levels decrease by 1:
+
+   -  The level 2 heading becomes level 1 (# instead of ##) in the sharded new document
+   -  All subsection levels decrease by 1:
 
    ```txt
      - ### → ##
@@ -124,10 +126,10 @@ Create an `index.md` file in the sharded folder that:
 
 ## Sections
 
-- [Section Name 1](./section-name-1.md)
-- [Section Name 2](./section-name-2.md)
-- [Section Name 3](./section-name-3.md)
-  ...
+-  [Section Name 1](./section-name-1.md)
+-  [Section Name 2](./section-name-2.md)
+-  [Section Name 3](./section-name-3.md)
+   ...
 ```
 
 ### 5. Preserve Special Content
@@ -181,7 +183,7 @@ Document sharded successfully:
 
 ## Important Notes
 
-- Never modify the actual content, only adjust heading levels
-- Preserve ALL formatting, including whitespace where significant
-- Handle edge cases like sections with code blocks containing ## symbols
-- Ensure the sharding is reversible (could reconstruct the original from shards)
+-  Never modify the actual content, only adjust heading levels
+-  Preserve ALL formatting, including whitespace where significant
+-  Handle edge cases like sections with code blocks containing ## symbols
+-  Ensure the sharding is reversible (could reconstruct the original from shards)

@@ -12,9 +12,9 @@ Create a requirements traceability matrix that ensures every acceptance criterio
 
 ## Prerequisites
 
-- Story file with clear acceptance criteria
-- Access to test files or test specifications
-- Understanding of the implementation
+-  Story file with clear acceptance criteria
+-  Access to test files or test specifications
+-  Understanding of the implementation
 
 ## Traceability Process
 
@@ -22,33 +22,33 @@ Create a requirements traceability matrix that ensures every acceptance criterio
 
 Identify all testable requirements from:
 
-- Acceptance Criteria (primary source)
-- User story statement
-- Tasks/subtasks with specific behaviors
-- Non-functional requirements mentioned
-- Edge cases documented
+-  Acceptance Criteria (primary source)
+-  User story statement
+-  Tasks/subtasks with specific behaviors
+-  Non-functional requirements mentioned
+-  Edge cases documented
 
 ### 2. Map to Test Cases
 
 For each requirement, document which tests validate it. Use Given-When-Then to describe what the test validates (not how it's written):
 
 ```yaml
-requirement: 'AC1: User can login with valid credentials'
+requirement: "AC1: User can login with valid credentials"
 test_mappings:
-  - test_file: 'auth/login.test.ts'
-    test_case: 'should successfully login with valid email and password'
-    # Given-When-Then describes WHAT the test validates, not HOW it's coded
-    given: 'A registered user with valid credentials'
-    when: 'They submit the login form'
-    then: 'They are redirected to dashboard and session is created'
-    coverage: full
+   - test_file: "auth/login.test.ts"
+     test_case: "should successfully login with valid email and password"
+     # Given-When-Then describes WHAT the test validates, not HOW it's coded
+     given: "A registered user with valid credentials"
+     when: "They submit the login form"
+     then: "They are redirected to dashboard and session is created"
+     coverage: full
 
-  - test_file: 'e2e/auth-flow.test.ts'
-    test_case: 'complete login flow'
-    given: 'User on login page'
-    when: 'Entering valid credentials and submitting'
-    then: 'Dashboard loads with user data'
-    coverage: integration
+   - test_file: "e2e/auth-flow.test.ts"
+     test_case: "complete login flow"
+     given: "User on login page"
+     when: "Entering valid credentials and submitting"
+     then: "Dashboard loads with user data"
+     coverage: integration
 ```
 
 ### 3. Coverage Analysis
@@ -57,11 +57,11 @@ Evaluate coverage for each requirement:
 
 **Coverage Levels:**
 
-- `full`: Requirement completely tested
-- `partial`: Some aspects tested, gaps exist
-- `none`: No test coverage found
-- `integration`: Covered in integration/e2e tests only
-- `unit`: Covered in unit tests only
+-  `full`: Requirement completely tested
+-  `partial`: Some aspects tested, gaps exist
+-  `none`: No test coverage found
+-  `integration`: Covered in integration/e2e tests only
+-  `unit`: Covered in unit tests only
 
 ### 4. Gap Identification
 
@@ -69,19 +69,19 @@ Document any gaps found:
 
 ```yaml
 coverage_gaps:
-  - requirement: 'AC3: Password reset email sent within 60 seconds'
-    gap: 'No test for email delivery timing'
-    severity: medium
-    suggested_test:
-      type: integration
-      description: 'Test email service SLA compliance'
+   - requirement: "AC3: Password reset email sent within 60 seconds"
+     gap: "No test for email delivery timing"
+     severity: medium
+     suggested_test:
+        type: integration
+        description: "Test email service SLA compliance"
 
-  - requirement: 'AC5: Support 1000 concurrent users'
-    gap: 'No load testing implemented'
-    severity: high
-    suggested_test:
-      type: performance
-      description: 'Load test with 1000 concurrent connections'
+   - requirement: "AC5: Support 1000 concurrent users"
+     gap: "No load testing implemented"
+     severity: high
+     suggested_test:
+        type: performance
+        description: "Load test with 1000 concurrent connections"
 ```
 
 ## Outputs
@@ -92,16 +92,16 @@ coverage_gaps:
 
 ```yaml
 trace:
-  totals:
-    requirements: X
-    full: Y
-    partial: Z
-    none: W
-  planning_ref: 'qa.qaLocation/assessments/{epic}.{story}-test-design-{YYYYMMDD}.md'
-  uncovered:
-    - ac: 'AC3'
-      reason: 'No test found for password reset timing'
-  notes: 'See qa.qaLocation/assessments/{epic}.{story}-trace-{YYYYMMDD}.md'
+   totals:
+      requirements: X
+      full: Y
+      partial: Z
+      none: W
+   planning_ref: "qa.qaLocation/assessments/{epic}.{story}-test-design-{YYYYMMDD}.md"
+   uncovered:
+      - ac: "AC3"
+        reason: "No test found for password reset timing"
+   notes: "See qa.qaLocation/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
 ```
 
 ### Output 2: Traceability Report
@@ -117,10 +117,10 @@ Create a traceability report with:
 
 ### Coverage Summary
 
-- Total Requirements: X
-- Fully Covered: Y (Z%)
-- Partially Covered: A (B%)
-- Not Covered: C (D%)
+-  Total Requirements: X
+-  Fully Covered: Y (Z%)
+-  Partially Covered: A (B%)
+-  Not Covered: C (D%)
 
 ### Requirement Mappings
 
@@ -130,15 +130,16 @@ Create a traceability report with:
 
 Given-When-Then Mappings:
 
-- **Unit Test**: `auth.service.test.ts::validateCredentials`
-  - Given: Valid user credentials
-  - When: Validation method called
-  - Then: Returns true with user object
+-  **Unit Test**: `auth.service.test.ts::validateCredentials`
 
-- **Integration Test**: `auth.integration.test.ts::loginFlow`
-  - Given: User with valid account
-  - When: Login API called
-  - Then: JWT token returned and session created
+   -  Given: Valid user credentials
+   -  When: Validation method called
+   -  Then: Returns true with user object
+
+-  **Integration Test**: `auth.integration.test.ts::loginFlow`
+   -  Given: User with valid account
+   -  When: Login API called
+   -  Then: JWT token returned and session created
 
 #### AC2: {Acceptance Criterion 2}
 
@@ -149,14 +150,15 @@ Given-When-Then Mappings:
 ### Critical Gaps
 
 1. **Performance Requirements**
-   - Gap: No load testing for concurrent users
-   - Risk: High - Could fail under production load
-   - Action: Implement load tests using k6 or similar
+
+   -  Gap: No load testing for concurrent users
+   -  Risk: High - Could fail under production load
+   -  Action: Implement load tests using k6 or similar
 
 2. **Security Requirements**
-   - Gap: Rate limiting not tested
-   - Risk: Medium - Potential DoS vulnerability
-   - Action: Add rate limit tests to integration suite
+   -  Gap: Rate limiting not tested
+   -  Risk: Medium - Potential DoS vulnerability
+   -  Action: Add rate limit tests to integration suite
 
 ### Test Design Recommendations
 
@@ -169,9 +171,9 @@ Based on gaps identified, recommend:
 
 ### Risk Assessment
 
-- **High Risk**: Requirements with no coverage
-- **Medium Risk**: Requirements with only partial coverage
-- **Low Risk**: Requirements with full unit + integration coverage
+-  **High Risk**: Requirements with no coverage
+-  **Medium Risk**: Requirements with only partial coverage
+-  **Low Risk**: Requirements with full unit + integration coverage
 ```
 
 ## Traceability Best Practices
@@ -182,21 +184,21 @@ Use Given-When-Then to document what each test validates:
 
 **Given**: The initial context the test sets up
 
-- What state/data the test prepares
-- User context being simulated
-- System preconditions
+-  What state/data the test prepares
+-  User context being simulated
+-  System preconditions
 
 **When**: The action the test performs
 
-- What the test executes
-- API calls or user actions tested
-- Events triggered
+-  What the test executes
+-  API calls or user actions tested
+-  Events triggered
 
 **Then**: What the test asserts
 
-- Expected outcomes verified
-- State changes checked
-- Values validated
+-  Expected outcomes verified
+-  State changes checked
+-  Values validated
 
 **Note**: This is for documentation only. Actual test code follows your project's standards (e.g., describe/it blocks, no BDD syntax).
 
@@ -214,38 +216,38 @@ Prioritize coverage based on:
 
 Map at appropriate levels:
 
-- Unit tests for business logic
-- Integration tests for component interaction
-- E2E tests for user journeys
-- Performance tests for NFRs
+-  Unit tests for business logic
+-  Integration tests for component interaction
+-  E2E tests for user journeys
+-  Performance tests for NFRs
 
 ## Quality Indicators
 
 Good traceability shows:
 
-- Every AC has at least one test
-- Critical paths have multiple test levels
-- Edge cases are explicitly covered
-- NFRs have appropriate test types
-- Clear Given-When-Then for each test
+-  Every AC has at least one test
+-  Critical paths have multiple test levels
+-  Edge cases are explicitly covered
+-  NFRs have appropriate test types
+-  Clear Given-When-Then for each test
 
 ## Red Flags
 
 Watch for:
 
-- ACs with no test coverage
-- Tests that don't map to requirements
-- Vague test descriptions
-- Missing edge case coverage
-- NFRs without specific tests
+-  ACs with no test coverage
+-  Tests that don't map to requirements
+-  Vague test descriptions
+-  Missing edge case coverage
+-  NFRs without specific tests
 
 ## Integration with Gates
 
 This traceability feeds into quality gates:
 
-- Critical gaps → FAIL
-- Minor gaps → CONCERNS
-- Missing P0 tests from test-design → CONCERNS
+-  Critical gaps → FAIL
+-  Minor gaps → CONCERNS
+-  Missing P0 tests from test-design → CONCERNS
 
 ### Output 3: Story Hook Line
 
@@ -255,12 +257,12 @@ This traceability feeds into quality gates:
 Trace matrix: qa.qaLocation/assessments/{epic}.{story}-trace-{YYYYMMDD}.md
 ```
 
-- Full coverage → PASS contribution
+-  Full coverage → PASS contribution
 
 ## Key Principles
 
-- Every requirement must be testable
-- Use Given-When-Then for clarity
-- Identify both presence and absence
-- Prioritize based on risk
-- Make recommendations actionable
+-  Every requirement must be testable
+-  Use Given-When-Then for clarity
+-  Identify both presence and absence
+-  Prioritize based on risk
+-  Make recommendations actionable

@@ -30,9 +30,9 @@ Assess non-functional requirements for a story and generate:
 
 If story_path or story file can't be found:
 
-- Still create assessment file with note: "Source story not found"
-- Set all selected NFRs to CONCERNS with notes: "Target unknown / evidence missing"
-- Continue with assessment to provide value
+-  Still create assessment file with note: "Source story not found"
+-  Set all selected NFRs to CONCERNS with notes: "Target unknown / evidence missing"
+-  Continue with assessment to provide value
 
 ### 1. Elicit Scope
 
@@ -57,9 +57,9 @@ Which NFRs should I assess? (Enter numbers or press Enter for default)
 
 Look for NFR requirements in:
 
-- Story acceptance criteria
-- `docs/architecture/*.md` files
-- `docs/technical-preferences.md`
+-  Story acceptance criteria
+-  `docs/architecture/*.md` files
+-  `docs/technical-preferences.md`
 
 **Interactive mode:** Ask for missing thresholds
 **Non-interactive mode:** Mark as CONCERNS with "Target unknown"
@@ -78,9 +78,9 @@ No security requirements found. Required auth method?
 
 For each selected NFR, check:
 
-- Is there evidence it's implemented?
-- Can we validate it?
-- Are there obvious gaps?
+-  Is there evidence it's implemented?
+-  Can we validate it?
+-  Are there obvious gaps?
 
 ### 4. Generate Outputs
 
@@ -91,26 +91,26 @@ Generate ONLY for NFRs actually assessed (no placeholders):
 ```yaml
 # Gate YAML (copy/paste):
 nfr_validation:
-  _assessed: [security, performance, reliability, maintainability]
-  security:
-    status: CONCERNS
-    notes: 'No rate limiting on auth endpoints'
-  performance:
-    status: PASS
-    notes: 'Response times < 200ms verified'
-  reliability:
-    status: PASS
-    notes: 'Error handling and retries implemented'
-  maintainability:
-    status: CONCERNS
-    notes: 'Test coverage at 65%, target is 80%'
+   _assessed: [security, performance, reliability, maintainability]
+   security:
+      status: CONCERNS
+      notes: "No rate limiting on auth endpoints"
+   performance:
+      status: PASS
+      notes: "Response times < 200ms verified"
+   reliability:
+      status: PASS
+      notes: "Error handling and retries implemented"
+   maintainability:
+      status: CONCERNS
+      notes: "Test coverage at 65%, target is 80%"
 ```
 
 ## Deterministic Status Rules
 
-- **FAIL**: Any selected NFR has critical gap or target clearly not met
-- **CONCERNS**: No FAILs, but any NFR is unknown/partial/missing evidence
-- **PASS**: All selected NFRs meet targets with evidence
+-  **FAIL**: Any selected NFR has critical gap or target clearly not met
+-  **CONCERNS**: No FAILs, but any NFR is unknown/partial/missing evidence
+-  **PASS**: All selected NFRs meet targets with evidence
 
 ## Quality Score Calculation
 
@@ -137,26 +137,27 @@ Reviewer: Quinn
 
 ## Summary
 
-- Security: CONCERNS - Missing rate limiting
-- Performance: PASS - Meets <200ms requirement
-- Reliability: PASS - Proper error handling
-- Maintainability: CONCERNS - Test coverage below target
+-  Security: CONCERNS - Missing rate limiting
+-  Performance: PASS - Meets <200ms requirement
+-  Reliability: PASS - Proper error handling
+-  Maintainability: CONCERNS - Test coverage below target
 
 ## Critical Issues
 
 1. **No rate limiting** (Security)
-   - Risk: Brute force attacks possible
-   - Fix: Add rate limiting middleware to auth endpoints
+
+   -  Risk: Brute force attacks possible
+   -  Fix: Add rate limiting middleware to auth endpoints
 
 2. **Test coverage 65%** (Maintainability)
-   - Risk: Untested code paths
-   - Fix: Add tests for uncovered branches
+   -  Risk: Untested code paths
+   -  Fix: Add tests for uncovered branches
 
 ## Quick Wins
 
-- Add rate limiting: ~2 hours
-- Increase test coverage: ~4 hours
-- Add performance monitoring: ~1 hour
+-  Add rate limiting: ~2 hours
+-  Increase test coverage: ~4 hours
+-  Add performance monitoring: ~1 hour
 ```
 
 ## Output 3: Story Update Line
@@ -181,82 +182,82 @@ Gate NFR block ready → paste into qa.qaLocation/gates/{epic}.{story}-{slug}.ym
 
 **PASS if:**
 
-- Authentication implemented
-- Authorization enforced
-- Input validation present
-- No hardcoded secrets
+-  Authentication implemented
+-  Authorization enforced
+-  Input validation present
+-  No hardcoded secrets
 
 **CONCERNS if:**
 
-- Missing rate limiting
-- Weak encryption
-- Incomplete authorization
+-  Missing rate limiting
+-  Weak encryption
+-  Incomplete authorization
 
 **FAIL if:**
 
-- No authentication
-- Hardcoded credentials
-- SQL injection vulnerabilities
+-  No authentication
+-  Hardcoded credentials
+-  SQL injection vulnerabilities
 
 ### Performance
 
 **PASS if:**
 
-- Meets response time targets
-- No obvious bottlenecks
-- Reasonable resource usage
+-  Meets response time targets
+-  No obvious bottlenecks
+-  Reasonable resource usage
 
 **CONCERNS if:**
 
-- Close to limits
-- Missing indexes
-- No caching strategy
+-  Close to limits
+-  Missing indexes
+-  No caching strategy
 
 **FAIL if:**
 
-- Exceeds response time limits
-- Memory leaks
-- Unoptimized queries
+-  Exceeds response time limits
+-  Memory leaks
+-  Unoptimized queries
 
 ### Reliability
 
 **PASS if:**
 
-- Error handling present
-- Graceful degradation
-- Retry logic where needed
+-  Error handling present
+-  Graceful degradation
+-  Retry logic where needed
 
 **CONCERNS if:**
 
-- Some error cases unhandled
-- No circuit breakers
-- Missing health checks
+-  Some error cases unhandled
+-  No circuit breakers
+-  Missing health checks
 
 **FAIL if:**
 
-- No error handling
-- Crashes on errors
-- No recovery mechanisms
+-  No error handling
+-  Crashes on errors
+-  No recovery mechanisms
 
 ### Maintainability
 
 **PASS if:**
 
-- Test coverage meets target
-- Code well-structured
-- Documentation present
+-  Test coverage meets target
+-  Code well-structured
+-  Documentation present
 
 **CONCERNS if:**
 
-- Test coverage below target
-- Some code duplication
-- Missing documentation
+-  Test coverage below target
+-  Some code duplication
+-  Missing documentation
 
 **FAIL if:**
 
-- No tests
-- Highly coupled code
-- No documentation
+-  No tests
+-  Highly coupled code
+-  No documentation
 
 ## Quick Reference
 
@@ -264,41 +265,41 @@ Gate NFR block ready → paste into qa.qaLocation/gates/{epic}.{story}-{slug}.ym
 
 ```yaml
 security:
-  - Authentication mechanism
-  - Authorization checks
-  - Input validation
-  - Secret management
-  - Rate limiting
+   - Authentication mechanism
+   - Authorization checks
+   - Input validation
+   - Secret management
+   - Rate limiting
 
 performance:
-  - Response times
-  - Database queries
-  - Caching usage
-  - Resource consumption
+   - Response times
+   - Database queries
+   - Caching usage
+   - Resource consumption
 
 reliability:
-  - Error handling
-  - Retry logic
-  - Circuit breakers
-  - Health checks
-  - Logging
+   - Error handling
+   - Retry logic
+   - Circuit breakers
+   - Health checks
+   - Logging
 
 maintainability:
-  - Test coverage
-  - Code structure
-  - Documentation
-  - Dependencies
+   - Test coverage
+   - Code structure
+   - Documentation
+   - Dependencies
 ```
 
 ## Key Principles
 
-- Focus on the core four NFRs by default
-- Quick assessment, not deep analysis
-- Gate-ready output format
-- Brief, actionable findings
-- Skip what doesn't apply
-- Deterministic status rules for consistency
-- Unknown targets → CONCERNS, not guesses
+-  Focus on the core four NFRs by default
+-  Quick assessment, not deep analysis
+-  Gate-ready output format
+-  Brief, actionable findings
+-  Skip what doesn't apply
+-  Deterministic status rules for consistency
+-  Unknown targets → CONCERNS, not guesses
 
 ---
 
@@ -327,19 +328,19 @@ Use these when assessing beyond the core four.
 
 ```yaml
 performance_deep_dive:
-  response_times:
-    p50: 45ms
-    p95: 180ms
-    p99: 350ms
-  database:
-    slow_queries: 2
-    missing_indexes: ['users.email', 'orders.user_id']
-  caching:
-    hit_rate: 0%
-    recommendation: 'Add Redis for session data'
-  load_test:
-    max_rps: 150
-    breaking_point: 200 rps
+   response_times:
+      p50: 45ms
+      p95: 180ms
+      p99: 350ms
+   database:
+      slow_queries: 2
+      missing_indexes: ["users.email", "orders.user_id"]
+   caching:
+      hit_rate: 0%
+      recommendation: "Add Redis for session data"
+   load_test:
+      max_rps: 150
+      breaking_point: 200 rps
 ```
 
 </details>

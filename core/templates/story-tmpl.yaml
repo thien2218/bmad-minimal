@@ -27,8 +27,8 @@ sections:
     type: choice
     choices: [Draft, Approved, InProgress, Review, Done]
     instruction: Select the current status of the story
-    owner: scrum-master
-    editors: [scrum-master, dev-agent]
+    owner: product-development-master
+    editors: [product-development-master, developer]
 
   - id: story
     title: Story
@@ -39,16 +39,16 @@ sections:
       **so that** {{benefit}}
     instruction: Define the user story using the standard format with role, action, and benefit
     elicit: true
-    owner: scrum-master
-    editors: [scrum-master]
+    owner: product-development-master
+    editors: [product-development-master]
 
   - id: acceptance-criteria
     title: Acceptance Criteria
     type: numbered-list
     instruction: Copy the acceptance criteria numbered list from the epic file
     elicit: true
-    owner: scrum-master
-    editors: [scrum-master]
+    owner: product-development-master
+    editors: [product-development-master]
 
   - id: tasks-subtasks
     title: Tasks / Subtasks
@@ -64,8 +64,8 @@ sections:
       - [ ] Task 3 (AC: # if applicable)
         - [ ] Subtask 3.1...
     elicit: true
-    owner: scrum-master
-    editors: [scrum-master, dev-agent]
+    owner: product-development-master
+    editors: [product-development-master, developer]
 
   - id: dev-notes
     title: Dev Notes
@@ -76,8 +76,8 @@ sections:
       - If there were important notes from previous story that are relevant to this one, include them here
       - Put enough information in this section so that the dev agent should NEVER need to read the architecture documents, these notes along with the tasks and subtasks must give the Dev Agent the complete context it needs to comprehend with the least amount of overhead the information to complete the story, meeting all AC and completing all tasks+subtasks
     elicit: true
-    owner: scrum-master
-    editors: [scrum-master]
+    owner: product-development-master
+    editors: [product-development-master]
     sections:
       - id: testing-standards
         title: Testing
@@ -88,47 +88,47 @@ sections:
           - Testing frameworks and patterns to use
           - Any specific testing requirements for this story
         elicit: true
-        owner: scrum-master
-        editors: [scrum-master]
+        owner: product-development-master
+        editors: [product-development-master]
 
   - id: change-log
     title: Change Log
     type: table
     columns: [Date, Version, Description, Author]
     instruction: Track changes made to this story document
-    owner: scrum-master
-    editors: [scrum-master, dev-agent, qa-agent]
+    owner: product-development-master
+    editors: [product-development-master, developer, qa-agent]
 
-  - id: dev-agent-record
+  - id: developer-record
     title: Dev Agent Record
     instruction: This section is populated by the development agent during implementation
-    owner: dev-agent
-    editors: [dev-agent]
+    owner: developer
+    editors: [developer]
     sections:
       - id: agent-model
         title: Agent Model Used
         template: "{{agent_model_name_version}}"
         instruction: Record the specific AI agent model and version used for development
-        owner: dev-agent
-        editors: [dev-agent]
+        owner: developer
+        editors: [developer]
 
       - id: debug-log-references
         title: Debug Log References
         instruction: Reference any debug logs or traces generated during development
-        owner: dev-agent
-        editors: [dev-agent]
+        owner: developer
+        editors: [developer]
 
       - id: completion-notes
         title: Completion Notes List
         instruction: Notes about the completion of tasks and any issues encountered
-        owner: dev-agent
-        editors: [dev-agent]
+        owner: developer
+        editors: [developer]
 
       - id: file-list
         title: File List
         instruction: List all files created, modified, or affected during story implementation
-        owner: dev-agent
-        editors: [dev-agent]
+        owner: developer
+        editors: [developer]
 
   - id: qa-results
     title: QA Results

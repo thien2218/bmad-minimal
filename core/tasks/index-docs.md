@@ -13,42 +13,46 @@ You are now operating as a Documentation Indexer. Your goal is to ensure all doc
 ### Required Steps
 
 1. First, locate and scan:
-   - The `docs/` directory and all subdirectories
-   - The existing `docs/index.md` file (create if absent)
-   - All markdown (`.md`) and text (`.txt`) files in the documentation structure
-   - Note the folder structure for hierarchical organization
+
+   -  The `docs/` directory and all subdirectories
+   -  The existing `docs/index.md` file (create if absent)
+   -  All markdown (`.md`) and text (`.txt`) files in the documentation structure
+   -  Note the folder structure for hierarchical organization
 
 2. For the existing `docs/index.md`:
-   - Parse current entries
-   - Note existing file references and descriptions
-   - Identify any broken links or missing files
-   - Keep track of already-indexed content
-   - Preserve existing folder sections
+
+   -  Parse current entries
+   -  Note existing file references and descriptions
+   -  Identify any broken links or missing files
+   -  Keep track of already-indexed content
+   -  Preserve existing folder sections
 
 3. For each documentation file found:
-   - Extract the title (from first heading or filename)
-   - Generate a brief description by analyzing the content
-   - Create a relative markdown link to the file
-   - Check if it's already in the index
-   - Note which folder it belongs to (if in a subfolder)
-   - If missing or outdated, prepare an update
+
+   -  Extract the title (from first heading or filename)
+   -  Generate a brief description by analyzing the content
+   -  Create a relative markdown link to the file
+   -  Check if it's already in the index
+   -  Note which folder it belongs to (if in a subfolder)
+   -  If missing or outdated, prepare an update
 
 4. For any missing or non-existent files found in index:
-   - Present a list of all entries that reference non-existent files
-   - For each entry:
-     - Show the full entry details (title, path, description)
-     - Ask for explicit confirmation before removal
-     - Provide option to update the path if file was moved
-     - Log the decision (remove/update/keep) for final report
+
+   -  Present a list of all entries that reference non-existent files
+   -  For each entry:
+      -  Show the full entry details (title, path, description)
+      -  Ask for explicit confirmation before removal
+      -  Provide option to update the path if file was moved
+      -  Log the decision (remove/update/keep) for final report
 
 5. Update `docs/index.md`:
-   - Maintain existing structure and organization
-   - Create level 2 sections (`##`) for each subfolder
-   - List root-level documents first
-   - Add missing entries with descriptions
-   - Update outdated entries
-   - Remove only entries that were confirmed for removal
-   - Ensure consistent formatting throughout
+   -  Maintain existing structure and organization
+   -  Create level 2 sections (`##`) for each subfolder
+   -  List root-level documents first
+   -  Add missing entries with descriptions
+   -  Update outdated entries
+   -  Remove only entries that were confirmed for removal
+   -  Ensure consistent formatting throughout
 
 ### Index Structure Format
 
@@ -109,8 +113,8 @@ Brief description of the document's purpose and contents.
 7. Report any broken links or inconsistencies found
 8. Allow path updates for moved files before considering removal
 9. Create folder sections using level 2 headings (`##`)
-10. Sort folders alphabetically, with root documents listed first
-11. Within each section, sort documents alphabetically by title
+10.   Sort folders alphabetically, with root documents listed first
+11.   Within each section, sort documents alphabetically by title
 
 ### Process Output
 
@@ -120,9 +124,9 @@ The task will provide:
 2. List of newly indexed files (organized by folder)
 3. List of updated entries
 4. List of entries presented for removal and their status:
-   - Confirmed removals
-   - Updated paths
-   - Kept despite missing file
+   -  Confirmed removals
+   -  Updated paths
+   -  Kept despite missing file
 5. Any new folders discovered
 6. Any other issues or inconsistencies found
 
@@ -154,9 +158,10 @@ For each file referenced in the index but not found in the filesystem:
 ### Special Cases
 
 1. **Sharded Documents**: If a folder contains an `index.md` file, treat it as a sharded document:
-   - Use the folder's `index.md` title as the section title
-   - List the folder's documents as subsections
-   - Note in the description that this is a multi-part document
+
+   -  Use the folder's `index.md` title as the section title
+   -  List the folder's documents as subsections
+   -  Note in the description that this is a multi-part document
 
 2. **README files**: Convert `README.md` to more descriptive titles based on content
 

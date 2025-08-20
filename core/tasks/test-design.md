@@ -8,10 +8,10 @@ Create comprehensive test scenarios with appropriate test level recommendations 
 
 ```yaml
 required:
-  - story_id: '{epic}.{story}' # e.g., "1.3"
-  - story_path: '{devStoryLocation}/{epic}.{story}.*.md' # Path from core-config.yaml
-  - story_title: '{title}' # If missing, derive from story file H1
-  - story_slug: '{slug}' # If missing, derive from title (lowercase, hyphenated)
+   - story_id: "{epic}.{story}" # e.g., "1.3"
+   - story_path: "{devStoryLocation}/{epic}.{story}.*.md" # Path from core-config.yaml
+   - story_title: "{title}" # If missing, derive from story file H1
+   - story_slug: "{slug}" # If missing, derive from title (lowercase, hyphenated)
 ```
 
 ## Purpose
@@ -22,8 +22,8 @@ Design a complete test strategy that identifies what to test, at which level (un
 
 ```yaml
 data:
-  - test-levels-framework.md # Unit/Integration/E2E decision criteria
-  - test-priorities-matrix.md # P0/P1/P2/P3 classification system
+   - test-levels-framework.md # Unit/Integration/E2E decision criteria
+   - test-priorities-matrix.md # P0/P1/P2/P3 classification system
 ```
 
 ## Process
@@ -32,10 +32,10 @@ data:
 
 Break down each acceptance criterion into testable scenarios. For each AC:
 
-- Identify the core functionality to test
-- Determine data variations needed
-- Consider error conditions
-- Note edge cases
+-  Identify the core functionality to test
+-  Determine data variations needed
+-  Consider error conditions
+-  Note edge cases
 
 ### 2. Apply Test Level Framework
 
@@ -43,9 +43,9 @@ Break down each acceptance criterion into testable scenarios. For each AC:
 
 Quick rules:
 
-- **Unit**: Pure logic, algorithms, calculations
-- **Integration**: Component interactions, DB operations
-- **E2E**: Critical user journeys, compliance
+-  **Unit**: Pure logic, algorithms, calculations
+-  **Integration**: Component interactions, DB operations
+-  **E2E**: Critical user journeys, compliance
 
 ### 3. Assign Priorities
 
@@ -53,10 +53,10 @@ Quick rules:
 
 Quick priority assignment:
 
-- **P0**: Revenue-critical, security, compliance
-- **P1**: Core user journeys, frequently used
-- **P2**: Secondary features, admin functions
-- **P3**: Nice-to-have, rarely used
+-  **P0**: Revenue-critical, security, compliance
+-  **P1**: Core user journeys, frequently used
+-  **P2**: Secondary features, admin functions
+-  **P3**: Nice-to-have, rarely used
 
 ### 4. Design Test Scenarios
 
@@ -64,23 +64,23 @@ For each identified test need, create:
 
 ```yaml
 test_scenario:
-  id: '{epic}.{story}-{LEVEL}-{SEQ}'
-  requirement: 'AC reference'
-  priority: P0|P1|P2|P3
-  level: unit|integration|e2e
-  description: 'What is being tested'
-  justification: 'Why this level was chosen'
-  mitigates_risks: ['RISK-001'] # If risk profile exists
+   id: "{epic}.{story}-{LEVEL}-{SEQ}"
+   requirement: "AC reference"
+   priority: P0|P1|P2|P3
+   level: unit|integration|e2e
+   description: "What is being tested"
+   justification: "Why this level was chosen"
+   mitigates_risks: ["RISK-001"] # If risk profile exists
 ```
 
 ### 5. Validate Coverage
 
 Ensure:
 
-- Every AC has at least one test
-- No duplicate coverage across levels
-- Critical paths have multiple levels
-- Risk mitigations are addressed
+-  Every AC has at least one test
+-  No duplicate coverage across levels
+-  Critical paths have multiple levels
+-  Risk mitigations are addressed
 
 ## Outputs
 
@@ -96,11 +96,11 @@ Designer: Quinn (Test Architect)
 
 ## Test Strategy Overview
 
-- Total test scenarios: X
-- Unit tests: Y (A%)
-- Integration tests: Z (B%)
-- E2E tests: W (C%)
-- Priority distribution: P0: X, P1: Y, P2: Z
+-  Total test scenarios: X
+-  Unit tests: Y (A%)
+-  Integration tests: Z (B%)
+-  E2E tests: W (C%)
+-  Priority distribution: P0: X, P1: Y, P2: Z
 
 ## Test Scenarios by Acceptance Criteria
 
@@ -135,16 +135,16 @@ Generate for inclusion in quality gate:
 
 ```yaml
 test_design:
-  scenarios_total: X
-  by_level:
-    unit: Y
-    integration: Z
-    e2e: W
-  by_priority:
-    p0: A
-    p1: B
-    p2: C
-  coverage_gaps: [] # List any ACs without tests
+   scenarios_total: X
+   by_level:
+      unit: Y
+      integration: Z
+      e2e: W
+   by_priority:
+      p0: A
+      p1: B
+      p2: C
+   coverage_gaps: [] # List any ACs without tests
 ```
 
 ### Output 3: Trace References
@@ -160,17 +160,17 @@ P0 tests identified: {count}
 
 Before finalizing, verify:
 
-- [ ] Every AC has test coverage
-- [ ] Test levels are appropriate (not over-testing)
-- [ ] No duplicate coverage across levels
-- [ ] Priorities align with business risk
-- [ ] Test IDs follow naming convention
-- [ ] Scenarios are atomic and independent
+-  [ ] Every AC has test coverage
+-  [ ] Test levels are appropriate (not over-testing)
+-  [ ] No duplicate coverage across levels
+-  [ ] Priorities align with business risk
+-  [ ] Test IDs follow naming convention
+-  [ ] Scenarios are atomic and independent
 
 ## Key Principles
 
-- **Shift left**: Prefer unit over integration, integration over E2E
-- **Risk-based**: Focus on what could go wrong
-- **Efficient coverage**: Test once at the right level
-- **Maintainability**: Consider long-term test maintenance
-- **Fast feedback**: Quick tests run first
+-  **Shift left**: Prefer unit over integration, integration over E2E
+-  **Risk-based**: Focus on what could go wrong
+-  **Efficient coverage**: Test once at the right level
+-  **Maintainability**: Consider long-term test maintenance
+-  **Fast feedback**: Quick tests run first

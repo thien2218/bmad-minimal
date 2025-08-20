@@ -4,10 +4,10 @@
 
 ## Purpose
 
-- Provide optional reflective and brainstorming actions to enhance content quality
-- Enable deeper exploration of ideas through structured elicitation techniques
-- Support iterative refinement through multiple analytical perspectives
-- Usable during template-driven document creation or any chat conversation
+-  Provide optional reflective and brainstorming actions to enhance content quality
+-  Enable deeper exploration of ideas through structured elicitation techniques
+-  Support iterative refinement through multiple analytical perspectives
+-  Usable during template-driven document creation or any chat conversation
 
 ## Usage Scenarios
 
@@ -24,9 +24,9 @@ After outputting a section during document creation:
 
 User can request advanced elicitation on any agent output:
 
-- User says "do advanced elicitation" or similar
-- Agent selects 9 relevant methods for the context
-- Same simple 0-9 selection process
+-  User says "do advanced elicitation" or similar
+-  Agent selects 9 relevant methods for the context
+-  Same simple 0-9 selection process
 
 ## Task Instructions
 
@@ -34,25 +34,27 @@ User can request advanced elicitation on any agent output:
 
 **Context Analysis**: Before presenting options, analyze:
 
-- **Content Type**: Technical specs, user stories, architecture, requirements, etc.
-- **Complexity Level**: Simple, moderate, or complex content
-- **Stakeholder Needs**: Who will use this information
-- **Risk Level**: High-impact decisions vs routine items
-- **Creative Potential**: Opportunities for innovation or alternatives
+-  **Content Type**: Technical specs, user stories, architecture, requirements, etc.
+-  **Complexity Level**: Simple, moderate, or complex content
+-  **Stakeholder Needs**: Who will use this information
+-  **Risk Level**: High-impact decisions vs routine items
+-  **Creative Potential**: Opportunities for innovation or alternatives
 
 **Method Selection Strategy**:
 
 1. **Always Include Core Methods** (choose 3-4):
-   - Expand or Contract for Audience
-   - Critique and Refine
-   - Identify Potential Risks
-   - Assess Alignment with Goals
+
+   -  Expand or Contract for Audience
+   -  Critique and Refine
+   -  Identify Potential Risks
+   -  Assess Alignment with Goals
 
 2. **Context-Specific Methods** (choose 4-5):
-   - **Technical Content**: Tree of Thoughts, ReWOO, Meta-Prompting
-   - **User-Facing Content**: Agile Team Perspective, Stakeholder Roundtable
-   - **Creative Content**: Innovation Tournament, Escape Room Challenge
-   - **Strategic Content**: Red Team vs Blue Team, Hindsight Reflection
+
+   -  **Technical Content**: Tree of Thoughts, ReWOO, Meta-Prompting
+   -  **User-Facing Content**: Agile Team Perspective, Stakeholder Roundtable
+   -  **Creative Content**: Innovation Tournament, Escape Room Challenge
+   -  **Strategic Content**: Red Team vs Blue Team, Hindsight Reflection
 
 3. **Always Include**: "Proceed / No Further Actions" as option 9
 
@@ -65,18 +67,18 @@ When invoked after outputting a section:
 2. **Explain Visual Elements**: If the section contains diagrams, explain them briefly before offering elicitation options
 
 3. **Clarify Scope Options**: If the section contains multiple distinct items, inform the user they can apply elicitation actions to:
-   - The entire section as a whole
-   - Individual items within the section (specify which item when selecting an action)
+   -  The entire section as a whole
+   -  Individual items within the section (specify which item when selecting an action)
 
 ### 3. Present Elicitation Options
 
 **Review Request Process:**
 
-- Ask the user to review the drafted section
-- In the SAME message, inform them they can suggest direct changes OR select an elicitation method
-- Present 9 intelligently selected methods (0-8) plus "Proceed" (9)
-- Keep descriptions short - just the method name
-- Await simple numeric selection
+-  Ask the user to review the drafted section
+-  In the SAME message, inform them they can suggest direct changes OR select an elicitation method
+-  Present 9 intelligently selected methods (0-8) plus "Proceed" (9)
+-  Keep descriptions short - just the method name
+-  Await simple numeric selection
 
 **Action List Presentation Format:**
 
@@ -98,9 +100,9 @@ Choose a number (0-8) or 9 to proceed:
 
 **Response Handling:**
 
-- **Numbers 0-8**: Execute the selected method, then re-offer the choice
-- **Number 9**: Proceed to next section or continue conversation
-- **Direct Feedback**: Apply user's suggested changes and continue
+-  **Numbers 0-8**: Execute the selected method, then re-offer the choice
+-  **Number 9**: Proceed to next section or continue conversation
+-  **Direct Feedback**: Apply user's suggested changes and continue
 
 ### 4. Method Execution Framework
 
@@ -113,7 +115,7 @@ Choose a number (0-8) or 9 to proceed:
 
 **Execution Guidelines:**
 
-- **Be Concise**: Focus on actionable insights, not lengthy explanations
-- **Stay Relevant**: Tie all elicitation back to the specific content being analyzed
-- **Identify Personas**: For multi-persona methods, clearly identify which viewpoint is speaking
-- **Maintain Flow**: Keep the process moving efficiently
+-  **Be Concise**: Focus on actionable insights, not lengthy explanations
+-  **Stay Relevant**: Tie all elicitation back to the specific content being analyzed
+-  **Identify Personas**: For multi-persona methods, clearly identify which viewpoint is speaking
+-  **Maintain Flow**: Keep the process moving efficiently
