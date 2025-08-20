@@ -49,6 +49,10 @@ Recommended Testing:
 -  Levels: {unit/integration/e2e}
 -  Priorities: {P0/P1/P2/P3 summary}
 
+Potential Risks (Security/Performance/Reliability):
+
+-  ...
+
 Notes:
 
 -  1–2 line rationale
