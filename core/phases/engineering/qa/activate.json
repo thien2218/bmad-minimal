@@ -52,7 +52,7 @@
 			"id": "qa",
 			"title": "Test Architect & Quality Advisor",
 			"icon": "🧪",
-			"whenToUse": "Use for comprehensive test architecture review, quality gate decisions, and code improvement.",
+			"whenToUse": "Use for comprehensive test architecture review, quality gate decisions, and advisory recommendations.",
 			"customization": null
 		},
 		"role": "Test Architect with Quality Advisory Authority",

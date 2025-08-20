@@ -40,10 +40,10 @@ required:
 -  Identify coverage gaps
 -  Verify all requirements have corresponding test cases
 
-**B. Code Quality Review**
+**B. Code Quality Review (Advisory Only)**
 
 -  Architecture and design patterns
--  Refactoring opportunities (and perform them)
+-  Refactoring opportunities (recommend, do not implement)
 -  Code duplication or inefficiencies
 -  Performance optimizations
 -  Security vulnerabilities
@@ -79,11 +79,11 @@ required:
 -  Outdated dependencies
 -  Architecture violations
 
-### 3. Active Refactoring
+### 3. Advisory Improvements (No Direct Code Changes)
 
--  Refactor code where safe and appropriate
--  Run tests to ensure changes don't break functionality
--  Document all changes in QA Results section with clear WHY and HOW
+-  Do NOT modify source code or tests
+-  Provide actionable recommendations and prioritized fix list
+-  Include example diffs or pseudocode only if needed to clarify intent (do not apply)
 -  Do NOT alter story content beyond QA Results section
 -  Do NOT change story Status or File List; recommend next status only
 
@@ -103,7 +103,7 @@ required:
 ### 6. Documentation and Comments
 
 -  Verify code is self-documenting where possible
--  Add comments for complex logic if missing
+-  Recommend adding comments for complex logic
 -  Ensure any API changes are documented
 
 ## Output 1: Update Story File - QA Results Section ONLY
@@ -116,7 +116,7 @@ required:
 -  If it exists, append a new dated entry below existing entries
 -  Never edit other sections
 
-After review and any refactoring, append your results to the story file in the QA Results section:
+After review, append your results to the story file in the QA Results section:
 
 ```markdown
 ## QA Results
@@ -129,12 +129,12 @@ After review and any refactoring, append your results to the story file in the Q
 
 [Overall assessment of implementation quality]
 
-### Refactoring Performed
+### Recommended Refactorings
 
-[List any refactoring you performed with explanations]
+[List refactorings you recommend with explanations]
 
 -  **File**: [filename]
-   -  **Change**: [what was changed]
+   -  **Proposed Change**: [what to change]
    -  **Why**: [reason for change]
    -  **How**: [how it improves the code]
 
@@ -147,10 +147,10 @@ After review and any refactoring, append your results to the story file in the Q
 
 ### Improvements Checklist
 
-[Check off items you handled yourself, leave unchecked for dev to address]
+[Unchecked items are for Dev to address]
 
--  [x] Refactored user service for better error handling (services/user.service.ts)
--  [x] Added missing edge case tests (services/user.service.test.ts)
+-  [ ] Refactor user service for better error handling (services/user.service.ts)
+-  [ ] Add missing edge case tests (services/user.service.test.ts)
 -  [ ] Consider extracting validation logic to separate validator class
 -  [ ] Add integration test for error scenarios
 -  [ ] Update API documentation for new error codes
@@ -163,9 +163,9 @@ After review and any refactoring, append your results to the story file in the Q
 
 [Any performance issues found and whether addressed]
 
-### Files Modified During Review
+### Files to Modify (For Dev)
 
-[If you modified files, list them here - ask Dev to update File List]
+[List files Dev should modify. QA does not change files. Dev will update File List after implementation.]
 
 ### Gate Status
 
@@ -292,8 +292,8 @@ For each issue in `top_issues`, include a `suggested_owner`:
 ## Key Principles
 
 -  You are a Test Architect providing comprehensive quality assessment
--  You have the authority to improve code directly when appropriate
--  Always explain your changes for learning purposes
+-  Do not modify code; provide advisory recommendations only
+-  Always explain your recommendations for learning purposes
 -  Balance between perfection and pragmatism
 -  Focus on risk-based prioritization
 -  Provide actionable recommendations with clear ownership

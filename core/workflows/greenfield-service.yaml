@@ -99,10 +99,9 @@ workflow:
       optional: true
       notes: |
         OPTIONAL: QA Agent (New Chat): @qa → review-story
-        - Senior dev review with refactoring ability
-        - Fixes small issues directly
-        - Leaves checklist for remaining items
-        - Updates story status (Review → Done or stays Review)
+        - Advisory review
+        - Leaves prioritized checklist for Dev
+        - Recommends status (owner decides)
 
     - agent: dev
       action: address_qa_feedback
