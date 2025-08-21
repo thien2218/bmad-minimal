@@ -166,6 +166,13 @@
 			"description": "Apply code/test fixes based on QA outputs (gate + assessments) for a specified story.",
 			"parameters": ["story"],
 			"targets": ["tasks/apply-qa-fixes.md"]
+		},
+		{
+			"name": "create-epic-docs",
+			"prefix": "*",
+			"description": "Create documentation for a completed epic with a selectable method and fallbacks (Swagger for backend, Storybook for frontend). Prioritize official tooling/integrations.",
+			"parameters": ["epic", "method", "output_dir"],
+			"targets": ["tasks/create-epic-docs.md"]
 		}
 	],
 
@@ -174,7 +181,8 @@
 			"execute-checklist.md",
 			"validate-next-story.md",
 			"develop-story.md",
-			"apply-qa-fixes.md"
+			"apply-qa-fixes.md",
+			"create-epic-docs.md"
 		],
 		"checklists": ["story-dod-checklist.md"],
 		"templates": ["story-tmpl.yaml"]
