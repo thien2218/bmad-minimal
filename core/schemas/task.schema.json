@@ -1,0 +1,458 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://bmad.ai/schemas/task.schema.json",
+  "title": "BMAD Task Schema",
+  "description": "Schema for task YAML files used by BMAD agents",
+  "type": "object",
+  "required": ["id", "title", "version", "purpose", "process"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this schema file (for validation)",
+      "const": "../schemas/task.schema.json"
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the task",
+      "pattern": "^[a-z0-9-]+$",
+      "examples": ["develop-story", "review-story", "create-doc"]
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable title of the task",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version of the task",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "examples": ["1.0.0", "2.1.3"]
+    },
+    "purpose": {
+      "type": "string",
+      "description": "Brief description of what this task accomplishes"
+    },
+    "category": {
+      "type": "string",
+      "description": "Category of the task",
+      "enum": ["development", "quality", "documentation", "planning", "deployment", "maintenance", "other"]
+    },
+    "agent": {
+      "type": "string",
+      "description": "Primary agent responsible for this task",
+      "enum": ["dev", "qa", "pdm", "any"],
+      "default": "any"
+    },
+    "inputs": {
+      "type": "object",
+      "description": "Input parameters for the task",
+      "properties": {
+        "required": {
+          "type": "array",
+          "description": "Required input parameters",
+          "items": {
+            "type": "object",
+            "required": ["name", "type", "description"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[a-z_][a-z0-9_]*$"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["string", "number", "boolean", "array", "object", "path", "epic_id", "story_id"]
+              },
+              "description": {
+                "type": "string"
+              },
+              "pattern": {
+                "type": "string",
+                "description": "Regex pattern for validation (if type is string)"
+              },
+              "default": {
+                "description": "Default value if not provided"
+              },
+              "examples": {
+                "type": "array",
+                "items": {}
+              }
+            }
+          }
+        },
+        "optional": {
+          "type": "array",
+          "description": "Optional input parameters",
+          "items": {
+            "$ref": "#/properties/inputs/properties/required/items"
+          }
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "description": "Output artifacts and results",
+      "properties": {
+        "artifacts": {
+          "type": "array",
+          "description": "Files or resources produced",
+          "items": {
+            "type": "object",
+            "required": ["name", "type", "path"],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["file", "directory", "report", "gate", "assessment"]
+              },
+              "path": {
+                "type": "string",
+                "description": "Path pattern where artifact is created"
+              },
+              "format": {
+                "type": "string",
+                "enum": ["yaml", "json", "markdown", "html", "text", "binary"]
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "updates": {
+          "type": "array",
+          "description": "Files or sections updated",
+          "items": {
+            "type": "object",
+            "required": ["target", "sections"],
+            "properties": {
+              "target": {
+                "type": "string",
+                "description": "File path pattern to update"
+              },
+              "sections": {
+                "type": "array",
+                "description": "Sections within the file that can be updated",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "restrictions": {
+                "type": "string",
+                "description": "Any restrictions on updates"
+              }
+            }
+          }
+        }
+      }
+    },
+    "prerequisites": {
+      "type": "object",
+      "description": "Conditions that must be met before task execution",
+      "properties": {
+        "status": {
+          "type": "array",
+          "description": "Required status values",
+          "items": {
+            "type": "object",
+            "properties": {
+              "entity": {
+                "type": "string",
+                "enum": ["story", "epic", "project"]
+              },
+              "field": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "operator": {
+                "type": "string",
+                "enum": ["equals", "not_equals", "in", "not_in"],
+                "default": "equals"
+              }
+            }
+          }
+        },
+        "files": {
+          "type": "array",
+          "description": "Files that must exist",
+          "items": {
+            "type": "string"
+          }
+        },
+        "commands": {
+          "type": "array",
+          "description": "Commands that must succeed",
+          "items": {
+            "type": "object",
+            "properties": {
+              "command": {
+                "type": "string"
+              },
+              "expected_exit_code": {
+                "type": "number",
+                "default": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "process": {
+      "type": "object",
+      "description": "The execution process",
+      "required": ["steps"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "description": "Execution mode",
+          "enum": ["sequential", "parallel", "conditional"],
+          "default": "sequential"
+        },
+        "steps": {
+          "type": "array",
+          "description": "Process steps to execute",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "action"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Z0-9-]+$"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "action": {
+                "type": "object",
+                "description": "Action to perform",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["command", "file_operation", "validation", "decision", "subtask", "elicit", "analysis"]
+                  },
+                  "command": {
+                    "type": "string",
+                    "description": "Command to execute (if type is command)"
+                  },
+                  "operation": {
+                    "type": "string",
+                    "description": "File operation (if type is file_operation)",
+                    "enum": ["create", "update", "delete", "copy", "move", "read"]
+                  },
+                  "target": {
+                    "type": "string",
+                    "description": "Target file or resource"
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Content to write or template to use"
+                  },
+                  "subtask": {
+                    "type": "string",
+                    "description": "Reference to another task to execute"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "Prompt for user elicitation"
+                  },
+                  "options": {
+                    "type": "array",
+                    "description": "Options for user selection",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "validation": {
+                    "type": "object",
+                    "description": "Validation rules",
+                    "properties": {
+                      "type": {
+                        "type": "string"
+                      },
+                      "pattern": {
+                        "type": "string"
+                      },
+                      "required": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              },
+              "condition": {
+                "type": "object",
+                "description": "Condition for step execution",
+                "properties": {
+                  "if": {
+                    "type": "string",
+                    "description": "Condition expression"
+                  },
+                  "then": {
+                    "type": "string",
+                    "description": "Step to execute if true"
+                  },
+                  "else": {
+                    "type": "string",
+                    "description": "Step to execute if false"
+                  }
+                }
+              },
+              "retry": {
+                "type": "object",
+                "description": "Retry configuration",
+                "properties": {
+                  "max_attempts": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 10
+                  },
+                  "delay_seconds": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                }
+              },
+              "on_failure": {
+                "type": "string",
+                "description": "Action on failure",
+                "enum": ["halt", "continue", "skip", "rollback"]
+              },
+              "elicit": {
+                "type": "boolean",
+                "description": "Whether this step requires user interaction",
+                "default": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "description": "Task dependencies",
+      "properties": {
+        "tasks": {
+          "type": "array",
+          "description": "Other tasks this depends on",
+          "items": {
+            "type": "string"
+          }
+        },
+        "checklists": {
+          "type": "array",
+          "description": "Checklists this task uses",
+          "items": {
+            "type": "string"
+          }
+        },
+        "templates": {
+          "type": "array",
+          "description": "Templates this task uses",
+          "items": {
+            "type": "string"
+          }
+        },
+        "data": {
+          "type": "array",
+          "description": "Data files this task references",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "blocking_conditions": {
+      "type": "array",
+      "description": "Conditions that cause task to halt",
+      "items": {
+        "type": "object",
+        "properties": {
+          "condition": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["error", "critical"],
+            "default": "error"
+          }
+        }
+      }
+    },
+    "completion": {
+      "type": "object",
+      "description": "Completion criteria",
+      "properties": {
+        "checklist": {
+          "type": "string",
+          "description": "Reference to completion checklist"
+        },
+        "criteria": {
+          "type": "array",
+          "description": "Explicit completion criteria",
+          "items": {
+            "type": "string"
+          }
+        },
+        "validations": {
+          "type": "array",
+          "description": "Validation commands to run",
+          "items": {
+            "type": "object",
+            "properties": {
+              "command": {
+                "type": "string"
+              },
+              "expected_output": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata",
+      "properties": {
+        "author": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date"
+        },
+        "lastModified": {
+          "type": "string",
+          "format": "date"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "complexity": {
+          "type": "string",
+          "enum": ["simple", "moderate", "complex"],
+          "default": "moderate"
+        },
+        "estimated_duration": {
+          "type": "string",
+          "description": "Estimated duration (e.g., '30m', '2h')"
+        }
+      }
+    }
+  }
+}
