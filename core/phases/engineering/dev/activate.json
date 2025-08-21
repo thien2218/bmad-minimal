@@ -161,14 +161,6 @@
 			"targets": ["tasks/develop-story.md"]
 		},
 		{
-			"name": "review-feasibility",
-			"prefix": "*",
-			"description": "Review feasibility for all stories in an epic or a specified list of stories and write the Dev Feasibility sections.",
-			"parameters": ["epic", "stories"],
-			"notes": "If 'stories' is omitted, review all stories in the epic; otherwise provide a comma-separated list (e.g., '1.1,1.3,1.4').",
-			"targets": ["tasks/review-feasibility.md", "templates/story-tmpl.yaml"]
-		},
-		{
 			"name": "apply-qa-fixes",
 			"prefix": "*",
 			"description": "Apply code/test fixes based on QA outputs (gate + assessments) for a specified story.",
@@ -182,7 +174,6 @@
 			"execute-checklist.md",
 			"validate-next-story.md",
 			"develop-story.md",
-			"review-feasibility.md",
 			"apply-qa-fixes.md"
 		],
 		"checklists": ["story-dod-checklist.md"],

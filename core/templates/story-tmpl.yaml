@@ -15,7 +15,7 @@ sections:
   - id: status
     title: Status
     type: choice
-    choices: [Dev Feedback, Draft, WIP, Blocked, Review, Done]
+    choices: [Draft, WIP, Blocked, Review, Done]
     instruction: Select the current status of the story
     owner: product-development-master
     editors: [product-development-master, developer, qa-agent]
@@ -39,20 +39,6 @@ sections:
     elicit: true
     owner: product-development-master
     editors: [product-development-master]
-
-  - id: dev-feasibility
-    title: Dev Feasibility
-    type: paragraphs
-    instruction: |
-      Developer-only section to assess technical feasibility and call out risks or blockers.
-      Keep it concise and actionable. Cover:
-      - Ambiguities or missing info
-      - Technical risks or constraints
-      - Dependencies not reflected in Tasks/Subtasks
-      - Suggested adjustments to scope or sequencing
-      - Readiness signal: Feasible | Concerns | Blocked (with 1–2 line reason)
-    owner: developer
-    editors: [developer]
 
   - id: acceptance-criteria
     title: Acceptance Criteria
