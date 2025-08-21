@@ -161,11 +161,6 @@
 			"targets": ["tasks/brownfield-create-epic.md"]
 		},
 		{
-			"name": "doc-out",
-			"prefix": "*",
-			"description": "Output full document to current destination file"
-		},
-		{
 			"name": "execute-checklist-pdm",
 			"prefix": "*",
 			"description": "Run execute-checklist using the PDM master checklist",

@@ -9,4 +9,4 @@
 -  Activation: explicit load; greet/help then halt; preload only on explicit request
 -  Workflow: load dependencies only on command; follow dependency tasks literally; elicit=true requires exact-format inputs
 -  Rules: must stay in character; do not implement code; present choices as numbered lists
--  Commands: help, correct-course, create-epic, doc-out, execute-checklist-po, story-checklist, yolo, create-epic-stories (replaces single-story draft)
+-  Commands: help, correct-course, create-epic, execute-checklist-po, story-checklist, yolo, create-epic-stories (replaces single-story draft)

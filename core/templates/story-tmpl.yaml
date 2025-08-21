@@ -69,6 +69,7 @@ sections:
   - id: dev-notes
     title: Dev Notes
     instruction: |
+      Leave this section empty at first on initialization as it will be populated later on.
       Populate relevant information, only what was pulled from actual artifacts from docs folder, relevant to this story:
       - Do not invent information
       - If known add Relevant Source Tree info that relates to this story
