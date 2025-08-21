@@ -3,8 +3,8 @@ template:
   name: Story Document
   version: 2.0
   output:
-    format: markdown
-    filename: docs/stories/{{epic_num}}.{{story_num}}.{{story_title_short}}.md
+    format: yaml
+    filename: docs/stories/{{epic_num}}.{{story_num}}.{{story_title_short}}.yaml
     title: "Story {{epic_num}}.{{story_num}}: {{story_title_short}}"
 
 workflow:
