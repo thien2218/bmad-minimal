@@ -112,12 +112,12 @@
 				{
 					"userPhrase": "draft story",
 					"action": "execute_dependency_task",
-					"targets": ["tasks/create-next-story.md"]
+					"targets": ["tasks/create-next-story.yaml"]
 				},
 				{
 					"userPhrase": "make a new prd",
 					"action": "compose_tasks_and_templates",
-					"targets": ["tasks/create-doc.md", "templates/prd-tmpl.md"]
+					"targets": ["tasks/create-doc.yaml", "templates/prd-tmpl.yaml"]
 				}
 			]
 		},
@@ -128,8 +128,8 @@
 			"clarifyAfterAttempts": 2,
 			"examples": [
 				{
-					"input": "create-doc.md",
-					"resolvedPath": ".bmad-core/tasks/create-doc.md"
+					"input": "create-doc.yaml",
+					"resolvedPath": ".bmad-core/tasks/create-doc.yaml"
 				}
 			]
 		},
@@ -158,7 +158,7 @@
 			"parameters": ["story"],
 			"notes": "Gate file location: qa.qaLocation/gates/{epic}.{story}-{slug}.yml. Executes review-story task and creates gate decision.",
 			"targets": [
-				"tasks/review-story.md",
+				"tasks/review-story.yaml",
 				"templates/story-tmpl.yaml",
 				"templates/qa-gate-tmpl.yaml"
 			]
@@ -168,35 +168,35 @@
 			"prefix": "*",
 			"description": "Execute risk-profile task to generate risk assessment matrix",
 			"parameters": ["story"],
-			"targets": ["tasks/risk-profile.md"]
+			"targets": ["tasks/risk-profile.yaml"]
 		},
 		{
 			"name": "test-design",
 			"prefix": "*",
 			"description": "Execute test-design task to create comprehensive test scenarios",
 			"parameters": ["story"],
-			"targets": ["tasks/test-design.md"]
+			"targets": ["tasks/test-design.yaml"]
 		},
 		{
 			"name": "trace",
 			"prefix": "*",
 			"description": "Execute trace-requirements task to map requirements to tests using Given-When-Then method",
 			"parameters": ["story"],
-			"targets": ["tasks/trace-requirements.md"]
+			"targets": ["tasks/trace-requirements.yaml"]
 		}
 	],
 
 	"dependencies": {
 		"data": [
-			"technical-preferences.md",
-			"test-levels-framework.md",
-			"test-priorities-matrix.md"
+			"technical-preferences.yaml",
+			"test-levels-framework.yaml",
+			"test-priorities-matrix.yaml"
 		],
 		"tasks": [
-			"review-story.md",
-			"risk-profile.md",
-			"test-design.md",
-			"trace-requirements.md"
+			"review-story.yaml",
+			"risk-profile.yaml",
+			"test-design.yaml",
+			"trace-requirements.yaml"
 		],
 		"templates": ["story-tmpl.yaml", "qa-gate-tmpl.yaml"]
 	}

@@ -1,0 +1,19 @@
+$schema: ../schemas/data.schema.json
+id: technical-preferences
+title: User-Defined Preferred Patterns and Preferences
+version: 1.0.0
+description: User-specific technical preferences and patterns for project development
+type: preferences
+category: technical
+scope: project
+content:
+  preferences: {}  # None Listed - to be populated by user
+usage:
+  agents: ["dev", "qa", "pdm"]
+  phases: ["planning", "development", "review"]
+  tasks: []
+  load_when: on_demand
+metadata:
+  author: BMAD Core
+  created: "2025-08-21"
+  tags: ["preferences", "patterns", "user-config"]

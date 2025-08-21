@@ -100,12 +100,12 @@
 				{
 					"userPhrase": "draft story",
 					"action": "execute_dependency_task",
-					"targets": ["tasks/create-next-story.md"]
+					"targets": ["tasks/create-next-story.yaml"]
 				},
 				{
 					"userPhrase": "make a new prd",
 					"action": "compose_tasks_and_templates",
-					"targets": ["tasks/create-doc.md", "templates/prd-tmpl.md"]
+					"targets": ["tasks/create-doc.yaml", "templates/prd-tmpl.yaml"]
 				}
 			]
 		},
@@ -116,8 +116,8 @@
 			"clarifyAfterAttempts": 2,
 			"examples": [
 				{
-					"input": "create-doc.md",
-					"resolvedPath": ".bmad-core/tasks/create-doc.md"
+					"input": "create-doc.yaml",
+					"resolvedPath": ".bmad-core/tasks/create-doc.yaml"
 				}
 			]
 		},
@@ -158,33 +158,33 @@
 			"preconditions": {
 				"storyStatusMustBe": "WIP"
 			},
-			"targets": ["tasks/develop-story.md"]
+			"targets": ["tasks/develop-story.yaml"]
 		},
 		{
 			"name": "apply-qa-fixes",
 			"prefix": "*",
 			"description": "Apply code/test fixes based on QA outputs (gate + assessments) for a specified story.",
 			"parameters": ["story"],
-			"targets": ["tasks/apply-qa-fixes.md"]
+			"targets": ["tasks/apply-qa-fixes.yaml"]
 		},
 		{
 			"name": "create-epic-docs",
 			"prefix": "*",
 			"description": "Create documentation for a completed epic with a selectable method and fallbacks (Swagger for backend, Storybook for frontend). Prioritize official tooling/integrations.",
 			"parameters": ["epic", "method", "output_dir"],
-			"targets": ["tasks/create-epic-docs.md"]
+			"targets": ["tasks/create-epic-docs.yaml"]
 		}
 	],
 
 	"dependencies": {
 		"tasks": [
-			"execute-checklist.md",
-			"validate-next-story.md",
-			"develop-story.md",
-			"apply-qa-fixes.md",
-			"create-epic-docs.md"
+			"execute-checklist.yaml",
+			"validate-next-story.yaml",
+			"develop-story.yaml",
+			"apply-qa-fixes.yaml",
+			"create-epic-docs.yaml"
 		],
-		"checklists": ["story-dod-checklist.md"],
+		"checklists": ["story-dod-checklist.yaml"],
 		"templates": ["story-tmpl.yaml"]
 	}
 }

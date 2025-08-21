@@ -1,0 +1,225 @@
+$schema: ../schemas/task.schema.json
+id: create-doc
+title: Create Document from Template (YAML Driven)
+version: 1.0.0
+purpose: Create documents from YAML templates with mandatory user interaction and elicitation for each section
+
+category: documentation
+agent: any
+
+inputs:
+  required:
+    - name: template_path
+      type: path
+      description: Path to YAML template file or directory to search
+      examples: [".bmad-core/templates/prd-template.yaml", ".bmad-core/templates/"]
+  optional:
+    - name: output_file
+      type: path
+      description: Path where document should be created
+      default: "docs/{template-name}-output.md"
+    - name: mode
+      type: string
+      description: Processing mode - Interactive (default) or YOLO
+      default: "interactive"
+      pattern: "^(interactive|yolo)$"
+
+outputs:
+  artifacts:
+    - name: Generated Document
+      type: file
+      path: "{output_file}"
+      format: markdown
+      description: Document created from template with user input
+
+prerequisites:
+  files:
+    - .bmad-core/templates/
+    - data/elicitation-methods.yaml
+
+process:
+  mode: sequential
+  steps:
+    - id: DISCOVER-1
+      title: Template Discovery
+      description: If template not provided, list available templates
+      action:
+        type: command
+        command: |
+          if [ -z "{template_path}" ]; then
+            echo "Available templates:"
+            ls -la .bmad-core/templates/*.yaml
+            echo "Please select a template or provide path"
+          fi
+      condition:
+        if: "template_path == null"
+      elicit: true
+
+    - id: LOAD-1
+      title: Parse YAML Template
+      description: Load template metadata and sections
+      action:
+        type: file_operation
+        operation: read
+        target: "{template_path}"
+        validation:
+          type: string
+          required: true
+
+    - id: PREFS-1
+      title: Set Preferences
+      description: Show current mode and confirm output file
+      action:
+        type: elicit
+        prompt: |
+          Document Creation Settings:
+          - Mode: {mode} (Interactive)
+          - Output File: {output_file}
+          - Template: {template_name}
+          
+          Type '#yolo' to switch to YOLO mode (process all sections at once)
+          Or press Enter to continue in Interactive mode
+      elicit: true
+
+    - id: PROCESS-1
+      title: Process Template Sections
+      description: Iterate through each section with mandatory elicitation
+      action:
+        type: subtask
+        subtask: process-section
+        content: |
+          For each section in template:
+          1. Skip if condition unmet
+          2. Check agent permissions (owner/editors)
+          3. Draft content using section instruction
+          4. Present content + detailed rationale
+          5. IF elicit: true → MANDATORY 1-9 options format
+          6. Save to file after user response
+      elicit: true
+      retry:
+        max_attempts: 1
+        delay_seconds: 0
+
+    - id: ELICIT-1
+      title: Mandatory Elicitation Format
+      description: When elicit is true, use strict 1-9 format
+      action:
+        type: elicit
+        prompt: |
+          CRITICAL: When elicit: true, this is a HARD STOP requiring user interaction:
+          
+          1. Present section content
+          2. Provide detailed rationale explaining:
+             - Trade-offs and choices made
+             - Key assumptions made during drafting
+             - Interesting or questionable decisions
+             - Areas that might need validation
+          3. Present numbered options 1-9:
+             - Option 1: Always "Proceed to next section"
+             - Options 2-9: Select 8 methods from data/elicitation-methods
+             - End with: "Select 1-9 or just type your question/feedback:"
+          4. WAIT FOR USER RESPONSE - Do not proceed until user responds
+        validation:
+          type: string
+          pattern: "^[1-9]|.*$"
+          required: true
+      condition:
+        if: "section.elicit == true"
+      elicit: true
+
+    - id: ELICIT-RESULT-1
+      title: Process Elicitation Results
+      description: Handle user's elicitation method selection
+      action:
+        type: decision
+        prompt: |
+          After user selects elicitation method (2-9):
+          1. Execute method from data/elicitation-methods
+          2. Present results with insights
+          3. Offer options:
+             - 1. Apply changes and update section
+             - 2. Return to elicitation menu
+             - 3. Ask questions or engage further
+      condition:
+        if: "user_selection >= 2 && user_selection <= 9"
+      elicit: true
+
+    - id: PERMISSIONS-1
+      title: Note Agent Permissions
+      description: Document agent ownership and editing restrictions
+      action:
+        type: file_operation
+        operation: update
+        content: |
+          For sections with agent permissions:
+          - owner: Note which agent role creates/populates
+          - editors: List agent roles allowed to modify
+          - readonly: Mark sections that cannot be modified after creation
+          
+          Include note in document:
+          "_(This section is owned by {owner} and can only be modified by {editors})_"
+      condition:
+        if: "section.permissions != null"
+
+    - id: SAVE-1
+      title: Save Section to File
+      description: Write processed section to output file
+      action:
+        type: file_operation
+        operation: update
+        target: "{output_file}"
+        content: "{processed_section_content}"
+
+    - id: CONTINUE-1
+      title: Continue Until Complete
+      description: Process remaining sections or finish
+      action:
+        type: decision
+        prompt: Check if more sections remain to process
+      condition:
+        if: "sections_remaining > 0"
+        then: "PROCESS-1"
+        else: "COMPLETE-1"
+
+    - id: COMPLETE-1
+      title: Document Generation Complete
+      description: Finalize document and provide summary
+      action:
+        type: elicit
+        prompt: |
+          Document generation complete!
+          
+          File created: {output_file}
+          Sections processed: {section_count}
+          
+          Next steps:
+          1. Review the generated document
+          2. Make any final edits
+          3. Share with team or stakeholders
+
+blocking_conditions:
+  - condition: Template file not found
+    message: Cannot proceed without valid template file
+    severity: critical
+  - condition: Elicitation skipped when required
+    message: WORKFLOW VIOLATION - elicit:true sections require user interaction
+    severity: critical
+
+completion:
+  criteria:
+    - All template sections processed
+    - User interaction completed for elicit:true sections
+    - Document saved to output file
+    - Agent permissions documented where applicable
+
+metadata:
+  author: BMAD Core Team
+  created: 2024-01-01
+  lastModified: 2024-01-01
+  tags:
+    - documentation
+    - templates
+    - elicitation
+    - interactive
+  complexity: moderate
+  estimated_duration: 30m-2h

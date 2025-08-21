@@ -109,12 +109,12 @@
 				{
 					"userPhrase": "draft story",
 					"action": "execute_dependency_task",
-					"targets": ["tasks/create-next-story.md"]
+					"targets": ["tasks/create-next-story.yaml"]
 				},
 				{
 					"userPhrase": "make a new prd",
 					"action": "compose_tasks_and_templates",
-					"targets": ["tasks/create-doc.md", "templates/prd-tmpl.md"]
+					"targets": ["tasks/create-doc.yaml", "templates/prd-tmpl.yaml"]
 				}
 			]
 		},
@@ -125,8 +125,8 @@
 			"clarifyAfterAttempts": 2,
 			"examples": [
 				{
-					"input": "create-doc.md",
-					"resolvedPath": ".bmad-core/tasks/create-doc.md"
+					"input": "create-doc.yaml",
+					"resolvedPath": ".bmad-core/tasks/create-doc.yaml"
 				}
 			]
 		},
@@ -152,21 +152,21 @@
 			"name": "correct-course",
 			"prefix": "*",
 			"description": "Execute task correct-course.md",
-			"targets": ["tasks/correct-course.md"]
+			"targets": ["tasks/correct-course.yaml"]
 		},
 		{
 			"name": "create-epic",
 			"prefix": "*",
 			"description": "Create epic for brownfield projects",
-			"targets": ["tasks/brownfield-create-epic.md"]
+			"targets": ["tasks/brownfield-create-epic.yaml"]
 		},
 		{
 			"name": "execute-checklist-pdm",
 			"prefix": "*",
 			"description": "Run execute-checklist using the PDM master checklist",
 			"targets": [
-				"tasks/execute-checklist.md",
-				"checklists/po-master-checklist.md"
+				"tasks/execute-checklist.yaml",
+				"checklists/po-master-checklist.yaml"
 			]
 		},
 		{
@@ -174,8 +174,8 @@
 			"prefix": "*",
 			"description": "Execute task execute-checklist.md with checklist story-draft-checklist.md",
 			"targets": [
-				"tasks/execute-checklist.md",
-				"checklists/story-draft-checklist.md"
+				"tasks/execute-checklist.yaml",
+				"checklists/story-draft-checklist.yaml"
 			]
 		},
 		{
@@ -189,28 +189,28 @@
 			"prefix": "*",
 			"description": "Create all stories for the highest ordered epic or the epic specified by user in a single batched operation (multiple iterations of create-next-story).",
 			"parameters": ["epic"],
-			"targets": ["tasks/create-next-story.md"]
+			"targets": ["tasks/create-next-story.yaml"]
 		},
 		{
 			"name": "create-story",
 			"prefix": "*",
 			"description": "Create the next story for the highest ordered epic or the one specified by user.",
 			"parameters": ["epic"],
-			"targets": ["tasks/create-next-story.md"]
+			"targets": ["tasks/create-next-story.yaml"]
 		}
 	],
 
 	"dependencies": {
 		"checklists": [
-			"change-checklist.md",
-			"po-master-checklist.md",
-			"story-draft-checklist.md"
+			"change-checklist.yaml",
+			"po-master-checklist.yaml",
+			"story-draft-checklist.yaml"
 		],
 		"tasks": [
-			"correct-course.md",
-			"execute-checklist.md",
-			"brownfield-create-epic.md",
-			"create-next-story.md"
+			"correct-course.yaml",
+			"execute-checklist.yaml",
+			"brownfield-create-epic.yaml",
+			"create-next-story.yaml"
 		]
 	}
 }

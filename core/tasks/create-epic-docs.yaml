@@ -1,0 +1,187 @@
+$schema: "../schemas/task.schema.json"
+id: "create-epic-docs"
+title: "Create Epic Documentation"
+version: "1.0.0"
+purpose: "Generate documentation for a completed epic after its status is set to Done. Supports multiple documentation methods with sensible fallbacks."
+category: "documentation"
+agent: "dev"
+
+inputs:
+  required:
+    - name: "epic"
+      type: "epic_id"
+      description: "Epic identifier"
+      examples: ["2"]
+    - name: "epic_path"
+      type: "path"
+      description: "Path to epic file (derived from config or docs directory)"
+      pattern: "{epicRoot}/{epic}*.md"
+  optional:
+    - name: "method"
+      type: "string"
+      description: "Documentation method to use"
+      examples: ["swagger", "openapi", "storybook", "markdown", "mkdocs", "docusaurus", "mdbook", "custom"]
+    - name: "output_dir"
+      type: "path"
+      description: "Custom output root for docs"
+      default: "docs/epics/{epic}"
+
+outputs:
+  artifacts:
+    - name: "documentation_package"
+      type: "directory"
+      path: "{output_dir}"
+      format: "html"
+      description: "Generated documentation artifacts under output directory"
+  updates:
+    - target: "epic file"
+      sections: ["Change Log", "documentation section"]
+      restrictions: "Only update if permitted by rules; otherwise record in Dev Agent Record"
+
+prerequisites:
+  status:
+    - entity: "epic"
+      field: "status"
+      value: "Done"
+      operator: "equals"
+  commands:
+    - command: "Repository builds and tests should pass"
+      expected_exit_code: 0
+
+process:
+  mode: "sequential"
+  steps:
+    - id: "LOAD-CONFIG"
+      title: "Load Core Config"
+      description: "Read core config to resolve default doc directories if present"
+      action:
+        type: "file_operation"
+        operation: "read"
+        target: ".bmad-core/core-config.yaml"
+
+    - id: "LOCATE-EPIC"
+      title: "Locate Epic and Validate Status"
+      description: "Resolve epic_path and validate epic status is Done"
+      action:
+        type: "validation"
+        validation:
+          type: "epic_status"
+          required: true
+      on_failure: "halt"
+
+    - id: "DETERMINE-METHOD"
+      title: "Determine Documentation Method"
+      description: "If method not provided, elicit choice or apply fallback rules"
+      elicit: true
+      action:
+        type: "elicit"
+        prompt: "Choose documentation method:"
+        options:
+          - "Swagger/OpenAPI (backend API docs)"
+          - "Storybook (frontend component docs)"
+          - "Markdown (README and usage guides)"
+          - "MkDocs (static site)"
+          - "Docusaurus (static site)"
+          - "mdBook (book-style)"
+          - "Custom (user provides command)"
+
+    - id: "PREPARE-OUTPUT"
+      title: "Prepare Output Directory"
+      description: "Set output_dir and ensure the directory exists"
+      action:
+        type: "file_operation"
+        operation: "create"
+        target: "{output_dir}"
+
+    - id: "GENERATE-SWAGGER"
+      title: "Generate Swagger/OpenAPI Documentation"
+      description: "Generate OpenAPI documentation using official tooling"
+      condition:
+        if: "method == 'swagger' || method == 'openapi'"
+      action:
+        type: "command"
+        command: "Prefer framework's built-in OpenAPI generation, check for existing openapi.yaml/json, or scaffold new"
+
+    - id: "GENERATE-STORYBOOK"
+      title: "Generate Storybook Documentation"
+      description: "Build and deploy Storybook documentation"
+      condition:
+        if: "method == 'storybook'"
+      action:
+        type: "command"
+        command: "Use official Storybook builder, run build-storybook, copy to output_dir/storybook"
+
+    - id: "GENERATE-MARKDOWN"
+      title: "Generate Markdown Documentation"
+      description: "Create README.md and CHANGELOG.md for the epic"
+      condition:
+        if: "method == 'markdown'"
+      action:
+        type: "file_operation"
+        operation: "create"
+        target: "{output_dir}/README.md"
+        content: "Epic summary with scope, modules changed, usage examples, and acceptance criteria mapping"
+
+    - id: "GENERATE-STATIC-SITE"
+      title: "Generate Static Site Documentation"
+      description: "Generate documentation for MkDocs/Docusaurus/mdBook"
+      condition:
+        if: "method in ['mkdocs', 'docusaurus', 'mdbook']"
+      action:
+        type: "command"
+        command: "Invoke standard build command for the chosen static site generator"
+
+    - id: "GENERATE-CUSTOM"
+      title: "Generate Custom Documentation"
+      description: "Execute user-provided custom documentation command"
+      condition:
+        if: "method == 'custom'"
+      elicit: true
+      action:
+        type: "elicit"
+        prompt: "Provide the exact command(s) to run and any templates/paths to use"
+
+    - id: "VALIDATE-OUTPUT"
+      title: "Validation"
+      description: "Ensure artifacts exist and include at least one top-level index"
+      action:
+        type: "validation"
+        validation:
+          type: "file_exists"
+          required: true
+      on_failure: "halt"
+
+    - id: "UPDATE-RECORDS"
+      title: "Recordkeeping"
+      description: "Update Dev Agent Record with generation details"
+      action:
+        type: "file_operation"
+        operation: "update"
+        target: "story file Dev Agent Record"
+        content: "Debug Log references, Completion Notes, File List, Change Log entry"
+
+blocking_conditions:
+  - condition: "Epic file not found or status not Done"
+    message: "Epic must exist and have status 'Done'"
+    severity: "error"
+  - condition: "Required generation tools/scripts missing and user declines scaffolding"
+    message: "Cannot proceed without required documentation tools"
+    severity: "error"
+  - condition: "Output directory cannot be written"
+    message: "Unable to write to output directory"
+    severity: "error"
+
+completion:
+  criteria:
+    - "Artifacts created under output_dir with an entry point"
+    - "Method selection recorded"
+    - "Dev Agent Record updated where allowed"
+    - "No validation errors remain"
+
+metadata:
+  author: "BMAD Core"
+  created: "2025-08-21"
+  lastModified: "2025-08-21"
+  tags: ["documentation", "epic", "swagger", "storybook", "markdown"]
+  complexity: "complex"
+  estimated_duration: "30m"
