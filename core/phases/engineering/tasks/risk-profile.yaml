@@ -1,0 +1,248 @@
+id: risk-profile
+title: Risk Profile
+version: 1.0.0
+purpose: Generate a comprehensive risk assessment matrix for a story implementation using probability × impact analysis.
+category: quality
+agent: qa
+
+inputs:
+  required:
+    - name: story_id
+      type: story_id
+      description: Story identifier in format {epic}.{story}
+      pattern: "^\\d+\\.\\d+$"
+      examples: ["1.3", "2.5"]
+    - name: story_path
+      type: path
+      description: Path to story file
+      examples: ["docs/stories/{epic}.{story}.*.md"]
+    - name: story_title
+      type: string
+      description: Story title (derive from story file H1 if missing)
+    - name: story_slug
+      type: string
+      description: Story slug (derive from title if missing - lowercase, hyphenated)
+      pattern: "^[a-z0-9-]+$"
+
+process:
+  mode: sequential
+  steps:
+    - id: IDENTIFY-TECH
+      title: Identify Technical Risks
+      description: Identify technical implementation risks
+      action:
+        type: analysis
+        prompt: |
+          Identify TECH risks:
+          - Architecture complexity
+          - Integration challenges
+          - Technical debt
+          - Scalability concerns
+          - System dependencies
+
+    - id: IDENTIFY-SEC
+      title: Identify Security Risks
+      description: Identify security vulnerabilities and threats
+      action:
+        type: analysis
+        prompt: |
+          Identify SEC risks:
+          - Authentication/authorization flaws
+          - Data exposure vulnerabilities
+          - Injection attacks
+          - Session management issues
+          - Cryptographic weaknesses
+
+    - id: IDENTIFY-PERF
+      title: Identify Performance Risks
+      description: Identify performance bottlenecks and issues
+      action:
+        type: analysis
+        prompt: |
+          Identify PERF risks:
+          - Response time degradation
+          - Throughput bottlenecks
+          - Resource exhaustion
+          - Database query optimization
+          - Caching failures
+
+    - id: IDENTIFY-DATA
+      title: Identify Data Risks
+      description: Identify data integrity and privacy risks
+      action:
+        type: analysis
+        prompt: |
+          Identify DATA risks:
+          - Data loss potential
+          - Data corruption
+          - Privacy violations
+          - Compliance issues
+          - Backup/recovery gaps
+
+    - id: IDENTIFY-BUS
+      title: Identify Business Risks
+      description: Identify business impact risks
+      action:
+        type: analysis
+        prompt: |
+          Identify BUS risks:
+          - Feature doesn't meet user needs
+          - Revenue impact
+          - Reputation damage
+          - Regulatory non-compliance
+          - Market timing
+
+    - id: IDENTIFY-OPS
+      title: Identify Operational Risks
+      description: Identify operational and deployment risks
+      action:
+        type: analysis
+        prompt: |
+          Identify OPS risks:
+          - Deployment failures
+          - Monitoring gaps
+          - Incident response readiness
+          - Documentation inadequacy
+          - Knowledge transfer issues
+
+    - id: ASSESS-RISKS
+      title: Assess Risk Levels
+      description: Evaluate probability and impact for each risk
+      action:
+        type: analysis
+        prompt: |
+          For each identified risk:
+          - Assign probability: High(3), Medium(2), Low(1)
+          - Assign impact: High(3), Medium(2), Low(1)
+          - Calculate score: Probability × Impact
+          - Classify: Critical(9), High(6), Medium(4), Low(2-3), Minimal(1)
+
+    - id: PRIORITIZE
+      title: Prioritize Risks
+      description: Create prioritized risk matrix
+      action:
+        type: analysis
+        prompt: |
+          Create risk matrix sorted by score (descending):
+          - Risk ID (category prefix + number)
+          - Description
+          - Probability
+          - Impact
+          - Score
+          - Priority level
+
+    - id: MITIGATION
+      title: Define Mitigation Strategies
+      description: Develop mitigation actions for each risk
+      action:
+        type: analysis
+        prompt: |
+          For each risk, define:
+          - Strategy type: preventive, detective, or corrective
+          - Specific mitigation actions
+          - Testing requirements
+          - Residual risk level
+          - Owner (dev/qa/pdm)
+          - Timeline
+
+    - id: SCORE-CALC
+      title: Calculate Risk Score
+      description: Calculate overall story risk score
+      action:
+        type: analysis
+        prompt: |
+          Calculate overall risk score:
+          Base Score = 100
+          - Critical (9): Deduct 20 points
+          - High (6): Deduct 10 points
+          - Medium (4): Deduct 5 points
+          - Low (2-3): Deduct 2 points
+          Minimum = 0, Maximum = 100
+
+    - id: RECOMMENDATIONS
+      title: Generate Risk-Based Recommendations
+      description: Provide actionable recommendations based on risk profile
+      action:
+        type: analysis
+        prompt: |
+          Recommend:
+          1. Testing Priority - which tests to run first
+          2. Development Focus - code review emphasis areas
+          3. Deployment Strategy - phased rollout considerations
+          4. Monitoring Setup - metrics and alerts needed
+
+    - id: CREATE-GATE-BLOCK
+      title: Generate Gate YAML Block
+      description: Create risk_summary block for quality gate
+      action:
+        type: file_operation
+        operation: create
+        target: "risk_summary_block.yaml"
+        content: |
+          Generate risk_summary YAML block with:
+          - totals (critical, high, medium, low counts)
+          - highest risk (if any)
+          - recommendations (must_fix, monitor)
+
+    - id: CREATE-REPORT
+      title: Create Risk Assessment Report
+      description: Generate detailed risk profile markdown report
+      action:
+        type: file_operation
+        operation: create
+        target: "{qa.qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
+        content: |
+          Create comprehensive risk report with:
+          - Executive summary
+          - Critical risks requiring attention
+          - Risk distribution by category and component
+          - Detailed risk register
+          - Risk-based testing strategy
+          - Risk acceptance criteria
+          - Monitoring requirements
+          - Risk review triggers
+
+outputs:
+  artifacts:
+    - name: risk_assessment_report
+      type: report
+      path: "{qa.qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
+      format: markdown
+      description: Comprehensive risk assessment report
+    - name: gate_risk_block
+      type: file
+      path: "risk_summary_block.yaml"
+      format: yaml
+      description: Risk summary block for gate file
+
+dependencies:
+  data:
+    - technical-preferences.md
+
+blocking_conditions:
+  - condition: "Story file not found or incomplete"
+    message: "Story file must exist and be complete for risk assessment"
+    severity: error
+
+completion:
+  criteria:
+    - All risk categories assessed
+    - Risk scores calculated
+    - Mitigation strategies defined
+    - Risk report created
+    - Gate block generated
+  validations:
+    - command: "test -f {qa.qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
+      expected_output: "file exists"
+
+metadata:
+  author: BMAD Core Team
+  created: "2024-01-01"
+  lastModified: "2024-01-01"
+  tags:
+    - risk
+    - assessment
+    - quality
+    - analysis
+  complexity: moderate
+  estimated_duration: "30m-1h"

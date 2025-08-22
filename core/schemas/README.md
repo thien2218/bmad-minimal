@@ -7,9 +7,10 @@ These JSON schemas are for internal validation and tooling purposes only. **Agen
 ## Purpose
 
 These schemas define the structure for YAML/JSON versions of BMAD core artifacts:
-- **checklist.schema.json** - Structure for checklist definitions
-- **task.schema.json** - Structure for task definitions  
-- **data.schema.json** - Structure for data files
+
+-  **checklist.schema.json** - Structure for checklist definitions
+-  **task.schema.json** - Structure for task definitions
+-  **data.schema.json** - Structure for data files
 
 ## Usage
 
@@ -28,7 +29,6 @@ ajv validate -s core/schemas/checklist.schema.json -d "core/checklists/*.yaml"
 When creating YAML versions of tasks, checklists, or data, include a schema reference:
 
 ```yaml
-$schema: ../schemas/task.schema.json
 id: develop-story
 title: Develop Story Task
 version: 1.0.0
@@ -57,31 +57,34 @@ The migration from Markdown to YAML/JSON will be gradual:
 
 ## File Structure Mapping
 
-| Markdown Location | Future YAML/JSON Location | Schema |
-|------------------|---------------------------|---------|
-| core/tasks/*.md | core/tasks/*.yaml | task.schema.json |
-| core/checklists/*.md | core/checklists/*.yaml | checklist.schema.json |
-| core/data/*.md | core/data/*.yaml | data.schema.json |
+| Markdown Location     | Future YAML/JSON Location | Schema                |
+| --------------------- | ------------------------- | --------------------- |
+| core/tasks/\*.md      | core/tasks/\*.yaml        | task.schema.json      |
+| core/checklists/\*.md | core/checklists/\*.yaml   | checklist.schema.json |
+| core/data/\*.md       | core/data/\*.yaml         | data.schema.json      |
 
 ## Schema Features
 
 ### Task Schema
-- Structured inputs/outputs with types
-- Step-by-step process definition
-- Prerequisites and dependencies
-- Completion criteria and validations
 
-### Checklist Schema  
-- Item dependencies and verification methods
-- Progress tracking support
-- Required vs optional items
-- Categories and scoping
+-  Structured inputs/outputs with types
+-  Step-by-step process definition
+-  Prerequisites and dependencies
+-  Completion criteria and validations
+
+### Checklist Schema
+
+-  Item dependencies and verification methods
+-  Progress tracking support
+-  Required vs optional items
+-  Categories and scoping
 
 ### Data Schema
-- Flexible content types (preferences, frameworks, standards, etc.)
-- Usage metadata (which agents, when to load)
-- Validation constraints
-- Versioning and deprecation support
+
+-  Flexible content types (preferences, frameworks, standards, etc.)
+-  Usage metadata (which agents, when to load)
+-  Validation constraints
+-  Versioning and deprecation support
 
 ## Extending Schemas
 
@@ -96,9 +99,9 @@ To add new fields or modify schemas:
 
 Recommended tools for working with these schemas:
 
-- **ajv-cli** - Command-line JSON Schema validator
-- **VS Code** - Auto-completion and validation with YAML/JSON files
-- **spectral** - API linting that supports JSON Schema
+-  **ajv-cli** - Command-line JSON Schema validator
+-  **VS Code** - Auto-completion and validation with YAML/JSON files
+-  **spectral** - API linting that supports JSON Schema
 
 ## Contact
 

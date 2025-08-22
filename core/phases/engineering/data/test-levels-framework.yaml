@@ -1,0 +1,113 @@
+id: test-levels-framework
+title: Test Levels Framework
+version: 1.0.0
+description: Comprehensive guide for determining appropriate test levels (unit, integration, E2E) for different scenarios
+type: framework
+category: testing
+scope: project
+content:
+  framework:
+    name: Test Levels Framework
+    version: "1.0"
+    levels:
+      - level: unit
+        description: Testing pure functions and business logic
+        criteria:
+          - Testing pure functions and business logic
+          - Algorithm correctness
+          - Input validation and data transformation
+          - Error handling in isolated components
+          - Complex calculations or state machines
+        characteristics:
+          - Fast execution (immediate feedback)
+          - No external dependencies (DB, API, file system)
+          - Highly maintainable and stable
+          - Easy to debug failures
+        favor_when:
+          - Logic can be isolated
+          - No side effects involved
+          - Fast feedback needed
+          - High cyclomatic complexity
+        example:
+          component: PriceCalculator
+          scenario: Calculate discount with multiple rules
+          justification: Complex business logic with multiple branches
+          mock_requirements: None - pure function
+        naming_convention: "test_{component}_{scenario}"
+      - level: integration
+        description: Component interaction verification
+        criteria:
+          - Component interaction verification
+          - Database operations and transactions
+          - API endpoint contracts
+          - Service-to-service communication
+          - Middleware and interceptor behavior
+        characteristics:
+          - Moderate execution time
+          - Tests component boundaries
+          - May use test databases or containers
+          - Validates system integration points
+        favor_when:
+          - Testing persistence layer
+          - Validating service contracts
+          - Testing middleware/interceptors
+          - Component boundaries critical
+        example:
+          components: ["UserService", "AuthRepository"]
+          scenario: Create user with role assignment
+          justification: Critical data flow between service and persistence
+          test_environment: In-memory database
+        naming_convention: "test_{flow}_{interaction}"
+      - level: e2e
+        description: Critical user journeys and cross-system workflows
+        criteria:
+          - Critical user journeys
+          - Cross-system workflows
+          - Visual regression testing
+          - Compliance and regulatory requirements
+          - Final validation before release
+        characteristics:
+          - Slower execution
+          - Tests complete workflows
+          - Requires full environment setup
+          - Most realistic but most brittle
+        favor_when:
+          - User-facing critical paths
+          - Multi-system interactions
+          - Regulatory compliance scenarios
+          - Visual regression important
+        example:
+          journey: Complete checkout process
+          scenario: User purchases with saved payment method
+          justification: Revenue-critical path requiring full validation
+          environment: Staging with test payment gateway
+        naming_convention: "test_{journey}_{outcome}"
+    anti_patterns:
+      - E2E testing for business logic validation
+      - Unit testing framework behavior
+      - Integration testing third-party libraries
+      - Duplicate coverage across levels
+    duplicate_coverage_guard:
+      check_before_adding:
+        - Is this already tested at a lower level?
+        - Can a unit test cover this instead of integration?
+        - Can an integration test cover this instead of E2E?
+      acceptable_overlap:
+        - Testing different aspects (unit logic, integration interaction, e2e user experience)
+        - Critical paths requiring defense in depth
+        - Regression prevention for previously broken functionality
+    test_id_format:
+      pattern: "{EPIC}.{STORY}-{LEVEL}-{SEQ}"
+      examples:
+        - "1.3-UNIT-001"
+        - "1.3-INT-002"
+        - "1.3-E2E-001"
+usage:
+  agents: ["qa", "dev"]
+  phases: ["testing", "development", "review"]
+  tasks: ["test-design"]
+  load_when: on_demand
+metadata:
+  author: BMAD Core
+  created: "2025-08-21"
+  tags: ["testing", "quality", "framework", "test-levels", "unit-tests", "integration-tests", "e2e-tests"]

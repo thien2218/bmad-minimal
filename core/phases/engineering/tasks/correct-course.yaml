@@ -1,0 +1,283 @@
+id: correct-course
+title: Correct Course Task
+version: 1.0.0
+purpose: Guide structured response to change triggers using change-checklist to analyze impacts, explore solutions, and produce a Sprint Change Proposal document
+
+category: planning
+agent: pdm
+
+inputs:
+  required:
+    - name: change_trigger
+      type: string
+      description: Description of the change that triggered this task
+      examples: ["Bug discovered", "Scope change request", "Technical constraint identified"]
+    - name: initial_impact
+      type: string
+      description: User's initial explanation of the issue and its perceived impact
+  optional:
+    - name: interaction_mode
+      type: string
+      description: Preferred interaction mode - Incremental (default) or YOLO
+      default: "incremental"
+      examples: ["incremental", "yolo"]
+
+outputs:
+  artifacts:
+    - name: Sprint Change Proposal
+      type: file
+      path: docs/change-proposals/sprint-change-proposal-{timestamp}.md
+      format: markdown
+      description: Consolidated document containing change analysis and proposed edits
+    - name: Annotated Change Checklist
+      type: report
+      path: docs/change-proposals/change-checklist-{timestamp}.md
+      format: markdown
+      description: Completed change-checklist with findings and decisions
+  updates:
+    - target: docs/epics/*.md
+      sections: ["User Stories", "Acceptance Criteria", "Priority"]
+      restrictions: Only as specified in approved change proposal
+    - target: docs/prd/*.md
+      sections: ["Requirements", "Scope", "Technical Constraints"]
+      restrictions: Only as specified in approved change proposal
+    - target: docs/architecture/*.md
+      sections: ["Components", "Diagrams", "Technology Stack"]
+      restrictions: Only as specified in approved change proposal
+
+prerequisites:
+  files:
+    - checklists/change-checklist.md
+    - docs/prd/**
+    - docs/epics/**
+    - docs/architecture/**
+
+process:
+  mode: sequential
+  steps:
+    - id: SETUP-1
+      title: Initial Setup & Mode Selection
+      description: Acknowledge task, verify inputs, and establish interaction mode
+      action:
+        type: elicit
+        prompt: |
+          Correct Course Task (Change Navigation & Integration) initiated.
+          
+          Please confirm:
+          1. Change trigger: {change_trigger}
+          2. Initial impact assessment: {initial_impact}
+          
+          Select interaction mode:
+          - Incremental (Default & Recommended): Work through change-checklist section by section
+          - YOLO Mode: Conduct batched analysis with consolidated findings
+        options:
+          - "Incremental - section by section with detailed refinement"
+          - "YOLO - batched analysis for quick assessment"
+        validation:
+          type: string
+          pattern: "^(incremental|yolo)$"
+      elicit: true
+
+    - id: SETUP-2
+      title: Verify Access to Artifacts
+      action:
+        type: validation
+        target: "project artifacts"
+        validation:
+          type: string
+          required: true
+      description: Confirm access to PRD, Epics/Stories, Architecture Documents, and change-checklist
+
+    - id: ANALYSIS-1
+      title: Execute Change Context Analysis
+      description: Work through Section 1 of change-checklist - Change Context
+      action:
+        type: analysis
+        target: checklists/change-checklist.md#section-1
+        prompt: Analyze change context including trigger, timing, and initial assessment
+      elicit: true
+
+    - id: ANALYSIS-2
+      title: Epic/Story Impact Analysis
+      description: Work through Section 2 of change-checklist - Epic/Story Impact
+      action:
+        type: analysis
+        target: checklists/change-checklist.md#section-2
+        prompt: Assess impact on current epics, stories, and sprint work
+      elicit: true
+
+    - id: ANALYSIS-3
+      title: Artifact Conflict Resolution
+      description: Work through Section 3 of change-checklist - Artifact Conflicts
+      action:
+        type: analysis
+        target: checklists/change-checklist.md#section-3
+        prompt: Identify and resolve conflicts in project artifacts
+      elicit: true
+
+    - id: ANALYSIS-4
+      title: Path Evaluation & Recommendation
+      description: Work through Section 4 of change-checklist - Path Forward
+      action:
+        type: decision
+        prompt: |
+          Based on analysis, determine recommended path:
+          1. Adjust scope within current sprint
+          2. Rollback specific elements
+          3. Re-scope features
+          4. Defer to next sprint
+          5. Fundamental replan needed (handoff to PM/Architect)
+      elicit: true
+
+    - id: DRAFT-1
+      title: Draft Proposed Changes
+      description: Create specific, actionable proposed updates to affected artifacts
+      action:
+        type: file_operation
+        operation: create
+        content: |
+          Based on checklist analysis and chosen path:
+          - Identify specific artifacts requiring updates
+          - Draft explicit changes for each artifact
+          - Include:
+            * User story revisions with before/after text
+            * Acceptance criteria modifications
+            * PRD section updates
+            * Architecture diagram changes
+            * Technology/configuration updates
+      condition:
+        if: "path != 'fundamental_replan'"
+        then: "DRAFT-2"
+        else: "HANDOFF-1"
+      elicit: true
+
+    - id: DRAFT-2
+      title: Review and Refine Proposed Changes
+      description: Iterate on proposed changes based on interaction mode
+      action:
+        type: elicit
+        prompt: Review proposed changes and refine as needed
+        validation:
+          type: string
+          required: true
+      condition:
+        if: "interaction_mode == 'incremental'"
+      elicit: true
+
+    - id: GENERATE-1
+      title: Generate Sprint Change Proposal
+      description: Synthesize complete analysis and proposed edits into single document
+      action:
+        type: file_operation
+        operation: create
+        target: docs/change-proposals/sprint-change-proposal-{timestamp}.md
+        content: |
+          # Sprint Change Proposal
+          
+          ## Analysis Summary
+          - Original Issue: {change_trigger}
+          - Impact Assessment: {impact_analysis}
+          - Rationale for Chosen Path: {path_rationale}
+          
+          ## Specific Proposed Edits
+          
+          ### Epic/Story Changes
+          {epic_story_edits}
+          
+          ### PRD Updates
+          {prd_edits}
+          
+          ### Architecture Modifications
+          {architecture_edits}
+          
+          ## Risk Assessment
+          {risk_assessment}
+          
+          ## Implementation Plan
+          {implementation_steps}
+
+    - id: REVIEW-1
+      title: Present Sprint Change Proposal for Review
+      description: Present complete proposal to user for feedback
+      action:
+        type: elicit
+        prompt: |
+          Sprint Change Proposal complete. Please review:
+          
+          {proposal_summary}
+          
+          Would you like to:
+          1. Approve as-is
+          2. Request specific adjustments
+          3. Reject and restart analysis
+      elicit: true
+
+    - id: FINALIZE-1
+      title: Finalize and Determine Next Steps
+      description: Obtain approval and provide guidance on next steps
+      action:
+        type: decision
+        prompt: Determine if changes can be implemented directly or require fundamental replan
+      on_failure: halt
+
+    - id: HANDOFF-1
+      title: Prepare Handoff to PM/Architect
+      description: Package analysis for fundamental replan by other agents
+      action:
+        type: file_operation
+        operation: create
+        target: docs/change-proposals/replan-handoff-{timestamp}.md
+        content: |
+          # Fundamental Replan Required
+          
+          ## Change Analysis
+          {full_analysis}
+          
+          ## Why Fundamental Replan Needed
+          {replan_justification}
+          
+          ## Recommended Next Steps
+          - Engage PM agent for scope replanning
+          - Engage Architect agent for technical redesign
+          
+          ## Supporting Documents
+          - Sprint Change Proposal: {proposal_path}
+          - Annotated Checklist: {checklist_path}
+      condition:
+        if: "path == 'fundamental_replan'"
+
+dependencies:
+  checklists:
+    - change-checklist
+  templates:
+    - sprint-change-proposal-template
+
+blocking_conditions:
+  - condition: Missing critical project artifacts
+    message: Cannot proceed without access to PRD, Epics, and Architecture documents
+    severity: critical
+  - condition: Change requires capabilities beyond current sprint
+    message: Change scope exceeds current sprint capacity - requires replanning
+    severity: error
+
+completion:
+  checklist: change-checklist
+  criteria:
+    - All sections of change-checklist addressed
+    - Sprint Change Proposal document created
+    - User approval obtained
+    - Next steps clearly defined
+  validations:
+    - command: "test -f docs/change-proposals/sprint-change-proposal-*.md"
+      expected_output: "file exists"
+
+metadata:
+  author: BMAD Core Team
+  created: 2024-01-01
+  lastModified: 2024-01-01
+  tags:
+    - change-management
+    - sprint-planning
+    - impact-analysis
+  complexity: complex
+  estimated_duration: 2h
