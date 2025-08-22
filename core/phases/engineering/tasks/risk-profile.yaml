@@ -1,3 +1,4 @@
+$schema: ../../../schemas/task.schema.json
 id: risk-profile
 title: Risk Profile
 version: 1.0.0
@@ -217,7 +218,7 @@ outputs:
 
 dependencies:
   data:
-    - technical-preferences.md
+    - technical-preferences.yaml
 
 blocking_conditions:
   - condition: "Story file not found or incomplete"

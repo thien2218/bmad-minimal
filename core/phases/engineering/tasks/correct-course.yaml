@@ -1,3 +1,4 @@
+$schema: ../../../schemas/task.schema.json
 id: correct-course
 title: Correct Course Task
 version: 1.0.0

@@ -1,3 +1,4 @@
+$schema: ../../../schemas/task.schema.json
 id: create-next-story
 title: Create Next Story Task
 version: 1.0.0
@@ -21,11 +22,11 @@ outputs:
   artifacts:
     - name: Story File
       type: file
-      path: "{devStoryLocation}/{epicNum}.{storyNum}.story.md"
-      format: markdown
+      path: "{devStoryLocation}/{epicNum}.{storyNum}.story.yaml"
+      format: yaml
       description: Complete story ready for development with full technical context
   updates:
-    - target: "{devStoryLocation}/*.story.md"
+    - target: "{devStoryLocation}/*.story.yaml"
       sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
       restrictions: Only create new story, do not modify existing stories
 
@@ -79,7 +80,7 @@ process:
         content: |
           Based on prdSharded from config:
           - Locate epic files (sharded location/pattern or monolithic PRD sections)
-          - If devStoryLocation has story files, load highest {epicNum}.{storyNum}.story.md
+          - If devStoryLocation has story files, load highest {epicNum}.{storyNum}.story.yaml
           - Determine next sequential story
 
     - id: IDENTIFY-2
@@ -90,7 +91,7 @@ process:
         prompt: |
           If highest story exists and status != 'Done':
           ALERT: Found incomplete story!
-          File: {lastEpicNum}.{lastStoryNum}.story.md
+          File: {lastEpicNum}.{lastStoryNum}.story.yaml
           Status: {current_status}
           
           You should fix this story first, but would you like to accept risk & override to create the next story in draft?
@@ -143,7 +144,7 @@ process:
       description: If previous story exists, extract lessons learned
       action:
         type: analysis
-        target: "{devStoryLocation}/{previousEpicNum}.{previousStoryNum}.story.md"
+        target: "{devStoryLocation}/{previousEpicNum}.{previousStoryNum}.story.yaml"
         content: |
           Review Dev Agent Record sections for:
           - Completion Notes and Debug Log References
@@ -231,53 +232,39 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{devStoryLocation}/{epicNum}.{storyNum}.story.md"
+        target: "{devStoryLocation}/{epicNum}.{storyNum}.story.yaml"
         content: |
-          # Story {epicNum}.{storyNum}: {Title}
-          
-          ## Status: Draft
-          
-          ## Priority: {priority}
-          
-          ## Story
-          {story_statement}
-          
-          ## Acceptance Criteria
-          {acceptance_criteria}
-          
-          ## Dev Notes
-          CRITICAL: This section MUST contain ONLY information extracted from architecture documents.
-          NEVER invent or assume technical details.
-          
-          ### Previous Story Insights
-          {previous_insights}
-          
-          ### Data Models
-          {data_models} [Source: architecture/{filename}.md#{section}]
-          
-          ### API Specifications
-          {api_specs} [Source: architecture/{filename}.md#{section}]
-          
-          ### Component Specifications
-          {component_specs} [Source: architecture/{filename}.md#{section}]
-          
-          ### File Locations
-          {file_locations} [Source: architecture/{filename}.md#{section}]
-          
-          ### Testing Requirements
-          {testing_requirements} [Source: architecture/{filename}.md#{section}]
-          
-          ### Technical Constraints
-          {technical_constraints} [Source: architecture/{filename}.md#{section}]
-          
-          Note: If information for a category is not found in architecture docs, explicitly state:
-          "No specific guidance found in architecture docs"
-          
-          ## Tasks / Subtasks
-          {generated_tasks}
-          
-          ## Project Structure Notes
-          {structure_notes}
+          story:
+            id: "{epicNum}.{storyNum}"
+            title: "{Title}"
+            status: Draft
+            priority: "{priority}"
+            statement: "{story_statement}"
+          acceptance_criteria: "{acceptance_criteria}"
+          dev_notes:
+            policy: "This section MUST contain ONLY information extracted from architecture documents. NEVER invent or assume technical details."
+            previous_story_insights: "{previous_insights}"
+            data_models:
+              value: "{data_models}"
+              source: "architecture/{filename}.md#{section}"
+            api_specifications:
+              value: "{api_specs}"
+              source: "architecture/{filename}.md#{section}"
+            component_specifications:
+              value: "{component_specs}"
+              source: "architecture/{filename}.md#{section}"
+            file_locations:
+              value: "{file_locations}"
+              source: "architecture/{filename}.md#{section}"
+            testing_requirements:
+              value: "{testing_requirements}"
+              source: "architecture/{filename}.md#{section}"
+            technical_constraints:
+              value: "{technical_constraints}"
+              source: "architecture/{filename}.md#{section}"
+            notes_missing_guidance: "If information for a category is not found in architecture docs, explicitly state: 'No specific guidance found in architecture docs'"
+          tasks_subtasks: "{generated_tasks}"
+          project_structure_notes: "{structure_notes}"
 
     - id: TASKS-1
       title: Generate Tasks and Subtasks
@@ -322,7 +309,7 @@ process:
       action:
         type: elicit
         prompt: |
-          Story created: {devStoryLocation}/{epicNum}.{storyNum}.story.md
+          Story created: {devStoryLocation}/{epicNum}.{storyNum}.story.yaml
           Status: Draft
           
           Key technical components included from architecture docs:

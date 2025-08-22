@@ -158,7 +158,7 @@
 		{
 			"name": "correct-course",
 			"prefix": "*",
-			"description": "Execute task correct-course.md",
+			"description": "Execute task correct-course.yaml",
 			"targets": ["tasks/correct-course.yaml"]
 		},
 		{
@@ -179,7 +179,7 @@
 		{
 			"name": "story-checklist",
 			"prefix": "*",
-			"description": "Execute task execute-checklist.md with checklist story-draft-checklist.md",
+			"description": "Execute task execute-checklist.yaml with checklist story-draft-checklist.yaml",
 			"targets": [
 				"tasks/execute-checklist.yaml",
 				"checklists/story-draft-checklist.yaml"

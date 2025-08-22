@@ -1,3 +1,4 @@
+$schema: ../../../schemas/task.schema.json
 id: validate-next-story
 title: Validate Next Story Task
 version: 1.0.0

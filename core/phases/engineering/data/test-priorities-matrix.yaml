@@ -1,3 +1,4 @@
+$schema: ../../../schemas/data.schema.json
 id: test-priorities-matrix
 title: Test Priorities Matrix
 version: 1.0.0

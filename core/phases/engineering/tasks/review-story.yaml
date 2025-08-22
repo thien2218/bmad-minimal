@@ -1,3 +1,4 @@
+$schema: ../../../schemas/task.schema.json
 id: review-story
 title: Review Story
 version: 1.0.0

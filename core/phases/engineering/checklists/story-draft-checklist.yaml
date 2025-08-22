@@ -1,3 +1,4 @@
+$schema: ../../../schemas/checklist.schema.json
 id: story-draft-checklist
 title: Story Draft Checklist
 version: 1.0.0

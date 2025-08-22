@@ -1,3 +1,4 @@
+$schema: ../../../schemas/task.schema.json
 id: execute-checklist
 title: Checklist Validation Task
 version: 1.0.0
@@ -21,14 +22,6 @@ inputs:
       examples:
         - interactive
         - yolo
-
-outputs:
-  artifacts:
-    - name: validation_report
-      type: report
-      path: reports/checklist-validation.md
-      format: markdown
-      description: Comprehensive validation report with findings and recommendations
 
 prerequisites:
   files:
@@ -133,29 +126,6 @@ process:
           - Provide specific recommendations for improvement
           - In interactive mode, discuss findings with user
           - Document any user decisions or explanations
-
-    - id: GENERATE-REPORT
-      title: Final Report
-      description: Generate comprehensive validation report
-      action:
-        type: file_operation
-        operation: create
-        target: reports/checklist-validation.md
-        content: |
-          # Checklist Validation Report
-          
-          ## Summary
-          - Overall checklist completion status
-          - Pass rates by section
-          
-          ## Failed Items
-          - List of failed items with context
-          
-          ## Recommendations
-          - Specific recommendations for improvement
-          
-          ## Not Applicable Items
-          - Any sections or items marked as N/A with justification
 
 dependencies:
   checklists:

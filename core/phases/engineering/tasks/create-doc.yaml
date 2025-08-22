@@ -1,3 +1,4 @@
+$schema: ../../../schemas/task.schema.json
 id: create-doc
 title: Create Document from Template (YAML Driven)
 version: 1.0.0

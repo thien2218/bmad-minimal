@@ -217,7 +217,7 @@
 	],
 	"dependencies": {
 		"data": [
-			"technical-preferences.md",
+			"technical-preferences.yaml",
 			"test-levels-framework.yaml",
 			"test-priorities-matrix.yaml"
 		],

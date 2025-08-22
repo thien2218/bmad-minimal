@@ -1,3 +1,4 @@
+$schema: ../../../schemas/task.schema.json
 id: trace-requirements
 title: Trace Requirements
 version: 1.0.0
@@ -172,7 +173,7 @@ process:
         type: analysis
         prompt: |
           Print:
-          Trace matrix: {qa.qaLocation}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md
+          Trace matrix: {qa.qaLocation}/assessments/{epic}.{story}-trace-{YYYYMMDD}.yaml
 
 outputs:
   artifacts:
@@ -189,7 +190,7 @@ outputs:
 
 dependencies:
   data:
-    - test-design.md
+    - test-design.yaml
 
 completion:
   criteria:
