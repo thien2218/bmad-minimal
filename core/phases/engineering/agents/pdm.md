@@ -173,7 +173,7 @@
 			"description": "Run execute-checklist using the PDM master checklist",
 			"targets": [
 				"tasks/execute-checklist.yaml",
-				"checklists/po-master-checklist.yaml"
+				"checklists/pd-master-checklist.yaml"
 			]
 		},
 		{
@@ -239,7 +239,7 @@
 	"dependencies": {
 		"checklists": [
 			"change-checklist.yaml",
-			"po-master-checklist.yaml",
+			"pd-master-checklist.yaml",
 			"story-draft-checklist.yaml"
 		],
 		"tasks": [

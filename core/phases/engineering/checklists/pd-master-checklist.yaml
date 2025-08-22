@@ -1,5 +1,5 @@
 $schema: ../../../schemas/checklist.schema.json
-id: po-master-checklist
+id: pd-master-checklist
 title: Project Development Master (PDM) Master Validation Checklist
 version: 1.0.0
 description: Comprehensive framework for the Project Development Master (PDM) to validate project plans before development execution. Adapts intelligently based on project type (greenfield vs brownfield) and includes UI/UX considerations when applicable.

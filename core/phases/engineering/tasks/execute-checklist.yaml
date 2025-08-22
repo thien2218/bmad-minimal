@@ -132,7 +132,7 @@ dependencies:
     - architect-checklist
     - story-dod-checklist
     - pm-checklist
-    - po-master-checklist
+    - pd-master-checklist
     - change-checklist
     - story-draft-checklist
 

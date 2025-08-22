@@ -85,7 +85,7 @@ workflow:
 
     - agent: po
       validates: all_artifacts
-      uses: po-master-checklist
+      uses: pd-master-checklist
       notes: "Validates all documents for integration safety and completeness. May require updates to any document."
 
     - agent: various

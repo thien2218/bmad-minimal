@@ -40,7 +40,7 @@ workflow:
 
     - agent: po
       validates: all_artifacts
-      uses: po-master-checklist
+      uses: pd-master-checklist
       notes: "Validates all documents for UI integration safety and design consistency. May require updates to any document."
 
     - agent: various
@@ -143,7 +143,7 @@ workflow:
         B --> C[pm: prd.md]
         C --> D[ux-expert: front-end-spec.md]
         D --> E[architect: architecture.md]
-        E --> F[po: validate with po-master-checklist]
+        E --> F[po: validate with pd-master-checklist]
         F --> G{PO finds issues?}
         G -->|Yes| H[Return to relevant agent for fixes]
         G -->|No| I[po: shard documents]

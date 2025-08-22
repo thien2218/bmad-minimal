@@ -33,7 +33,7 @@ workflow:
 
     - agent: po
       validates: all_artifacts
-      uses: po-master-checklist
+      uses: pd-master-checklist
       notes: "Validates all documents for service integration safety and API compatibility. May require updates to any document."
 
     - agent: various
@@ -135,7 +135,7 @@ workflow:
         A[Start: Service Enhancement] --> B[analyst: analyze existing service]
         B --> C[pm: prd.md]
         C --> D[architect: architecture.md]
-        D --> E[po: validate with po-master-checklist]
+        D --> E[po: validate with pd-master-checklist]
         E --> F{PO finds issues?}
         F -->|Yes| G[Return to relevant agent for fixes]
         F -->|No| H[po: shard documents]
