@@ -2,7 +2,7 @@ $schema: ../../../schemas/task.schema.json
 id: develop-story
 title: Develop Story Task
 version: 1.0.0
-purpose: Implement an Approved story end-to-end using test-driven development (TDD), following the story's Tasks/Subtasks with formal workflow
+purpose: Implement an Approved story end-to-end using an implementation-first workflow; testing and validation occur after implementation is complete, following the story's Tasks/Subtasks with formal workflow
 
 category: development
 agent: dev
@@ -38,7 +38,7 @@ outputs:
       type: file
       path: "{project_root}/tests/**"
       format: text
-      description: Test files created following TDD approach
+      description: Test files created after implementation during validation phase
     - name: Implementation Files
       type: file
       path: "{project_root}/**"
@@ -94,40 +94,14 @@ process:
           - Select the first incomplete task/subtask in order
           - Output: Selected task/subtask to work on
 
-    - id: TEST-DESC-1
-      title: Write Test Case Descriptions
-      description: Document test cases for selected task
-      action:
-        type: file_operation
-        operation: update
-        target: "{story_path}"
-        content: |
-          For the selected task/subtask:
-          - Write clear test case descriptions specifying expected logic and observable outcomes
-          - Prefer Given-When-Then phrasing for clarity
-          - Record under Dev Agent Record as subsection "Test Case Descriptions"
-          - Reference the task/subtask being tested
-
-    - id: TEST-IMPL-1
-      title: Write Test Cases with Mocks
-      description: Implement tests based on descriptions
-      action:
-        type: file_operation
-        operation: create
-        content: |
-          - Implement tests based on the descriptions
-          - Use mocks/stubs where appropriate
-          - Keep tests isolated and deterministic
-          - Output: Test files/cases added
-
     - id: IMPLEMENT-1
       title: Implement Task and Subtasks
-      description: Write production code to satisfy tests
+      description: Write production code to satisfy acceptance criteria and task requirements
       action:
         type: file_operation
         operation: create
         content: |
-          - Write production code to satisfy the tests
+          - Write production code to satisfy the acceptance criteria for the selected task/subtask
           - Keep changes scoped to the current task/subtask
           - Update File List with files created/modified (paths relative to repo root)
           - Output: Implementation ready for validation
@@ -141,7 +115,19 @@ process:
       condition:
         if: "tasks_remaining == true"
         then: "TASK-1"
-        else: "VALIDATE-1"
+        else: "TESTS-1"
+
+    - id: TESTS-1
+      title: Write Tests After Implementation
+      description: Create tests for implemented features based on acceptance criteria
+      action:
+        type: file_operation
+        operation: create
+        content: |
+          - Write unit/integration tests as appropriate
+          - Use mocks/stubs where appropriate
+          - Keep tests isolated and deterministic
+          - Output: Test files/cases added
 
     - id: VALIDATE-1
       title: Execute Validations
@@ -256,7 +242,7 @@ metadata:
   lastModified: 2024-01-01
   tags:
     - development
-    - tdd
+    - implementation-first
     - implementation
     - testing
   complexity: complex

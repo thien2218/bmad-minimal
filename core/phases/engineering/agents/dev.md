@@ -160,7 +160,7 @@
 		{
 			"name": "develop-story",
 			"prefix": "*",
-			"description": "Execute develop-story task on the highest ordered WIP story or the story specified by the user",
+			"description": "Execute develop-story (implementation-first flow; write tests at the end during validation) on the highest ordered WIP story or the story specified by the user",
 			"parameters": ["story"],
 			"preconditions": {
 				"storyStatusMustBe": "WIP"
