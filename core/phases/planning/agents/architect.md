@@ -176,9 +176,9 @@
 		"data": ["technical-preferences.md"],
 		"tasks": [
 			"create-deep-research-prompt.md",
-			"create-doc.yaml",
+			"create-doc.md",
 			"document-project.md",
-			"execute-checklist.yaml",
+			"execute-checklist.md",
 			"shard-doc.md"
 		],
 		"templates": [

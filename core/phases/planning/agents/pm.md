@@ -142,7 +142,7 @@
 		}
 	],
 	"dependencies": {
-		"checklists": ["change-checklist.yaml", "pm-checklist.md"],
+		"checklists": ["change-checklist.md", "pm-checklist.md"],
 		"data": ["technical-preferences.md"],
 		"tasks": [
 			"create-deep-research-prompt.md",
