@@ -1,5 +1,5 @@
 {
-	"root": "/.bmad-core",
+	"root": ".bmad-core/",
 	"prd": {
 		"file": "docs/prd.md",
 		"version": "v4",
@@ -22,10 +22,10 @@
 	"qaLocation": "docs/qa",
 	"epic": {
 		"location": "docs/epics",
-		"fileNamePattern": "epic-{epic_index}-*.yaml"
+		"fileNamePattern": "epic-{epic_number}-*.yaml"
 	},
 	"story": {
 		"location": "docs/stories",
-		"fileNamePattern": "story-{epic_index}.{story_index}-*.yaml"
+		"fileNamePattern": "story-{epic_number}.{story_number}-*.yaml"
 	}
 }
