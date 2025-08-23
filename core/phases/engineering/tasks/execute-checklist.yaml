@@ -25,7 +25,7 @@ inputs:
 
 prerequisites:
   files:
-    - {root}/checklists/
+    - {roots}/checklists/
 
 process:
   mode: sequential
@@ -129,12 +129,10 @@ process:
 
 dependencies:
   checklists:
-    - architect-checklist
-    - story-dod-checklist
-    - pm-checklist
-    - pd-master-checklist
-    - change-checklist
-    - story-draft-checklist
+    - story-dod-checklist.yaml
+    - pd-master-checklist.yaml
+    - change-checklist.yaml
+    - story-draft-checklist.yaml
 
 completion:
   criteria:

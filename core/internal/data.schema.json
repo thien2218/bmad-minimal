@@ -16,11 +16,7 @@
 			"type": "string",
 			"description": "Unique identifier for the data file",
 			"pattern": "^[a-z0-9-]+$",
-			"examples": [
-				"technical-preferences",
-				"test-levels-framework",
-				"coding-standards"
-			]
+			"examples": ["test-levels-framework", "coding-standards"]
 		},
 		"title": {
 			"type": "string",

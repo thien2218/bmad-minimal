@@ -133,7 +133,6 @@
 	],
 	"dependencies": {
 		"checklists": ["change-checklist.md", "pm-checklist.md"],
-		"data": ["technical-preferences.md"],
 		"tasks": [
 			"create-deep-research-prompt.md",
 			"create-doc.md",

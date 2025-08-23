@@ -22,11 +22,11 @@ outputs:
   artifacts:
     - name: Story File
       type: file
-      path: "{devStoryLocation}/{epicNum}.{storyNum}.story.yaml"
+      path: "{story.location}/{epicNum}.{storyNum}.story.yaml"
       format: yaml
       description: Complete story ready for development with full technical context
   updates:
-    - target: "{devStoryLocation}/*.story.yaml"
+    - target: "{story.location}/*.story.yaml"
       sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
       restrictions: Only create new story, do not modify existing stories
 
@@ -61,7 +61,7 @@ process:
         type: validation
         content: |
           Extract and validate:
-          - devStoryLocation
+          - story.location
           - prd.* settings
           - architecture.* settings
           - workflow.* settings
@@ -80,7 +80,7 @@ process:
         content: |
           Based on prdSharded from config:
           - Locate epic files (sharded location/pattern or monolithic PRD sections)
-          - If devStoryLocation has story files, load highest {epicNum}.{storyNum}.story.yaml
+          - If story.location has story files, load highest {epicNum}.{storyNum}.story.yaml
           - Determine next sequential story
 
     - id: IDENTIFY-2
@@ -144,7 +144,7 @@ process:
       description: If previous story exists, extract lessons learned
       action:
         type: analysis
-        target: "{devStoryLocation}/{previousEpicNum}.{previousStoryNum}.story.yaml"
+        target: "{story.location}/{previousEpicNum}.{previousStoryNum}.story.yaml"
         content: |
           Review Dev Agent Record sections for:
           - Completion Notes and Debug Log References
@@ -232,7 +232,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{devStoryLocation}/{epicNum}.{storyNum}.story.yaml"
+        target: "{story.location}/{epicNum}.{storyNum}.story.yaml"
         content: |
           story:
             id: "{epicNum}.{storyNum}"
@@ -309,7 +309,7 @@ process:
       action:
         type: elicit
         prompt: |
-          Story created: {devStoryLocation}/{epicNum}.{storyNum}.story.yaml
+          Story created: {story.location}/{epicNum}.{storyNum}.story.yaml
           Status: Draft
           
           Key technical components included from architecture docs:
@@ -327,12 +327,12 @@ process:
 
 dependencies:
   tasks:
-    - execute-checklist
-    - validate-next-story
+    - execute-checklist.yaml
+    - validate-next-story.yaml
   checklists:
-    - story-draft-checklist
+    - story-draft-checklist.yaml
   schemas:
-    - story
+    - story.json
 
 blocking_conditions:
   - condition: config.json not found

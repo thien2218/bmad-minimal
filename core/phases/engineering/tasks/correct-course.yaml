@@ -181,7 +181,7 @@ process:
 
 dependencies:
   checklists:
-    - change-checklist
+    - change-checklist.yaml
 
 blocking_conditions:
   - condition: Missing critical project artifacts

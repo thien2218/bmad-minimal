@@ -124,7 +124,6 @@
 		}
 	],
 	"dependencies": {
-		"data": ["technical-preferences.md"],
 		"tasks": [
 			"create-doc.md",
 			"execute-checklist.md",

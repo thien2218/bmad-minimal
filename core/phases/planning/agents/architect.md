@@ -159,7 +159,6 @@
 	],
 	"dependencies": {
 		"checklists": ["architect-checklist.md"],
-		"data": ["technical-preferences.md"],
 		"tasks": [
 			"create-deep-research-prompt.md",
 			"create-doc.md",

@@ -18,6 +18,8 @@
 		"docs/architecture/tech-stack.md",
 		"docs/architecture/source-tree.md"
 	],
+	"qaLoadAlwaysFiles": ["docs/technical-preferences.md"],
+	"qaLocation": "docs/qa",
 	"epic": {
 		"location": "docs/epics",
 		"fileNamePattern": "epic-{epic_index}-*.yaml"

@@ -97,11 +97,11 @@ process:
               full: Y
               partial: Z
               none: W
-            planning_ref: "{qa.qaLocation}/assessments/{epic}.{story}-test-design-{YYYYMMDD}.md"
+            planning_ref: "{qaLocation}/assessments/{epic}.{story}-test-design-{YYYYMMDD}.md"
             uncovered:
               - ac: "AC3"
                 reason: "No test found for specific condition"
-            notes: "See {qa.qaLocation}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
+            notes: "See {qaLocation}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
 
     - id: CREATE-REPORT
       title: Create Traceability Report
@@ -109,7 +109,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{qa.qaLocation}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
+        target: "{qaLocation}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
         content: |
           # Requirements Traceability Matrix
           
@@ -173,13 +173,13 @@ process:
         type: analysis
         prompt: |
           Print:
-          Trace matrix: {qa.qaLocation}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md
+          Trace matrix: {qaLocation}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md
 
 outputs:
   artifacts:
     - name: traceability_report
       type: report
-      path: "{qa.qaLocation}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
+      path: "{qaLocation}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
       format: markdown
       description: Requirements traceability matrix report
     - name: gate_trace_block
@@ -200,7 +200,7 @@ completion:
     - Risk assessment completed
     - Recommendations provided
   validations:
-    - command: "test -f {qa.qaLocation}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
+    - command: "test -f {qaLocation}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
       expected_output: "file exists"
 
 metadata:

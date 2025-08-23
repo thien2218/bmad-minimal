@@ -24,6 +24,15 @@ inputs:
       type: string
       description: Story slug (derive from title if missing - lowercase, hyphenated)
       pattern: "^[a-z0-9-]+$"
+  optional:
+    - name: architecture_refs
+      type: path
+      description: Path to architecture documents from config.json
+      examples: ["docs/architecture/"]
+    - name: technical_preferences
+      type: path
+      description: Path to technical preferences file
+      examples: ["docs/technical-preferences.md"]
 
 process:
   mode: sequential
@@ -191,7 +200,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{qa.qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
+        target: "{qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
         content: |
           Create comprehensive risk report with:
           - Executive summary
@@ -207,7 +216,7 @@ outputs:
   artifacts:
     - name: risk_assessment_report
       type: report
-      path: "{qa.qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
+      path: "{qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
       format: markdown
       description: Comprehensive risk assessment report
     - name: gate_risk_block
@@ -217,7 +226,7 @@ outputs:
       description: Risk summary block for gate file
 
 dependencies:
-  data:
+  docs:
     - technical-preferences.md
 
 blocking_conditions:
@@ -233,7 +242,7 @@ completion:
     - Risk report created
     - Gate block generated
   validations:
-    - command: "test -f {qa.qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
+    - command: "test -f {qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
       expected_output: "file exists"
 
 metadata:
