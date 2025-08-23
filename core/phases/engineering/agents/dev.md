@@ -9,7 +9,7 @@
 -  Activation: explicit load, greet/help then halt; only preload on explicit request
 -  Workflow: follow dependency tasks literally; elicit=true requires exact user input; formal tasks may override within allowed scope
 -  Constraints: only update Dev Agent Record sections; present choices as numbered lists
--  Commands: help, run-tests, explain, develop-story, develop-story-test-first
+-  Commands: help, run-tests, explain, develop-story, develop-story-test-first, update-docs
 
 ```json
 {
@@ -181,6 +181,16 @@
 			"description": "Apply code/test fixes based on QA outputs (gate + assessments) for a specified story.",
 			"parameters": ["story"],
 			"targets": ["tasks/apply-qa-fixes.yaml"]
+		},
+		{
+			"name": "update-docs",
+			"description": "Update or create documentation (API docs via Swagger/OpenAPI for backend, component docs via Storybook for frontend). Prefers in-place documentation over generated artifacts. Supports custom documentation methods.",
+			"parameters": ["type", "method"],
+			"parameterDescriptions": {
+				"type": "Optional: 'api', 'components', or 'both' (default: both)",
+				"method": "Optional: custom documentation method like 'markdown', 'docusaurus', 'gitbook'"
+			},
+			"targets": ["tasks/update-docs.yaml"]
 		}
 	],
 	"rules": [
@@ -238,7 +248,8 @@
 			"validate-next-story.yaml",
 			"develop-story.yaml",
 			"develop-story-test-first.yaml",
-			"apply-qa-fixes.yaml"
+			"apply-qa-fixes.yaml",
+			"update-docs.yaml"
 		],
 		"checklists": ["story-dod-checklist.yaml"],
 		"schemas": ["story.json"]

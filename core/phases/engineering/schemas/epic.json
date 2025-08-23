@@ -104,9 +104,40 @@
 				}
 			]
 		},
-		{
-			"id": "story-breakdown",
-			"title": "Story Breakdown",
+    {
+      "id": "risk-mitigation",
+      "title": "Risk Mitigation",
+      "instruction": "Document risks and mitigation strategies for this epic.",
+      "owner": "product-development-master",
+      "editors": ["product-development-master"],
+      "sections": [
+        {
+          "id": "primary-risk",
+          "title": "Primary Risk",
+          "type": "paragraph",
+          "instruction": "Describe the main risk this epic poses to the existing system and users.",
+          "elicit": true
+        },
+        {
+          "id": "mitigation-strategies",
+          "title": "Mitigation Strategies",
+          "type": "bullet-list",
+          "instruction": "List concrete mitigation actions to reduce likelihood/impact of the risk.",
+          "template": "- {{mitigation_action}}",
+          "elicit": true
+        },
+        {
+          "id": "rollback-plan",
+          "title": "Rollback Plan",
+          "type": "paragraph",
+          "instruction": "Outline how to quickly revert changes if needed, including preconditions and steps.",
+          "elicit": true
+        }
+      ]
+    },
+    {
+      "id": "story-breakdown",
+      "title": "Story Breakdown",
 			"instruction": "Define the complete list of stories for this epic with proper sequencing for story generation.\nInclude a priority for each story (integer 1–5, where 1 = highest priority).\nOrder stories primarily by dependencies (no story should depend on a later story),\nthen by priority (1 first) to deliver highest-value work earlier when safe.",
 			"owner": "product-development-master",
 			"editors": ["product-development-master"],

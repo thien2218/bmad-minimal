@@ -3,7 +3,6 @@ id: correct-course
 title: Correct Course Task
 version: 1.0.0
 purpose: Guide structured response to change triggers using change-checklist to analyze impacts, explore solutions, and produce a Sprint Change Proposal document
-
 category: planning
 agent: pdm
 

@@ -90,37 +90,56 @@ process:
       on_failure: halt
 
     - id: CREATE-EPIC-HEADER
-      title: Create Epic Header
-      description: Generate epic title and goal
+      title: Create Epic File with Schema Structure
+      description: Initialize epic YAML file following the epic schema structure
       action:
         type: file_operation
         operation: create
         target: "{epic.location}/epic-{epic_number}-{enhancement_name}.yaml"
         content: |
-          # {Enhancement Name} - Brownfield Enhancement
-          
-          ## Epic Goal
-          {1-2 sentences describing what the epic will accomplish and why it adds value}
+          status: Draft
+          epic-overview:
+            goal: "{1-2 sentences describing what the epic will accomplish and why it adds value}"
+            description: ""
+            definition_of_done: []
+          scope-boundaries:
+            in-scope: []
+            out-of-scope: []
+          requirements-mapping:
+            functional-requirements: []
+            non-functional-requirements: []
+          risk-mitigation:
+            primary-risk: "{primary_risk}"
+            mitigation-strategies: []
+            rollback-plan: "{rollback_plan}"
+          story-breakdown:
+            story-list: []
+            story-sequencing-rationale: ""
+          dependencies:
+            dependencies: []
+            story-dependencies: []
 
     - id: ADD-EPIC-DESCRIPTION
       title: Add Epic Description
-      description: Document existing system context and enhancement details
+      description: Update epic-overview section with detailed description
       action:
         type: file_operation
         operation: update
         target: "{epic.location}/epic-{epic_number}-{enhancement_name}.yaml"
         content: |
-          ## Epic Description
-          
-          ### Existing System Context
-          - Current relevant functionality: {brief description}
-          - Technology stack: {relevant existing technologies}
-          - Integration points: {where new work connects to existing system}
-          
-          ### Enhancement Details
-          - What's being added/changed: {clear description}
-          - How it integrates: {integration approach}
-          - Success criteria: {measurable outcomes}
+          epic-overview:
+            description: |
+              Enhancement: {enhancement_name}
+              
+              Existing System Context:
+              {existing_system_context}
+              
+              Technology Stack:
+              {technology_stack}
+              
+              What's being added/changed: {clear description}
+              How it integrates: {integration approach}
+              Success criteria: {measurable outcomes}
 
     - id: DEFINE-STORIES
       title: Define Stories
@@ -139,62 +158,71 @@ process:
 
     - id: ADD-STORIES
       title: Add Stories to Epic
-      description: Document the stories in the epic
+      description: Update story-breakdown section with story list and sequencing
       action:
         type: file_operation
         operation: update
         target: "{epic.location}/epic-{epic_number}-{enhancement_name}.yaml"
         content: |
-          ## Stories
-          
-          1. **Story 1:** {Story title and brief description} - Priority: {1-5}
-          2. **Story 2:** {Story title and brief description} - Priority: {1-5}
-          3. **Story 3:** {Story title and brief description} - Priority: {1-5}
+          story-breakdown:
+            story-list:
+              - "1: **{Story 1 title}** - {Story 1 brief description} [Priority: {1-5}]"
+              - "2: **{Story 2 title}** - {Story 2 brief description} [Priority: {1-5}]"
+              - "3: **{Story 3 title}** - {Story 3 brief description} [Priority: {1-5}]"
+            story-sequencing-rationale: |
+              Stories are sequenced by dependencies first, then by priority to deliver highest value.
+              Each story builds upon previous stories and is sized for AI agent execution (2-4 hours).
 
-    - id: ADD-REQUIREMENTS
-      title: Add Compatibility Requirements
-      description: Document compatibility and integration requirements
+    - id: ADD-SCOPE-BOUNDARIES
+      title: Add Scope and Boundaries
+      description: Update scope-boundaries section with in-scope and out-of-scope items
       action:
         type: file_operation
         operation: update
         target: "{epic.location}/epic-{epic_number}-{enhancement_name}.yaml"
         content: |
-          ## Compatibility Requirements
-          
-          - [ ] Existing APIs remain unchanged
-          - [ ] Database schema changes are backward compatible
-          - [ ] UI changes follow existing patterns
-          - [ ] Performance impact is minimal
+          scope-boundaries:
+            in-scope:
+              - "Enhancement: {enhancement_name}"
+              - "Integration with: {integration_points}"
+              - "Compatibility with existing {technology_stack}"
+              - "Minimal impact brownfield changes"
+            out-of-scope:
+              - "Major architectural changes"
+              - "Unrelated technical debt"
+              - "Cross-cutting concerns handled elsewhere"
 
     - id: ADD-RISK-MITIGATION
       title: Add Risk Mitigation
-      description: Document risks and mitigation strategies
+      description: Update risk-mitigation section per schema
       action:
         type: file_operation
         operation: update
         target: "{epic.location}/epic-{epic_number}-{enhancement_name}.yaml"
         content: |
-          ## Risk Mitigation
-          
-          - **Primary Risk:** {main risk to existing system}
-          - **Mitigation:** {how risk will be addressed}
-          - **Rollback Plan:** {how to undo changes if needed}
+          risk-mitigation:
+            primary-risk: "{main risk to existing system}"
+            mitigation-strategies:
+              - "{how risk will be addressed}"
+              - "Follow existing patterns to minimize integration risk"
+              - "Implement feature flags for safe rollback"
+            rollback-plan: "{how to undo changes if needed}"
 
     - id: ADD-DOD
       title: Add Definition of Done
-      description: Document completion criteria for the epic
+      description: Update epic-overview definition_of_done per schema
       action:
         type: file_operation
         operation: update
         target: "{epic.location}/epic-{epic_number}-{enhancement_name}.yaml"
         content: |
-          ## Definition of Done
-          
-          - [ ] All stories completed with acceptance criteria met
-          - [ ] Existing functionality verified through testing
-          - [ ] Integration points working correctly
-          - [ ] Documentation updated appropriately
-          - [ ] No regression in existing features
+          epic-overview:
+            definition_of_done:
+              - "1: All stories completed with acceptance criteria met"
+              - "2: Existing functionality verified through testing"
+              - "3: Integration points working correctly"
+              - "4: Documentation updated appropriately"
+              - "5: No regression in existing features"
 
     - id: VALIDATE-EPIC
       title: Validate Epic Completeness

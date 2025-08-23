@@ -4,7 +4,7 @@ title: Checklist Validation Task
 version: 1.0.0
 purpose: Validate documentation against checklists through systematic validation
 category: quality
-agent: any
+agent: all
 
 inputs:
   optional:
@@ -25,7 +25,7 @@ inputs:
 
 prerequisites:
   files:
-    - {roots}/checklists/
+    - "{roots}/checklists/"
 
 process:
   mode: sequential
