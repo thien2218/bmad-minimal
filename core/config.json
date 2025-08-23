@@ -1,4 +1,5 @@
 {
+	"root": "/.bmad-core",
 	"prd": {
 		"file": "docs/prd.md",
 		"version": "v4",
@@ -9,8 +10,7 @@
 		"file": "docs/architecture.md",
 		"version": "v4",
 		"sharded": true,
-		"shardedLocation": "docs/architecture",
-		"epicFilePattern": "epic-{n}*.md"
+		"shardedLocation": "docs/architecture"
 	},
 	"customTechnicalDocuments": null,
 	"devLoadAlwaysFiles": [
@@ -18,9 +18,12 @@
 		"docs/architecture/tech-stack.md",
 		"docs/architecture/source-tree.md"
 	],
-	"slashPrefix": "BMad",
-	"devStoryLocation": "docs/stories",
-	"devEpicLocation": "docs/epics",
-	"epicFilePattern": "epic-{n}*.md",
-	"storyFilePattern": "story-{n}*.md"
+	"epic": {
+		"location": "docs/epics",
+		"fileNamePattern": "epic-{epic_index}-*.yaml"
+	},
+	"story": {
+		"location": "docs/stories",
+		"fileNamePattern": "story-{epic_index}.{story_index}-*.yaml"
+	}
 }

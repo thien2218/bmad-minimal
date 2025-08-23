@@ -1190,6 +1190,6 @@ items:
       instructions: Check monitoring continuity
 
 metadata:
-  author: BMAD Core
+  author: Thien Huynh
   created: "2025-08-21"
   tags: ["pdm", "validation", "planning", "greenfield", "brownfield", "project-management"]

@@ -179,7 +179,7 @@ completion:
     - "No validation errors remain"
 
 metadata:
-  author: "BMAD Core"
+  author: "Thien Huynh"
   created: "2025-08-21"
   lastModified: "2025-08-21"
   tags: ["documentation", "epic", "swagger", "storybook", "markdown"]

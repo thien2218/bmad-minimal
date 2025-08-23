@@ -268,16 +268,15 @@ methods:
     priority: optional
 
 usage:
-  agents: ["pdm", "all"]
+  agents: ["all"]
   phases: ["planning", "engineering"]
   tasks: ["advanced-elicitation", "create-doc", "create-next-story", "brownfield-create-epic"]
   load_when: "on_demand"
 
 metadata:
-  author: "BMAD Core Team"
+  author: "Thien Huynh"
   created: "2025-01-23"
   lastModified: "2025-01-23"
-  source: "core/phases/planning/data/elicitation-methods.md"
   tags:
     - "elicitation"
     - "analysis"

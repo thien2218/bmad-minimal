@@ -109,6 +109,6 @@ usage:
   tasks: ["test-design"]
   load_when: on_demand
 metadata:
-  author: BMAD Core
+  author: Thien Huynh
   created: "2025-08-21"
   tags: ["testing", "quality", "framework", "test-levels", "unit-tests", "integration-tests", "e2e-tests"]

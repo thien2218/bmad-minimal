@@ -177,6 +177,6 @@ usage:
   tasks: ["test-design", "test-priorities"]
   load_when: on_demand
 metadata:
-  author: BMAD Core
+  author: Thien Huynh
   created: "2025-08-21"
   tags: ["testing", "priorities", "risk-assessment", "quality", "matrix"]

@@ -105,4 +105,4 @@ Recommended tools for working with these schemas:
 
 ## Contact
 
-For questions about these schemas, consult the BMAD Core team or project maintainers.
+For questions about these schemas, consult Thien Huynh or project maintainers.

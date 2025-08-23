@@ -235,7 +235,7 @@ dependencies:
   checklists:
     - pm-checklist
   schemas:
-    - ../schemas/epic.json
+    - epic
 
 blocking_conditions:
   - condition: "Enhancement requires more than 3 stories"
@@ -259,7 +259,7 @@ completion:
     - Handoff to Story Manager is complete
 
 metadata:
-  author: BMAD Core Team
+  author: Thien Huynh
   created: 2024-01-01
   lastModified: 2024-01-01
   tags:

@@ -178,6 +178,6 @@ items:
       instructions: Verify special test considerations are documented
 
 metadata:
-  author: BMAD Core
+  author: Thien Huynh
   created: "2025-08-21"
   tags: ["story", "validation", "planning", "requirements"]

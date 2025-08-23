@@ -132,7 +132,7 @@ content:
         - "Individual items within the section (specify which item when selecting an action)"
 
 usage:
-  agents: ["pdm", "all"]
+  agents: ["all"]
   phases: ["planning", "engineering"]
   tasks: ["advanced-elicitation"]
   load_when: "task_start"
@@ -149,10 +149,9 @@ validation:
       constraint: "must be option 9"
 
 metadata:
-  author: "BMAD Core Team"
+  author: "Thien Huynh"
   created: "2025-01-23"
   lastModified: "2025-01-23"
-  source: "core/phases/planning/tasks/advanced-elicitation.md"
   tags:
     - "elicitation"
     - "configuration"

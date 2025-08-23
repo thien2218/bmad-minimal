@@ -33,12 +33,6 @@ inputs:
       pattern: "^[a-z0-9-]+$"
 
 outputs:
-  artifacts:
-    - name: fix_report
-      type: report
-      path: "{qa_root}/fix-reports/{story_id}-fixes-{timestamp}.md"
-      format: markdown
-      description: Summary of all fixes applied
   updates:
     - target: "{story_root}/{story_id}.*.md"
       sections:
@@ -177,34 +171,6 @@ process:
       action:
         type: validation
         prompt: Dev does not modify gate YAML. If fixes address issues, request QA to re-run review-story to update the gate
-    - id: CREATE-FIX-REPORT
-      title: Create Fix Report (Markdown)
-      description: Summarize fixes applied in a human-readable report
-      action:
-        type: file_operation
-        operation: create
-        target: "{qa_root}/fix-reports/{story_id}-fixes-{timestamp}.md"
-        content: |
-          # Fix Report: {story_id}
-          
-          ## Gate Status
-          - Status: {gate_status}
-          
-          ## Issues Addressed
-          - List high-severity issues and how they were fixed
-          
-          ## Code Changes
-          - Files modified: (list)
-          - Files added: (list)
-          - Files deleted: (list)
-          
-          ## Tests
-          - Added: (list)
-          - Updated: (list)
-          - Results: (summary)
-          
-          ## Notes
-          - Additional context and follow-ups
 
 dependencies:
   data:
@@ -238,7 +204,7 @@ completion:
       expected_output: "ok.*passed"
 
 metadata:
-  author: BMAD Core Team
+  author: Thien Huynh
   created: 2024-01-01
   lastModified: 2024-01-01
   tags:

@@ -178,7 +178,7 @@ process:
         operation: create
         target: "{qa.qaLocation}/gates/{epic}.{story}-{slug}.yml"
         content: |
-          Render from ../schemas/qa-gate.json
+          Render from .bmad-core/schemas/qa-gate.json
           Include gate decision, risk summary, NFR validation
 
 outputs:
@@ -243,7 +243,7 @@ completion:
       expected_output: "file exists"
 
 metadata:
-  author: BMAD Core Team
+  author: Thien Huynh
   created: "2024-01-01"
   lastModified: "2024-01-01"
   tags:
