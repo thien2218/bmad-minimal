@@ -15,16 +15,15 @@ inputs:
     - name: "epic_path"
       type: "path"
       description: "Path to epic file (derived from config or docs directory)"
-      pattern: "{epicRoot}/{epic}*.md"
+      pattern: "{epic.location}/{epic}-*.yaml"
+    - name: "output_dir"
+      type: "path"
+      description: "Custom output root for docs"
   optional:
     - name: "method"
       type: "string"
       description: "Documentation method to use"
       examples: ["swagger", "openapi", "storybook", "markdown", "mkdocs", "docusaurus", "mdbook", "custom"]
-    - name: "output_dir"
-      type: "path"
-      description: "Custom output root for docs"
-      default: "docs/epics/{epic}"
 
 outputs:
   artifacts:

@@ -11,7 +11,7 @@ inputs:
     - name: story_file
       type: path
       description: Path to the drafted story to validate
-      examples: ["{story.location}/{epic}.{story}.*.yaml"]
+      examples: ["{story.location}/{epic}.{story}-*.yaml"]
     - name: parent_epic
       type: epic_id
       description: Epic containing this story's requirements

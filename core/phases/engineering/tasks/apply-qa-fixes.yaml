@@ -34,7 +34,7 @@ inputs:
 
 outputs:
   updates:
-    - target: "{story_root}/{story_id}.*.md"
+    - target: "{story_root}/{story_id}-*.yaml"
       sections:
         - "Tasks / Subtasks Checkboxes"
         - "Dev Agent Record"
@@ -68,7 +68,7 @@ process:
 
     - id: LOCATE-STORY
       title: Locate Story File
-      description: Find story file in {story_root}/{epic}.{story}.*.md
+      description: Find story file in {story_root}/{epic}.{story}-*.yaml
       action:
         type: validation
         validation:
@@ -149,7 +149,7 @@ process:
       action:
         type: file_operation
         operation: update
-        target: "{story_root}/{story_id}.*.md"
+        target: "{story_root}/{story_id}-*.yaml"
         content: |
           Update ONLY these sections:
           - Tasks / Subtasks Checkboxes (mark any fix subtask as done)

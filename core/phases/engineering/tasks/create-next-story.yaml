@@ -22,11 +22,11 @@ outputs:
   artifacts:
     - name: Story File
       type: file
-      path: "{story.location}/{epicNum}.{storyNum}.story.yaml"
+      path: "{story.location}/{epic}.{story}-*.yaml"
       format: yaml
       description: Complete story ready for development with full technical context
   updates:
-    - target: "{story.location}/*.story.yaml"
+    - target: "{story.location}/*.yaml"
       sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
       restrictions: Only create new story, do not modify existing stories
 
@@ -80,7 +80,7 @@ process:
         content: |
           Based on prdSharded from config:
           - Locate epic files (sharded location/pattern or monolithic PRD sections)
-          - If story.location has story files, load highest {epicNum}.{storyNum}.story.yaml
+          - If story.location has story files, load highest {epic}.{story}-*.yaml
           - Determine next sequential story
 
     - id: IDENTIFY-2
@@ -91,7 +91,7 @@ process:
         prompt: |
           If highest story exists and status != 'Done':
           ALERT: Found incomplete story!
-          File: {lastEpicNum}.{lastStoryNum}.story.yaml
+          File: {lastEpicNum}.{lastStoryNum}-*.yaml
           Status: {current_status}
           
           You should fix this story first, but would you like to accept risk & override to create the next story in draft?
@@ -105,10 +105,10 @@ process:
       action:
         type: elicit
         prompt: |
-          Epic {epicNum} Complete: All stories in Epic {epicNum} have been completed.
+          Epic {epic} Complete: All stories in Epic {epic} have been completed.
           
           Would you like to:
-          1) Begin Epic {epicNum + 1} with story 1
+          1) Begin Epic {epic + 1} with story 1
           2) Select a specific story to work on
           3) Cancel story creation
           
@@ -123,7 +123,7 @@ process:
       action:
         type: elicit
         prompt: |
-          Identified next story for preparation: {epicNum}.{storyNum} - {Story Title}
+          Identified next story for preparation: {epic}.{story} - {Story Title}
 
     - id: GATHER-1
       title: Gather Story Requirements
@@ -131,7 +131,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "docs/epics/epic-{epicNum}.yaml"
+        target: "docs/epics/epic-{epic}.yaml"
         content: |
           Extract:
           - Story title and description
@@ -144,7 +144,7 @@ process:
       description: If previous story exists, extract lessons learned
       action:
         type: analysis
-        target: "{story.location}/{previousEpicNum}.{previousStoryNum}.story.yaml"
+        target: "{story.location}/{previousEpicNum}.{previousStoryNum}-*.yaml"
         content: |
           Review Dev Agent Record sections for:
           - Completion Notes and Debug Log References
@@ -232,10 +232,10 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{story.location}/{epicNum}.{storyNum}.story.yaml"
+        target: "{story.location}/{epic}.{story}-*.yaml"
         content: |
           story:
-            id: "{epicNum}.{storyNum}"
+            id: "{epic}.{story}"
             title: "{Title}"
             status: Draft
             priority: "{priority}"
@@ -309,7 +309,7 @@ process:
       action:
         type: elicit
         prompt: |
-          Story created: {story.location}/{epicNum}.{storyNum}.story.yaml
+          Story created: {story.location}/{epic}.{story}-*.yaml
           Status: Draft
           
           Key technical components included from architecture docs:

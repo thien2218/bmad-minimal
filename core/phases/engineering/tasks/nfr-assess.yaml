@@ -16,7 +16,7 @@ inputs:
     - name: story_path
       type: path
       description: Path to story file from story.location in config.json
-      examples: ["{story.location}/{epic}.{story}.*.md"]
+      examples: ["{story.location}/{epic}.{story}-*.yaml"]
   optional:
     - name: story_title
       type: string
@@ -257,7 +257,7 @@ process:
           Output integration information:
           
           1. NFR assessment: {qaLocation}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md
-          2. Gate NFR block ready → paste into {qaLocation}/gates/{epic}.{story}-{slug}.yaml under nfr_validation
+          2. Gate NFR block ready → paste into {qaLocation}/gates/{epic}.{story}-*.yaml under nfr_validation
 
 outputs:
   artifacts:
