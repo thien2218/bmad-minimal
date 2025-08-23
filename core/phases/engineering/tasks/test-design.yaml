@@ -1,4 +1,4 @@
-$schema: ../../../schemas/task.schema.json
+$schema: ../../../internal/task.schema.json
 id: test-design
 title: Test Design
 version: 1.0.0

@@ -1,4 +1,4 @@
-$schema: ../../../schemas/task.schema.json
+$schema: ../../../internal/task.schema.json
 id: correct-course
 title: Correct Course Task
 version: 1.0.0
@@ -25,7 +25,7 @@ inputs:
 
 outputs:
   updates:
-    - target: docs/epics/*.md
+    - target: docs/epics/*.yaml
       sections: ["User Stories", "Acceptance Criteria", "Priority"]
       restrictions: Only as specified in approved change proposal
     - target: docs/prd/*.md
@@ -37,7 +37,7 @@ outputs:
 
 prerequisites:
   files:
-    - checklists/change-checklist.md
+    - checklists/change-checklist.yaml
     - docs/prd/**
     - docs/epics/**
     - docs/architecture/**
@@ -83,7 +83,7 @@ process:
       description: Work through Section 1 of change-checklist - Change Context
       action:
         type: analysis
-        target: checklists/change-checklist.md#section-1
+        target: checklists/change-checklist.yaml#section-1
         prompt: Analyze change context including trigger, timing, and initial assessment
       elicit: true
 
@@ -92,7 +92,7 @@ process:
       description: Work through Section 2 of change-checklist - Epic/Story Impact
       action:
         type: analysis
-        target: checklists/change-checklist.md#section-2
+        target: checklists/change-checklist.yaml#section-2
         prompt: Assess impact on current epics, stories, and sprint work
       elicit: true
 
@@ -101,7 +101,7 @@ process:
       description: Work through Section 3 of change-checklist - Artifact Conflicts
       action:
         type: analysis
-        target: checklists/change-checklist.md#section-3
+        target: checklists/change-checklist.yaml#section-3
         prompt: Identify and resolve conflicts in project artifacts
       elicit: true
 

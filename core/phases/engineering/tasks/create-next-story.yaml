@@ -1,4 +1,4 @@
-$schema: ../../../schemas/task.schema.json
+$schema: ../../../internal/task.schema.json
 id: create-next-story
 title: Create Next Story Task
 version: 1.0.0
@@ -131,7 +131,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "docs/epics/epic-{epicNum}.md"
+        target: "docs/epics/epic-{epicNum}.yaml"
         content: |
           Extract:
           - Story title and description

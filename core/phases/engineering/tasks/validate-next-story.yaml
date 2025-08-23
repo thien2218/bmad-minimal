@@ -1,4 +1,4 @@
-$schema: ../../../schemas/task.schema.json
+$schema: ../../../internal/task.schema.json
 id: validate-next-story
 title: Validate Next Story Task
 version: 1.0.0
@@ -11,7 +11,7 @@ inputs:
     - name: story_file
       type: path
       description: Path to the drafted story to validate
-      examples: ["{devStoryLocation}/{epic}.{story}.*.md"]
+      examples: ["{devStoryLocation}/{epic}.{story}.*.yaml"]
     - name: parent_epic
       type: epic_id
       description: Epic containing this story's requirements
@@ -182,56 +182,40 @@ process:
           - Missing information: identify critical gaps
           - Actionability: all tasks actionable by agent
 
-    - id: GENERATE-REPORT
-      title: Generate Validation Report
-      description: Create structured validation report
+    - id: REPORT-FINDINGS
+      title: Report Validation Findings
+      description: Present comprehensive validation findings directly to user
       action:
-        type: file_operation
-        operation: create
-        target: "validation-report-{story_id}.md"
+        type: analysis
         content: |
-          # Validation Report for Story {story_id}
+          Present validation findings in structured format to user:
           
-          ## Schema Compliance Issues
-          - Missing sections from story schema
-          - Unfilled placeholders or template variables
-          - Structural formatting issues
+          ## Validation Report for Story {story_id}
           
-          ## Critical Issues (Must Fix - Story Blocked)
-          - Missing essential information
-          - Inaccurate or unverifiable claims
-          - Incomplete acceptance criteria coverage
-          - Missing required sections
+          ### Schema Compliance Issues
+          [List any missing sections, unfilled placeholders, structural issues]
           
-          ## Should-Fix Issues (Important Quality Improvements)
-          - Unclear implementation guidance
-          - Missing security considerations
-          - Task sequencing problems
-          - Incomplete testing instructions
+          ### Critical Issues (Must Fix - Story Blocked)
+          [List missing essential info, unverifiable claims, incomplete AC coverage, missing sections]
           
-          ## Nice-to-Have Improvements (Optional Enhancements)
-          - Additional helpful context
-          - Efficiency clarifications
-          - Documentation improvements
+          ### Should-Fix Issues (Important Quality Improvements)
+          [List unclear guidance, missing security considerations, sequencing problems, incomplete testing]
           
-          ## Anti-Hallucination Findings
-          - Unverifiable technical claims
-          - Missing source references
-          - Architecture inconsistencies
-          - Invented libraries/patterns/standards
+          ### Nice-to-Have Improvements (Optional Enhancements)
+          [List additional context, efficiency clarifications, documentation improvements]
           
-          ## Final Assessment
-          - Status: GO / NO-GO
-          - Implementation Readiness Score: X/10
-          - Confidence Level: High/Medium/Low
+          ### Anti-Hallucination Findings
+          [List unverifiable claims, missing references, architecture inconsistencies, invented details]
+          
+          ### Final Assessment
+          - **Status:** GO / NO-GO
+          - **Implementation Readiness Score:** X/10
+          - **Confidence Level:** High/Medium/Low
+          
+          Provide clear recommendation on whether story is ready for development.
 
 outputs:
-  artifacts:
-    - name: validation_report
-      type: report
-      path: "validation-report-{story_id}.md"
-      format: markdown
-      description: Comprehensive validation report with findings
+  direct_report: true
 
 blocking_conditions:
   - condition: "core-config.yaml not found"
@@ -247,13 +231,10 @@ blocking_conditions:
 completion:
   criteria:
     - All validation checks completed
-    - Report generated
+    - Findings reported to user in chat
     - GO/NO-GO decision made
     - Readiness score assigned
-    - All issues documented
-  validations:
-    - command: "test -f validation-report-{story_id}.md"
-      expected_output: "file exists"
+    - All issues documented and communicated
 
 metadata:
   author: BMAD Core Team

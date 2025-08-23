@@ -1,4 +1,4 @@
-$schema: ../../../schemas/task.schema.json
+$schema: ../../../internal/task.schema.json
 id: apply-qa-fixes
 title: Apply QA Fixes
 version: 1.0.0

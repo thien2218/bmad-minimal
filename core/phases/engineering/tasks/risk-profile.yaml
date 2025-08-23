@@ -1,4 +1,4 @@
-$schema: ../../../schemas/task.schema.json
+$schema: ../../../internal/task.schema.json
 id: risk-profile
 title: Risk Profile
 version: 1.0.0

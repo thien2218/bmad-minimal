@@ -1,4 +1,4 @@
-$schema: ../../../schemas/task.schema.json
+$schema: ../../../internal/task.schema.json
 id: develop-story
 title: Develop Story Task
 version: 1.0.0

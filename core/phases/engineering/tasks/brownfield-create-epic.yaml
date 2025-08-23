@@ -1,4 +1,4 @@
-$schema: ../../../schemas/task.schema.json
+$schema: ../../../internal/task.schema.json
 id: brownfield-create-epic
 title: Create Brownfield Epic Task
 version: 1.0.0

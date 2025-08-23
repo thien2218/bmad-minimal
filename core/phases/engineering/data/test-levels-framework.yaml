@@ -1,4 +1,4 @@
-$schema: ../../../schemas/data.schema.json
+$schema: ../../../internal/data.schema.json
 id: test-levels-framework
 title: Test Levels Framework
 version: 1.0.0
