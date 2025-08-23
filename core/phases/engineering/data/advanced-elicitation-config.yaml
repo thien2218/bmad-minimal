@@ -1,0 +1,160 @@
+$schema: ../../../internal/data.schema.json
+id: advanced-elicitation-config
+title: Advanced Elicitation Process Configuration
+version: 1.0.0
+description: Configuration rules and patterns for implementing advanced elicitation in document creation and chat conversations
+type: configuration
+category: process
+scope: project
+
+content:
+  scenarios:
+    - id: template-document-creation
+      name: Template Document Creation
+      description: Elicitation during structured document generation
+      process:
+        - step: "Section Review"
+          action: "Ask user to review the drafted section"
+          timing: "after_section_output"
+        - step: "Offer Elicitation"
+          action: "Present 9 carefully selected elicitation methods"
+          timing: "same_message_as_review"
+        - step: "Simple Selection"
+          action: "User types a number (0-8) to engage method, or 9 to proceed"
+          timing: "await_user_response"
+        - step: "Execute & Loop"
+          action: "Apply selected method, then re-offer choices until user proceeds"
+          timing: "iterative"
+    
+    - id: general-chat-elicitation
+      name: General Chat Elicitation
+      description: User-requested elicitation on any agent output
+      trigger_phrases:
+        - "do advanced elicitation"
+        - "apply elicitation"
+        - "analyze this"
+        - "improve this content"
+      process:
+        - step: "Method Selection"
+          action: "Agent selects 9 relevant methods for the context"
+          timing: "immediate"
+        - step: "Present Options"
+          action: "Same simple 0-9 selection process"
+          timing: "immediate"
+
+  method_selection_strategy:
+    analysis_factors:
+      - factor: "content_type"
+        values: ["technical_specs", "user_stories", "architecture", "requirements", "process_docs"]
+        weight: 0.3
+      - factor: "complexity_level" 
+        values: ["simple", "moderate", "complex"]
+        weight: 0.2
+      - factor: "stakeholder_needs"
+        values: ["technical_team", "business_stakeholders", "end_users", "mixed_audience"]
+        weight: 0.2
+      - factor: "risk_level"
+        values: ["low_impact", "medium_impact", "high_impact", "critical"]
+        weight: 0.2
+      - factor: "creative_potential"
+        values: ["routine", "some_innovation", "high_innovation", "breakthrough_needed"]
+        weight: 0.1
+    
+    core_methods:
+      always_include: 3-4
+      methods:
+        - "Expand or Contract for Audience"
+        - "Critique and Refine"  
+        - "Identify Potential Risks"
+        - "Assess Alignment with Goals"
+    
+    context_specific_selection:
+      technical_content:
+        - "Tree of Thoughts Deep Dive"
+        - "ReWOO (Reasoning Without Observation)"
+        - "Meta-Prompting Analysis"
+        - "Self-Consistency Validation"
+      
+      user_facing_content:
+        - "Agile Team Perspective Shift"
+        - "Stakeholder Round Table"
+        - "Challenge from Critical Perspective"
+        - "Hindsight is 20/20: The 'If Only...' Reflection"
+      
+      creative_content:
+        - "Innovation Tournament"
+        - "Escape Room Challenge"
+        - "Persona-Pattern Hybrid"
+        - "Emergent Collaboration Discovery"
+      
+      strategic_content:
+        - "Red Team vs Blue Team"
+        - "Hindsight is 20/20: The 'If Only...' Reflection"
+        - "Meta-Prompting Analysis"
+        - "Challenge from Critical Perspective"
+
+  presentation_format:
+    header: "**Advanced Elicitation Options**"
+    instruction: "Choose a number (0-8) or 9 to proceed:"
+    option_format: "{number}. {method_name}"
+    proceed_option: "9. Proceed / No Further Actions"
+    
+  execution_framework:
+    process_steps:
+      - step: "Retrieve Method"
+        action: "Access the specific elicitation method from the elicitation-methods data file"
+      - step: "Apply Context"
+        action: "Execute the method from your current role's perspective"
+      - step: "Provide Results"
+        action: "Deliver insights, critiques, or alternatives relevant to the content"
+      - step: "Re-offer Choice"
+        action: "Present the same 9 options again until user selects 9 or gives direct feedback"
+    
+    guidelines:
+      conciseness: "Focus on actionable insights, not lengthy explanations"
+      relevance: "Tie all elicitation back to the specific content being analyzed"
+      persona_identification: "For multi-persona methods, clearly identify which viewpoint is speaking"
+      flow_maintenance: "Keep the process moving efficiently"
+    
+    response_handling:
+      numeric_0_8: "Execute the selected method, then re-offer the choice"
+      numeric_9: "Proceed to next section or continue conversation"
+      direct_feedback: "Apply user's suggested changes and continue"
+
+  context_guidance:
+    section_review:
+      provide_context_summary: true
+      summary_length: "1-2 sentences"
+      explain_visual_elements: true
+      clarify_scope_options: true
+      scope_options:
+        - "The entire section as a whole"
+        - "Individual items within the section (specify which item when selecting an action)"
+
+usage:
+  agents: ["pdm", "all"]
+  phases: ["planning", "engineering"]
+  tasks: ["advanced-elicitation"]
+  load_when: "task_start"
+
+validation:
+  required_fields:
+    - "scenarios"
+    - "method_selection_strategy"
+    - "execution_framework"
+  constraints:
+    - field: "core_methods.always_include"
+      constraint: "must be between 3 and 4"
+    - field: "presentation_format.proceed_option"
+      constraint: "must be option 9"
+
+metadata:
+  author: "BMAD Core Team"
+  created: "2025-01-23"
+  lastModified: "2025-01-23"
+  source: "core/phases/planning/tasks/advanced-elicitation.md"
+  tags:
+    - "elicitation"
+    - "configuration"
+    - "process"
+    - "workflow"
