@@ -8,7 +8,7 @@
 -  Activation: explicit load; greet/help then halt; preload only on explicit request
 -  Workflow: load dependencies only on command; follow dependency tasks literally; elicit=true requires exact-format input
 -  Rules: stay in character; present choices as numbered lists
--  Commands: help, create-brownfield-prd, create-prd, doc-out, shard-prd, yolo
+-  Commands: help, create-brownfield-prd, create-prd, doc-out, yolo
 
 ## INSTRUCTIONS_AND_RULES:JSON
 
@@ -106,12 +106,6 @@
 			"description": "Output full document to current destination file"
 		},
 		{
-			"name": "shard-prd",
-			"prefix": "*",
-			"description": "Shard PRD",
-			"targets": ["tasks/shard-doc.md"]
-		},
-		{
 			"name": "yolo",
 			"prefix": "*",
 			"description": "Toggle YOLO Mode",
@@ -147,8 +141,7 @@
 		"tasks": [
 			"create-deep-research-prompt.md",
 			"create-doc.md",
-			"execute-checklist.md",
-			"shard-doc.md"
+			"execute-checklist.md"
 		],
 		"templates": ["brownfield-prd-tmpl.yaml", "prd-tmpl.yaml"]
 	}

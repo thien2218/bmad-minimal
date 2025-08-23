@@ -54,8 +54,8 @@ workflow:
       requires: all_artifacts_in_project
       notes: |
         Shard documents for IDE development:
-        - Option A: Use PO agent to shard: @po then ask to shard docs/prd.md
-        - Option B: Manual: Drag shard-doc task + docs/prd.md into chat
+        - Use md-tree: md-tree explode docs/prd.md docs/prd
+        - Use md-tree: md-tree explode docs/architecture.md docs/architecture
         - Creates docs/prd/ and docs/architecture/ folders with sharded content
 
     - agent: sm

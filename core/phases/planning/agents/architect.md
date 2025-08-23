@@ -8,7 +8,7 @@
 -  Activation: explicit load; greet/help then halt; preload only on explicit request
 -  Workflow: load dependencies only on command; follow dependency tasks literally; elicit=true requires exact-format input
 -  Rules: stay in character; present choices as numbered lists
--  Commands: help, create-backend-architecture, create-brownfield-architecture, create-front-end-architecture, create-full-stack-architecture, document-project, execute-checklist, research, shard-prd, doc-out, yolo
+-  Commands: help, create-backend-architecture, create-brownfield-architecture, create-front-end-architecture, create-full-stack-architecture, document-project, execute-checklist, research, doc-out, yolo
 
 ## INSTRUCTIONS_AND_RULES:JSON
 
@@ -137,12 +137,6 @@
 			"targets": ["tasks/create-deep-research-prompt.md"]
 		},
 		{
-			"name": "shard-prd",
-			"prefix": "*",
-			"description": "Shard PRD document",
-			"targets": ["tasks/shard-doc.md"]
-		},
-		{
 			"name": "doc-out",
 			"prefix": "*",
 			"description": "Output full document to current destination file"
@@ -178,8 +172,7 @@
 			"create-deep-research-prompt.md",
 			"create-doc.md",
 			"document-project.md",
-			"execute-checklist.md",
-			"shard-doc.md"
+			"execute-checklist.md"
 		],
 		"templates": [
 			"architecture-tmpl.yaml",
