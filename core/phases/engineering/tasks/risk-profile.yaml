@@ -218,7 +218,7 @@ outputs:
 
 dependencies:
   data:
-    - technical-preferences.yaml
+    - technical-preferences.md
 
 blocking_conditions:
   - condition: "Story file not found or incomplete"

@@ -207,8 +207,6 @@ process:
           - Additional context and follow-ups
 
 dependencies:
-  checklists:
-    - qa-fixes-checklist
   data:
     - test-priorities-matrix
     - test-levels-framework

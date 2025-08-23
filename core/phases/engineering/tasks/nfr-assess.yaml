@@ -1,0 +1,310 @@
+$schema: ../../../internal/task.schema.json
+id: nfr-assess
+title: Non-Functional Requirements Assessment
+version: 1.0.0
+purpose: Quick NFR validation focused on the core four (security, performance, reliability, maintainability). Assess non-functional requirements for a story and generate YAML blocks for gate files plus markdown assessment reports.
+category: quality
+agent: qa
+
+inputs:
+  required:
+    - name: story_id
+      type: story_id
+      description: Story identifier in format {epic}.{story}
+      pattern: "^\\d+\\.\\d+$"
+      examples: ["1.3", "2.5"]
+    - name: story_path
+      type: path
+      description: Path to story file from devStoryLocation in core-config.json
+      examples: ["{devStoryLocation}/{epic}.{story}.*.md"]
+  optional:
+    - name: story_title
+      type: string
+      description: Story title (derive from story file H1 if missing)
+    - name: story_slug
+      type: string
+      description: Story slug (derive from title if missing - lowercase, hyphenated)
+      pattern: "^[a-z0-9-]+$"
+    - name: architecture_refs
+      type: path
+      description: Path to architecture documents from core-config.json
+      examples: ["docs/architecture/"]
+    - name: technical_preferences
+      type: path
+      description: Path to technical preferences file
+      examples: ["docs/technical-preferences.md"]
+    - name: interaction_mode
+      type: string
+      description: Assessment interaction mode
+      default: "non-interactive"
+      examples: ["interactive", "non-interactive"]
+
+prerequisites:
+  files:
+    - "{root}/core-config.json"
+  status:
+    - entity: story
+      field: status
+      value: "Ready for Review"
+      operator: in
+
+process:
+  mode: sequential
+  steps:
+    - id: LOAD-CONFIG
+      title: Load Configuration and Story
+      description: Load core configuration and resolve story file path
+      action:
+        type: file_operation
+        operation: read
+        target: "{root}/core-config.json"
+        content: |
+          Extract qa.qaLocation and devStoryLocation settings.
+          Resolve story_path if not provided.
+      on_failure: continue
+
+    - id: ELICIT-SCOPE
+      title: Elicit NFR Scope
+      description: Determine which NFRs to assess
+      action:
+        type: elicit
+        prompt: |
+          Which NFRs should I assess? (Enter numbers or press Enter for default)
+          [1] Security (default)
+          [2] Performance (default) 
+          [3] Reliability (default)
+          [4] Maintainability (default)
+          [5] Usability
+          [6] Compatibility
+          [7] Portability
+          [8] Functional Suitability
+          
+          > [Enter for 1-4]
+        options: ["security", "performance", "reliability", "maintainability", "usability", "compatibility", "portability", "functional_suitability"]
+      condition:
+        if: "interaction_mode == 'interactive'"
+        else: "CHECK-THRESHOLDS"
+      elicit: true
+
+    - id: CHECK-THRESHOLDS
+      title: Check for NFR Thresholds
+      description: Look for existing NFR requirements and thresholds
+      action:
+        type: analysis
+        content: |
+          Look for NFR requirements in:
+          - Story acceptance criteria
+          - docs/architecture/*.md files  
+          - docs/technical-preferences.md
+          
+          If interactive mode and thresholds missing, ask user:
+          - Performance targets (response times, throughput)
+          - Security requirements (auth methods, validation)
+          - Reliability targets (uptime, error rates)
+          - Maintainability targets (test coverage, documentation)
+          
+          Unknown targets policy: Mark as CONCERNS with "Target unknown"
+
+    - id: ASSESS-SECURITY
+      title: Assess Security NFR
+      description: Evaluate security implementation and requirements
+      action:
+        type: analysis
+        content: |
+          Check security implementation:
+          - Authentication mechanism present
+          - Authorization checks enforced
+          - Input validation implemented
+          - No hardcoded secrets
+          - Rate limiting configured
+          
+          Status Rules:
+          - PASS: Auth implemented, validation present, no hardcoded secrets
+          - CONCERNS: Missing rate limiting, weak encryption, incomplete authorization
+          - FAIL: No authentication, hardcoded credentials, SQL injection vulnerabilities
+
+    - id: ASSESS-PERFORMANCE
+      title: Assess Performance NFR
+      description: Evaluate performance characteristics and bottlenecks
+      action:
+        type: analysis
+        content: |
+          Check performance aspects:
+          - Response time targets met
+          - No obvious bottlenecks
+          - Reasonable resource usage
+          - Database query optimization
+          - Caching strategy present
+          
+          Status Rules:
+          - PASS: Meets response time targets, no bottlenecks, reasonable usage
+          - CONCERNS: Close to limits, missing indexes, no caching strategy  
+          - FAIL: Exceeds response time limits, memory leaks, unoptimized queries
+
+    - id: ASSESS-RELIABILITY
+      title: Assess Reliability NFR
+      description: Evaluate error handling and system resilience
+      action:
+        type: analysis
+        content: |
+          Check reliability mechanisms:
+          - Error handling present
+          - Graceful degradation implemented
+          - Retry logic where needed
+          - Circuit breakers configured
+          - Health checks available
+          
+          Status Rules:
+          - PASS: Error handling present, graceful degradation, retry logic
+          - CONCERNS: Some error cases unhandled, no circuit breakers, missing health checks
+          - FAIL: No error handling, crashes on errors, no recovery mechanisms
+
+    - id: ASSESS-MAINTAINABILITY
+      title: Assess Maintainability NFR
+      description: Evaluate code quality and maintainability aspects
+      action:
+        type: analysis
+        content: |
+          Check maintainability factors:
+          - Test coverage meets targets
+          - Code well-structured
+          - Documentation present
+          - Reasonable dependencies
+          - Low code duplication
+          
+          Status Rules:
+          - PASS: Test coverage meets target, well-structured code, documentation present
+          - CONCERNS: Test coverage below target, some code duplication, missing documentation
+          - FAIL: No tests, highly coupled code, no documentation
+
+    - id: GENERATE-GATE-YAML
+      title: Generate Gate YAML Block
+      description: Create YAML block for quality gate file
+      action:
+        type: analysis
+        content: |
+          Generate YAML block for gate file (copy/paste format):
+          
+          nfr_validation:
+             _assessed: [security, performance, reliability, maintainability]
+             security:
+                status: CONCERNS
+                notes: "No rate limiting on auth endpoints"
+             performance:
+                status: PASS
+                notes: "Response times < 200ms verified"
+             reliability:
+                status: PASS
+                notes: "Error handling and retries implemented"
+             maintainability:
+                status: CONCERNS
+                notes: "Test coverage at 65%, target is 80%"
+          
+          Generate ONLY for NFRs actually assessed (no placeholders).
+
+    - id: CALCULATE-QUALITY-SCORE
+      title: Calculate Quality Score
+      description: Calculate overall quality score based on NFR assessments
+      action:
+        type: analysis
+        content: |
+          Calculate quality score:
+          Base Score = 100
+          - 20 for each FAIL attribute
+          - 10 for each CONCERNS attribute
+          Floor at 0, ceiling at 100
+          
+          Use custom weights from technical-preferences.md if available.
+
+    - id: CREATE-ASSESSMENT-REPORT
+      title: Create Assessment Report
+      description: Generate detailed NFR assessment markdown report
+      action:
+        type: file_operation
+        operation: create
+        target: "{qa.qaLocation}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md"
+        content: |
+          # NFR Assessment: {epic}.{story}
+          
+          Date: {date}
+          Reviewer: Quinn (Test Architect & Quality Advisor)
+          
+          <!-- Note: Source story not found (if applicable) -->
+          
+          ## Summary
+          
+          - Security: {security_status} - {security_notes}
+          - Performance: {performance_status} - {performance_notes}
+          - Reliability: {reliability_status} - {reliability_notes}
+          - Maintainability: {maintainability_status} - {maintainability_notes}
+          
+          ## Critical Issues
+          
+          {critical_issues_list}
+          
+          ## Quick Wins
+          
+          {quick_wins_list}
+          
+          ## Quality Score: {quality_score}/100
+
+    - id: PROVIDE-INTEGRATION-INFO
+      title: Provide Integration Information
+      description: Present integration instructions and references
+      action:
+        type: analysis
+        content: |
+          Output integration information:
+          
+          1. NFR assessment: {qa.qaLocation}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md
+          2. Gate NFR block ready → paste into {qa.qaLocation}/gates/{epic}.{story}-{slug}.yml under nfr_validation
+
+outputs:
+  artifacts:
+    - name: nfr_assessment_report
+      type: report
+      path: "{qa.qaLocation}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md"
+      format: markdown
+      description: Brief NFR assessment report with findings and recommendations
+    - name: gate_yaml_block
+      type: assessment
+      path: "console_output"
+      format: yaml
+      description: YAML block for quality gate file integration
+
+blocking_conditions:
+  - condition: "Core configuration not found"
+    message: "core-config.json is required for NFR assessment"
+    severity: error
+  - condition: "Story file not found and no fallback available"
+    message: "Story file must exist or assessment will use fallback mode"
+    severity: error
+
+completion:
+  criteria:
+    - NFR scope determined (interactive or default)
+    - All selected NFRs assessed with status
+    - Quality score calculated
+    - Assessment report created
+    - Gate YAML block generated
+    - Integration information provided
+
+dependencies:
+  data:
+    - technical-preferences.yaml
+    - test-priorities-matrix.yaml
+
+metadata:
+  author: BMAD Core Team
+  created: "2024-01-01"
+  lastModified: "2024-01-01"
+  tags:
+    - nfr
+    - quality
+    - assessment
+    - security
+    - performance
+    - reliability
+    - maintainability
+  complexity: moderate
+  estimated_duration: "20m-45m"

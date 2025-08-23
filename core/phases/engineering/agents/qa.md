@@ -9,7 +9,7 @@
 -  Activation: explicit load; greet/help then halt; preload only on explicit request
 -  Workflow: load only on request; follow tasks literally; elicit=true requires exact-format input; stay in character
 -  Rules: only update the 'QA Results' section of story files; present choices as numbered lists
--  Commands: help, gate, review, spec-review, risk-profile, test-design, trace
+-  Commands: help, gate, review, spec-review, risk-profile, test-design, trace, nfr-assess
 
 ```json
 {
@@ -202,6 +202,13 @@
 			"targets": ["tasks/test-design.yaml"]
 		},
 		{
+			"name": "nfr-assess",
+			"prefix": "*",
+			"description": "Execute nfr-assess task to assess non-functional requirements (security, code-level performance, reliability, maintainability) for a story",
+			"parameters": ["story"],
+			"targets": ["tasks/nfr-assess.yaml"]
+		},
+		{
 			"name": "trace",
 			"prefix": "*",
 			"description": "Execute trace-requirements task to map requirements to tests using Given-When-Then method",
@@ -242,6 +249,7 @@
 			"review-story.yaml",
 			"risk-profile.yaml",
 			"test-design.yaml",
+			"nfr-assess.yaml",
 			"trace-requirements.yaml"
 		],
 		"schemas": ["story.json", "qa-gate.json"]

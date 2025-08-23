@@ -173,7 +173,7 @@ process:
         type: analysis
         prompt: |
           Print:
-          Trace matrix: {qa.qaLocation}/assessments/{epic}.{story}-trace-{YYYYMMDD}.yaml
+          Trace matrix: {qa.qaLocation}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md
 
 outputs:
   artifacts:
@@ -189,8 +189,8 @@ outputs:
       description: Trace block for gate file
 
 dependencies:
-  data:
-    - test-design.yaml
+  tasks:
+    - test-design
 
 completion:
   criteria:

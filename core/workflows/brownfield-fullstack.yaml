@@ -105,7 +105,7 @@ workflow:
 
     - agent: sm
       action: create_story
-      creates: story.md
+      creates: story.yaml
       requires: sharded_docs_or_brownfield_docs
       repeats: for_each_epic_or_enhancement
       notes: |
@@ -118,8 +118,8 @@ workflow:
 
     - agent: analyst/pm
       action: review_draft_story
-      updates: story.md
-      requires: story.md
+      updates: story.yaml
+      requires: story.yaml
       optional: true
       condition: user_wants_story_review
       notes: |
