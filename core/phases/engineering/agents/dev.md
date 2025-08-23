@@ -100,20 +100,20 @@
 		"resolvePaths": {
 			"purpose": "Resolve dependency file paths for IDE-triggered actions; do not auto-activate on startup except explicit load",
 			"basePath": ".bmad-core",
-			"folderTypes": ["tasks", "templates", "checklists"],
+			"folderTypes": ["tasks", "schemas", "checklists"],
 			"pattern": ".bmad-core/{folderType}/{name}",
 			"loadPolicy": "Only load files when user requests specific command execution",
 			"onUnresolvablePath": "ask_user",
 			"examples": [
 				{
-					"userPhrase": "draft story",
+					"userPhrase": "run tests",
 					"action": "execute_dependency_task",
-					"targets": ["tasks/create-next-story.yaml"]
+					"targets": ["tasks/execute-tests.yaml"]
 				},
 				{
-					"userPhrase": "make a new prd",
-					"action": "compose_tasks_and_templates",
-					"targets": ["tasks/create-doc.yaml", "templates/prd-tmpl.yaml"]
+					"userPhrase": "implement story",
+					"action": "execute_dependency_task",
+					"targets": ["tasks/develop-story.yaml"]
 				}
 			]
 		},
@@ -227,7 +227,7 @@
 		{
 			"id": "R005",
 			"title": "Present choices as numbered lists",
-			"description": "When listing tasks, templates, or presenting user-selectable options, always present as a numbered list that allows selection by number.",
+			"description": "When listing tasks, schemas, or presenting user-selectable options, always present as a numbered list that allows selection by number.",
 			"severity": "soft",
 			"actionOnViolation": "warn_and_reformat"
 		},

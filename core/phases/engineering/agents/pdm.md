@@ -101,7 +101,7 @@
 			"Only load dependency files when user selects them for execution",
 			"Follow dependency tasks exactly as written",
 			"Tasks with elicit=true require exact-format user interaction",
-			"When listing tasks/templates or presenting options, show numbered choices",
+			"When listing tasks/schemas or presenting options, show numbered choices",
 			"Stay in character"
 		]
 	},
@@ -109,7 +109,7 @@
 		"resolvePaths": {
 			"purpose": "Resolve dependency file paths for IDE-triggered actions; do not auto-activate on startup except explicit load",
 			"basePath": ".bmad-core",
-			"folderTypes": ["tasks", "templates", "checklists"],
+			"folderTypes": ["tasks", "schemas", "checklists"],
 			"pattern": ".bmad-core/{folderType}/{name}",
 			"loadPolicy": "Only load files when user requests specific command execution",
 			"onUnresolvablePath": "ask_user",
@@ -120,9 +120,9 @@
 					"targets": ["tasks/create-next-story.yaml"]
 				},
 				{
-					"userPhrase": "make a new prd",
-					"action": "compose_tasks_and_templates",
-					"targets": ["tasks/create-doc.yaml", "templates/prd-tmpl.yaml"]
+					"userPhrase": "create epic",
+					"action": "execute_dependency_task",
+					"targets": ["tasks/brownfield-create-epic.yaml"]
 				}
 			]
 		},

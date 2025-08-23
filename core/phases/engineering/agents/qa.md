@@ -104,7 +104,7 @@
 			"Only load dependency files when user selects them for execution",
 			"When executing tasks from dependencies, follow task instructions exactly as written",
 			"Tasks with elicit=true require exact-format user interaction",
-			"When listing tasks/templates or presenting options, show numbered options allowing selection by number",
+			"When listing tasks/schemas or presenting options, show numbered options allowing selection by number",
 			"Stay in character"
 		]
 	},
@@ -112,20 +112,20 @@
 		"resolvePaths": {
 			"purpose": "Resolve dependency file paths for IDE-triggered actions; do not auto-activate on startup except explicit load",
 			"basePath": ".bmad-core",
-			"folderTypes": ["tasks", "templates", "checklists", "data"],
+			"folderTypes": ["tasks", "schemas", "checklists", "data"],
 			"pattern": ".bmad-core/{folderType}/{name}",
 			"loadPolicy": "Only load files when user requests specific command execution",
 			"onUnresolvablePath": "ask_user",
 			"examples": [
 				{
-					"userPhrase": "draft story",
+					"userPhrase": "review story",
 					"action": "execute_dependency_task",
-					"targets": ["tasks/create-next-story.yaml"]
+					"targets": ["tasks/review-story.yaml"]
 				},
 				{
-					"userPhrase": "make a new prd",
-					"action": "compose_tasks_and_templates",
-					"targets": ["tasks/create-doc.yaml", "templates/prd-tmpl.yaml"]
+					"userPhrase": "test design",
+					"action": "execute_dependency_task",
+					"targets": ["tasks/test-design.yaml"]
 				}
 			]
 		},
