@@ -130,7 +130,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "docs/epics/epic-{epic}.yaml"
+        target: "docs/epics/epic-{epic}-*.yaml"
         content: |
           Extract:
           - Story title and description
@@ -161,7 +161,7 @@ process:
         type: decision
         content: |
           If architectureVersion >= v4 and architectureSharded == true:
-            Read {architectureShardedLocation}/index.md
+            Read {architecture.shardedLocation}/*.md
             Follow structured reading order
           Else:
             Use monolithic architectureFile for similar sections

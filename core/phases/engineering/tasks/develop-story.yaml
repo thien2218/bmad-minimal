@@ -16,7 +16,7 @@ inputs:
     - name: story_path
       type: path
       description: Path to story file from story.location in config.json
-      examples: ["{story.location}/story-{epic}.{story}-*.yaml"]
+      pattern: "{story.location}/story-{epic}.{story}-*.yaml"
 
 outputs:
   updates:
