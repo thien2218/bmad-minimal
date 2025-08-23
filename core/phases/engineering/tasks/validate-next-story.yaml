@@ -26,7 +26,7 @@ prerequisites:
   files:
     - "{root}/core-config.yaml"
     - "{story_file}"
-    - "bmad-core/templates/story-tmpl.md"
+    - "core/phases/engineering/schemas/story.json"
 
 process:
   mode: sequential
@@ -51,7 +51,7 @@ process:
           type: checklist
           required: true
         prompt: |
-          Load bmad-core/templates/story-tmpl.md and check:
+          Load core/phases/engineering/schemas/story.json and check:
           - All required sections present
           - No template placeholders remaining ({{...}}, _TBD_)
           - Agent sections verified
@@ -192,8 +192,8 @@ process:
         content: |
           # Validation Report for Story {story_id}
           
-          ## Template Compliance Issues
-          - Missing sections from story template
+          ## Schema Compliance Issues
+          - Missing sections from story schema
           - Unfilled placeholders or template variables
           - Structural formatting issues
           
@@ -240,8 +240,8 @@ blocking_conditions:
   - condition: "Story file not found"
     message: "Story file must exist for validation"
     severity: critical
-  - condition: "Story template not found"
-    message: "Story template required for completeness check"
+  - condition: "Story schema not found"
+    message: "Story schema required for completeness check"
     severity: error
 
 completion:

@@ -1,0 +1,190 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://bmad.ai/schemas/checklist.schema.json",
+	"title": "Checklist Schema",
+	"description": "Schema for checklist YAML files used by BMAD agents",
+	"type": "object",
+	"required": ["id", "title", "version", "items"],
+	"additionalProperties": false,
+	"properties": {
+		"$schema": {
+			"type": "string",
+			"description": "Reference to this schema file (for validation)",
+			"const": "../../../internal/checklist.schema.json"
+		},
+		"id": {
+			"type": "string",
+			"description": "Unique identifier for the checklist",
+			"pattern": "^[a-z0-9-]+$",
+			"examples": ["story-dod-checklist", "epic-completion-checklist"]
+		},
+		"title": {
+			"type": "string",
+			"description": "Human-readable title of the checklist",
+			"minLength": 1,
+			"maxLength": 200
+		},
+		"version": {
+			"type": "string",
+			"description": "Semantic version of the checklist",
+			"pattern": "^\\d+\\.\\d+\\.\\d+$",
+			"examples": ["1.0.0", "2.1.3"]
+		},
+		"description": {
+			"type": "string",
+			"description": "Detailed description of the checklist's purpose and usage"
+		},
+		"category": {
+			"type": "string",
+			"description": "Category of the checklist",
+			"enum": [
+				"development",
+				"quality",
+				"deployment",
+				"documentation",
+				"planning",
+				"other"
+			]
+		},
+		"scope": {
+			"type": "string",
+			"description": "Scope of applicability",
+			"enum": ["story", "epic", "project", "release", "general"]
+		},
+		"items": {
+			"type": "array",
+			"description": "List of checklist items",
+			"minItems": 1,
+			"items": {
+				"type": "object",
+				"required": ["id", "text", "required"],
+				"additionalProperties": false,
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "Unique identifier within the checklist",
+						"pattern": "^[A-Z0-9-]+$",
+						"examples": ["CHK-001", "TEST-COVERAGE", "DOC-UPDATE"]
+					},
+					"text": {
+						"type": "string",
+						"description": "Checklist item text/description",
+						"minLength": 1
+					},
+					"required": {
+						"type": "boolean",
+						"description": "Whether this item is mandatory",
+						"default": true
+					},
+					"category": {
+						"type": "string",
+						"description": "Category of this specific item",
+						"examples": [
+							"testing",
+							"documentation",
+							"code-quality",
+							"security"
+						]
+					},
+					"verification": {
+						"type": "object",
+						"description": "How to verify this item is complete",
+						"properties": {
+							"type": {
+								"type": "string",
+								"enum": [
+									"manual",
+									"automated",
+									"command",
+									"file-exists",
+									"test-pass"
+								]
+							},
+							"command": {
+								"type": "string",
+								"description": "Command to run for verification (if type is command or automated)"
+							},
+							"path": {
+								"type": "string",
+								"description": "File path to check (if type is file-exists)"
+							},
+							"pattern": {
+								"type": "string",
+								"description": "Pattern to match in output or file content"
+							},
+							"instructions": {
+								"type": "string",
+								"description": "Manual verification instructions"
+							}
+						}
+					},
+					"dependencies": {
+						"type": "array",
+						"description": "IDs of other items that must be completed first",
+						"items": {
+							"type": "string"
+						}
+					},
+					"notes": {
+						"type": "string",
+						"description": "Additional notes or context for this item"
+					}
+				}
+			}
+		},
+		"metadata": {
+			"type": "object",
+			"description": "Additional metadata",
+			"properties": {
+				"author": {
+					"type": "string"
+				},
+				"created": {
+					"type": "string",
+					"format": "date"
+				},
+				"lastModified": {
+					"type": "string",
+					"format": "date"
+				},
+				"tags": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"completion": {
+			"type": "object",
+			"description": "Completion tracking (used at runtime, not in template)",
+			"properties": {
+				"status": {
+					"type": "string",
+					"enum": ["not-started", "in-progress", "completed", "blocked"]
+				},
+				"completedItems": {
+					"type": "array",
+					"description": "IDs of completed items",
+					"items": {
+						"type": "string"
+					}
+				},
+				"progress": {
+					"type": "number",
+					"description": "Percentage of completion",
+					"minimum": 0,
+					"maximum": 100
+				},
+				"completedBy": {
+					"type": "string",
+					"description": "Agent or user who completed"
+				},
+				"completedAt": {
+					"type": "string",
+					"format": "date-time"
+				}
+			}
+		}
+	}
+}

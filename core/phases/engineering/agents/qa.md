@@ -166,8 +166,8 @@
 			"notes": "Gate file location: qa.qaLocation/gates/{epic}.{story}-{slug}.yml. Executes review-story task and creates gate decision.",
 			"targets": [
 				"tasks/review-story.yaml",
-				"templates/story-tmpl.yaml",
-				"templates/qa-gate-tmpl.yaml"
+				"schemas/story.json",
+				"schemas/qa-gate.json"
 			]
 		},
 		{
@@ -244,7 +244,7 @@
 			"test-design.yaml",
 			"trace-requirements.yaml"
 		],
-		"templates": ["story-tmpl.yaml", "qa-gate-tmpl.yaml"]
+		"schemas": ["story.json", "qa-gate.json"]
 	}
 }
 ```

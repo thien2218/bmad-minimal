@@ -331,8 +331,8 @@ dependencies:
     - validate-next-story
   checklists:
     - story-draft-checklist
-  templates:
-    - story-template
+  schemas:
+    - ../schemas/story.json
 
 blocking_conditions:
   - condition: core-config.yaml not found

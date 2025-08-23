@@ -247,7 +247,8 @@
 			"execute-checklist.yaml",
 			"brownfield-create-epic.yaml",
 			"create-next-story.yaml"
-		]
+		],
+		"schemas": ["story.json", "epic.json"]
 	}
 }
 ```

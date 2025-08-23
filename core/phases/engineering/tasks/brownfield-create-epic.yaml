@@ -234,8 +234,8 @@ process:
 dependencies:
   checklists:
     - pm-checklist
-  templates:
-    - epic-template-brownfield
+  schemas:
+    - ../schemas/epic.json
 
 blocking_conditions:
   - condition: "Enhancement requires more than 3 stories"

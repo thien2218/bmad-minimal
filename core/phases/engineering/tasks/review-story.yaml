@@ -178,7 +178,7 @@ process:
         operation: create
         target: "{qa.qaLocation}/gates/{epic}.{story}-{slug}.yml"
         content: |
-          Render from ../templates/qa-gate-tmpl.yaml
+          Render from ../schemas/qa-gate.json
           Include gate decision, risk summary, NFR validation
 
 outputs:
@@ -205,8 +205,8 @@ outputs:
       restrictions: "Only append to QA Results section, never modify other sections"
 
 dependencies:
-  templates:
-    - qa-gate-tmpl.yaml
+  schemas:
+    - qa-gate.json
   data:
     - technical-preferences.md
   checklists:

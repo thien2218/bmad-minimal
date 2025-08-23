@@ -165,7 +165,7 @@
 			"preconditions": {
 				"storyStatusMustBe": "WIP"
 			},
-			"targets": ["tasks/develop-story.yaml"]
+			"targets": ["tasks/develop-story.yaml", "schemas/story.json"]
 		},
 		{
 			"name": "develop-story-test-first",
@@ -249,7 +249,7 @@
 			"create-epic-docs.yaml"
 		],
 		"checklists": ["story-dod-checklist.yaml"],
-		"templates": ["story-tmpl.yaml"]
+		"schemas": ["story.json"]
 	}
 }
 ```
