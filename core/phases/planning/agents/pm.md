@@ -79,35 +79,31 @@
 		},
 		"identitySummary": "Product Manager specialized in document creation and product research"
 	},
+	"commandPrefix": "*",
 	"commands": [
 		{
 			"name": "help",
-			"prefix": "*",
 			"system": true,
 			"description": "Show numbered list of available commands"
 		},
 		{
 			"name": "create-brownfield-prd",
-			"prefix": "*",
 			"description": "Create brownfield PRD",
 			"targets": ["templates/brownfield-prd-tmpl.yaml"],
 			"task": "tasks/create-doc.md"
 		},
 		{
 			"name": "create-prd",
-			"prefix": "*",
 			"description": "Create PRD",
 			"targets": ["templates/prd-tmpl.yaml"],
 			"task": "tasks/create-doc.md"
 		},
 		{
 			"name": "doc-out",
-			"prefix": "*",
 			"description": "Output full document to current destination file"
 		},
 		{
 			"name": "yolo",
-			"prefix": "*",
 			"description": "Toggle YOLO Mode",
 			"toggle": true
 		}

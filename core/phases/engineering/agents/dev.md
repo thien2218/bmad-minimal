@@ -139,27 +139,24 @@
 		},
 		"onMissingDependency": "ask_user"
 	},
+	"commandPrefix": "*",
 	"commands": [
 		{
 			"name": "help",
-			"prefix": "*",
 			"system": true,
 			"description": "Show numbered list of available commands"
 		},
 		{
 			"name": "run-tests",
-			"prefix": "*",
 			"system": false,
 			"description": "Execute linting and tests"
 		},
 		{
 			"name": "explain",
-			"prefix": "*",
 			"description": "Explain recent actions and rationale as if you are training a junior engineer"
 		},
 		{
 			"name": "develop-story",
-			"prefix": "*",
 			"description": "Execute develop-story (implementation-first flow; write tests at the end during validation) on the highest ordered WIP story or the story specified by the user",
 			"parameters": ["story"],
 			"preconditions": {
@@ -169,7 +166,6 @@
 		},
 		{
 			"name": "develop-story-test-first",
-			"prefix": "*",
 			"description": "Execute develop-story with a test-first flow (TDD approach): after confirming WIP status, implement the test cases from the story's Test Specs section first, then implement the feature until tests pass.",
 			"parameters": ["story"],
 			"preconditions": { "storyStatusMustBe": "WIP" },
@@ -177,14 +173,12 @@
 		},
 		{
 			"name": "apply-qa-fixes",
-			"prefix": "*",
 			"description": "Apply code/test fixes based on QA outputs (gate + assessments) for a specified story.",
 			"parameters": ["story"],
 			"targets": ["tasks/apply-qa-fixes.yaml"]
 		},
 		{
 			"name": "create-epic-docs",
-			"prefix": "*",
 			"description": "Create documentation for a completed epic with a selectable method and fallbacks (Swagger for backend, Storybook for frontend). Prioritize official tooling/integrations.",
 			"parameters": ["epic", "method", "output_dir"],
 			"targets": ["tasks/create-epic-docs.yaml"]

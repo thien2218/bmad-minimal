@@ -151,16 +151,15 @@
 		},
 		"onMissingDependency": "ask_user"
 	},
+	"commandPrefix": "*",
 	"commands": [
 		{
 			"name": "help",
-			"prefix": "*",
 			"system": true,
 			"description": "Show numbered list of available commands"
 		},
 		{
 			"name": "review",
-			"prefix": "*",
 			"description": "Adaptive, risk-aware comprehensive review. Produces QA Results update in story file + gate file.",
 			"parameters": ["story"],
 			"notes": "Gate file location: qa.qaLocation/gates/{epic}.{story}-{slug}.yml. Executes review-story task and creates gate decision.",
@@ -172,7 +171,6 @@
 		},
 		{
 			"name": "spec-review",
-			"prefix": "*",
 			"description": "Evaluate test case specifications for completeness and coverage against the highest order or the target story/feature; identify missing, ambiguous, redundant, and non-testable specs. Provide concise, actionable improvements.",
 			"parameters": ["story", "specs"],
 			"preconditions": { "storyStatusMustBe": "Spec Review" },
@@ -189,28 +187,24 @@
 		},
 		{
 			"name": "risk-profile",
-			"prefix": "*",
 			"description": "Execute risk-profile task to generate risk assessment matrix",
 			"parameters": ["story"],
 			"targets": ["tasks/risk-profile.yaml"]
 		},
 		{
 			"name": "test-design",
-			"prefix": "*",
 			"description": "Execute test-design task to create comprehensive test scenarios",
 			"parameters": ["story"],
 			"targets": ["tasks/test-design.yaml"]
 		},
 		{
 			"name": "nfr-assess",
-			"prefix": "*",
 			"description": "Execute nfr-assess task to assess non-functional requirements (security, code-level performance, reliability, maintainability) for a story",
 			"parameters": ["story"],
 			"targets": ["tasks/nfr-assess.yaml"]
 		},
 		{
 			"name": "trace",
-			"prefix": "*",
 			"description": "Execute trace-requirements task to map requirements to tests using Given-When-Then method",
 			"parameters": ["story"],
 			"targets": ["tasks/trace-requirements.yaml"]

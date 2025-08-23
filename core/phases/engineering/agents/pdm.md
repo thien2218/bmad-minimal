@@ -148,28 +148,25 @@
 		},
 		"onMissingDependency": "ask_user"
 	},
+	"commandPrefix": "*",
 	"commands": [
 		{
 			"name": "help",
-			"prefix": "*",
 			"system": true,
 			"description": "Show numbered list of available commands"
 		},
 		{
 			"name": "correct-course",
-			"prefix": "*",
 			"description": "Execute task correct-course.yaml",
 			"targets": ["tasks/correct-course.yaml"]
 		},
 		{
 			"name": "create-epic",
-			"prefix": "*",
 			"description": "Create epic for brownfield projects",
 			"targets": ["tasks/brownfield-create-epic.yaml"]
 		},
 		{
 			"name": "execute-checklist-pdm",
-			"prefix": "*",
 			"description": "Run execute-checklist using the PDM master checklist",
 			"targets": [
 				"tasks/execute-checklist.yaml",
@@ -178,7 +175,6 @@
 		},
 		{
 			"name": "story-checklist",
-			"prefix": "*",
 			"description": "Execute task execute-checklist.yaml with checklist story-draft-checklist.yaml",
 			"targets": [
 				"tasks/execute-checklist.yaml",
@@ -187,20 +183,17 @@
 		},
 		{
 			"name": "yolo",
-			"prefix": "*",
 			"description": "Toggle YOLO Mode (when ON will skip doc section confirmations)",
 			"toggle": true
 		},
 		{
 			"name": "create-epic-stories",
-			"prefix": "*",
 			"description": "Create all stories for the highest ordered epic or the epic specified by user in a single batched operation (multiple iterations of create-next-story).",
 			"parameters": ["epic"],
 			"targets": ["tasks/create-next-story.yaml"]
 		},
 		{
 			"name": "create-story",
-			"prefix": "*",
 			"description": "Create the next story for the highest ordered epic or the one specified by user.",
 			"parameters": ["epic"],
 			"targets": ["tasks/create-next-story.yaml"]

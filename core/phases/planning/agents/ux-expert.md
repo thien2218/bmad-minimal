@@ -80,27 +80,25 @@
 		},
 		"identitySummary": "UX Expert specializing in user experience design and creating intuitive interfaces"
 	},
+	"commandPrefix": "*",
 	"commands": [
 		{
 			"name": "help",
-			"prefix": "*",
 			"system": true,
 			"description": "Show numbered list of available commands"
 		},
 		{
 			"name": "create-front-end-spec",
-			"prefix": "*",
 			"description": "Create front-end specification document",
 			"targets": ["templates/front-end-spec-tmpl.yaml"],
 			"task": "tasks/create-doc.md"
 		},
 		{
 			"name": "generate-ui-prompt",
-			"prefix": "*",
 			"description": "Generate AI UI prompt",
 			"targets": ["tasks/generate-ai-frontend-prompt.md"]
 		},
-		{ "name": "exit", "prefix": "*", "description": "Exit UX Expert persona" }
+		{ "name": "exit", "description": "Exit UX Expert persona" }
 	],
 	"rules": [
 		{

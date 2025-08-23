@@ -81,64 +81,56 @@
 		},
 		"identitySummary": "Master of holistic application design bridging frontend, backend, and infrastructure"
 	},
+	"commandPrefix": "*",
 	"commands": [
 		{
 			"name": "help",
-			"prefix": "*",
 			"system": true,
 			"description": "Show numbered list of available commands"
 		},
 		{
 			"name": "create-backend-architecture",
-			"prefix": "*",
 			"description": "Create backend architecture document",
 			"targets": ["templates/architecture-tmpl.yaml"],
 			"task": "tasks/create-doc.md"
 		},
 		{
 			"name": "create-brownfield-architecture",
-			"prefix": "*",
 			"description": "Create brownfield architecture document",
 			"targets": ["templates/brownfield-architecture-tmpl.yaml"],
 			"task": "tasks/create-doc.md"
 		},
 		{
 			"name": "create-front-end-architecture",
-			"prefix": "*",
 			"description": "Create front-end architecture document",
 			"targets": ["templates/front-end-architecture-tmpl.yaml"],
 			"task": "tasks/create-doc.md"
 		},
 		{
 			"name": "create-full-stack-architecture",
-			"prefix": "*",
 			"description": "Create full-stack architecture document",
 			"targets": ["templates/fullstack-architecture-tmpl.yaml"],
 			"task": "tasks/create-doc.md"
 		},
 		{
 			"name": "document-project",
-			"prefix": "*",
 			"description": "Document an existing project",
 			"targets": ["tasks/document-project.md"]
 		},
 		{
 			"name": "execute-checklist",
-			"prefix": "*",
 			"description": "Run checklist",
 			"parameters": ["checklist"],
 			"targets": ["tasks/execute-checklist.md"]
 		},
 		{
 			"name": "research",
-			"prefix": "*",
 			"description": "Create deep research prompt",
 			"parameters": ["topic"],
 			"targets": ["tasks/create-deep-research-prompt.md"]
 		},
 		{
 			"name": "doc-out",
-			"prefix": "*",
 			"description": "Output full document to current destination file"
 		}
 	],
