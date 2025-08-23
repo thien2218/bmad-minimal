@@ -22,7 +22,7 @@ outputs:
   artifacts:
     - name: Story File
       type: file
-      path: "{story.location}/{epic}.{story}-*.yaml"
+      path: "{story.location}/story-{epic}.{story}-*.yaml"
       format: yaml
       description: Complete story ready for development with full technical context
   updates:
@@ -80,7 +80,7 @@ process:
         content: |
           Based on prdSharded from config:
           - Locate epic files (sharded location/pattern or monolithic PRD sections)
-          - If story.location has story files, load highest {epic}.{story}-*.yaml
+          - If story.location has story files, load highest story-{epic}.{story}-*.yaml
           - Determine next sequential story
 
     - id: IDENTIFY-2
@@ -232,7 +232,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{story.location}/{epic}.{story}-*.yaml"
+        target: "{story.location}/story-{epic}.{story}-*.yaml"
         content: |
           story:
             id: "{epic}.{story}"
@@ -309,7 +309,7 @@ process:
       action:
         type: elicit
         prompt: |
-          Story created: {story.location}/{epic}.{story}-*.yaml
+          Story created: {story.location}/story-{epic}.{story}-*.yaml
           Status: Draft
           
           Key technical components included from architecture docs:

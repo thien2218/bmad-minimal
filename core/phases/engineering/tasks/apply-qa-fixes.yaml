@@ -68,12 +68,12 @@ process:
 
     - id: LOCATE-STORY
       title: Locate Story File
-      description: Find story file in {story_root}/{epic}.{story}-*.yaml
+      description: Find story file in {story_root}/story-{epic}.{story}-*.yaml
       action:
         type: validation
         validation:
           type: string
-          pattern: ".*\\.md$"
+          pattern: ".*\\.yaml$"
           required: true
       on_failure: halt
 

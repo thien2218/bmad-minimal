@@ -17,7 +17,7 @@ inputs:
     - name: story_path
       type: path
       description: Path to story file from story.location in config.json
-      examples: ["stories/1.3.story.md", "dev/stories/2.1.story.md"]
+      examples: ["stories/1.3.story.yaml", "dev/stories/2.1.story.yaml"]
 
 outputs:
   updates:

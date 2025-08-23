@@ -16,7 +16,7 @@ inputs:
     - name: story_path
       type: path
       description: Path to story file from story.location
-      examples: ["{story.location}/{epic}.{story}-*.yaml"]
+      examples: ["{story.location}/story-{epic}.{story}-*.yaml"]
     - name: story_title
       type: string
       description: Story title (derive from story file H1 if missing)
