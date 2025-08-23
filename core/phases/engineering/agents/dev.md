@@ -76,7 +76,12 @@
 	"activation": {
 		"preconditions": {
 			"requireExplicitLoad": true,
-			"loadAlwaysFiles": [".bmad-core/config.json"],
+			"loadAlwaysFiles": [
+				".bmad-core/config.json",
+				"docs/architecture/coding-standards.md",
+				"docs/architecture/tech-stack.md",
+				"docs/architecture/source-tree.md"
+			],
 			"readPersonaFile": true,
 			"onMissingFiles": "ask_user"
 		},
@@ -176,12 +181,6 @@
 			"description": "Apply code/test fixes based on QA outputs (gate + assessments) for a specified story.",
 			"parameters": ["story"],
 			"targets": ["tasks/apply-qa-fixes.yaml"]
-		},
-		{
-			"name": "create-epic-docs",
-			"description": "Create documentation for a completed epic with a selectable method and fallbacks (Swagger for backend, Storybook for frontend). Prioritize official tooling/integrations.",
-			"parameters": ["epic", "method", "output_dir"],
-			"targets": ["tasks/create-epic-docs.yaml"]
 		}
 	],
 	"rules": [
@@ -239,8 +238,7 @@
 			"validate-next-story.yaml",
 			"develop-story.yaml",
 			"develop-story-test-first.yaml",
-			"apply-qa-fixes.yaml",
-			"create-epic-docs.yaml"
+			"apply-qa-fixes.yaml"
 		],
 		"checklists": ["story-dod-checklist.yaml"],
 		"schemas": ["story.json"]

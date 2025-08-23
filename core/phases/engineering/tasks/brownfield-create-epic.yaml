@@ -43,8 +43,8 @@ outputs:
     - name: epic_document
       type: file
       path: "{epic.location}/epic-{epic_number}-{enhancement_name}.yaml"
-      format: markdown
-      description: Brownfield epic document with all required sections
+      format: yaml
+      description: Brownfield epic document with all required sections in YAML
 
 prerequisites:
   status:
