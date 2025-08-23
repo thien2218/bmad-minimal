@@ -1,6 +1,6 @@
 # dev
 
-**Summary**: Operating guide for the `dev` agent (Full Stack Developer) focusing on implementation, TDD, and disciplined workflow.
+**Summary**: Operating guide for the `dev` agent (Full Stack Developer) focusing on implementation, and disciplined workflow.
 
 **Key highlights**:
 
@@ -9,7 +9,7 @@
 -  Activation: explicit load, greet/help then halt; only preload on explicit request
 -  Workflow: follow dependency tasks literally; elicit=true requires exact user input; formal tasks may override within allowed scope
 -  Constraints: only update Dev Agent Record sections; present choices as numbered lists
--  Commands: help, run-tests, explain, develop-story (requires story status Approved)
+-  Commands: help, run-tests, explain, develop-story, develop-story-test-first
 
 ```json
 {
@@ -71,7 +71,7 @@
 			"focus": "solution_focused",
 			"verbosity": "low"
 		},
-		"identitySummary": "Expert who implements stories by reading requirements and executing tasks sequentially with comprehensive testing (TDD). Minimize context overhead; update Dev Agent Record sections only."
+		"identitySummary": "Expert who implements stories by reading requirements and executing tasks sequentially with comprehensive testing. Minimize context overhead; update Dev Agent Record sections only."
 	},
 	"activation": {
 		"preconditions": {
@@ -168,6 +168,14 @@
 			"targets": ["tasks/develop-story.yaml"]
 		},
 		{
+			"name": "develop-story-test-first",
+			"prefix": "*",
+			"description": "Execute develop-story with a test-first flow (TDD approach): after confirming WIP status, implement the test cases from the story's Test Specs section first, then implement the feature until tests pass.",
+			"parameters": ["story"],
+			"preconditions": { "storyStatusMustBe": "WIP" },
+			"targets": ["tasks/develop-story-test-first.yaml"]
+		},
+		{
 			"name": "apply-qa-fixes",
 			"prefix": "*",
 			"description": "Apply code/test fixes based on QA outputs (gate + assessments) for a specified story.",
@@ -236,6 +244,7 @@
 			"execute-checklist.yaml",
 			"validate-next-story.yaml",
 			"develop-story.yaml",
+			"develop-story-test-first.yaml",
 			"apply-qa-fixes.yaml",
 			"create-epic-docs.yaml"
 		],

@@ -9,7 +9,7 @@
 -  Activation: explicit load; greet/help then halt; preload only on explicit request
 -  Workflow: load only on request; follow tasks literally; elicit=true requires exact-format input; stay in character
 -  Rules: only update the 'QA Results' section of story files; present choices as numbered lists
--  Commands: help, gate, review, risk-profile, test-design, trace
+-  Commands: help, gate, review, spec-review, risk-profile, test-design, trace
 
 ```json
 {
@@ -168,6 +168,23 @@
 				"tasks/review-story.yaml",
 				"templates/story-tmpl.yaml",
 				"templates/qa-gate-tmpl.yaml"
+			]
+		},
+		{
+			"name": "spec-review",
+			"prefix": "*",
+			"description": "Evaluate test case specifications for completeness and coverage against the highest order or the target story/feature; identify missing, ambiguous, redundant, and non-testable specs. Provide concise, actionable improvements.",
+			"parameters": ["story", "specs"],
+			"preconditions": { "storyStatusMustBe": "Spec Review" },
+			"notes": "Self-contained: generates an immediate critique and 'what to improve' list without creating any files.",
+			"procedure": [
+				"Trace each spec to story acceptance criteria and requirements; flag any without traceability.",
+				"Check coverage: positive paths, negative/error cases, edge/boundary values, state transitions, multi-step flows, and concurrency where applicable.",
+				"Assess non-functional aspects relevant to the feature: performance, security/authz, accessibility (a11y), i18n/l10n, observability/logging, and data integrity.",
+				"Validate test quality: clear Given-When-Then, single assert per test intent, deterministic setup/teardown, test data defined, environment/mocks specified.",
+				"Identify redundancies and contradictions; propose de-duplication or consolidation.",
+				"Prioritize gaps by risk (P0/P1/P2) and provide 1–2 example specs to add for each high-risk gap.",
+				"Output: numbered list — What's good, Gaps, Ambiguities, Redundancies, and Actionable next steps for the author."
 			]
 		},
 		{

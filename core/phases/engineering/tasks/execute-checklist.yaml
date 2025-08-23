@@ -89,7 +89,7 @@ process:
 
     - id: PROCESS-YOLO
       title: Process All Sections at Once
-      description: Process entire checklist and create comprehensive report
+      description: Process entire checklist
       action:
         type: validation
         validation:
@@ -143,7 +143,6 @@ completion:
     - Each item has been validated with appropriate status
     - Pass rates have been calculated
     - Recommendations have been provided
-    - Final report has been generated
     - User has received comprehensive findings
 
 metadata:

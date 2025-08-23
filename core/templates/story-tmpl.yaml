@@ -15,7 +15,7 @@ sections:
   - id: status
     title: Status
     type: choice
-    choices: [Draft, Test Review, WIP, Blocked, Review, Done]
+    choices: [Draft, Spec Review, WIP, Blocked, Review, Done]
     instruction: Select the current status of the story
     owner: product-development-master
     editors: [product-development-master, developer, qa-agent]

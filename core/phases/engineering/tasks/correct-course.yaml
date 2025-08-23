@@ -24,17 +24,6 @@ inputs:
       examples: ["incremental", "yolo"]
 
 outputs:
-  artifacts:
-    - name: Sprint Change Proposal
-      type: file
-      path: docs/change-proposals/sprint-change-proposal-{timestamp}.md
-      format: markdown
-      description: Consolidated document containing change analysis and proposed edits
-    - name: Annotated Change Checklist
-      type: report
-      path: docs/change-proposals/change-checklist-{timestamp}.md
-      format: markdown
-      description: Completed change-checklist with findings and decisions
   updates:
     - target: docs/epics/*.md
       sections: ["User Stories", "Acceptance Criteria", "Priority"]
@@ -134,8 +123,7 @@ process:
       title: Draft Proposed Changes
       description: Create specific, actionable proposed updates to affected artifacts
       action:
-        type: file_operation
-        operation: create
+        type: analysis
         content: |
           Based on checklist analysis and chosen path:
           - Identify specific artifacts requiring updates
@@ -165,37 +153,6 @@ process:
         if: "interaction_mode == 'incremental'"
       elicit: true
 
-    - id: GENERATE-1
-      title: Generate Sprint Change Proposal
-      description: Synthesize complete analysis and proposed edits into single document
-      action:
-        type: file_operation
-        operation: create
-        target: docs/change-proposals/sprint-change-proposal-{timestamp}.md
-        content: |
-          # Sprint Change Proposal
-          
-          ## Analysis Summary
-          - Original Issue: {change_trigger}
-          - Impact Assessment: {impact_analysis}
-          - Rationale for Chosen Path: {path_rationale}
-          
-          ## Specific Proposed Edits
-          
-          ### Epic/Story Changes
-          {epic_story_edits}
-          
-          ### PRD Updates
-          {prd_edits}
-          
-          ### Architecture Modifications
-          {architecture_edits}
-          
-          ## Risk Assessment
-          {risk_assessment}
-          
-          ## Implementation Plan
-          {implementation_steps}
 
     - id: REVIEW-1
       title: Present Sprint Change Proposal for Review
@@ -221,37 +178,10 @@ process:
         prompt: Determine if changes can be implemented directly or require fundamental replan
       on_failure: halt
 
-    - id: HANDOFF-1
-      title: Prepare Handoff to PM/Architect
-      description: Package analysis for fundamental replan by other agents
-      action:
-        type: file_operation
-        operation: create
-        target: docs/change-proposals/replan-handoff-{timestamp}.md
-        content: |
-          # Fundamental Replan Required
-          
-          ## Change Analysis
-          {full_analysis}
-          
-          ## Why Fundamental Replan Needed
-          {replan_justification}
-          
-          ## Recommended Next Steps
-          - Engage PM agent for scope replanning
-          - Engage Architect agent for technical redesign
-          
-          ## Supporting Documents
-          - Sprint Change Proposal: {proposal_path}
-          - Annotated Checklist: {checklist_path}
-      condition:
-        if: "path == 'fundamental_replan'"
 
 dependencies:
   checklists:
     - change-checklist
-  templates:
-    - sprint-change-proposal-template
 
 blocking_conditions:
   - condition: Missing critical project artifacts
@@ -265,12 +195,8 @@ completion:
   checklist: change-checklist
   criteria:
     - All sections of change-checklist addressed
-    - Sprint Change Proposal document created
     - User approval obtained
     - Next steps clearly defined
-  validations:
-    - command: "test -f docs/change-proposals/sprint-change-proposal-*.md"
-      expected_output: "file exists"
 
 metadata:
   author: BMAD Core Team

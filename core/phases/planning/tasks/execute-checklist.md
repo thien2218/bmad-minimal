@@ -38,7 +38,6 @@ If the user asks or does not specify a specific checklist, list the checklists a
 
    If in YOLO mode:
    - Process all sections at once
-   - Create a comprehensive report of all findings
    - Present the complete analysis to the user
 
 4. **Validation Approach**
@@ -63,7 +62,7 @@ If the user asks or does not specify a specific checklist, list the checklists a
    - In interactive mode, discuss findings with user
    - Document any user decisions or explanations
 
-6. **Final Report**
+6. **Final Summary**
 
    Prepare a summary that includes:
    - Overall checklist completion status
@@ -79,10 +78,10 @@ Each checklist now contains embedded LLM prompts and instructions that will:
 1. **Guide thorough thinking** - Prompts ensure deep analysis of each section
 2. **Request specific artifacts** - Clear instructions on what documents/access is needed
 3. **Provide contextual guidance** - Section-specific prompts for better validation
-4. **Generate comprehensive reports** - Final summary with detailed findings
+4. **Generate comprehensive summaries** - Present findings inline with detailed context
 
 The LLM will:
 
 - Execute the complete checklist validation
-- Present a final report with pass/fail rates and key findings
+- Present a final summary with pass/fail rates and key findings
 - Offer to provide detailed analysis of any section, especially those with warnings or failures
