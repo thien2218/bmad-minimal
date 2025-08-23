@@ -32,11 +32,11 @@ outputs:
 
 prerequisites:
   files:
-    - "{root}/core-config.yaml"
+    - "{root}/core-config.json"
     - docs/prd/**
     - docs/architecture/**
   commands:
-    - command: "test -f core-config.yaml"
+    - command: "test -f core-config.json"
       expected_exit_code: 0
 
 process:
@@ -44,11 +44,11 @@ process:
   steps:
     - id: CONFIG-1
       title: Load Core Configuration
-      description: Load core-config.yaml and extract key configurations
+      description: Load core-config.json and extract key configurations
       action:
         type: file_operation
         operation: read
-        target: "{root}/core-config.yaml"
+        target: "{root}/core-config.json"
         validation:
           type: string
           required: true
@@ -66,8 +66,8 @@ process:
           - architecture.* settings
           - workflow.* settings
           
-          If core-config.yaml not found:
-          HALT with message: "core-config.yaml not found. This file is required for story creation."
+          If core-config.json not found:
+          HALT with message: "core-config.json not found. This file is required for story creation."
       condition:
         if: "config_missing"
         then: "HALT"
@@ -335,7 +335,7 @@ dependencies:
     - ../schemas/story.json
 
 blocking_conditions:
-  - condition: core-config.yaml not found
+  - condition: core-config.json not found
     message: This file is required for story creation. Copy from bmad-core or run BMad installer
     severity: critical
   - condition: No epic files found

@@ -24,7 +24,7 @@ inputs:
 
 prerequisites:
   files:
-    - "{root}/core-config.yaml"
+    - "{root}/core-config.json"
     - "{story_file}"
     - "core/phases/engineering/schemas/story.json"
 
@@ -33,11 +33,11 @@ process:
   steps:
     - id: LOAD-CONFIG
       title: Load Core Configuration and Inputs
-      description: Load core-config.yaml and identify required inputs
+      description: Load core-config.json and identify required inputs
       action:
         type: file_operation
         operation: read
-        target: "{root}/core-config.yaml"
+        target: "{root}/core-config.json"
         validation:
           required: true
       on_failure: halt
@@ -218,8 +218,8 @@ outputs:
   direct_report: true
 
 blocking_conditions:
-  - condition: "core-config.yaml not found"
-    message: "core-config.yaml is required for story validation"
+  - condition: "core-config.json not found"
+    message: "core-config.json is required for story validation"
     severity: critical
   - condition: "Story file not found"
     message: "Story file must exist for validation"

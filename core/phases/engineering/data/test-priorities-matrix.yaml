@@ -32,7 +32,6 @@ content:
           - Comprehensive coverage at all levels
           - Both happy and unhappy paths
           - Edge cases and error scenarios
-          - Performance under load
         coverage_targets:
           unit: ">90%"
           integration: ">80%"
@@ -55,7 +54,6 @@ content:
           - Primary happy paths required
           - Key error scenarios
           - Critical edge cases
-          - Basic performance validation
         coverage_targets:
           unit: ">80%"
           integration: ">60%"

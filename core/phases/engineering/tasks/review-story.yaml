@@ -100,7 +100,7 @@ process:
         prompt: |
           Check NFRs:
           - Security: Authentication, authorization, data protection
-          - Performance: Response times, resource usage
+          - Performance: Code-level analysis (potential bottlenecks, query optimization opportunities, algorithmic efficiency, resource usage patterns) - excludes benchmark metrics
           - Reliability: Error handling, recovery mechanisms
           - Maintainability: Code clarity, documentation
 

@@ -97,7 +97,7 @@
       },
       "performance": {
         "status": "PASS",
-        "notes": ""
+        "notes": "Code-level performance analysis only - excludes benchmark metrics"
       },
       "reliability": {
         "status": "PASS",
