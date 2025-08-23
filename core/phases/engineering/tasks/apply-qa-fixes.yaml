@@ -15,12 +15,12 @@ inputs:
       examples: ["2.2", "1.3", "3.1"]
     - name: qa_root
       type: path
-      description: QA artifacts location from bmad-core/core-config.json key qa.qaLocation
+      description: QA artifacts location from bmad-core/config.json key qa.qaLocation
       default: "docs/project/qa"
       examples: ["docs/project/qa"]
     - name: story_root
       type: path
-      description: Story files location from bmad-core/core-config.json key devStoryLocation
+      description: Story files location from bmad-core/config.json key devStoryLocation
       default: "docs/project/stories"
       examples: ["docs/project/stories"]
   optional:
@@ -50,7 +50,7 @@ outputs:
 
 prerequisites:
   files:
-    - ".bmad-core/core-config.json"
+    - ".bmad-core/config.json"
   commands:
     - command: "deno --version"
       expected_exit_code: 0
@@ -69,7 +69,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: ".bmad-core/core-config.json"
+        target: ".bmad-core/config.json"
       on_failure: halt
 
     - id: LOCATE-STORY
@@ -214,7 +214,7 @@ dependencies:
     - test-levels-framework
 
 blocking_conditions:
-  - condition: "Missing bmad-core/core-config.json"
+  - condition: "Missing bmad-core/config.json"
     message: Core configuration file not found
     severity: critical
   - condition: "Story file not found for story_id"

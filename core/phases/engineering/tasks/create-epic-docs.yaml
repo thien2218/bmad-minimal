@@ -57,7 +57,7 @@ process:
       action:
         type: "file_operation"
         operation: "read"
-        target: ".bmad-core/core-config.json"
+        target: ".bmad-core/config.json"
 
     - id: "LOCATE-EPIC"
       title: "Locate Epic and Validate Status"

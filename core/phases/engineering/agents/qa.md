@@ -87,7 +87,7 @@
 	"activation": {
 		"preconditions": {
 			"requireExplicitLoad": true,
-			"loadAlwaysFiles": [".bmad-core/core-config.json"],
+			"loadAlwaysFiles": [".bmad-core/config.json"],
 			"readPersonaFile": true,
 			"onMissingFiles": "ask_user"
 		},
