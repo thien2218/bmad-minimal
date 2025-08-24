@@ -27,8 +27,8 @@ process:
       action:
         type: "analysis"
         content: |
-          # Documentation Philosophy: In-place documentation is always preferred
-          # Priority: 1) JSDoc/type hints/decorators 2) Framework integration 3) Generated artifacts
+          Documentation Philosophy: In-place documentation is always preferred
+          Priority: 1) JSDoc/type hints/decorators 2) Framework integration 3) Generated artifacts
           
           Analyze project for:
           - Package files: package.json, requirements.txt, go.mod, Cargo.toml, composer.json
@@ -69,20 +69,12 @@ process:
       condition:
         if: "!exists({root}/api/) || !exists({root}/components/)"
       action:
-        type: "file_operation"
-        operation: "create"
-        target: "{root}/api/"
+        type: "analysis"
         content: |
-          # Read root path from .bmad-core/config.json (default: ".bmad-core/")
-          # Create documentation structure only if it doesn't exist:
-          # {root}/api/ - for API documentation (Swagger/OpenAPI) 
-          # {root}/components/ - for component documentation (Storybook)
-          
-          ROOT_PATH=$(cat .bmad-core/config.json | grep -o '"root":\s*"[^"]*' | cut -d'"' -f4)
-          
-          # Only create if directories don't exist
-          [ ! -d "${ROOT_PATH}api" ] && mkdir -p "${ROOT_PATH}api"
-          [ ! -d "${ROOT_PATH}components" ] && mkdir -p "${ROOT_PATH}components"
+          Read root path from .bmad-core/config.json (default: ".bmad-core/")
+          Create documentation structure only if it doesn't exist:
+          - {root}/api/ - for API documentation (Swagger/OpenAPI) 
+          - {root}/components/ - for component documentation (Storybook)
 
     - id: "SETUP-BACKEND-DOCS"
       title: "Configure backend API documentation"
@@ -90,24 +82,21 @@ process:
       condition:
         if: "inputs.type == 'api' || inputs.type == 'both'"
       action:
-        type: "command"
-        command: |
-          ROOT_PATH=$(cat .bmad-core/config.json | grep -o '"root":\s*"[^"]*' | cut -d'"' -f4)
+        type: "analysis"
+        content: |
+          Check if API documentation already exists in {root}/api/
           
-          # Check if API documentation already exists
-          if [ -d "${ROOT_PATH}api" ] && [ "$(ls -A ${ROOT_PATH}api)" ]; then
-            echo "Updating existing API documentation with in-place approach"
-            # Update existing documentation
-          else
-            echo "Creating new API documentation with in-place approach"
-            # Framework-specific setup with in-place documentation emphasis:
-            # Express: swagger-jsdoc + JSDoc comments in routes
-            # FastAPI: Built-in docs with Pydantic models + type hints
-            # NestJS: @nestjs/swagger with decorators
-            # Flask: Flask-RESTX with decorators
-            # Go: gin-swagger with structured comments
-            # Generic: OpenAPI YAML template
-          fi
+          If updating existing documentation:
+          - Update existing API documentation with in-place approach
+          
+          If creating new documentation:
+          - Framework-specific setup with in-place documentation emphasis:
+            * Express: swagger-jsdoc + JSDoc comments in routes
+            * FastAPI: Built-in docs with Pydantic models + type hints
+            * NestJS: @nestjs/swagger with decorators
+            * Flask: Flask-RESTX with decorators
+            * Go: gin-swagger with structured comments
+            * Generic: OpenAPI YAML template
 
     - id: "SETUP-FRONTEND-DOCS"
       title: "Configure frontend component documentation"
@@ -115,23 +104,20 @@ process:
       condition:
         if: "inputs.type == 'components' || inputs.type == 'both'"
       action:
-        type: "command"
-        command: |
-          ROOT_PATH=$(cat .bmad-core/config.json | grep -o '"root":\s*"[^"]*' | cut -d'"' -f4)
+        type: "analysis"
+        content: |
+          Check if component documentation already exists in {root}/components/
           
-          # Check if component documentation already exists
-          if [ -d "${ROOT_PATH}components" ] && [ "$(ls -A ${ROOT_PATH}components)" ]; then
-            echo "Updating existing component documentation with in-place approach"
-            # Update existing documentation
-          else
-            echo "Creating new component documentation with in-place approach"
-            # Framework-specific Storybook setup:
-            # React: Storybook with PropTypes/TypeScript + JSDoc
-            # Vue: Storybook for Vue with component props
-            # Angular: Storybook with Compodoc integration  
-            # Svelte: Storybook for Svelte/SvelteKit
-            # Generic: Basic Storybook setup
-          fi
+          If updating existing documentation:
+          - Update existing component documentation with in-place approach
+          
+          If creating new documentation:
+          - Framework-specific Storybook setup:
+            * React: Storybook with PropTypes/TypeScript + JSDoc
+            * Vue: Storybook for Vue with component props
+            * Angular: Storybook with Compodoc integration  
+            * Svelte: Storybook for Svelte/SvelteKit
+            * Generic: Basic Storybook setup
 
     - id: "CUSTOM-METHOD-SETUP"
       title: "Configure custom documentation method"
@@ -139,14 +125,12 @@ process:
       condition:
         if: "inputs.method != null && inputs.method != ''"
       action:
-        type: "file_operation"
-        operation: "create"
-        target: "docs/"
+        type: "analysis"
         content: |
-          # Custom documentation setup for: {method}
-          # Still emphasizing in-place documentation within chosen method
+          Custom documentation setup for: {method}
+          Still emphasizing in-place documentation within chosen method
           
-          Setting up {method} documentation structure
+          Set up {method} documentation structure
 
     - id: "CREATE-EXAMPLES"
       title: "Generate documentation examples"
@@ -156,13 +140,13 @@ process:
         operation: "create"
         target: "examples/"
         content: |
-          # In-place documentation examples:
-          # - JSDoc comments for APIs
-          # - PropTypes for React components
-          # - Type hints for Python
-          # - Structured comments for Go
+          Create in-place documentation examples:
+          - JSDoc comments for APIs
+          - PropTypes for React components
+          - Type hints for Python
+          - Structured comments for Go
           
-          Examples created for in-place documentation patterns
+          Generate examples showing in-place documentation patterns
 
     - id: "CONFIGURE-AUTOMATION"
       title: "Set up documentation automation"
@@ -171,7 +155,7 @@ process:
         type: "file_operation"
         operation: "update"
         target: "package.json"
-        content: "# Add documentation build scripts if package.json exists"
+        content: "Add documentation build scripts if package.json exists"
 
 outputs:
   artifacts:

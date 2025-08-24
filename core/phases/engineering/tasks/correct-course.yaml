@@ -152,7 +152,6 @@ process:
         if: "interaction_mode == 'incremental'"
       elicit: true
 
-
     - id: REVIEW-1
       title: Present Sprint Change Proposal for Review
       description: Present complete proposal to user for feedback
@@ -169,6 +168,27 @@ process:
           3. Reject and restart analysis
       elicit: true
 
+    - id: HANDOFF-1
+      title: Handoff for Fundamental Replan
+      description: Provide handoff guidance when fundamental replanning is needed
+      action:
+        type: elicit
+        prompt: |
+          Change analysis indicates fundamental replanning is required.
+          
+          This change exceeds the scope of sprint-level adjustments and requires:
+          - Architectural review
+          - Product management reassessment
+          - Timeline impact analysis
+          
+          Recommended next steps:
+          1. Schedule architecture review session
+          2. Engage product stakeholders for scope discussion
+          3. Conduct impact assessment on current sprint commitments
+          
+          Please coordinate with PM/Architect for next steps.
+      elicit: true
+
     - id: FINALIZE-1
       title: Finalize and Determine Next Steps
       description: Obtain approval and provide guidance on next steps
@@ -176,7 +196,6 @@ process:
         type: decision
         prompt: Determine if changes can be implemented directly or require fundamental replan
       on_failure: halt
-
 
 dependencies:
   checklists:

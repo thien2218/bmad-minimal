@@ -125,7 +125,7 @@ process:
         type: decision
         prompt: Are there incomplete tasks/subtasks remaining?
       condition:
-        if: "tasks_remaining == true"
+        if: "some tasks still remain"
         then: "TASK-1"
         else: "TESTS-1"
 
