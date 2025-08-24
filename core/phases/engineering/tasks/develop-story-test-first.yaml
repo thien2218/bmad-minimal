@@ -17,6 +17,19 @@ inputs:
       type: path
       description: Path to story file from story.location in config.json
       pattern: "{story.location}/story-{epic}.{story}-*.yaml"
+    - name: test_command
+      type: command
+      description: Command for running tests in the project (derived from the project setup if not specified)
+      examples: ["npm run test", "go test"]
+    - name: build_command
+      type: command
+      description: Command for executing build step for the project (derived from the project setup if not specified)
+      examples: ["npm run build", "cargo build"]
+  optional:
+    - name: lint_command
+      type: command
+      description: Command to check for linting errors. Typically in a TypeScript/JavaScript project
+      examples: ["npm run lint"]
 
 outputs:
   updates:
@@ -43,7 +56,7 @@ outputs:
 
 prerequisites:
   files:
-    - "{roots}/config.json"
+    - "{root}/config.json"
     - "{story_path}"
   status:
     - entity: story
@@ -60,7 +73,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{roots}/config.json"
+        target: "{root}/config.json"
 
     - id: VERIFY-WIP
       title: Verify Story Status is WIP
@@ -98,7 +111,7 @@ process:
       description: Confirm tests fail before implementation
       action:
         type: command
-        command: "*run-tests"
+        command: "{test_command}"
       on_success: proceed
       on_failure: proceed
 
@@ -118,7 +131,7 @@ process:
       description: Ensure the suite passes
       action:
         type: command
-        command: "*run-tests"
+        command: "{test_command}"
       retry:
         max_attempts: 3
         delay_seconds: 0
@@ -145,7 +158,7 @@ process:
 
 outputs_post:
   validations:
-    - command: "*run-tests"
+    - command: "{test_command}"
       expected_output: "success"
 
 dependencies:

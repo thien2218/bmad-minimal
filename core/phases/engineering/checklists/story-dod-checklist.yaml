@@ -66,7 +66,7 @@ items:
     category: code-quality
     verification:
       type: command
-      command: "lint command derived from user's project setup"
+      command: "{lint_command}"
       pattern: "0 problems"
   - id: CODE-007
     text: Code is well-commented where necessary (complex logic, not obvious statements)
@@ -97,7 +97,7 @@ items:
     category: testing
     verification:
       type: command
-      command: "test command derived from user's project setup"
+      command: "{test_command}"
       pattern: "ok"
   - id: TEST-004
     text: Test coverage meets project standards (if defined)
@@ -154,7 +154,7 @@ items:
     category: testing
     verification:
       type: command
-      command: "build command derived from user's project setup"
+      command: "{build_command}"
       pattern: "success|complete"
     notes: Build issues block everyone - ensure everything compiles cleanly
   - id: BUILD-002
@@ -163,7 +163,7 @@ items:
     category: testing
     verification:
       type: command
-      command: "lint command derived from user's project setup"
+      command: "{lint_command}"
       pattern: "0 problems"
   - id: BUILD-003
     text: New dependencies were pre-approved or explicitly approved during development

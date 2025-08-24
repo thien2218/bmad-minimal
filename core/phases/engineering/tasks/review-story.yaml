@@ -187,7 +187,7 @@ process:
         operation: create
         target: "{qaLocation}/gates/story-{epic}.{story}-*.yaml"
         content: |
-          Render from {roots}/schemas/qa-gate.json
+          Render from {root}/schemas/qa-gate.json
           Include gate decision, risk summary, NFR validation
 
 outputs:

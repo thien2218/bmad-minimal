@@ -23,7 +23,15 @@ inputs:
       description: Story files location from bmad-core/config.json key story.location
       default: "docs/stories"
       examples: ["docs/stories"]
+    - name: test_command
+      type: command
+      description: Command for running tests in the project (derived from the project setup if not specified)
+      examples: ["npm run test", "go test"]
   optional:
+    - name: lint_command
+      type: command
+      description: Command to check for linting errors. Typically in a TypeScript/JavaScript project
+      examples: ["npm run lint"]
     - name: story_title
       type: string
       description: Story title - derived from story H1 if missing
@@ -44,10 +52,7 @@ outputs:
 
 prerequisites:
   files:
-    - "{roots}/config.json"
-  commands:
-    - command: "check runtime availability command derived from project setup"
-      expected_exit_code: 0
+    - "{root}/config.json"
   status:
     - entity: story
       field: status
@@ -63,7 +68,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{roots}/config.json"
+        target: "{root}/config.json"
       on_failure: halt
 
     - id: LOCATE-STORY
@@ -128,7 +133,7 @@ process:
       description: Run lint command and fix any issues
       action:
         type: command
-        command: "lint command derived from project setup"
+        command: "{lint_command}"
       retry:
         max_attempts: 3
         delay_seconds: 1
@@ -138,7 +143,7 @@ process:
       description: Run all tests and ensure they pass
       action:
         type: command
-        command: "test command derived from project setup"
+        command: "{test_command}"
       retry:
         max_attempts: 3
         delay_seconds: 2
@@ -198,9 +203,9 @@ completion:
     - "Story updated (allowed sections only) including File List and Change Log"
     - "Status set according to Status Rule"
   validations:
-    - command: "lint command derived from project setup"
+    - command: "{lint_command}"
       expected_output: "Checked.*files.*problems"
-    - command: "test command derived from project setup"
+    - command: "{test_command}"
       expected_output: "ok.*passed"
 
 metadata:

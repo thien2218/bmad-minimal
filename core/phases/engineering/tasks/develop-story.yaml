@@ -17,6 +17,19 @@ inputs:
       type: path
       description: Path to story file from story.location in config.json
       pattern: "{story.location}/story-{epic}.{story}-*.yaml"
+    - name: test_command
+      type: command
+      description: Command for running tests in the project (derived from the project setup if not specified)
+      examples: ["npm run test", "go test"]
+    - name: build_command
+      type: command
+      description: Command for executing build step for the project (derived from the project setup if not specified)
+      examples: ["npm run build", "cargo build"]
+  optional:
+    - name: lint_command
+      type: command
+      description: Command to check for linting errors. Typically in a TypeScript/JavaScript project
+      examples: ["npm run lint"]
 
 outputs:
   updates:
@@ -46,7 +59,7 @@ outputs:
 
 prerequisites:
   files:
-    - "{roots}/config.json"
+    - "{root}/config.json"
     - "{story_path}"
   status:
     - entity: story
@@ -63,7 +76,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{roots}/config.json"
+        target: "{root}/config.json"
         content: |
           Extract key configurations:
           - story.location
@@ -133,7 +146,7 @@ process:
       description: Run tests and validation tasks
       action:
         type: command
-        command: "*run-tests"
+        command: "{test_command}"
         content: |
           - Run test suite
           - Execute dependency task: validate-next-story
