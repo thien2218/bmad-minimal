@@ -101,31 +101,32 @@ process:
       description: Validate each checklist item against documentation
       action:
         type: validation
-        operations:
-          - Read and understand the requirement
-          - Look for evidence in documentation
-          - Consider explicit mentions and implicit coverage
-          - Follow all checklist LLM instructions
+        content: |
+          Read and understand the requirement
+          Look for evidence in documentation
+          Consider explicit mentions and implicit coverage
+          Follow all checklist LLM instructions
+          
+          Mark items as:
+          - ✅ PASS: Requirement clearly met
+          - ❌ FAIL: Requirement not met or insufficient coverage
+          - ⚠️ PARTIAL: Some aspects covered but needs improvement
+          - N/A: Not applicable to this case
         validation:
           type: checklist_item
-          pattern: |
-            Mark items as:
-            - ✅ PASS: Requirement clearly met
-            - ❌ FAIL: Requirement not met or insufficient coverage
-            - ⚠️ PARTIAL: Some aspects covered but needs improvement
-            - N/A: Not applicable to this case
+          required: true
 
     - id: ANALYZE-SECTIONS
       title: Section Analysis
       description: Analyze each section for patterns and recommendations
       action:
         type: analysis
-        operations:
-          - Calculate pass rate step by step
-          - Identify common themes in failed items
-          - Provide specific recommendations for improvement
-          - In interactive mode, discuss findings with user
-          - Document any user decisions or explanations
+        content: |
+          Calculate pass rate step by step
+          Identify common themes in failed items
+          Provide specific recommendations for improvement
+          In interactive mode, discuss findings with user
+          Document any user decisions or explanations
 
 dependencies:
   checklists:

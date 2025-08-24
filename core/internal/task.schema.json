@@ -78,7 +78,8 @@
 									"object",
 									"path",
 									"epic_id",
-									"story_id"
+									"story_id",
+									"command"
 								]
 							},
 							"description": {
@@ -369,6 +370,11 @@
 							"on_failure": {
 								"type": "string",
 								"description": "Action on failure",
+								"enum": ["halt", "continue", "skip", "rollback"]
+							},
+							"on_success": {
+								"type": "string",
+								"description": "Action on success",
 								"enum": ["halt", "continue", "skip", "rollback"]
 							},
 							"elicit": {

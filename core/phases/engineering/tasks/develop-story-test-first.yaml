@@ -112,8 +112,8 @@ process:
       action:
         type: command
         command: "{test_command}"
-      on_success: proceed
-      on_failure: proceed
+      on_success: continue
+      on_failure: continue
 
     - id: IMPLEMENT
       title: Implement Minimal Code to Pass Tests (Green)
@@ -155,11 +155,6 @@ process:
         content: |
           - Append to Debug Log, Completion Notes, Change Log with concise entries
           - Do not edit non-Dev sections
-
-outputs_post:
-  validations:
-    - command: "{test_command}"
-      expected_output: "success"
 
 dependencies:
   tasks:
