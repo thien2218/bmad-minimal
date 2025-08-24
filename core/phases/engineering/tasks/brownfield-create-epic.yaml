@@ -108,10 +108,6 @@ process:
           requirements-mapping:
             functional-requirements: []
             non-functional-requirements: []
-          risk-mitigation:
-            primary-risk: "{primary_risk}"
-            mitigation-strategies: []
-            rollback-plan: "{rollback_plan}"
           story-breakdown:
             story-list: []
             story-sequencing-rationale: ""
@@ -192,22 +188,6 @@ process:
               - "Unrelated technical debt"
               - "Cross-cutting concerns handled elsewhere"
 
-    - id: ADD-RISK-MITIGATION
-      title: Add Risk Mitigation
-      description: Update risk-mitigation section per schema
-      action:
-        type: file_operation
-        operation: update
-        target: "{epic.location}/epic-{epic_number}-{enhancement_name}.yaml"
-        content: |
-          risk-mitigation:
-            primary-risk: "{main risk to existing system}"
-            mitigation-strategies:
-              - "{how risk will be addressed}"
-              - "Follow existing patterns to minimize integration risk"
-              - "Implement feature flags for safe rollback"
-            rollback-plan: "{how to undo changes if needed}"
-
     - id: ADD-DOD
       title: Add Definition of Done
       description: Update epic-overview definition_of_done per schema
@@ -234,7 +214,6 @@ process:
           - Clear goal and description
           - 1-3 properly scoped stories with priorities
           - Compatibility requirements
-          - Risk assessment and mitigation
           - Definition of done
           - All stories follow existing patterns
 

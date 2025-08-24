@@ -263,7 +263,30 @@ process:
               source: "architecture/{filename}.md#{section}"
             notes_missing_guidance: "If information for a category is not found in architecture docs, explicitly state: 'No specific guidance found in architecture docs'"
           tasks_subtasks: "{generated_tasks}"
+          risk_mitigation:
+            primary_risk: "{primary_risk}"
+            mitigation_strategies: "{mitigation_strategies}"
+            rollback_plan: "{rollback_plan}"
           project_structure_notes: "{structure_notes}"
+
+    - id: RISK-1
+      title: Assess Story Risk
+      description: Evaluate risks specific to this story implementation
+      action:
+        type: analysis
+        content: |
+          Assess story-specific risks:
+          - Impact on existing functionality
+          - Technical complexity and unknowns
+          - Integration challenges
+          - Data migration or schema changes
+          - Performance implications
+          - Security considerations
+          
+          Define:
+          - Primary risk for this story
+          - Concrete mitigation strategies
+          - Rollback plan if implementation fails
 
     - id: TASKS-1
       title: Generate Tasks and Subtasks

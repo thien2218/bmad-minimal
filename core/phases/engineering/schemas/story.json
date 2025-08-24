@@ -87,6 +87,37 @@
 			]
 		},
 		{
+			"id": "risk-mitigation",
+			"title": "Risk Mitigation",
+			"instruction": "Document risks and mitigation strategies for this story implementation.",
+			"owner": "product-development-master",
+			"editors": ["product-development-master"],
+			"sections": [
+				{
+					"id": "primary-risk",
+					"title": "Primary Risk",
+					"type": "paragraph",
+					"instruction": "Describe the main risk this story poses to the existing system and users.",
+					"elicit": true
+				},
+				{
+					"id": "mitigation-strategies",
+					"title": "Mitigation Strategies",
+					"type": "bullet-list",
+					"instruction": "List concrete mitigation actions to reduce likelihood/impact of the risk.",
+					"template": "- {{mitigation_action}}",
+					"elicit": true
+				},
+				{
+					"id": "rollback-plan",
+					"title": "Rollback Plan",
+					"type": "paragraph",
+					"instruction": "Outline how to quickly revert changes if needed, including preconditions and steps.",
+					"elicit": true
+				}
+			]
+		},
+		{
 			"id": "change-log",
 			"title": "Change Log",
 			"type": "table",
