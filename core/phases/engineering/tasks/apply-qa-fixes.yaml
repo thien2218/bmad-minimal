@@ -16,13 +16,13 @@ inputs:
     - name: qa_root
       type: path
       description: QA artifacts location from bmad-core/config.json key qaLocation
-      default: "docs/project/qa"
-      examples: ["docs/project/qa"]
+      default: "docs/qa"
+      examples: ["docs/qa"]
     - name: story_root
       type: path
       description: Story files location from bmad-core/config.json key story.location
-      default: "docs/project/stories"
-      examples: ["docs/project/stories"]
+      default: "docs/stories"
+      examples: ["docs/stories"]
   optional:
     - name: story_title
       type: string
@@ -46,7 +46,7 @@ prerequisites:
   files:
     - "{roots}/config.json"
   commands:
-    - command: "deno --version"
+    - command: "check runtime availability command derived from project setup"
       expected_exit_code: 0
   status:
     - entity: story
@@ -125,10 +125,10 @@ process:
 
     - id: VALIDATE-LINT
       title: Validate with Linting
-      description: Run deno lint and fix any issues
+      description: Run lint command and fix any issues
       action:
         type: command
-        command: "deno lint"
+        command: "lint command derived from project setup"
       retry:
         max_attempts: 3
         delay_seconds: 1
@@ -138,7 +138,7 @@ process:
       description: Run all tests and ensure they pass
       action:
         type: command
-        command: "deno test -A"
+        command: "test command derived from project setup"
       retry:
         max_attempts: 3
         delay_seconds: 2
@@ -190,17 +190,17 @@ blocking_conditions:
 
 completion:
   criteria:
-    - deno lint shows 0 problems
-    - deno test -A all tests pass
-    - All high severity top_issues addressed
-    - NFR FAIL issues resolved; CONCERNS minimized or documented
-    - Coverage gaps closed or explicitly documented with rationale
-    - Story updated (allowed sections only) including File List and Change Log
-    - Status set according to Status Rule
+    - "linting shows 0 problems"
+    - "all test cases pass"
+    - "All high severity top_issues addressed"
+    - "NFR FAIL issues resolved; CONCERNS minimized or documented"
+    - "Coverage gaps closed or explicitly documented with rationale"
+    - "Story updated (allowed sections only) including File List and Change Log"
+    - "Status set according to Status Rule"
   validations:
-    - command: "deno lint"
+    - command: "lint command derived from project setup"
       expected_output: "Checked.*files.*problems"
-    - command: "deno test -A"
+    - command: "test command derived from project setup"
       expected_output: "ok.*passed"
 
 metadata:
