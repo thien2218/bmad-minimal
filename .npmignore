@@ -1,2 +1,41 @@
-/core
+# Development files
+*.log
+*.tmp
+*.temp
 .DS_Store
+Thumbs.db
+
+# Git files
+.git/
+.gitignore
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test files
+test/
+tests/
+__tests__/
+*.test.js
+*.spec.js
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# CI/CD files
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Local environment
+.env
+.env.local
+.env.*.local
+
+# Core template files (will be copied to package)
+core/
