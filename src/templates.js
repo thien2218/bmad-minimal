@@ -1,66 +1,72 @@
-const fs = require('fs-extra');
-const path = require('path');
-const chalk = require('chalk');
-const { generateTechPreferences } = require('./detection');
+const fs = require("fs-extra");
+const path = require("path");
+const chalk = require("chalk");
+const { generateTechPreferences } = require("./detection");
 
 async function createTemplateFiles(workspacePath, config, projectInfo) {
-  console.log(chalk.blue('📝 Generating template files...'));
-  
-  const bmadCorePath = path.join(workspacePath, '.bmad-core');
-  const agentsPath = path.join(workspacePath, '.agents');
-  
-  // Generate config.json
-  await createConfigFile(bmadCorePath, config);
-  
-  // Generate technical-preferences.md
-  await createTechnicalPreferencesFile(bmadCorePath, config, projectInfo);
-  
-  // Create agent files
-  await createAgentFiles(agentsPath, projectInfo);
-  
-  // Create placeholder files
-  await createPlaceholderFiles(bmadCorePath, config);
-  
-  // Create planning files if requested
-  if (config.includePlanning) {
-    await createPlanningFiles(path.join(workspacePath, 'planning'));
-  }
+	console.log(chalk.blue("📝 Generating template files..."));
+
+	const bmadCorePath = path.join(workspacePath, ".bmad-core");
+	const agentsPath = path.join(workspacePath, ".agents");
+
+	// Generate config.json
+	await createConfigFile(bmadCorePath, config);
+
+	// Generate technical-preferences.md
+	await createTechnicalPreferencesFile(bmadCorePath, config, projectInfo);
+
+	// Create agent files
+	await createAgentFiles(agentsPath, projectInfo);
+
+	// Create placeholder files
+	await createPlaceholderFiles(bmadCorePath, config);
+
+	// Create planning files if requested
+	if (config.includePlanning) {
+		await createPlanningFiles(path.join(workspacePath, "planning"));
+	}
 }
 
 async function createConfigFile(bmadCorePath, config) {
-  const configContent = {
-    root: '.bmad-core/',
-    prd: {
-      file: `${config.folders.docs}/prd.md`,
-      version: 'v4',
-      sharded: true,
-      shardedLocation: `${config.folders.docs}/prd`
-    },
-    architecture: {
-      file: `${config.folders.docs}/architecture.md`,
-      version: 'v4',
-      sharded: true,
-      shardedLocation: `${config.folders.docs}/architecture`
-    },
-    customTechnicalDocuments: null,
-    qaLocation: config.folders.qa,
-    epic: {
-      location: config.folders.epics,
-      fileNamePattern: 'epic-{epic_number}-*.yaml'
-    },
-    story: {
-      location: config.folders.stories,
-      fileNamePattern: 'story-{epic_number}.{story_number}-*.yaml'
-    }
-  };
-  
-  await fs.writeJson(path.join(bmadCorePath, 'config.json'), configContent, { spaces: 2 });
+	const configContent = {
+		root: ".bmad-core/",
+		prd: {
+			file: `${config.folders.docs}/prd.md`,
+			version: "v4",
+			sharded: true,
+			shardedLocation: `${config.folders.docs}/prd`,
+		},
+		architecture: {
+			file: `${config.folders.docs}/architecture.md`,
+			version: "v4",
+			sharded: true,
+			shardedLocation: `${config.folders.docs}/architecture`,
+		},
+		customTechnicalDocuments: null,
+		qaLocation: config.folders.qa,
+		epic: {
+			location: config.folders.epics,
+			fileNamePattern: "epic-{epic_number}-*.yaml",
+		},
+		story: {
+			location: config.folders.stories,
+			fileNamePattern: "story-{epic_number}.{story_number}-*.yaml",
+		},
+	};
+
+	await fs.writeJson(path.join(bmadCorePath, "config.json"), configContent, {
+		spaces: 2,
+	});
 }
 
-async function createTechnicalPreferencesFile(bmadCorePath, config, projectInfo) {
-  const techInfo = generateTechPreferences(projectInfo, config);
-  
-  const content = `# Technical Preferences
+async function createTechnicalPreferencesFile(
+	bmadCorePath,
+	config,
+	projectInfo
+) {
+	const techInfo = generateTechPreferences(projectInfo, config);
+
+	const content = `# Technical Preferences
 
 A living document that captures product-wide technical decisions, defaults, and constraints. Use this to align teams and accelerate delivery.
 
@@ -82,14 +88,30 @@ A living document that captures product-wide technical decisions, defaults, and 
 ### R1) Languages and runtimes
 
 - Primary language(s) and version(s): ${techInfo.languages}
-- Runtime baseline & policy: ${techInfo.runtime}${techInfo.runtime !== 'TBD' ? ' LTS' : ''}
-- Type/strictness: ${techInfo.languages.includes('TypeScript') ? 'TypeScript "strict": true' : 'TBD'}
+- Runtime baseline & policy: ${techInfo.runtime}${
+		techInfo.runtime !== "TBD" ? " LTS" : ""
+	}
+- Type/strictness: ${
+		techInfo.languages.includes("TypeScript")
+			? 'TypeScript "strict": true'
+			: "TBD"
+	}
 
 ---
 
 ### R2) Frameworks and libraries
 
-- Frontend: ${Array.isArray(techInfo.frameworks) && techInfo.frameworks.includes('React') ? 'React' : 'TBD'}${Array.isArray(techInfo.frameworks) && techInfo.frameworks.includes('Next.js') ? ', Next.js' : ''}
+- Frontend: ${
+		Array.isArray(techInfo.frameworks) &&
+		techInfo.frameworks.includes("React")
+			? "React"
+			: "TBD"
+	}${
+		Array.isArray(techInfo.frameworks) &&
+		techInfo.frameworks.includes("Next.js")
+			? ", Next.js"
+			: ""
+	}
 - Backend: ${getBackendFrameworks(techInfo.frameworks)}
 - Testing: TBD
 - Build tools: ${getBuildTools(techInfo)}
@@ -98,8 +120,10 @@ A living document that captures product-wide technical decisions, defaults, and 
 
 ### R3) Project structure and package management
 
-- Repo model: ${projectInfo.hasGit ? 'Git repository' : 'TBD'}
-- Directory layout (high-level): ${config.folders.docs}/, ${config.folders.epics}/, ${config.folders.stories}/
+- Repo model: ${projectInfo.hasGit ? "Git repository" : "TBD"}
+- Directory layout (high-level): ${config.folders.docs}/, ${
+		config.folders.epics
+	}/, ${config.folders.stories}/
 - Package manager & version: ${techInfo.packageManager}
 - Workspaces: TBD
 
@@ -107,7 +131,12 @@ A living document that captures product-wide technical decisions, defaults, and 
 
 ### R4) Code quality
 
-- Formatting: ${techInfo.languages.includes('TypeScript') || techInfo.languages.includes('JavaScript') ? 'Prettier' : 'TBD'}
+- Formatting: ${
+		techInfo.languages.includes("TypeScript") ||
+		techInfo.languages.includes("JavaScript")
+			? "Prettier"
+			: "TBD"
+	}
 - Linting: ${getLintingTools(techInfo.languages)}
 - Commit convention: Conventional Commits
 
@@ -141,7 +170,9 @@ A living document that captures product-wide technical decisions, defaults, and 
 
 - AuthN/AuthZ approach: TBD
 - Secrets policy: TBD
-- Dependency updates: ${techInfo.packageManager !== 'N/A' ? 'Renovate/Dependabot' : 'TBD'}
+- Dependency updates: ${
+		techInfo.packageManager !== "N/A" ? "Renovate/Dependabot" : "TBD"
+	}
 
 ---
 
@@ -177,36 +208,37 @@ This file was auto-generated based on your project:
 - **Runtime**: ${techInfo.runtime}
 - **Frameworks**: ${techInfo.frameworks}
 - **Package Manager**: ${techInfo.packageManager}
-- **Git Repository**: ${techInfo.hasGit ? 'Yes' : 'No'}
+- **Git Repository**: ${techInfo.hasGit ? "Yes" : "No"}
 
 *Modify the sections above as needed for your specific project requirements.*
 `;
 
-  await fs.writeFile(path.join(bmadCorePath, 'technical-preferences.md'), content);
+	await fs.writeFile(
+		path.join(bmadCorePath, "technical-preferences.md"),
+		content
+	);
 }
 
 async function createAgentFiles(agentsPath, projectInfo) {
-  // Create a basic agent configuration
-  const agentConfig = {
-    name: 'bmad-minimal-agent',
-    description: 'BMAD Minimal workspace agent configuration',
-    version: '1.0.0',
-    context: {
-      project_type: projectInfo.type,
-      languages: projectInfo.languages,
-      frameworks: projectInfo.frameworks
-    },
-    capabilities: [
-      'code-generation',
-      'documentation',
-      'project-analysis'
-    ]
-  };
-  
-  await fs.writeJson(path.join(agentsPath, 'config.json'), agentConfig, { spaces: 2 });
-  
-  // Create a simple README for the agents folder
-  const agentReadme = `# BMAD Agents
+	// Create a basic agent configuration
+	const agentConfig = {
+		name: "bmad-minimal-agent",
+		description: "BMAD Minimal workspace agent configuration",
+		version: "1.0.0",
+		context: {
+			project_type: projectInfo.type,
+			languages: projectInfo.languages,
+			frameworks: projectInfo.frameworks,
+		},
+		capabilities: ["code-generation", "documentation", "project-analysis"],
+	};
+
+	await fs.writeJson(path.join(agentsPath, "config.json"), agentConfig, {
+		spaces: 2,
+	});
+
+	// Create a simple README for the agents folder
+	const agentReadme = `# BMAD Agents
 
 This folder contains agent configurations for your BMAD workspace.
 
@@ -220,13 +252,13 @@ This folder contains agent configurations for your BMAD workspace.
 This folder is hidden from AI-assisted IDEs to prevent accidental modifications.
 Modify agent configurations carefully as they control AI behavior.
 `;
-  
-  await fs.writeFile(path.join(agentsPath, 'README.md'), agentReadme);
+
+	await fs.writeFile(path.join(agentsPath, "README.md"), agentReadme);
 }
 
 async function createPlaceholderFiles(bmadCorePath, config) {
-  // Create placeholder PRD
-  const prdContent = `# Product Requirements Document
+	// Create placeholder PRD
+	const prdContent = `# Product Requirements Document
 
 *This file was created by BMAD Minimal CLI*
 
@@ -265,10 +297,13 @@ Brief description of your product or project.
 *This document should be updated regularly as requirements evolve.*
 `;
 
-  await fs.writeFile(path.join(bmadCorePath, config.folders.docs, 'prd.md'), prdContent);
-  
-  // Create placeholder Architecture document
-  const archContent = `# Architecture Document
+	await fs.writeFile(
+		path.join(bmadCorePath, config.folders.docs, "prd.md"),
+		prdContent
+	);
+
+	// Create placeholder Architecture document
+	const archContent = `# Architecture Document
 
 *This file was created by BMAD Minimal CLI*
 
@@ -312,11 +347,14 @@ Based on project detection:
 *This document should be updated as the architecture evolves.*
 `;
 
-  await fs.writeFile(path.join(bmadCorePath, config.folders.docs, 'architecture.md'), archContent);
+	await fs.writeFile(
+		path.join(bmadCorePath, config.folders.docs, "architecture.md"),
+		archContent
+	);
 }
 
 async function createPlanningFiles(planningPath) {
-  const planningReadme = `# Planning
+	const planningReadme = `# Planning
 
 This folder is for web-based planning activities.
 
@@ -336,46 +374,46 @@ Use this folder for planning activities that are better suited for web interface
 
 The planning folder is excluded from git by default but can be included if desired.
 `;
-  
-  await fs.writeFile(path.join(planningPath, 'README.md'), planningReadme);
-  
-  // Create subdirectories
-  await fs.ensureDir(path.join(planningPath, 'sessions'));
-  await fs.ensureDir(path.join(planningPath, 'roadmaps'));
-  await fs.ensureDir(path.join(planningPath, 'research'));
+
+	await fs.writeFile(path.join(planningPath, "README.md"), planningReadme);
+
+	// Create subdirectories
+	await fs.ensureDir(path.join(planningPath, "sessions"));
+	await fs.ensureDir(path.join(planningPath, "roadmaps"));
+	await fs.ensureDir(path.join(planningPath, "research"));
 }
 
 function getBackendFrameworks(frameworks) {
-  if (!Array.isArray(frameworks)) {
-    return 'TBD';
-  }
-  const backend = frameworks.filter(f => 
-    ['Express', 'Fastify', 'NestJS'].includes(f)
-  );
-  return backend.length > 0 ? backend.join(', ') : 'TBD';
+	if (!Array.isArray(frameworks)) {
+		return "TBD";
+	}
+	const backend = frameworks.filter((f) =>
+		["Express", "Fastify", "NestJS"].includes(f)
+	);
+	return backend.length > 0 ? backend.join(", ") : "TBD";
 }
 
 function getBuildTools(techInfo) {
-  if (techInfo.languages.includes('TypeScript')) {
-    return 'TypeScript compiler, bundler TBD';
-  } else if (techInfo.languages.includes('JavaScript')) {
-    return 'Bundler TBD (Webpack/Vite/Rollup)';
-  }
-  return 'TBD';
+	if (techInfo.languages.includes("TypeScript")) {
+		return "TypeScript compiler, bundler TBD";
+	} else if (techInfo.languages.includes("JavaScript")) {
+		return "Bundler TBD (Webpack/Vite/Rollup)";
+	}
+	return "TBD";
 }
 
 function getLintingTools(languages) {
-  const tools = [];
-  if (languages.includes('TypeScript') || languages.includes('JavaScript')) {
-    tools.push('ESLint');
-  }
-  if (languages.includes('Python')) {
-    tools.push('flake8/black');
-  }
-  if (languages.includes('Go')) {
-    tools.push('golangci-lint');
-  }
-  return tools.length > 0 ? tools.join(', ') : 'TBD';
+	const tools = [];
+	if (languages.includes("TypeScript") || languages.includes("JavaScript")) {
+		tools.push("ESLint");
+	}
+	if (languages.includes("Python")) {
+		tools.push("flake8/black");
+	}
+	if (languages.includes("Go")) {
+		tools.push("golangci-lint");
+	}
+	return tools.length > 0 ? tools.join(", ") : "TBD";
 }
 
 module.exports = { createTemplateFiles };
