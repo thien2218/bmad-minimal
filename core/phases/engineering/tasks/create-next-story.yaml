@@ -21,11 +21,11 @@ outputs:
   artifacts:
     - name: Story File
       type: file
-      path: "{config.story.location}/story-{epic}.{story}-*.yaml"
+      path: "{config.storiesLocation}/story-{epic}.{story}-*.yaml"
       format: yaml
       description: Complete story ready for development with full technical context
   updates:
-    - target: "{config.story.location}/*.yaml"
+    - target: "{config.storiesLocation}/*.yaml"
       sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
       restrictions: Only create new story, do not modify existing stories
 
@@ -60,7 +60,7 @@ process:
         type: validation
         content: |
           Extract and validate:
-          - story.location
+          - storiesLocation
           - prd.* settings
           - architecture.* settings
           - workflow.* settings
@@ -79,7 +79,7 @@ process:
         content: |
           Based on prdSharded from config:
           - Locate epic files (sharded location/pattern or monolithic PRD sections)
-          - If story.location has story files, load highest story-{epic}.{story}-*.yaml
+          - If storiesLocation has story files, load highest story-{epic}.{story}-*.yaml
           - Determine next sequential story
 
     - id: IDENTIFY-2
@@ -130,7 +130,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{config.docsLocation}/{config.epic.location}/epic-{epic}-*.yaml"
+        target: "{config.docsLocation}/{config.epicsLocation}/epic-{epic}-*.yaml"
         content: |
           Extract:
           - Story title and description
@@ -143,7 +143,7 @@ process:
       description: If previous story exists, extract lessons learned
       action:
         type: analysis
-        target: "{config.story.location}/{previousEpicNum}.{previousStoryNum}-*.yaml"
+        target: "{config.storiesLocation}/{previousEpicNum}.{previousStoryNum}-*.yaml"
         content: |
           Review Dev Agent Record sections for:
           - Completion Notes and Debug Log References
@@ -231,7 +231,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{config.story.location}/story-{epic}.{story}-*.yaml"
+        target: "{config.storiesLocation}/story-{epic}.{story}-*.yaml"
         content: |
           story:
             id: "{epic}.{story}"
@@ -331,7 +331,7 @@ process:
       action:
         type: elicit
         prompt: |
-          Story created: {config.story.location}/story-{epic}.{story}-*.yaml
+          Story created: {config.storiesLocation}/story-{epic}.{story}-*.yaml
           Status: Draft
           
           Key technical components included from architecture docs:

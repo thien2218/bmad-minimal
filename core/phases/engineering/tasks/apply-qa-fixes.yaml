@@ -19,8 +19,8 @@ inputs:
       default: "{config.docsLocation}/{config.qaLocation}"
     - name: story_root
       type: path
-      description: Story files location from {config.root}/config.json key story.location
-      default: "{config.docsLocation}/{config.story.location}"
+      description: Story files location from {config.root}/config.json key storiesLocation
+      default: "{config.docsLocation}/{config.storiesLocation}"
     - name: test_command
       type: command
       description: Command for running tests in the project (derived from the project setup if not specified)

@@ -11,7 +11,7 @@ inputs:
     - name: story_file
       type: path
       description: Path to the drafted story to validate
-      pattern: "{config.story.location}/story-{epic}.{story}-*.yaml"
+      pattern: "{config.storiesLocation}/story-{epic}.{story}-*.yaml"
     - name: parent_epic
       type: epic_id
       description: Epic containing this story's requirements

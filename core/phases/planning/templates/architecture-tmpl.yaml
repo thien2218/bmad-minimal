@@ -4,7 +4,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: {config.docsLocation}/architecture.md
+    filename: "{config.docsLocation}/architecture.md"
     title: "{{project_name}} Architecture Document"
 
 workflow:
@@ -285,7 +285,7 @@ sections:
       If the project includes a REST API:
 
       1. Create an OpenAPI 3.0 specification
-      2. Include all endpoints from {config.epic.location}/stories
+      2. Include all endpoints from {config.epicsLocation}/stories
       3. Define request/response schemas based on data models
       4. Document authentication requirements
       5. Include example requests/responses

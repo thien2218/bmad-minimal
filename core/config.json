@@ -15,12 +15,6 @@
 	},
 	"customTechnicalDocuments": null,
 	"qaLocation": "qa/",
-	"epic": {
-		"location": "epics/",
-		"fileNamePattern": "epic-{epic_number}-*.yaml"
-	},
-	"story": {
-		"location": "stories/",
-		"fileNamePattern": "story-{epic_number}.{story_number}-*.yaml"
-	}
+	"epicsLocation": "epics/",
+	"storiesLocation": "stories/"
 }

@@ -41,7 +41,7 @@ Check for available documentation in this order:
 
    -  May contain embedded technical details
 
-4. **Epic Files** ({config.docsLocation}/{config.epic.location}/ or similar)
+4. **Epic Files** ({config.docsLocation}/{config.epicsLocation}/ or similar)
 
    -  Created by brownfield-create-epic task
 
@@ -257,8 +257,8 @@ Before finalizing:
 
 Save the story with appropriate naming:
 
--  If from epic: `{config.docsLocation}/{config.story.location}/epic-{n}-story-{m}.md`
--  If standalone: `{config.docsLocation}/{config.story.location}/brownfield-{feature-name}.md`
+-  If from epic: `{config.docsLocation}/{config.storiesLocation}/epic-{n}-story-{m}.md`
+-  If standalone: `{config.docsLocation}/{config.storiesLocation}/brownfield-{feature-name}.md`
 -  If sequential: Follow existing story numbering
 
 Include header noting documentation context:

@@ -15,8 +15,8 @@ inputs:
       examples: ["1.3", "2.5"]
     - name: story_path
       type: path
-      description: Path to story file from story.location in config.json
-      pattern: "{config.story.location}/story-{epic}.{story}-*.yaml"
+      description: Path to story file from storiesLocation in config.json
+      pattern: "{config.storiesLocation}/story-{epic}.{story}-*.yaml"
   optional:
     - name: story_title
       type: string
@@ -59,7 +59,7 @@ process:
         operation: read
         target: "{config.root}/config.json"
         content: |
-          Extract qaLocation and story.location settings.
+          Extract qaLocation and storiesLocation settings.
           Resolve story_path if not provided.
       on_failure: continue
 
