@@ -214,7 +214,7 @@ This file was auto-generated based on your project:
 `;
 
 	await fs.writeFile(
-		path.join(bmadCorePath, "technical-preferences.md"),
+		path.join(bmadCorePath, config.folders.docs, "technical-preferences.md"),
 		content
 	);
 }

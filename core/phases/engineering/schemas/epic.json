@@ -5,7 +5,7 @@
 		"version": "2.0",
 		"output": {
 			"format": "json",
-			"filename": "docs/epics/{{epic_number}}.{{epic_title_short}}.json",
+			"filename": "{config.docsLocation}/{config.epic.location}/{{epic_number}}.{{epic_title_short}}.json",
 			"title": "Epic {{epic_number}}: {{epic_title}}"
 		}
 	},
@@ -104,9 +104,9 @@
 				}
 			]
 		},
-    {
-      "id": "story-breakdown",
-      "title": "Story Breakdown",
+		{
+			"id": "story-breakdown",
+			"title": "Story Breakdown",
 			"instruction": "Define the complete list of stories for this epic with proper sequencing for story generation.\nInclude a priority for each story (integer 1–5, where 1 = highest priority).\nOrder stories primarily by dependencies (no story should depend on a later story),\nthen by priority (1 first) to deliver highest-value work earlier when safe.",
 			"owner": "product-development-master",
 			"editors": ["product-development-master"],

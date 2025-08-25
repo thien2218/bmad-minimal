@@ -28,7 +28,7 @@
 		"persona"
 	],
 	"glossary": {
-		"dependencyTask": "Task loaded from .bmad-core/tasks/... and executed as an authoritative workflow.",
+		"dependencyTask": "Task loaded from {config.root}/tasks/... and executed as an authoritative workflow.",
 		"formalDependencyTask": "A dependency task with explicit ordered steps and elicit flags; it can override within allowed scope.",
 		"executableCommand": "User-invoked action with prefix '*' that triggers a defined command workflow.",
 		"elicit": "A step that requires exact user input format before proceeding.",
@@ -84,7 +84,7 @@
 	"activation": {
 		"preconditions": {
 			"requireExplicitLoad": true,
-			"loadAlwaysFiles": [".bmad-core/config.json"],
+			"loadAlwaysFiles": ["{config.root}/config.json"],
 			"readPersonaFile": true,
 			"onMissingFiles": "ask_user"
 		},
@@ -108,9 +108,9 @@
 	"workflow": {
 		"resolvePaths": {
 			"purpose": "Resolve dependency file paths for IDE-triggered actions; do not auto-activate on startup except explicit load",
-			"basePath": ".bmad-core",
+			"basePath": "{config.root}",
 			"folderTypes": ["tasks", "schemas", "checklists"],
-			"pattern": ".bmad-core/{folderType}/{name}",
+			"pattern": "{config.root}/{folderType}/{name}",
 			"loadPolicy": "Only load files when user requests specific command execution",
 			"onUnresolvablePath": "ask_user",
 			"examples": [
@@ -134,7 +134,7 @@
 			"examples": [
 				{
 					"input": "create-doc.yaml",
-					"resolvedPath": ".bmad-core/tasks/create-doc.yaml"
+					"resolvedPath": "{config.root}/tasks/create-doc.yaml"
 				}
 			]
 		},

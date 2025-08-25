@@ -16,7 +16,7 @@ inputs:
     - name: story_path
       type: path
       description: Path to story file from story.location in config.json
-      pattern: "{story.location}/story-{epic}.{story}-*.yaml"
+      pattern: "{config.story.location}/story-{epic}.{story}-*.yaml"
   optional:
     - name: story_title
       type: string
@@ -28,11 +28,11 @@ inputs:
     - name: architecture_refs
       type: path
       description: Path to architecture documents from config.json
-      examples: ["docs/architecture/"]
+      examples: ["{config.docsLocation}/architecture/"]
     - name: technical_preferences
       type: path
       description: Path to technical preferences file
-      examples: ["docs/technical-preferences.md"]
+      examples: ["{config.docsLocation}/technical-preferences.md"]
     - name: interaction_mode
       type: string
       description: Assessment interaction mode
@@ -41,7 +41,7 @@ inputs:
 
 prerequisites:
   files:
-    - "{root}/config.json"
+    - "{config.root}/config.json"
   status:
     - entity: story
       field: status
@@ -57,7 +57,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{root}/config.json"
+        target: "{config.root}/config.json"
         content: |
           Extract qaLocation and story.location settings.
           Resolve story_path if not provided.
@@ -94,8 +94,8 @@ process:
         content: |
           Look for NFR requirements in:
           - Story acceptance criteria
-          - docs/architecture/*.md files  
-          - docs/technical-preferences.md
+          - {config.docsLocation}/architecture/*.md files  
+          - {config.docsLocation}/technical-preferences.md
           
           If interactive mode and thresholds missing, ask user:
           - Performance targets (response times, throughput)

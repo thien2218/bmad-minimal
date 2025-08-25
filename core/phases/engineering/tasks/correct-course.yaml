@@ -24,22 +24,22 @@ inputs:
 
 outputs:
   updates:
-    - target: docs/epics/*.yaml
+    - target: "{config.docsLocation}/{config.epic.location}/*.yaml"
       sections: ["User Stories", "Acceptance Criteria", "Priority"]
       restrictions: Only as specified in approved change proposal
-    - target: docs/prd/*.md
+    - target: "{config.docsLocation}/prd/*.md"
       sections: ["Requirements", "Scope", "Technical Constraints"]
       restrictions: Only as specified in approved change proposal
-    - target: docs/architecture/*.md
+    - target: "{config.docsLocation}/architecture/*.md"
       sections: ["Components", "Diagrams", "Technology Stack"]
       restrictions: Only as specified in approved change proposal
 
 prerequisites:
   files:
     - checklists/change-checklist.yaml
-    - docs/prd/**
-    - docs/epics/**
-    - docs/architecture/**
+    - "{config.docsLocation}/prd/**"
+    - "{config.docsLocation}/{config.epic.location}/**"
+    - "{config.docsLocation}/architecture/**"
 
 process:
   mode: sequential

@@ -16,7 +16,7 @@ inputs:
     - name: story_path
       type: path
       description: Path to story file from story.location
-      pattern: "{story.location}/story-{epic}.{story}-*.yaml"
+      pattern: "{config.story.location}/story-{epic}.{story}-*.yaml"
     - name: story_title
       type: string
       description: Story title (derive from story file H1 if missing)
@@ -28,11 +28,11 @@ inputs:
     - name: architecture_refs
       type: path
       description: Path to architecture documents from config.json
-      examples: ["docs/architecture/"]
+      examples: ["{config.docsLocation}/architecture/"]
     - name: technical_preferences
       type: path
       description: Path to technical preferences file
-      examples: ["docs/technical-preferences.md"]
+      examples: ["{config.docsLocation}/technical-preferences.md"]
 
 prerequisites:
   status:
@@ -187,7 +187,7 @@ process:
         operation: create
         target: "{qaLocation}/gates/story-{epic}.{story}-*.yaml"
         content: |
-          Render from {root}/schemas/qa-gate.json
+          Render from {config.root}/schemas/qa-gate.json
           Include gate decision, risk summary, NFR validation
 
 outputs:

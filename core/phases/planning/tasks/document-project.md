@@ -191,8 +191,8 @@ Instead of duplicating, reference actual model files:
 
 ### API Specifications
 
--  **OpenAPI Spec**: `docs/api/openapi.yaml` (if exists)
--  **Postman Collection**: `docs/api/postman-collection.json`
+-  **OpenAPI Spec**: `{config.docsLocation}/api/openapi.yaml` (if exists)
+-  **Postman Collection**: `{config.docsLocation}/api/postman-collection.json`
 -  **Manual Endpoints**: [List any undocumented endpoints discovered]
 
 ## Technical Debt and Known Issues
@@ -295,18 +295,18 @@ npm run seed        # Seed test data
 
 -  **Logs**: Check `logs/app.log` for application logs
 -  **Debug Mode**: Set `DEBUG=app:*` for verbose logging
--  **Common Issues**: See `docs/troubleshooting.md`]]
+-  **Common Issues**: See `{config.docsLocation}/troubleshooting.md`]]
 
 ### 4. Document Delivery
 
 1. **In Web UI (Gemini, ChatGPT, Claude)**:
 
    -  Present the entire document in one response (or multiple if too long)
-   -  Tell user to copy and save as `docs/brownfield-architecture.md` or `docs/project-architecture.md`
+   -  Tell user to copy and save as `{config.docsLocation}/brownfield-architecture.md` or `{config.docsLocation}/project-architecture.md`
    -  Mention it can be sharded later in IDE if needed
 
 2. **In IDE Environment**:
-   -  Create the document as `docs/brownfield-architecture.md`
+   -  Create the document as `{config.docsLocation}/brownfield-architecture.md`
    -  Inform user this single document contains all architectural information
    -  Can be sharded later using PDM agent if desired
 
