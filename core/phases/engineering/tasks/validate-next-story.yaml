@@ -20,7 +20,7 @@ inputs:
     - name: architecture_docs
       type: path
       description: Path to architecture documents
-      examples: ["{config.docsLocation}/architecture/", "{config.docsLocation}/architecture.md"]
+      examples: ["{config.architecture.shardedLocation}/", "{config.architecture.file}"]
 
 prerequisites:
   files:

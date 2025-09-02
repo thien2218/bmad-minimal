@@ -4,7 +4,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{config.docsLocation}/architecture.md"
+    filename: "{config.architecture.file}"
     title: "{{project_name}} Architecture Document"
 
 workflow:
@@ -15,7 +15,7 @@ sections:
   - id: introduction
     title: Introduction
     instruction: |
-      If available, review any provided relevant documents to gather all relevant context before beginning. If at a minimum you cannot locate {config.docsLocation}/prd.md ask the user what docs will provide the basis for the architecture.
+      If available, review any provided relevant documents to gather all relevant context before beginning. If at a minimum you cannot locate {config.prd.file} ask the user what docs will provide the basis for the architecture.
     sections:
       - id: intro-content
         content: |

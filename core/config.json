@@ -2,19 +2,15 @@
 	"root": "bmad-minimal/.core/",
 	"docsLocation": "docs/",
 	"prd": {
-		"file": "prd.md",
-		"version": "v4",
-		"sharded": true,
-		"shardedLocation": "prd"
+		"file": "{docsLocation}/prd.md",
+		"shardedLocation": "{docsLocation}/prd/"
 	},
 	"architecture": {
-		"file": "architecture.md",
-		"version": "v4",
-		"sharded": true,
-		"shardedLocation": "architecture/"
+		"file": "{docsLocation}/architecture.md",
+		"shardedLocation": "{docsLocation}/architecture/"
 	},
 	"customTechnicalDocuments": null,
-	"qaLocation": "qa/",
-	"epicsLocation": "epics/",
-	"storiesLocation": "stories/"
+	"qaLocation": "{docsLocation}/qa/",
+	"epicsLocation": "{docsLocation}/epics/",
+	"storiesLocation": "{docsLocation}/stories/"
 }

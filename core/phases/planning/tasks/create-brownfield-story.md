@@ -28,7 +28,7 @@ Create detailed, implementation-ready stories for brownfield projects where trad
 
 Check for available documentation in this order:
 
-1. **Sharded PRD/Architecture** ({config.docsLocation}/prd/, {config.docsLocation}/architecture/)
+1. **Sharded PRD/Architecture** ({config.prd.shardedLocation}/, {config.architecture.shardedLocation}/)
 
    -  If found, recommend using create-next-story task instead
 
@@ -37,11 +37,11 @@ Check for available documentation in this order:
    -  Created by document-project task
    -  Contains actual system state, technical debt, workarounds
 
-3. **Brownfield PRD** ({config.docsLocation}/prd.md)
+3. **Brownfield PRD** ({config.prd.file})
 
    -  May contain embedded technical details
 
-4. **Epic Files** ({config.docsLocation}/{config.epicsLocation}/ or similar)
+4. **Epic Files** ({config.epicsLocation}/ or similar)
 
    -  Created by brownfield-create-epic task
 
@@ -257,8 +257,8 @@ Before finalizing:
 
 Save the story with appropriate naming:
 
--  If from epic: `{config.docsLocation}/{config.storiesLocation}/epic-{n}-story-{m}.md`
--  If standalone: `{config.docsLocation}/{config.storiesLocation}/brownfield-{feature-name}.md`
+-  If from epic: `{config.storiesLocation}/epic-{n}-story-{m}.md`
+-  If standalone: `{config.storiesLocation}/brownfield-{feature-name}.md`
 -  If sequential: Follow existing story numbering
 
 Include header noting documentation context:

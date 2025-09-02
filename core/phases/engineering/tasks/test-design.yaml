@@ -103,7 +103,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{qaLocation}/assessments/{epic}.{story}-test-design-{YYYYMMDD}.md"
+        target: "{config.qaLocation}/assessments/{epic}.{story}-test-design-{YYYYMMDD}.md"
         content: |
           # Test Design: Story {epic}.{story}
           
@@ -169,14 +169,14 @@ process:
         type: analysis
         prompt: |
           Print:
-          Test design matrix: {qaLocation}/assessments/{epic}.{story}-test-design-{YYYYMMDD}.md
+          Test design matrix: {config.qaLocation}/assessments/{epic}.{story}-test-design-{YYYYMMDD}.md
           P0 tests identified: {count}
 
 outputs:
   artifacts:
     - name: test_design_document
       type: report
-      path: "{qaLocation}/assessments/{epic}.{story}-test-design-{YYYYMMDD}.md"
+      path: "{config.qaLocation}/assessments/{epic}.{story}-test-design-{YYYYMMDD}.md"
       format: markdown
       description: Comprehensive test design document with scenarios
     - name: gate_test_block
@@ -199,7 +199,7 @@ completion:
     - Test IDs follow naming convention
     - Scenarios are atomic and independent
   validations:
-    - command: "test -f {qaLocation}/assessments/{epic}.{story}-test-design-{YYYYMMDD}.md"
+    - command: "test -f {config.qaLocation}/assessments/{epic}.{story}-test-design-{YYYYMMDD}.md"
       expected_output: "file exists"
 
 metadata:

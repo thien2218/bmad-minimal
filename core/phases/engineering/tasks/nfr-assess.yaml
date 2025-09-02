@@ -28,7 +28,7 @@ inputs:
     - name: architecture_refs
       type: path
       description: Path to architecture documents from config.json
-      examples: ["{config.docsLocation}/architecture/"]
+      examples: ["{config.architecture.shardedLocation}/"]
     - name: technical_preferences
       type: path
       description: Path to technical preferences file
@@ -94,7 +94,7 @@ process:
         content: |
           Look for NFR requirements in:
           - Story acceptance criteria
-          - {config.docsLocation}/architecture/*.md files  
+          - {config.architecture.shardedLocation}/*.md files  
           - {config.docsLocation}/technical-preferences.md
           
           If interactive mode and thresholds missing, ask user:
@@ -222,7 +222,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{qaLocation}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md"
+        target: "{config.qaLocation}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md"
         content: |
           # NFR Assessment: {epic}.{story}
           
@@ -256,14 +256,14 @@ process:
         content: |
           Output integration information:
           
-          1. NFR assessment: {qaLocation}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md
-          2. Gate NFR block ready → paste into {qaLocation}/gates/story-{epic}.{story}-*.yaml under nfr_validation
+          1. NFR assessment: {config.qaLocation}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md
+          2. Gate NFR block ready → paste into {config.qaLocation}/gates/story-{epic}.{story}-*.yaml under nfr_validation
 
 outputs:
   artifacts:
     - name: nfr_assessment_report
       type: report
-      path: "{qaLocation}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md"
+      path: "{config.qaLocation}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md"
       format: markdown
       description: Brief NFR assessment report with findings and recommendations
     - name: gate_yaml_block

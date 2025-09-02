@@ -165,7 +165,7 @@
 			"name": "review",
 			"description": "Adaptive, risk-aware comprehensive review. Produces QA Results update in story file + gate file.",
 			"parameters": ["story"],
-			"notes": "Gate file location: qaLocation/gates/story-{epic}.{story}-*.yaml. Executes review-story task and creates gate decision.",
+			"notes": "Gate file location: {config.qaLocation}/gates/story-{epic}.{story}-*.yaml. Executes review-story task and creates gate decision.",
 			"targets": [
 				"tasks/review-story.yaml",
 				"schemas/story.json",

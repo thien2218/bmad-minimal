@@ -28,7 +28,7 @@ inputs:
     - name: architecture_refs
       type: path
       description: Path to architecture documents from config.json
-      pattern: "{config.docsLocation}/architecture/"
+      pattern: "{config.architecture.shardedLocation}/"
     - name: technical_preferences
       type: path
       description: Path to technical preferences file
@@ -200,7 +200,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
+        target: "{config.qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
         content: |
           Create comprehensive risk report with:
           - Executive summary
@@ -216,7 +216,7 @@ outputs:
   artifacts:
     - name: risk_assessment_report
       type: report
-      path: "{qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
+      path: "{config.qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
       format: markdown
       description: Comprehensive risk assessment report
     - name: gate_risk_block
@@ -238,7 +238,7 @@ completion:
     - Risk report created
     - Gate block generated
   validations:
-    - command: "test -f {qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
+    - command: "test -f {config.qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
       expected_output: "file exists"
 
 metadata:

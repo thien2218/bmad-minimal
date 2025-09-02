@@ -32,8 +32,8 @@ outputs:
 prerequisites:
   files:
     - "{config.root}/config.json"
-    - "{config.docsLocation}/prd/**"
-    - "{config.docsLocation}/architecture/**"
+    - "{config.prd.shardedLocation}/**"
+    - "{config.architecture.shardedLocation}/**"
   commands:
     - command: "test -f config.json"
       expected_exit_code: 0
@@ -130,7 +130,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{config.docsLocation}/{config.epicsLocation}/epic-{epic}-*.yaml"
+        target: "{config.epicsLocation}/epic-{epic}-*.yaml"
         content: |
           Extract:
           - Story title and description
@@ -160,11 +160,8 @@ process:
       action:
         type: decision
         content: |
-          If architectureVersion >= v4 and architectureSharded == true:
-            Read {architecture.shardedLocation}/*.md
-            Follow structured reading order
-          Else:
-            Use monolithic architectureFile for similar sections
+          Read {config.architecture.shardedLocation}/*.md
+          Follow structured reading order
 
     - id: ARCH-2
       title: Read Architecture Documents
@@ -212,14 +209,14 @@ process:
           - Testing requirements specific to the story's features
           - Security or performance considerations affecting the story
           
-          ALWAYS cite source: [Source: architecture/{filename}.md#{section}]
+          ALWAYS cite source: [Source: architecture/<filename>.md#{section}]
 
     - id: STRUCTURE-1
       title: Verify Project Structure Alignment
       description: Cross-reference with Project Structure Guide
       action:
         type: validation
-        target: "{config.docsLocation}/architecture/unified-project-structure.md"
+        target: "{config.architecture.shardedLocation}/unified-project-structure.md"
         content: |
           - Cross-reference story requirements with Project Structure Guide
           - Ensure file paths, component locations, module names align
@@ -245,22 +242,22 @@ process:
             previous_story_insights: "{previous_insights}"
             data_models:
               value: "{data_models}"
-              source: "architecture/{filename}.md#{section}"
+              source: "architecture/<filename>.md#{section}"
             api_specifications:
               value: "{api_specs}"
-              source: "architecture/{filename}.md#{section}"
+              source: "architecture/<filename>.md#{section}"
             component_specifications:
               value: "{component_specs}"
-              source: "architecture/{filename}.md#{section}"
+              source: "architecture/<filename>.md#{section}"
             file_locations:
               value: "{file_locations}"
-              source: "architecture/{filename}.md#{section}"
+              source: "architecture/<filename>.md#{section}"
             testing_requirements:
               value: "{testing_requirements}"
-              source: "architecture/{filename}.md#{section}"
+              source: "architecture/<filename>.md#{section}"
             technical_constraints:
               value: "{technical_constraints}"
-              source: "architecture/{filename}.md#{section}"
+              source: "architecture/<filename>.md#{section}"
             notes_missing_guidance: "If information for a category is not found in architecture docs, explicitly state: 'No specific guidance found in architecture docs'"
           tasks_subtasks: "{generated_tasks}"
           risk_mitigation:

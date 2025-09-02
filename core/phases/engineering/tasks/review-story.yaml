@@ -28,7 +28,7 @@ inputs:
     - name: architecture_refs
       type: path
       description: Path to architecture documents from config.json
-      examples: ["{config.docsLocation}/architecture/"]
+      examples: ["{config.architecture.shardedLocation}/"]
     - name: technical_preferences
       type: path
       description: Path to technical preferences file
@@ -185,7 +185,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{qaLocation}/gates/story-{epic}.{story}-*.yaml"
+        target: "{config.qaLocation}/gates/story-{epic}.{story}-*.yaml"
         content: |
           Render from {config.root}/schemas/qa-gate.json
           Include gate decision, risk summary, NFR validation
@@ -194,17 +194,17 @@ outputs:
   artifacts:
     - name: quality_gate
       type: file
-      path: "{qaLocation}/gates/story-{epic}.{story}-*.yaml"
+      path: "{config.qaLocation}/gates/story-{epic}.{story}-*.yaml"
       format: yaml
       description: Quality gate assessment file with pass/fail decision
     - name: risk_profile
       type: file
-      path: "{qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
+      path: "{config.qaLocation}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
       format: markdown
       description: Risk assessment matrix
     - name: nfr_assessment
       type: file
-      path: "{qaLocation}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md"
+      path: "{config.qaLocation}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md"
       format: markdown
       description: Non-functional requirements assessment
   updates:
@@ -242,7 +242,7 @@ completion:
     - All findings documented
     - Actionable recommendations provided
   validations:
-    - command: "test -f {qaLocation}/gates/story-{epic}.{story}-*.yaml"
+    - command: "test -f {config.qaLocation}/gates/story-{epic}.{story}-*.yaml"
       expected_output: "file exists"
 
 metadata:
