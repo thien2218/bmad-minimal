@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Create detailed, implementation-ready stories for brownfield projects where traditional sharded PRD/architecture documents may not exist. This task bridges the gap between various documentation formats (document-project output, brownfield PRDs, epics, or user documentation) and executable stories for the Dev agent.
+Create detailed, implementation-ready stories for brownfield projects where traditional sharded architecture documents may not exist. This task bridges the gap between various documentation formats (document-project output, brownfield PRDs, epics, or user documentation) and executable stories for the Dev agent.
 
 ## When to Use This Task
 
@@ -18,7 +18,7 @@ Create detailed, implementation-ready stories for brownfield projects where trad
 
 **Use create-next-story when:**
 
--  Working with properly sharded PRD and v4 architecture documents
+-  Working with properly sharded v4 architecture documents
 -  Following standard greenfield or well-documented brownfield workflow
 -  All technical context is available in structured format
 
@@ -28,7 +28,7 @@ Create detailed, implementation-ready stories for brownfield projects where trad
 
 Check for available documentation in this order:
 
-1. **Sharded PRD/Architecture** ({config.prd.shardedLocation}/, {config.architecture.shardedLocation}/)
+1. **Sharded Architecture** ({config.architecture.shardedLocation}/)
 
    -  If found, recommend using create-next-story task instead
 
@@ -37,7 +37,7 @@ Check for available documentation in this order:
    -  Created by document-project task
    -  Contains actual system state, technical debt, workarounds
 
-3. **Brownfield PRD** ({config.prd.file})
+3. **Brownfield PRD** ({config.prdFile})
 
    -  May contain embedded technical details
 

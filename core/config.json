@@ -1,10 +1,7 @@
 {
 	"root": "bmad-minimal/.core/",
 	"docsLocation": "docs/",
-	"prd": {
-		"file": "{docsLocation}/prd.md",
-		"shardedLocation": "{docsLocation}/prd/"
-	},
+	"prdFile": "{docsLocation}/prd.md",
 	"architecture": {
 		"file": "{docsLocation}/architecture.md",
 		"shardedLocation": "{docsLocation}/architecture/"

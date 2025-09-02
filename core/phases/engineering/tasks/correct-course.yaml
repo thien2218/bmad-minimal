@@ -30,7 +30,7 @@ outputs:
     - target: "{config.prd.shardedLocation}/*.md"
       sections: ["Requirements", "Scope", "Technical Constraints"]
       restrictions: Only as specified in approved change proposal
-    - target: "{config.architecture.shardedLocation}//*.md"
+    - target: "{config.architecture.shardedLocation}/*.md"
       sections: ["Components", "Diagrams", "Technology Stack"]
       restrictions: Only as specified in approved change proposal
 

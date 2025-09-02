@@ -99,9 +99,8 @@ workflow:
       requires: all_artifacts_in_project
       notes: |
         Shard documents for IDE development:
-        - Use md-tree: md-tree explode {config.docsLocation}/prd.md {config.docsLocation}/prd
         - Use md-tree: md-tree explode {config.docsLocation}/frontend-architecture.md {config.docsLocation}/frontend-architecture
-        - Creates {config.docsLocation}/prd/ and {config.docsLocation}/frontend-architecture/ folders with sharded content
+        - Creates {config.docsLocation}/frontend-architecture/ folder with sharded content
 
     - agent: sm
       action: create_story
@@ -110,7 +109,7 @@ workflow:
       repeats: for_each_epic_or_enhancement
       notes: |
         Story creation cycle:
-        - For sharded PRD: @sm → *create (uses create-next-story)
+        - For sharded docs: @sm → *create (uses create-next-story)
         - For brownfield docs: @sm → use create-brownfield-story task
         - Creates story from available documentation
         - Story starts in "Draft" status
@@ -213,7 +212,7 @@ workflow:
         
         O --> P[sm: create story]
         P --> Q{Story Type?}
-        Q -->|Sharded PRD| R[create-next-story]
+        Q -->|Sharded Docs| R[create-next-story]
         Q -->|Brownfield Docs| S[create-brownfield-story]
         
         R --> T{Review draft?}
@@ -285,7 +284,7 @@ workflow:
     
     po_to_sm: |
       All artifacts validated. 
-      Documentation type available: {{sharded_prd / brownfield_docs}}
+      Documentation type available: {{sharded_docs / brownfield_docs}}
       {{if sharded}}: Use standard create-next-story task.
       {{if brownfield}}: Use create-brownfield-story task to handle varied documentation formats.
     

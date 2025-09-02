@@ -71,7 +71,7 @@ workflow:
 
     - development_order_guidance:
       action: guide_development_sequence
-      notes: "Based on PRD stories: If stories are frontend-heavy, start with frontend project/directory first. If backend-heavy or API-first, start with backend. For tightly coupled features, follow story sequence in monorepo setup. Reference sharded PRD epics for development order."
+      notes: "Based on PRD stories: If stories are frontend-heavy, start with frontend project/directory first. If backend-heavy or API-first, start with backend. For tightly coupled features, follow story sequence in monorepo setup. Reference sharded architecture and frontend-architecture docs for development order."
 
     - agent: po
       action: shard_documents
@@ -79,10 +79,9 @@ workflow:
       requires: all_artifacts_in_project
       notes: |
         Shard documents for IDE development:
-        - Use md-tree: md-tree explode {config.docsLocation}/prd.md {config.docsLocation}/prd
         - Use md-tree: md-tree explode {config.docsLocation}/architecture.md {config.docsLocation}/architecture
         - Use md-tree: md-tree explode {config.docsLocation}/frontend-architecture.md {config.docsLocation}/frontend-architecture
-        - Creates {config.docsLocation}/prd/, {config.docsLocation}/architecture/, and {config.docsLocation}/frontend-architecture/ folders with sharded content
+        - Creates {config.docsLocation}/architecture/ and {config.docsLocation}/frontend-architecture/ folders with sharded content
 
     - agent: sm
       action: create_story

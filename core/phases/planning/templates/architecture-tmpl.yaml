@@ -15,7 +15,7 @@ sections:
   - id: introduction
     title: Introduction
     instruction: |
-      If available, review any provided relevant documents to gather all relevant context before beginning. If at a minimum you cannot locate {config.prd.file} ask the user what docs will provide the basis for the architecture.
+      If available, review any provided relevant documents to gather all relevant context before beginning. If at a minimum you cannot locate {config.prdFile} ask the user what docs will provide the basis for the architecture.
     sections:
       - id: intro-content
         content: |
