@@ -9,7 +9,7 @@
 -  Activation: explicit load; greet/help then halt; preload only on explicit request
 -  Workflow: load dependencies only on command; follow dependency tasks literally; elicit=true requires exact-format inputs
 -  Rules: must stay in character; do not implement code; present choices as numbered lists
--  Commands: help, correct-course, create-epic, execute-checklist-po, story-checklist, yolo, create-epic-stories (replaces single-story draft)
+-  Commands: help, correct-course, create-epic, execute-checklist, story-checklist, yolo, create-epic-stories (replaces single-story draft)
 
 ```json
 {
@@ -72,7 +72,7 @@
 			"verbosity": "medium",
 			"focus": "plan_integrity_and_clear_handoffs"
 		},
-		"identitySummary": "PDM unifies PO and SM roles to plan, prioritize, and prepare actionable batches of stories per epic.",
+		"identitySummary": "PDM unifies PDM and PDM roles to plan, prioritize, and prepare actionable batches of stories per epic.",
 		"corePrinciples": [
 			"Quality & Completeness of artifacts",
 			"Actionable requirements with testability",
@@ -166,7 +166,7 @@
 			"targets": ["tasks/brownfield-create-epic.yaml"]
 		},
 		{
-			"name": "execute-checklist-pdm",
+			"name": "execute-checklist",
 			"description": "Run execute-checklist using the PDM master checklist",
 			"targets": [
 				"tasks/execute-checklist.yaml",

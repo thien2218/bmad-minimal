@@ -31,7 +31,7 @@ workflow:
       requires: prd.md
       notes: "Creates architecture with service integration strategy and API evolution planning. SAVE OUTPUT: Copy final architecture.md to your project's {config.docsLocation}/ folder."
 
-    - agent: po
+    - agent: pdm
       validates: all_artifacts
       uses: pd-master-checklist
       notes: "Validates all documents for service integration safety and API compatibility. May require updates to any document."
@@ -39,9 +39,9 @@ workflow:
     - agent: various
       updates: any_flagged_documents
       condition: po_checklist_issues
-      notes: "If PO finds issues, return to relevant agent to fix and re-export updated documents to {config.docsLocation}/ folder."
+      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {config.docsLocation}/ folder."
 
-    - agent: po
+    - agent: pdm
       action: shard_documents
       creates: sharded_docs
       requires: all_artifacts_in_project
@@ -50,14 +50,14 @@ workflow:
         - Use md-tree: md-tree explode {config.docsLocation}/architecture.md {config.docsLocation}/architecture
         - Creates {config.docsLocation}/architecture/ folder with sharded content
 
-    - agent: sm
+    - agent: pdm
       action: create_story
       creates: story.yaml
       requires: sharded_docs
       repeats: for_each_epic
       notes: |
         Story creation cycle:
-        - SM Agent (New Chat): @sm → *create
+        - PDM Agent (New Chat): @pdm → *create
         - Creates next story from sharded docs
         - Story starts in "Draft" status
 
@@ -106,10 +106,10 @@ workflow:
     - repeat_development_cycle:
       action: continue_for_all_stories
       notes: |
-        Repeat story cycle (SM → Dev → QA) for all epic stories
+        Repeat story cycle (PDM → Dev → QA) for all epic stories
         Continue until all stories in PRD are complete
 
-    - agent: po
+    - agent: pdm
       action: epic_retrospective
       creates: epic-retrospective.md
       condition: epic_complete
@@ -134,13 +134,13 @@ workflow:
         A[Start: Service Enhancement] --> B[analyst: analyze existing service]
         B --> C[pm: prd.md]
         C --> D[architect: architecture.md]
-        D --> E[po: validate with pd-master-checklist]
-        E --> F{PO finds issues?}
+        D --> E[pdm: validate with pd-master-checklist]
+        E --> F{PDM finds issues?}
         F -->|Yes| G[Return to relevant agent for fixes]
-        F -->|No| H[po: shard documents]
+        F -->|No| H[pdm: shard documents]
         G --> E
         
-        H --> I[sm: create story]
+        H --> I[pdm: create story]
         I --> J{Review draft story?}
         J -->|Yes| K[analyst/pm: review & approve story]
         J -->|No| L[dev: implement story]
@@ -154,7 +154,7 @@ workflow:
         Q --> N
         O -->|Yes| I
         O -->|No| R{Epic retrospective?}
-        R -->|Yes| S[po: epic retrospective]
+        R -->|Yes| S[pdm: epic retrospective]
         R -->|No| T[Project Complete]
         S --> T
 
@@ -181,5 +181,5 @@ workflow:
     analyst_to_pm: "Service analysis complete. Create comprehensive PRD with service integration strategy."
     pm_to_architect: "PRD ready. Save it as {config.docsLocation}/prd.md, then create the service architecture."
     architect_to_po: "Architecture complete. Save it as {config.docsLocation}/architecture.md. Please validate all artifacts for service integration safety."
-    po_issues: "PO found issues with [document]. Please return to [agent] to fix and re-save the updated document."
+    po_issues: "PDM found issues with [document]. Please return to [agent] to fix and re-save the updated document."
     complete: "All planning artifacts validated and saved in {config.docsLocation}/ folder. Move to IDE environment to begin development."

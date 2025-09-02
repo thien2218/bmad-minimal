@@ -152,7 +152,7 @@ This proposal guides all subsequent work.]]
 -  [ ] **Recommended Path Forward:** Chosen solution with rationale.
 -  [ ] **PRD MVP Impact:** Changes to scope/goals (if any).
 -  [ ] **High-Level Action Plan:** Next steps for {config.storiesLocation}/updates.
--  [ ] **Agent Handoff Plan:** Identify roles needed (PM, Arch, Design Arch, PO).
+-  [ ] **Agent Handoff Plan:** Identify roles needed (PM, Arch, Design Arch, PDM).
 
 ## 6. Final Review & Handoff
 

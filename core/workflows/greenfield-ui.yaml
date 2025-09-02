@@ -53,7 +53,7 @@ workflow:
       condition: architecture_suggests_prd_changes
       notes: "If architect suggests story changes, update PRD and re-export the complete unredacted prd.md to {config.docsLocation}/ folder."
 
-    - agent: po
+    - agent: pdm
       validates: all_artifacts
       uses: pd-master-checklist
       notes: "Validates all documents for consistency and completeness. May require updates to any document."
@@ -61,14 +61,14 @@ workflow:
     - agent: various
       updates: any_flagged_documents
       condition: po_checklist_issues
-      notes: "If PO finds issues, return to relevant agent to fix and re-export updated documents to {config.docsLocation}/ folder."
+      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {config.docsLocation}/ folder."
 
     - project_setup_guidance:
       action: guide_project_structure
       condition: user_has_generated_ui
       notes: "If user generated UI with v0/Lovable: For polyrepo setup, place downloaded project in separate frontend repo. For monorepo, place in apps/web or frontend/ directory. Review architecture document for specific guidance."
 
-    - agent: po
+    - agent: pdm
       action: shard_documents
       creates: sharded_docs
       requires: all_artifacts_in_project
@@ -77,14 +77,14 @@ workflow:
         - Use md-tree: md-tree explode {config.docsLocation}/architecture.md {config.docsLocation}/architecture
         - Creates {config.docsLocation}/architecture/ folder with sharded content
 
-    - agent: sm
+    - agent: pdm
       action: create_story
       creates: story.yaml
       requires: sharded_docs
       repeats: for_each_epic
       notes: |
         Story creation cycle:
-        - SM Agent (New Chat): @sm → *create
+        - PDM Agent (New Chat): @pdm → *create
         - Creates next story from sharded docs
         - Story starts in "Draft" status
 
@@ -133,10 +133,10 @@ workflow:
     - repeat_development_cycle:
       action: continue_for_all_stories
       notes: |
-        Repeat story cycle (SM → Dev → QA) for all epic stories
+        Repeat story cycle (PDM → Dev → QA) for all epic stories
         Continue until all stories in PRD are complete
 
-    - agent: po
+    - agent: pdm
       action: epic_retrospective
       creates: epic-retrospective.md
       condition: epic_complete
@@ -168,14 +168,14 @@ workflow:
         D4 --> E
         E --> F{Architecture suggests PRD changes?}
         F -->|Yes| G[pm: update prd.md]
-        F -->|No| H[po: validate all artifacts]
+        F -->|No| H[pdm: validate all artifacts]
         G --> H
-        H --> I{PO finds issues?}
+        H --> I{PDM finds issues?}
         I -->|Yes| J[Return to relevant agent for fixes]
-        I -->|No| K[po: shard documents]
+        I -->|No| K[pdm: shard documents]
         J --> H
         
-        K --> L[sm: create story]
+        K --> L[pdm: create story]
         L --> M{Review draft story?}
         M -->|Yes| N[analyst/pm: review & approve story]
         M -->|No| O[dev: implement story]
@@ -189,7 +189,7 @@ workflow:
         T --> Q
         R -->|Yes| L
         R -->|No| U{Epic retrospective?}
-        U -->|Yes| V[po: epic retrospective]
+        U -->|Yes| V[pdm: epic retrospective]
         U -->|No| W[Project Complete]
         V --> W
 
@@ -229,5 +229,5 @@ workflow:
     architect_review: "Frontend architecture complete. Save it as {config.docsLocation}/front-end-architecture.md. Do you suggest any changes to the PRD stories or need new stories added?"
     architect_to_pm: "Please update the PRD with the suggested story changes, then re-export the complete prd.md to {config.docsLocation}/."
     updated_to_po: "All documents ready in {config.docsLocation}/ folder. Please validate all artifacts for consistency."
-    po_issues: "PO found issues with [document]. Please return to [agent] to fix and re-save the updated document."
+    po_issues: "PDM found issues with [document]. Please return to [agent] to fix and re-save the updated document."
     complete: "All planning artifacts validated and saved in {config.docsLocation}/ folder. Move to IDE environment to begin development."
