@@ -28,7 +28,7 @@
 		"persona"
 	],
 	"glossary": {
-		"dependencyTask": "Task loaded from {config.root}/tasks/... and executed as an authoritative workflow.",
+		"dependencyTask": "Task loaded from {@root}/tasks/... and executed as an authoritative workflow.",
 		"formalDependencyTask": "A dependency task with explicit ordered steps and elicit flags; it can override within allowed scope.",
 		"executableCommand": "User-invoked action with prefix '*' that triggers a defined command workflow.",
 		"elicit": "A step that requires exact user input format before proceeding.",
@@ -84,7 +84,7 @@
 	"activation": {
 		"preconditions": {
 			"requireExplicitLoad": true,
-			"loadAlwaysFiles": ["{config.root}/config.json"],
+			"loadAlwaysFiles": ["{@root}/config.json"],
 			"readPersonaFile": true,
 			"onMissingFiles": "ask_user"
 		},
@@ -108,9 +108,9 @@
 	"workflow": {
 		"resolvePaths": {
 			"purpose": "Resolve dependency file paths for IDE-triggered actions; do not auto-activate on startup except explicit load",
-			"basePath": "{config.root}",
+			"basePath": "{@root}",
 			"folderTypes": ["tasks", "schemas", "checklists"],
-			"pattern": "{config.root}/{folderType}/{name}",
+			"pattern": "{@root}/{folderType}/{name}",
 			"loadPolicy": "Only load files when user requests specific command execution",
 			"onUnresolvablePath": "ask_user",
 			"examples": [
@@ -134,7 +134,7 @@
 			"examples": [
 				{
 					"input": "create-doc.yaml",
-					"resolvedPath": "{config.root}/tasks/create-doc.yaml"
+					"resolvedPath": "{@root}/tasks/create-doc.yaml"
 				}
 			]
 		},
@@ -202,8 +202,8 @@
 	"rules": [
 		{
 			"id": "CFG-R001",
-			"title": "Resolve {config.*} references from core config",
-			"description": "Whenever encountering a {config.*} placeholder (curly braces with config.), load and read {config.root}/config.json to resolve the value before proceeding.",
+			"title": "Resolve {@*} references from core config",
+			"description": "Whenever encountering a {@*} placeholder (curly braces starting with @), load and read {@root}/config.json to resolve the value before proceeding.",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},

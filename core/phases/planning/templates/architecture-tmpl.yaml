@@ -4,7 +4,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{config.docs.architecture.backend}"
+    filename: "{@docs.architecture.backend}"
     title: "{{project_name}} Architecture Document"
 
 workflow:
@@ -15,7 +15,7 @@ sections:
   - id: introduction
     title: Introduction
     instruction: |
-      If available, review any provided relevant documents to gather all relevant context before beginning. If at a minimum you cannot locate {config.docs.files.prd} ask the user what docs will provide the basis for the architecture.
+      If available, review any provided relevant documents to gather all relevant context before beginning. If at a minimum you cannot locate {@docs.files.prd} ask the user what docs will provide the basis for the architecture.
     sections:
       - id: intro-content
         content: |
@@ -127,7 +127,7 @@ sections:
     instruction: |
       This is the DEFINITIVE technology selection section. Work with the user to make specific choices:
 
-      1. Review PRD technical assumptions and any preferences from {config.docs.files.techPreferences) or an attached technical-preferences
+      1. Review PRD technical assumptions and any preferences from {@docs.files.techPreferences) or an attached technical-preferences
       2. For each category, present 2-3 viable options with pros/cons
       3. Make a clear recommendation based on project needs
       4. Get explicit user approval for each selection
@@ -285,7 +285,7 @@ sections:
       If the project includes a REST API:
 
       1. Create an OpenAPI 3.0 specification
-      2. Include all endpoints from {config.docs.paths.epics}/stories
+      2. Include all endpoints from {@docs.paths.epics}/stories
       3. Define request/response schemas based on data models
       4. Document authentication requirements
       5. Include example requests/responses

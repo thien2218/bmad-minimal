@@ -16,7 +16,7 @@ inputs:
     - name: story_path
       type: path
       description: Path to story file
-      pattern: "{config.docs.paths.stories}/story-{epic}.{story}-*.yaml"
+      pattern: "{@docs.paths.stories}/story-{epic}.{story}-*.yaml"
 
 prerequisites:
   files:
@@ -97,11 +97,11 @@ process:
               full: Y
               partial: Z
               none: W
-            planning_ref: "{config.docs.paths.qa}/assessments/{epic}.{story}-test-design-{YYYYMMDD}.md"
+            planning_ref: "{@docs.paths.qa}/assessments/{epic}.{story}-test-design-{YYYYMMDD}.md"
             uncovered:
               - ac: "AC3"
                 reason: "No test found for specific condition"
-            notes: "See {config.docs.paths.qa}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
+            notes: "See {@docs.paths.qa}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
 
     - id: CREATE-REPORT
       title: Create Traceability Report
@@ -109,7 +109,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{config.docs.paths.qa}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
+        target: "{@docs.paths.qa}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
         content: |
           # Requirements Traceability Matrix
           
@@ -173,13 +173,13 @@ process:
         type: analysis
         prompt: |
           Print:
-          Trace matrix: {config.docs.paths.qa}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md
+          Trace matrix: {@docs.paths.qa}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md
 
 outputs:
   artifacts:
     - name: traceability_report
       type: report
-      path: "{config.docs.paths.qa}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
+      path: "{@docs.paths.qa}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
       format: markdown
       description: Requirements traceability matrix report
     - name: gate_trace_block
@@ -200,7 +200,7 @@ completion:
     - Risk assessment completed
     - Recommendations provided
   validations:
-    - command: "test -f {config.docs.paths.qa}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
+    - command: "test -f {@docs.paths.qa}/assessments/{epic}.{story}-trace-{YYYYMMDD}.md"
       expected_output: "file exists"
 
 metadata:

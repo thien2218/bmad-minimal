@@ -120,7 +120,7 @@ Be honest about trade-offs. There's rarely a perfect solution.]]
    -  [ ] Assess feasibility, effort, and risks of this path.
 -  [ ] **Option 2: Potential Rollback:**
    -  [ ] Would reverting completed stories significantly simplify addressing the issue?
-   -  [ ] Identify specific {config.docs.paths.stories}/commits to consider for rollback.
+   -  [ ] Identify specific {@docs.paths.stories}/commits to consider for rollback.
    -  [ ] Assess the effort required for rollback.
    -  [ ] Assess the impact of rollback (lost work, data implications).
    -  [ ] Compare the net benefit/cost vs. Direct Adjustment.
@@ -151,7 +151,7 @@ This proposal guides all subsequent work.]]
 -  [ ] **Artifact Adjustment Needs:** List of documents to change.
 -  [ ] **Recommended Path Forward:** Chosen solution with rationale.
 -  [ ] **PRD MVP Impact:** Changes to scope/goals (if any).
--  [ ] **High-Level Action Plan:** Next steps for {config.docs.paths.stories}/updates.
+-  [ ] **High-Level Action Plan:** Next steps for {@docs.paths.stories}/updates.
 -  [ ] **Agent Handoff Plan:** Identify roles needed (PM, Arch, Design Arch, PDM).
 
 ## 6. Final Review & Handoff

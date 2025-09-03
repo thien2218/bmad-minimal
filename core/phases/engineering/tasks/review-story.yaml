@@ -16,7 +16,7 @@ inputs:
     - name: story_path
       type: path
       description: Path to story file from docs.paths.stories
-      pattern: "{config.docs.paths.stories}/story-{epic}.{story}-*.yaml"
+      pattern: "{@docs.paths.stories}/story-{epic}.{story}-*.yaml"
     - name: story_title
       type: string
       description: Story title (derive from story file H1 if missing)
@@ -28,11 +28,11 @@ inputs:
     - name: architecture_refs
       type: path
       description: Path to architecture documents from config.json
-      examples: ["{config.docs.architecture.root}"]
+      examples: ["{@docs.architecture.root}"]
     - name: technical_preferences
       type: path
       description: Path to technical preferences file
-      examples: ["{config.docs.files.techPreferences)"]
+      examples: ["{@docs.files.techPreferences)"]
 
 prerequisites:
   status:
@@ -185,26 +185,26 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{config.docs.paths.qa}/gates/story-{epic}.{story}-*.yaml"
+        target: "{@docs.paths.qa}/gates/story-{epic}.{story}-*.yaml"
         content: |
-          Render from {config.root}/schemas/qa-gate.json
+          Render from {@root}/schemas/qa-gate.json
           Include gate decision, risk summary, NFR validation
 
 outputs:
   artifacts:
     - name: quality_gate
       type: file
-      path: "{config.docs.paths.qa}/gates/story-{epic}.{story}-*.yaml"
+      path: "{@docs.paths.qa}/gates/story-{epic}.{story}-*.yaml"
       format: yaml
       description: Quality gate assessment file with pass/fail decision
     - name: risk_profile
       type: file
-      path: "{config.docs.paths.qa}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
+      path: "{@docs.paths.qa}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
       format: markdown
       description: Risk assessment matrix
     - name: nfr_assessment
       type: file
-      path: "{config.docs.paths.qa}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md"
+      path: "{@docs.paths.qa}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md"
       format: markdown
       description: Non-functional requirements assessment
   updates:
@@ -242,7 +242,7 @@ completion:
     - All findings documented
     - Actionable recommendations provided
   validations:
-    - command: "test -f {config.docs.paths.qa}/gates/story-{epic}.{story}-*.yaml"
+    - command: "test -f {@docs.paths.qa}/gates/story-{epic}.{story}-*.yaml"
       expected_output: "file exists"
 
 metadata:

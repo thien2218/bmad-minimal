@@ -11,7 +11,7 @@ inputs:
     - name: story_file
       type: path
       description: Path to the drafted story to validate
-      pattern: "{config.docs.paths.stories}/story-{epic}.{story}-*.yaml"
+      pattern: "{@docs.paths.stories}/story-{epic}.{story}-*.yaml"
     - name: parent_epic
       type: epic_id
       description: Epic containing this story's requirements
@@ -20,13 +20,13 @@ inputs:
     - name: architecture_docs
       type: path
       description: Path to architecture documents
-      examples: ["{config.docs.architecture.root}"]
+      examples: ["{@docs.architecture.root}"]
 
 prerequisites:
   files:
-    - "{config.root}/config.json"
+    - "{@root}/config.json"
     - "{story_file}"
-    - "{config.root}/schemas/story.json"
+    - "{@root}/schemas/story.json"
 
 process:
   mode: sequential
@@ -37,7 +37,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{config.root}/config.json"
+        target: "{@root}/config.json"
         validation:
           required: true
       on_failure: halt
@@ -51,7 +51,7 @@ process:
           type: checklist
           required: true
         prompt: |
-          Load {config.root}/schemas/story.json and check:
+          Load {@root}/schemas/story.json and check:
           - All required sections present
           - No template placeholders remaining ({{...}}, _TBD_)
           - Agent sections verified

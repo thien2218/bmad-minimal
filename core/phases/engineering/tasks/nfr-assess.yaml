@@ -16,7 +16,7 @@ inputs:
     - name: story_path
       type: path
       description: Path to story file from docs.paths.stories in config.json
-      pattern: "{config.docs.paths.stories}/story-{epic}.{story}-*.yaml"
+      pattern: "{@docs.paths.stories}/story-{epic}.{story}-*.yaml"
   optional:
     - name: story_title
       type: string
@@ -28,11 +28,11 @@ inputs:
     - name: architecture_refs
       type: path
       description: Path to architecture documents from config.json
-      examples: ["{config.docs.architecture.root}"]
+      examples: ["{@docs.architecture.root}"]
     - name: technical_preferences
       type: path
       description: Path to technical preferences file
-      examples: ["{config.docs.files.techPreferences)"]
+      examples: ["{@docs.files.techPreferences)"]
     - name: interaction_mode
       type: string
       description: Assessment interaction mode
@@ -41,7 +41,7 @@ inputs:
 
 prerequisites:
   files:
-    - "{config.root}/config.json"
+    - "{@root}/config.json"
   status:
     - entity: story
       field: status
@@ -57,7 +57,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{config.root}/config.json"
+        target: "{@root}/config.json"
         content: |
           Extract config.docs.paths.qa and docs.paths.stories settings.
           Resolve story_path if not provided.
@@ -94,8 +94,8 @@ process:
         content: |
           Look for NFR requirements in:
           - Story acceptance criteria
-          - {config.docs.architecture.root}*.md files  
-          - {config.docs.files.techPreferences)
+          - {@docs.architecture.root}*.md files  
+          - {@docs.files.techPreferences)
           
           If interactive mode and thresholds missing, ask user:
           - Performance targets (response times, throughput)
@@ -214,7 +214,7 @@ process:
           - 10 for each CONCERNS attribute
           Floor at 0, ceiling at 100
           
-          Use custom weights from {config.docs.files.techPreferences} if available.
+          Use custom weights from {@docs.files.techPreferences} if available.
 
     - id: CREATE-ASSESSMENT-REPORT
       title: Create Assessment Report
@@ -222,7 +222,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{config.docs.paths.qa}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md"
+        target: "{@docs.paths.qa}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md"
         content: |
           # NFR Assessment: {epic}.{story}
           
@@ -256,14 +256,14 @@ process:
         content: |
           Output integration information:
           
-          1. NFR assessment: {config.docs.paths.qa}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md
-          2. Gate NFR block ready → paste into {config.docs.paths.qa}/gates/story-{epic}.{story}-*.yaml under nfr_validation
+          1. NFR assessment: {@docs.paths.qa}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md
+          2. Gate NFR block ready → paste into {@docs.paths.qa}/gates/story-{epic}.{story}-*.yaml under nfr_validation
 
 outputs:
   artifacts:
     - name: nfr_assessment_report
       type: report
-      path: "{config.docs.paths.qa}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md"
+      path: "{@docs.paths.qa}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md"
       format: markdown
       description: Brief NFR assessment report with findings and recommendations
     - name: gate_yaml_block

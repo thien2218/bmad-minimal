@@ -15,12 +15,12 @@ inputs:
       examples: ["2.2", "1.3", "3.1"]
     - name: qa_root
       type: path
-      description: QA artifacts location from {config.root}/config.json docs.paths.qa
-      default: "{config.docs.paths.qa}"
+      description: QA artifacts location from {@root}/config.json docs.paths.qa
+      default: "{@docs.paths.qa}"
     - name: story_root
       type: path
-      description: Story files location from {config.root}/config.json docs.paths.stories
-      default: "{config.docs.paths.stories}"
+      description: Story files location from {@root}/config.json docs.paths.stories
+      default: "{@docs.paths.stories}"
     - name: test_command
       type: command
       description: Command for running tests in the project (derived from the project setup if not specified)
@@ -50,7 +50,7 @@ outputs:
 
 prerequisites:
   files:
-    - "{config.root}/config.json"
+    - "{@root}/config.json"
   status:
     - entity: story
       field: status
@@ -66,7 +66,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{config.root}/config.json"
+        target: "{@root}/config.json"
       on_failure: halt
 
     - id: LOCATE-STORY
@@ -181,7 +181,7 @@ dependencies:
     - test-levels-framework.yaml
 
 blocking_conditions:
-  - condition: "Missing {config.root}/config.json"
+  - condition: "Missing {@root}/config.json"
     message: Core configuration file not found
     severity: critical
   - condition: "Story file not found for story_id"

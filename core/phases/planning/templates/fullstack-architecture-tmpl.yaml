@@ -4,7 +4,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{config.docs.architecture.fullstack}"
+    filename: "{@docs.architecture.fullstack}"
     title: "{{project_name}} Fullstack Architecture Document"
 
 workflow:
@@ -15,7 +15,7 @@ sections:
   - id: introduction
     title: Introduction
     instruction: |
-      If available, review any provided relevant documents to gather all relevant context before beginning. At minimum, you should have access to {config.docs.files.prd} and {config.docs.files.frontendSpec}. Ask the user for any documents you need but cannot locate. This template creates a unified architecture that covers both backend and frontend concerns to guide AI-driven fullstack development.
+      If available, review any provided relevant documents to gather all relevant context before beginning. At minimum, you should have access to {@docs.files.prd} and {@docs.files.frontendSpec}. Ask the user for any documents you need but cannot locate. This template creates a unified architecture that covers both backend and frontend concerns to guide AI-driven fullstack development.
     elicit: true
     content: |
       This document outlines the complete fullstack architecture for {{project_name}}, including backend systems, frontend implementation, and their integration. It serves as the single source of truth for AI-driven development, ensuring consistency across the entire technology stack.
@@ -238,7 +238,7 @@ sections:
       1. If REST API, create an OpenAPI 3.0 specification
       2. If GraphQL, provide the GraphQL schema
       3. If tRPC, show router definitions
-      4. Include all endpoints from {config.docs.paths.epics}/stories
+      4. Include all endpoints from {@docs.paths.epics}/stories
       5. Define request/response schemas based on data models
       6. Document authentication requirements
       7. Include example requests/responses

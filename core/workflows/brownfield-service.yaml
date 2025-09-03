@@ -23,13 +23,13 @@ workflow:
       creates: prd.md
       uses: brownfield-prd-tmpl
       requires: existing_service_analysis
-      notes: "Creates comprehensive PRD focused on service enhancement with existing system analysis. SAVE OUTPUT: Copy final prd.md to your project's {config.docs.root} folder."
+      notes: "Creates comprehensive PRD focused on service enhancement with existing system analysis. SAVE OUTPUT: Copy final prd.md to your project's {@docs.root} folder."
 
     - agent: architect
       creates: architecture.md
       uses: brownfield-architecture-tmpl
       requires: prd.md
-      notes: "Creates architecture with service integration strategy and API evolution planning. SAVE OUTPUT: Copy final architecture.md to your project's {config.docs.root} folder."
+      notes: "Creates architecture with service integration strategy and API evolution planning. SAVE OUTPUT: Copy final architecture.md to your project's {@docs.root} folder."
 
     - agent: pdm
       validates: all_artifacts
@@ -39,21 +39,13 @@ workflow:
     - agent: various
       updates: any_flagged_documents
       condition: po_checklist_issues
-      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {config.docs.root} folder."
+      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {@docs.root} folder."
 
-    - agent: pdm
-      action: shard_documents
-      creates: sharded_docs
-      requires: all_artifacts_in_project
-      notes: |
-        Shard documents for IDE development:
-        - Use md-tree: md-tree explode {config.docs.files.architecture} {config.docs.architecture.root}
-        - Creates {config.docs.architecture.root} folder with sharded content
 
     - agent: pdm
       action: create_story
       creates: story.yaml
-      requires: sharded_docs
+      requires: all_artifacts_in_project
       repeats: for_each_epic
       notes: |
         Story creation cycle:
@@ -126,7 +118,7 @@ workflow:
         All stories implemented and reviewed!
         Project development phase complete.
         
-        Reference: {config.root}/data/bmad-kb.md#IDE Development Workflow
+        Reference: {@root}/data/bmad-kb.md#IDE Development Workflow
 
   flow_diagram: |
     ```mermaid
@@ -137,10 +129,9 @@ workflow:
         D --> E[pdm: validate with pd-master-checklist]
         E --> F{PDM finds issues?}
         F -->|Yes| G[Return to relevant agent for fixes]
-        F -->|No| H[pdm: shard documents]
+        F -->|No| I[pdm: create story]
         G --> E
         
-        H --> I[pdm: create story]
         I --> J{Review draft story?}
         J -->|Yes| K[analyst/pm: review & approve story]
         J -->|No| L[dev: implement story]
@@ -169,7 +160,7 @@ workflow:
 
   handoff_prompts:
     analyst_to_pm: "Service analysis complete. Create comprehensive PRD with service integration strategy."
-    pm_to_architect: "PRD ready. Save it as {config.docs.root}/prd.md, then create the service architecture."
-    architect_to_po: "Architecture complete. Save it as {config.docs.architecture.brownfield}. Please validate all artifacts for service integration safety."
+    pm_to_architect: "PRD ready. Save it as {@docs.root}/prd.md, then create the service architecture."
+    architect_to_po: "Architecture complete. Save it as {@docs.architecture.brownfield}. Please validate all artifacts for service integration safety."
     po_issues: "PDM found issues with [document]. Please return to [agent] to fix and re-save the updated document."
-    complete: "All planning artifacts validated and saved in {config.docs.root} folder. Move to IDE environment to begin development."
+    complete: "All planning artifacts validated and saved in {@docs.root} folder. Move to IDE environment to begin development."

@@ -191,8 +191,8 @@ Instead of duplicating, reference actual model files:
 
 ### API Specifications
 
--  **OpenAPI Spec**: `{config.docs.root}/api/openapi.yaml` (if exists)
--  **Postman Collection**: `{config.docs.root}/api/postman-collection.json`
+-  **OpenAPI Spec**: `{@docs.root}/api/openapi.yaml` (if exists)
+-  **Postman Collection**: `{@docs.root}/api/postman-collection.json`
 -  **Manual Endpoints**: [List any undocumented endpoints discovered]
 
 ## Technical Debt and Known Issues
@@ -286,18 +286,18 @@ Based on the enhancement requirements, these files will be affected:
 
 -  **Logs**: Check `logs/app.log` for application logs
 -  **Debug Mode**: Set `DEBUG=app:*` for verbose logging
--  **Common Issues**: See `{config.docs.root}/troubleshooting.md`
+-  **Common Issues**: See `{@docs.root}/troubleshooting.md`
 
 ### 4. Document Delivery
 
 1. **In Web UI (Gemini, ChatGPT, Claude)**:
 
    -  Present the entire document in one response (or multiple if too long)
-   -  Tell user to copy and save as `{config.docs.architecture.root}/*.md`
+   -  Tell user to copy and save as `{@docs.architecture.root}/*.md`
    -  Mention it can be sharded later in IDE if needed
 
 2. **In IDE Environment**:
-   -  Create the document as `{config.docs.architecture.root}/*.md`
+   -  Create the document as `{@docs.architecture.root}/*.md`
    -  Inform user this single document contains all architectural information
    -  Can be sharded later using PDM agent if desired
 

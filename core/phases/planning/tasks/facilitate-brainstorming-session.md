@@ -1,6 +1,6 @@
 ## <!-- Powered by BMAD™ Core -->
 
-docOutputLocation: {config.docs.root}/brainstorming-session-results.md
+docOutputLocation: {@docs.root}/brainstorming-session-results.md
 template: '.bmad-method/templates/brainstorming-output-tmpl.yaml'
 
 ---

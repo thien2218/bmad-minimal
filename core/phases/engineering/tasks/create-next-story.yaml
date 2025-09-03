@@ -21,19 +21,19 @@ outputs:
   artifacts:
     - name: Story File
       type: file
-      path: "{config.docs.paths.stories}/story-{epic}.{story}-*.yaml"
+      path: "{@docs.paths.stories}/story-{epic}.{story}-*.yaml"
       format: yaml
       description: Complete story ready for development with full technical context
   updates:
-    - target: "{config.docs.paths.stories}/*.yaml"
+    - target: "{@docs.paths.stories}/*.yaml"
       sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
       restrictions: Only create new story, do not modify existing stories
 
 prerequisites:
   files:
-    - "{config.root}/config.json"
-    - "{config.docs.files.prd}"
-    - "{config.docs.architecture.root}/**"
+    - "{@root}/config.json"
+    - "{@docs.files.prd}"
+    - "{@docs.architecture.root}/**"
   commands:
     - command: "test -f config.json"
       expected_exit_code: 0
@@ -47,7 +47,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{config.root}/config.json"
+        target: "{@root}/config.json"
         validation:
           type: string
           required: true
@@ -130,7 +130,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{config.docs.paths.epics}/epic-{epic}-*.yaml"
+        target: "{@docs.paths.epics}/epic-{epic}-*.yaml"
         content: |
           Extract:
           - Story title and description
@@ -143,7 +143,7 @@ process:
       description: If previous story exists, extract lessons learned
       action:
         type: analysis
-        target: "{config.docs.paths.stories}/{previousEpicNum}.{previousStoryNum}-*.yaml"
+        target: "{@docs.paths.stories}/{previousEpicNum}.{previousStoryNum}-*.yaml"
         content: |
           Review Dev Agent Record sections for:
           - Completion Notes and Debug Log References
@@ -160,7 +160,7 @@ process:
       action:
         type: decision
         content: |
-          Read {config.docs.architecture.root}*.md
+          Read {@docs.architecture.root}*.md
           Follow structured reading order
 
     - id: ARCH-2
@@ -179,12 +179,12 @@ process:
           For Backend/API Stories, additionally:
           - data-models
           - database-schema
-          - {config.docs.architecture.backend}
+          - {@docs.architecture.backend}
           - rest-api-spec
           - external-apis
           
           For Frontend/UI Stories, additionally:
-          - {config.docs.architecture.frontend}
+          - {@docs.architecture.frontend}
           - components
           - core-workflows
           - data-models
@@ -216,7 +216,7 @@ process:
       description: Cross-reference with Project Structure Guide
       action:
         type: validation
-        target: "{config.docs.architecture.root}/*.md#unified-project-structure"
+        target: "{@docs.architecture.root}/*.md#unified-project-structure"
         content: |
           - Cross-reference story requirements with Project Structure Guide
           - Ensure file paths, component locations, module names align
@@ -228,7 +228,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{config.docs.paths.stories}/story-{epic}.{story}-*.yaml"
+        target: "{@docs.paths.stories}/story-{epic}.{story}-*.yaml"
         content: |
           story:
             id: "{epic}.{story}"
@@ -242,22 +242,22 @@ process:
             previous_story_insights: "{previous_insights}"
             data_models:
               value: "{data_models}"
-              source: "{config.docs.architecture.root}/*.md#{section}"
+              source: "{@docs.architecture.root}/*.md#{section}"
             api_specifications:
               value: "{api_specs}"
-              source: "{config.docs.architecture.root}/*.md#{section}"
+              source: "{@docs.architecture.root}/*.md#{section}"
             component_specifications:
               value: "{component_specs}"
-              source: "{config.docs.architecture.root}/*.md#{section}"
+              source: "{@docs.architecture.root}/*.md#{section}"
             file_locations:
               value: "{file_locations}"
-              source: "{config.docs.architecture.root}/*.md#{section}"
+              source: "{@docs.architecture.root}/*.md#{section}"
             testing_requirements:
               value: "{testing_requirements}"
-              source: "{config.docs.architecture.root}/*.md#{section}"
+              source: "{@docs.architecture.root}/*.md#{section}"
             technical_constraints:
               value: "{technical_constraints}"
-              source: "{config.docs.architecture.root}/*.md#{section}"
+              source: "{@docs.architecture.root}/*.md#{section}"
             notes_missing_guidance: "If information for a category is not found in architecture docs, explicitly state: 'No specific guidance found in architecture docs'"
           tasks_subtasks: "{generated_tasks}"
           risk_mitigation:
@@ -320,7 +320,7 @@ process:
       action:
         type: subtask
         subtask: execute-checklist
-        target: "{config.root}/checklists/story-draft-checklist"
+        target: "{@root}/checklists/story-draft-checklist"
 
     - id: HANDOFF-1
       title: Provide Summary and Next Steps
@@ -328,7 +328,7 @@ process:
       action:
         type: elicit
         prompt: |
-          Story created: {config.docs.paths.stories}/story-{epic}.{story}-*.yaml
+          Story created: {@docs.paths.stories}/story-{epic}.{story}-*.yaml
           Status: Draft
           
           Key technical components included from architecture docs:
