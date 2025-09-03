@@ -87,6 +87,31 @@
 			]
 		},
 		{
+			"id": "test-specs",
+			"title": "Test Specs",
+			"instruction": "Maintain both test specifications and a list of relevant test files for this story.",
+			"owner": "qa-agent",
+			"editors": ["qa-agent", "developer"],
+			"sections": [
+				{
+					"id": "specs",
+					"title": "Specifications",
+					"type": "numbered-list",
+					"instruction": "List concise Given-When-Then (or equivalent) specs. Include AC references.",
+					"template": "{{spec_number}}: [AC {{ac_numbers}}] {{short_description}} — Given {{given}}, When {{when}}, Then {{then}}",
+					"elicit": true
+				},
+				{
+					"id": "artifacts",
+					"title": "Artifacts",
+					"type": "bullet-list",
+					"instruction": "List existing or planned test files relevant to this story (paths with brief purpose).",
+					"template": "- {{path}} — {{purpose}}",
+					"elicit": false
+				}
+			]
+		},
+		{
 			"id": "risk-mitigation",
 			"title": "Risk Mitigation",
 			"instruction": "Document risks and mitigation strategies for this story implementation.",
