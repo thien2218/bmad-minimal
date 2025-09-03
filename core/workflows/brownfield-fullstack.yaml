@@ -101,7 +101,7 @@ workflow:
       repeats: for_each_epic_or_enhancement
       notes: |
         Story creation cycle:
-        - For sharded docs: @pdm → *create (uses create-next-story)
+        - For architecture docs: @pdm → *create (uses create-next-story)
         - For brownfield docs: @pdm → use create-brownfield-story task
         - Creates story from available documentation
         - Story starts in "Draft" status
@@ -203,7 +203,7 @@ workflow:
         N --> L
         
         P --> Q{Story Type?}
-        Q -->|Sharded Docs| R[create-next-story]
+        Q -->|Architecture Docs| R[create-next-story]
         Q -->|Brownfield Docs| S[create-brownfield-story]
         
         R --> T{Review draft?}
@@ -261,8 +261,8 @@ workflow:
     
     po_to_sm: |
       All artifacts validated. 
-      Documentation type available: {{sharded_docs / brownfield_docs}}
-      {{if sharded}}: Use standard create-next-story task.
+      Documentation type available: architecture docs or brownfield docs
+      If architecture docs: Use standard create-next-story task.
       {{if brownfield}}: Use create-brownfield-story task to handle varied documentation formats.
     
     sm_story_creation: |

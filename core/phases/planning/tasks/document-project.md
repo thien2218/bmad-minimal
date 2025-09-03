@@ -294,12 +294,10 @@ Based on the enhancement requirements, these files will be affected:
 
    -  Present the entire document in one response (or multiple if too long)
    -  Tell user to copy and save as `{@docs.architecture.root}/*.md`
-   -  Mention it can be sharded later in IDE if needed
 
 2. **In IDE Environment**:
    -  Create the document as `{@docs.architecture.root}/*.md`
    -  Inform user this single document contains all architectural information
-   -  Can be sharded later using PDM agent if desired
 
 The document should be comprehensive enough that future agents can understand:
 

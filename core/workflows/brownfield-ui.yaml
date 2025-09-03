@@ -57,7 +57,7 @@ workflow:
       notes: |
         Story creation cycle:
         - PDM Agent (New Chat): @pdm → *create
-        - Creates next story from sharded docs
+        - Creates next story from architecture docs
         - Story starts in "Draft" status
 
     - agent: analyst/pm

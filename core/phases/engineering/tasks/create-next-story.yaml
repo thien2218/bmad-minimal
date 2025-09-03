@@ -73,12 +73,12 @@ process:
 
     - id: IDENTIFY-1
       title: Locate Epic Files and Review Existing Stories
-      description: Find epic files based on prdSharded configuration
+      description: Find epic files based on configured PRD/epic locations
       action:
         type: analysis
         content: |
-          Based on prdSharded from config:
-          - Locate epic files (sharded location/pattern or monolithic PRD sections)
+          Based on configured PRD/epic locations:
+          - Locate epic files (from configured epics path or monolithic PRD sections)
           - If docs.paths.stories has story files, load highest story-{epic}.{story}-*.yaml
           - Determine next sequential story
 

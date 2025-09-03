@@ -32,15 +32,11 @@ async function createConfigFile(bmadCorePath, config) {
 		root: ".bmad-core/",
 		prd: {
 			file: `${config.folders.docs}/prd.md`,
-			version: "v4",
-			sharded: true,
-			shardedLocation: `${config.folders.docs}/prd`,
+			version: "v4"
 		},
 		architecture: {
 			file: `${config.folders.docs}/architecture.md`,
-			version: "v4",
-			sharded: true,
-			shardedLocation: `${config.folders.docs}/architecture`,
+			version: "v4"
 		},
 		customTechnicalDocuments: null,
 		qaLocation: config.folders.qa,

@@ -71,7 +71,7 @@ workflow:
 
     - development_order_guidance:
       action: guide_development_sequence
-      notes: "Based on PRD stories: If stories are frontend-heavy, start with frontend project/directory first. If backend-heavy or API-first, start with backend. For tightly coupled features, follow story sequence in monorepo setup. Reference sharded architecture and frontend-architecture docs for development order."
+      notes: "Based on PRD stories: If stories are frontend-heavy, start with frontend project/directory first. If backend-heavy or API-first, start with backend. For tightly coupled features, follow story sequence in monorepo setup. Reference architecture and frontend-architecture docs for development order."
 
 
     - agent: pdm
@@ -82,7 +82,7 @@ workflow:
       notes: |
         Story creation cycle:
         - PDM Agent (New Chat): @pdm → *create
-        - Creates next story from sharded docs
+        - Creates next story from architecture docs
         - Story starts in "Draft" status
 
     - agent: analyst/pm

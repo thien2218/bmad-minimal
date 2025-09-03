@@ -83,8 +83,7 @@ bmad-minimal/
 │   └── docs/            # Documentation structure
 │       ├── prd.md       # Product Requirements Document
 │       ├── architecture.md  # Architecture document
-│       ├── prd/         # Sharded PRD files
-│       ├── architecture/ # Sharded architecture files
+│       ├── architecture/ # Optional architecture subdocuments
 │       ├── epics/       # Epic files
 │       ├── stories/     # Story files
 │       └── qa/          # QA files
@@ -124,15 +123,11 @@ The generated `config.json` includes:
   "root": ".bmad-core/",
   "prd": {
     "file": "docs/prd.md",
-    "version": "v4",
-    "sharded": true,
-    "shardedLocation": "docs/prd"
+    "version": "v4"
   },
   "architecture": {
     "file": "docs/architecture.md", 
-    "version": "v4",
-    "sharded": true,
-    "shardedLocation": "docs/architecture"
+    "version": "v4"
   },
   "qaLocation": "docs/qa",
   "epic": {
