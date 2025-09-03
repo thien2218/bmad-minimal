@@ -74,8 +74,8 @@ workflow:
       requires: all_artifacts_in_project
       notes: |
         Shard documents for IDE development:
-        - Use md-tree: md-tree explode {config.docs.root}/architecture.md {config.docs.root}/architecture
-        - Creates {config.docs.root}/architecture/ folder with sharded content
+        - Use md-tree: md-tree explode {config.docs.files.architecture} {config.docs.paths.architecture}
+        - Creates {config.docs.paths.architecture} folder with sharded content
 
     - agent: pdm
       action: create_story

@@ -14,7 +14,8 @@
 			"prd": "prd.md",
 			"architecture": "architecture.md",
 			"feSpecs": "frontend-spec.md",
-			"feArchitecture": "frontend-architecture.md"
+			"feArchitecture": "frontend-architecture.md",
+			"techPreferences": "technical-preferences.md"
 		}
 	}
 }

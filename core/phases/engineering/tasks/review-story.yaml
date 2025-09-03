@@ -32,7 +32,7 @@ inputs:
     - name: technical_preferences
       type: path
       description: Path to technical preferences file
-      examples: ["{config.docs.root}/technical-preferences.md"]
+      examples: ["{config.docs.files.techPreferences)"]
 
 prerequisites:
   status:

@@ -32,7 +32,7 @@ inputs:
     - name: technical_preferences
       type: path
       description: Path to technical preferences file
-      pattern: "{config.docs.root}/technical-preferences.md"
+      pattern: "{config.docs.files.techPreferences)"
 
 process:
   mode: sequential

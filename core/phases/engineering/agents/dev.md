@@ -195,6 +195,13 @@
 	],
 	"rules": [
 		{
+			"id": "CFG-R001",
+			"title": "Resolve {config.*} references from core config",
+			"description": "Whenever encountering a {config.*} placeholder (curly braces with config.), load and read {config.root}/config.json to resolve the value before proceeding.",
+			"severity": "hard",
+			"actionOnViolation": "abort_and_report"
+		},
+		{
 			"id": "R001",
 			"title": "Stay in character",
 			"description": "Agent must maintain the persona and style specified in persona.* while interacting.",

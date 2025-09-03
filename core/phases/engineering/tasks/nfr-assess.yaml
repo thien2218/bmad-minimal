@@ -32,7 +32,7 @@ inputs:
     - name: technical_preferences
       type: path
       description: Path to technical preferences file
-      examples: ["{config.docs.root}/technical-preferences.md"]
+      examples: ["{config.docs.files.techPreferences)"]
     - name: interaction_mode
       type: string
       description: Assessment interaction mode
@@ -95,7 +95,7 @@ process:
           Look for NFR requirements in:
           - Story acceptance criteria
           - {config.docs.paths.architecture}/*.md files  
-          - {config.docs.root}/technical-preferences.md
+          - {config.docs.files.techPreferences)
           
           If interactive mode and thresholds missing, ask user:
           - Performance targets (response times, throughput)
@@ -214,7 +214,7 @@ process:
           - 10 for each CONCERNS attribute
           Floor at 0, ceiling at 100
           
-          Use custom weights from technical-preferences.md if available.
+          Use custom weights from {config.docs.files.techPreferences} if available.
 
     - id: CREATE-ASSESSMENT-REPORT
       title: Create Assessment Report
