@@ -282,20 +282,11 @@ Based on the enhancement requirements, these files will be affected:
 
 ## Appendix - Useful Commands and Scripts
 
-### Frequently Used Commands
-
-```bash
-npm run dev         # Start development server
-npm run build       # Production build
-npm run migrate     # Run database migrations
-npm run seed        # Seed test data
-```
-
 ### Debugging and Troubleshooting
 
 -  **Logs**: Check `logs/app.log` for application logs
 -  **Debug Mode**: Set `DEBUG=app:*` for verbose logging
--  **Common Issues**: See `{config.docs.root}/troubleshooting.md`]]
+-  **Common Issues**: See `{config.docs.root}/troubleshooting.md`
 
 ### 4. Document Delivery
 
@@ -316,7 +307,7 @@ The document should be comprehensive enough that future agents can understand:
 -  Where to find key files and logic
 -  What technical debt exists
 -  What constraints must be respected
--  If PRD provided: What needs to change for the enhancement]]
+-  If PRD provided: What needs to change for the enhancement?
 
 ### 5. Quality Assurance
 

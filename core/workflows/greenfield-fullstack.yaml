@@ -18,19 +18,19 @@ workflow:
       optional_steps:
         - brainstorming_session
         - market_research_prompt
-      notes: "Can do brainstorming first, then optional deep research before creating project brief. SAVE OUTPUT: Copy final project-brief.md to your project's {config.docs.root}/ folder."
+      notes: "Can do brainstorming first, then optional deep research before creating project brief. SAVE OUTPUT: Copy final project-brief.md to your project's {config.docs.root} folder."
 
     - agent: pm
       creates: prd.md
       requires: project-brief.md
-      notes: "Creates PRD from project brief using prd-tmpl. SAVE OUTPUT: Copy final prd.md to your project's {config.docs.root}/ folder."
+      notes: "Creates PRD from project brief using prd-tmpl. SAVE OUTPUT: Copy final prd.md to your project's {config.docs.root} folder."
 
     - agent: ux-expert
       creates: frontend-spec.md
       requires: prd.md
       optional_steps:
         - user_research_prompt
-      notes: "Creates UI/UX specification using frontend-spec-tmpl. SAVE OUTPUT: Copy final frontend-spec.md to your project's {config.docs.root}/ folder."
+      notes: "Creates UI/UX specification using frontend-spec-tmpl. SAVE OUTPUT: Copy final frontend-spec.md to your project's {config.docs.root} folder."
 
     - agent: ux-expert
       creates: v0_prompt (optional)
@@ -46,13 +46,13 @@ workflow:
       optional_steps:
         - technical_research_prompt
         - review_generated_ui_structure
-      notes: "Creates comprehensive architecture using fullstack-architecture-tmpl. If user generated UI with v0/Lovable, can incorporate the project structure into architecture. May suggest changes to PRD stories or new stories. SAVE OUTPUT: Copy final fullstack-architecture.md to your project's {config.docs.root}/ folder."
+      notes: "Creates comprehensive architecture using fullstack-architecture-tmpl. If user generated UI with v0/Lovable, can incorporate the project structure into architecture. May suggest changes to PRD stories or new stories. SAVE OUTPUT: Copy final fullstack-architecture.md to your project's {config.docs.root} folder."
 
     - agent: pm
       updates: prd.md (if needed)
       requires: fullstack-architecture.md
       condition: architecture_suggests_prd_changes
-      notes: "If architect suggests story changes, update PRD and re-export the complete unredacted prd.md to {config.docs.root}/ folder."
+      notes: "If architect suggests story changes, update PRD and re-export the complete unredacted prd.md to {config.docs.root} folder."
 
     - agent: pdm
       validates: all_artifacts
@@ -62,7 +62,7 @@ workflow:
     - agent: various
       updates: any_flagged_documents
       condition: po_checklist_issues
-      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {config.docs.root}/ folder."
+      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {config.docs.root} folder."
 
     - project_setup_guidance:
       action: guide_project_structure
@@ -203,20 +203,6 @@ workflow:
         B -.-> B2[Optional: market research]
         D -.-> D1[Optional: user research]
         E -.-> E1[Optional: technical research]
-
-        style W fill:#90EE90
-        style K fill:#ADD8E6
-        style L fill:#ADD8E6
-        style O fill:#ADD8E6
-        style D3 fill:#E6E6FA
-        style D4 fill:#E6E6FA
-        style B fill:#FFE4B5
-        style C fill:#FFE4B5
-        style D fill:#FFE4B5
-        style E fill:#FFE4B5
-        style N fill:#F0E68C
-        style Q fill:#F0E68C
-        style V fill:#F0E68C
     ```
 
   decision_guidance:
@@ -234,6 +220,6 @@ workflow:
     ux_to_architect: "UI/UX spec complete. Save it as {config.docs.files.frontendSpec} in your project, then create the fullstack architecture."
     architect_review: "Architecture complete. Save it as {config.docs.root}/fullstack-architecture.md. Do you suggest any changes to the PRD stories or need new stories added?"
     architect_to_pm: "Please update the PRD with the suggested story changes, then re-export the complete prd.md to {config.docs.root}/."
-    updated_to_po: "All documents ready in {config.docs.root}/ folder. Please validate all artifacts for consistency."
+    updated_to_po: "All documents ready in {config.docs.root} folder. Please validate all artifacts for consistency."
     po_issues: "PDM found issues with [document]. Please return to [agent] to fix and re-save the updated document."
-    complete: "All planning artifacts validated and saved in {config.docs.root}/ folder. Move to IDE environment to begin development."
+    complete: "All planning artifacts validated and saved in {config.docs.root} folder. Move to IDE environment to begin development."

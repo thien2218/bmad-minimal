@@ -63,7 +63,7 @@ workflow:
       notes: |
         Creates PRD for major enhancement. If document-project was run, reference its output to avoid re-analysis.
         If skipped, use existing project documentation.
-        SAVE OUTPUT: Copy final prd.md to your project's {config.docs.root}/ folder.
+        SAVE OUTPUT: Copy final prd.md to your project's {config.docs.root} folder.
 
     - step: architecture_decision
       agent: pm/architect
@@ -81,7 +81,7 @@ workflow:
       uses: brownfield-architecture-tmpl
       requires: prd.md
       condition: architecture_changes_needed
-      notes: "Creates architecture ONLY for significant architectural changes. SAVE OUTPUT: Copy final architecture.md to your project's {config.docs.root}/ folder."
+      notes: "Creates architecture ONLY for significant architectural changes. SAVE OUTPUT: Copy final architecture.md to your project's {config.docs.root} folder."
 
     - agent: pdm
       validates: all_artifacts
@@ -91,7 +91,7 @@ workflow:
     - agent: various
       updates: any_flagged_documents
       condition: po_checklist_issues
-      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {config.docs.root}/ folder."
+      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {config.docs.root} folder."
 
     - agent: pdm
       action: shard_documents
@@ -233,20 +233,6 @@ workflow:
         AB -->|Yes| AC[pdm: retrospective]
         AB -->|No| AD[Complete]
         AC --> AD
-
-        style AD fill:#90EE90
-        style END1 fill:#90EE90
-        style END2 fill:#90EE90
-        style D fill:#87CEEB
-        style E fill:#87CEEB
-        style I fill:#FFE4B5
-        style K fill:#FFE4B5
-        style O fill:#ADD8E6
-        style P fill:#ADD8E6
-        style V fill:#ADD8E6
-        style U fill:#F0E68C
-        style X fill:#F0E68C
-        style AC fill:#F0E68C
     ```
 
   decision_guidance:

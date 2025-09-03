@@ -19,25 +19,25 @@ workflow:
       optional_steps:
         - brainstorming_session
         - market_research_prompt
-      notes: "Can do brainstorming first, then optional deep research before creating project brief. SAVE OUTPUT: Copy final project-brief.md to your project's {config.docs.root}/ folder."
+      notes: "Can do brainstorming first, then optional deep research before creating project brief. SAVE OUTPUT: Copy final project-brief.md to your project's {config.docs.root} folder."
 
     - agent: pm
       creates: prd.md
       requires: project-brief.md
-      notes: "Creates PRD from project brief using prd-tmpl, focused on API/service requirements. SAVE OUTPUT: Copy final prd.md to your project's {config.docs.root}/ folder."
+      notes: "Creates PRD from project brief using prd-tmpl, focused on API/service requirements. SAVE OUTPUT: Copy final prd.md to your project's {config.docs.root} folder."
 
     - agent: architect
       creates: architecture.md
       requires: prd.md
       optional_steps:
         - technical_research_prompt
-      notes: "Creates backend/service architecture using architecture-tmpl. May suggest changes to PRD stories or new stories. SAVE OUTPUT: Copy final architecture.md to your project's {config.docs.root}/ folder."
+      notes: "Creates backend/service architecture using architecture-tmpl. May suggest changes to PRD stories or new stories. SAVE OUTPUT: Copy final architecture.md to your project's {config.docs.root} folder."
 
     - agent: pm
       updates: prd.md (if needed)
       requires: architecture.md
       condition: architecture_suggests_prd_changes
-      notes: "If architect suggests story changes, update PRD and re-export the complete unredacted prd.md to {config.docs.root}/ folder."
+      notes: "If architect suggests story changes, update PRD and re-export the complete unredacted prd.md to {config.docs.root} folder."
 
     - agent: pdm
       validates: all_artifacts
@@ -47,7 +47,7 @@ workflow:
     - agent: various
       updates: any_flagged_documents
       condition: po_checklist_issues
-      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {config.docs.root}/ folder."
+      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {config.docs.root} folder."
 
     - agent: pdm
       action: shard_documents
@@ -172,17 +172,6 @@ workflow:
         B -.-> B1[Optional: brainstorming]
         B -.-> B2[Optional: market research]
         D -.-> D1[Optional: technical research]
-
-        style V fill:#90EE90
-        style J fill:#ADD8E6
-        style K fill:#ADD8E6
-        style N fill:#ADD8E6
-        style B fill:#FFE4B5
-        style C fill:#FFE4B5
-        style D fill:#FFE4B5
-        style M fill:#F0E68C
-        style P fill:#F0E68C
-        style U fill:#F0E68C
     ```
 
   decision_guidance:
@@ -199,6 +188,6 @@ workflow:
     pm_to_architect: "PRD is ready. Save it as {config.docs.root}/prd.md in your project, then create the service architecture."
     architect_review: "Architecture complete. Save it as {config.docs.files.architecture}. Do you suggest any changes to the PRD stories or need new stories added?"
     architect_to_pm: "Please update the PRD with the suggested story changes, then re-export the complete prd.md to {config.docs.root}/."
-    updated_to_po: "All documents ready in {config.docs.root}/ folder. Please validate all artifacts for consistency."
+    updated_to_po: "All documents ready in {config.docs.root} folder. Please validate all artifacts for consistency."
     po_issues: "PDM found issues with [document]. Please return to [agent] to fix and re-save the updated document."
-    complete: "All planning artifacts validated and saved in {config.docs.root}/ folder. Move to IDE environment to begin development."
+    complete: "All planning artifacts validated and saved in {config.docs.root} folder. Move to IDE environment to begin development."

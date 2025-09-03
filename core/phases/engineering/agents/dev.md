@@ -78,9 +78,9 @@
 			"requireExplicitLoad": true,
 			"loadAlwaysFiles": [
 				"{config.root}/config.json",
-				"{config.docs.paths.architecture}/coding-standards.md",
-				"{config.docs.paths.architecture}/tech-stack.md",
-				"{config.docs.paths.architecture}/source-tree.md"
+				"{config.docs.paths.architecture}coding-standards.md",
+				"{config.docs.paths.architecture}tech-stack.md",
+				"{config.docs.paths.architecture}source-tree.md"
 			],
 			"readPersonaFile": true,
 			"onMissingFiles": "ask_user"

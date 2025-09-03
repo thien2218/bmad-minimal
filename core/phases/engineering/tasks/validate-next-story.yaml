@@ -20,7 +20,7 @@ inputs:
     - name: architecture_docs
       type: path
       description: Path to architecture documents
-      examples: ["{config.docs.paths.architecture}/", "{config.docs.files.architecture}"]
+      examples: ["{config.docs.paths.architecture}", "{config.docs.files.architecture}"]
 
 prerequisites:
   files:

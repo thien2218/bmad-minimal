@@ -33,7 +33,7 @@ prerequisites:
   files:
     - "{config.root}/config.json"
     - "{config.docs.files.prd}"
-    - "{config.docs.paths.architecture}/**"
+    - "{config.docs.paths.architecture}**"
   commands:
     - command: "test -f config.json"
       expected_exit_code: 0
@@ -160,7 +160,7 @@ process:
       action:
         type: decision
         content: |
-          Read {config.docs.paths.architecture}/*.md
+          Read {config.docs.paths.architecture}*.md
           Follow structured reading order
 
     - id: ARCH-2

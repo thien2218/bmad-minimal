@@ -28,7 +28,7 @@ Create detailed, implementation-ready stories for brownfield projects where trad
 
 Check for available documentation in this order:
 
-1. **Sharded Architecture** ({config.docs.paths.architecture}/)
+1. **Sharded Architecture** ({config.docs.paths.architecture})
 
    -  If found, recommend using create-next-story task instead
 
@@ -41,7 +41,7 @@ Check for available documentation in this order:
 
    -  May contain embedded technical details
 
-4. **Epic Files** ({config.docs.paths.epics}/ or similar)
+4. **Epic Files** ({config.docs.paths.epics} or similar)
 
    -  Created by brownfield-create-epic task
 
