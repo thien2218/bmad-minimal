@@ -4,7 +4,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{config.docs.files.architecture}"
+    filename: "{config.docs.architecture.backend}"
     title: "{{project_name}} Architecture Document"
 
 workflow:

@@ -4,18 +4,23 @@
 	"docs": {
 		"root": "docs/",
 		"paths": {
-			"architecture": "architecture",
 			"qa": "qa",
 			"epics": "epics",
-			"stories": "stories",
-			"feArchitecture": "frontend-architecture"
+			"stories": "stories"
 		},
 		"files": {
 			"prd": "prd.md",
-			"architecture": "architecture.md",
 			"feSpecs": "frontend-spec.md",
-			"feArchitecture": "frontend-architecture.md",
 			"techPreferences": "technical-preferences.md"
+		},
+		"architecture": {
+			"root": "architecture/",
+			"files": {
+				"frontend": "frontend.md",
+				"backend": "backend.md",
+				"fullstack": "fullstack.md",
+				"brownfield": "brownfield.md"
+			}
 		}
 	}
 }

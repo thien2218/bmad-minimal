@@ -79,9 +79,9 @@ workflow:
       requires: all_artifacts_in_project
       notes: |
         Shard documents for IDE development:
-        - Use md-tree: md-tree explode {config.docs.files.architecture} {config.docs.paths.architecture}
+        - Use md-tree: md-tree explode {config.docs.files.architecture} {config.docs.architecture.root}
         - Use md-tree: md-tree explode {config.docs.files.feArchitecture} {config.docs.paths.feArchitecture}
-        - Creates {config.docs.paths.architecture} and {config.docs.paths.feArchitecture} folders with sharded content
+        - Creates {config.docs.architecture.root} and {config.docs.paths.feArchitecture} folders with sharded content
 
     - agent: pdm
       action: create_story
@@ -218,7 +218,7 @@ workflow:
     analyst_to_pm: "Project brief is complete. Save it as {config.docs.root}/project-brief.md in your project, then create the PRD."
     pm_to_ux: "PRD is ready. Save it as {config.docs.root}/prd.md in your project, then create the UI/UX specification."
     ux_to_architect: "UI/UX spec complete. Save it as {config.docs.files.frontendSpec} in your project, then create the fullstack architecture."
-    architect_review: "Architecture complete. Save it as {config.docs.files.architecture}. Do you suggest any changes to the PRD stories or need new stories added?"
+    architect_review: "Architecture complete. Save it as {config.docs.architecture.fullstack}. Do you suggest any changes to the PRD stories or need new stories added?"
     architect_to_pm: "Please update the PRD with the suggested story changes, then re-export the complete prd.md to {config.docs.root}/."
     updated_to_po: "All documents ready in {config.docs.root} folder. Please validate all artifacts for consistency."
     po_issues: "PDM found issues with [document]. Please return to [agent] to fix and re-save the updated document."

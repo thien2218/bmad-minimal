@@ -28,7 +28,7 @@ inputs:
     - name: architecture_refs
       type: path
       description: Path to architecture documents from config.json
-      examples: ["{config.docs.paths.architecture}"]
+      examples: ["{config.docs.architecture.root}"]
     - name: technical_preferences
       type: path
       description: Path to technical preferences file
@@ -94,7 +94,7 @@ process:
         content: |
           Look for NFR requirements in:
           - Story acceptance criteria
-          - {config.docs.paths.architecture}*.md files  
+          - {config.docs.architecture.root}*.md files  
           - {config.docs.files.techPreferences)
           
           If interactive mode and thresholds missing, ask user:

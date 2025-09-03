@@ -33,7 +33,7 @@ prerequisites:
   files:
     - "{config.root}/config.json"
     - "{config.docs.files.prd}"
-    - "{config.docs.paths.architecture}**"
+    - "{config.docs.architecture.root}/**"
   commands:
     - command: "test -f config.json"
       expected_exit_code: 0
@@ -160,34 +160,34 @@ process:
       action:
         type: decision
         content: |
-          Read {config.docs.paths.architecture}*.md
+          Read {config.docs.architecture.root}*.md
           Follow structured reading order
 
     - id: ARCH-2
       title: Read Architecture Documents
-      description: Read relevant architecture documents based on story type
+      description: Read relevant architecture documents or sections based on story type
       action:
         type: file_operation
         operation: read
         content: |
           For ALL Stories:
-          - tech-stack.md
-          - unified-project-structure.md
-          - coding-standards.md
-          - testing-strategy.md
+          - tech-stack
+          - unified-project-structure
+          - coding-standards
+          - testing-strategy
           
           For Backend/API Stories, additionally:
-          - data-models.md
-          - database-schema.md
-          - backend-architecture.md
-          - rest-api-spec.md
-          - external-apis.md
+          - data-models
+          - database-schema
+          - {config.docs.architecture.backend}
+          - rest-api-spec
+          - external-apis
           
           For Frontend/UI Stories, additionally:
-          - frontend-architecture.md
-          - components.md
-          - core-workflows.md
-          - data-models.md
+          - {config.docs.architecture.frontend}
+          - components
+          - core-workflows
+          - data-models
           
           For Full-Stack Stories:
           - Read both Backend and Frontend sections
@@ -209,14 +209,14 @@ process:
           - Testing requirements specific to the story's features
           - Security or performance considerations affecting the story
           
-          ALWAYS cite source: [Source: architecture/<filename>.md#{section}]
+          ALWAYS cite source. Example: [Source: architecture/<filename>.md#{section}]
 
     - id: STRUCTURE-1
       title: Verify Project Structure Alignment
       description: Cross-reference with Project Structure Guide
       action:
         type: validation
-        target: "{config.docs.paths.docs.paths.architecture}/unified-project-structure.md"
+        target: "{config.docs.architecture.root}/*.md#unified-project-structure"
         content: |
           - Cross-reference story requirements with Project Structure Guide
           - Ensure file paths, component locations, module names align
@@ -242,22 +242,22 @@ process:
             previous_story_insights: "{previous_insights}"
             data_models:
               value: "{data_models}"
-              source: "architecture/<filename>.md#{section}"
+              source: "{config.docs.architecture.root}/*.md#{section}"
             api_specifications:
               value: "{api_specs}"
-              source: "architecture/<filename>.md#{section}"
+              source: "{config.docs.architecture.root}/*.md#{section}"
             component_specifications:
               value: "{component_specs}"
-              source: "architecture/<filename>.md#{section}"
+              source: "{config.docs.architecture.root}/*.md#{section}"
             file_locations:
               value: "{file_locations}"
-              source: "architecture/<filename>.md#{section}"
+              source: "{config.docs.architecture.root}/*.md#{section}"
             testing_requirements:
               value: "{testing_requirements}"
-              source: "architecture/<filename>.md#{section}"
+              source: "{config.docs.architecture.root}/*.md#{section}"
             technical_constraints:
               value: "{technical_constraints}"
-              source: "architecture/<filename>.md#{section}"
+              source: "{config.docs.architecture.root}/*.md#{section}"
             notes_missing_guidance: "If information for a category is not found in architecture docs, explicitly state: 'No specific guidance found in architecture docs'"
           tasks_subtasks: "{generated_tasks}"
           risk_mitigation:

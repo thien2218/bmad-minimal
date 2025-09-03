@@ -28,11 +28,11 @@ Create detailed, implementation-ready stories for brownfield projects where trad
 
 Check for available documentation in this order:
 
-1. **Sharded Architecture** ({config.docs.paths.architecture})
+1. **Sharded Architecture** ({config.docs.architecture.root})
 
    -  If found, recommend using create-next-story task instead
 
-2. **Brownfield Architecture Document** ({config.docs.files.architecture} or similar)
+2. **Brownfield Architecture Document** ({config.docs.architecture.brownfield} or similar)
 
    -  Created by document-project task
    -  Contains actual system state, technical debt, workarounds

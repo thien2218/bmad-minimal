@@ -30,7 +30,7 @@ outputs:
     - target: "{config.docs.files.prd}"
       sections: ["Requirements", "Scope", "Technical Constraints"]
       restrictions: Only as specified in approved change proposal
-    - target: "{config.docs.paths.architecture}*.md"
+    - target: "{config.docs.architecture.root}/*.md"
       sections: ["Components", "Diagrams", "Technology Stack"]
       restrictions: Only as specified in approved change proposal
 
@@ -39,7 +39,7 @@ prerequisites:
     - checklists/change-checklist.yaml
     - "{config.docs.files.prd}"
     - "{config.docs.paths.epics}/**"
-    - "{config.docs.paths.architecture}**"
+    - "{config.docs.architecture.root}/**"
 
 process:
   mode: sequential

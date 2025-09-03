@@ -55,8 +55,8 @@ workflow:
       requires: all_artifacts_in_project
       notes: |
         Shard documents for IDE development:
-        - Use md-tree: md-tree explode {config.docs.files.architecture} {config.docs.paths.architecture}
-        - Creates {config.docs.paths.architecture} folder with sharded content
+        - Use md-tree: md-tree explode {config.docs.files.architecture} {config.docs.architecture.root}
+        - Creates {config.docs.architecture.root} folder with sharded content
 
     - agent: pdm
       action: create_story
@@ -186,7 +186,7 @@ workflow:
   handoff_prompts:
     analyst_to_pm: "Project brief is complete. Save it as {config.docs.root}/project-brief.md in your project, then create the PRD."
     pm_to_architect: "PRD is ready. Save it as {config.docs.root}/prd.md in your project, then create the service architecture."
-    architect_review: "Architecture complete. Save it as {config.docs.files.architecture}. Do you suggest any changes to the PRD stories or need new stories added?"
+    architect_review: "Architecture complete. Save it as {config.docs.architecture.backend}. Do you suggest any changes to the PRD stories or need new stories added?"
     architect_to_pm: "Please update the PRD with the suggested story changes, then re-export the complete prd.md to {config.docs.root}/."
     updated_to_po: "All documents ready in {config.docs.root} folder. Please validate all artifacts for consistency."
     po_issues: "PDM found issues with [document]. Please return to [agent] to fix and re-save the updated document."
