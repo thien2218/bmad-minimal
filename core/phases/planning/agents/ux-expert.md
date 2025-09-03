@@ -8,7 +8,7 @@
 -  Activation: explicit load; greet/help then halt; preload only on explicit request
 -  Workflow: load dependencies only on command; follow dependency tasks literally; elicit=true requires exact-format input
 -  Rules: stay in character; present choices as numbered lists
--  Commands: help, create-front-end-spec, generate-ui-prompt, exit
+-  Commands: help, create-frontend-spec, generate-ui-prompt, exit
 
 ## INSTRUCTIONS_AND_RULES:JSON
 
@@ -88,9 +88,9 @@
 			"description": "Show numbered list of available commands"
 		},
 		{
-			"name": "create-front-end-spec",
+			"name": "create-frontend-spec",
 			"description": "Create front-end specification document",
-			"targets": ["templates/front-end-spec-tmpl.yaml"],
+			"targets": ["templates/frontend-spec-tmpl.yaml"],
 			"task": "tasks/create-doc.md"
 		},
 		{
@@ -129,7 +129,7 @@
 			"execute-checklist.md",
 			"generate-ai-frontend-prompt.md"
 		],
-		"templates": ["front-end-spec-tmpl.yaml"]
+		"templates": ["frontend-spec-tmpl.yaml"]
 	}
 }
 ```

@@ -25,17 +25,17 @@ workflow:
       notes: "Creates comprehensive PRD focused on UI enhancement with existing system analysis. SAVE OUTPUT: Copy final prd.md to your project's {config.docsLocation}/ folder."
 
     - agent: ux-expert
-      creates: front-end-spec.md
-      uses: front-end-spec-tmpl
+      creates: frontend-spec.md
+      uses: frontend-spec-tmpl
       requires: prd.md
-      notes: "Creates UI/UX specification that integrates with existing design patterns. SAVE OUTPUT: Copy final front-end-spec.md to your project's {config.docsLocation}/ folder."
+      notes: "Creates UI/UX specification that integrates with existing design patterns. SAVE OUTPUT: Copy final frontend-spec.md to your project's {config.docsLocation}/ folder."
 
     - agent: architect
       creates: architecture.md
       uses: brownfield-architecture-tmpl
       requires:
         - prd.md
-        - front-end-spec.md
+        - frontend-spec.md
       notes: "Creates frontend architecture with component integration strategy and migration planning. SAVE OUTPUT: Copy final architecture.md to your project's {config.docsLocation}/ folder."
 
     - agent: pdm
@@ -140,7 +140,7 @@ workflow:
     graph TD
         A[Start: UI Enhancement] --> B[analyst: analyze existing UI]
         B --> C[pm: prd.md]
-        C --> D[ux-expert: front-end-spec.md]
+        C --> D[ux-expert: frontend-spec.md]
         D --> E[architect: architecture.md]
         E --> F[pdm: validate with pd-master-checklist]
         F --> G{PDM finds issues?}
@@ -189,7 +189,7 @@ workflow:
   handoff_prompts:
     analyst_to_pm: "UI analysis complete. Create comprehensive PRD with UI integration strategy."
     pm_to_ux: "PRD ready. Save it as {config.docsLocation}/prd.md, then create the UI/UX specification."
-    ux_to_architect: "UI/UX spec complete. Save it as {config.docsLocation}/front-end-spec.md, then create the frontend architecture."
+    ux_to_architect: "UI/UX spec complete. Save it as {config.docsLocation}/frontend-spec.md, then create the frontend architecture."
     architect_to_po: "Architecture complete. Save it as {config.docsLocation}/architecture.md. Please validate all artifacts for UI integration safety."
     po_issues: "PDM found issues with [document]. Please return to [agent] to fix and re-save the updated document."
     complete: "All planning artifacts validated and saved in {config.docsLocation}/ folder. Move to IDE environment to begin development."
