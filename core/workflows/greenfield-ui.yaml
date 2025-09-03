@@ -19,19 +19,19 @@ workflow:
       optional_steps:
         - brainstorming_session
         - market_research_prompt
-      notes: "Can do brainstorming first, then optional deep research before creating project brief. SAVE OUTPUT: Copy final project-brief.md to your project's {config.docsLocation}/ folder."
+      notes: "Can do brainstorming first, then optional deep research before creating project brief. SAVE OUTPUT: Copy final project-brief.md to your project's {config.docs.root}/ folder."
 
     - agent: pm
       creates: prd.md
       requires: project-brief.md
-      notes: "Creates PRD from project brief using prd-tmpl, focused on UI/frontend requirements. SAVE OUTPUT: Copy final prd.md to your project's {config.docsLocation}/ folder."
+      notes: "Creates PRD from project brief using prd-tmpl, focused on UI/frontend requirements. SAVE OUTPUT: Copy final prd.md to your project's {config.docs.root}/ folder."
 
     - agent: ux-expert
       creates: frontend-spec.md
       requires: prd.md
       optional_steps:
         - user_research_prompt
-      notes: "Creates UI/UX specification using frontend-spec-tmpl. SAVE OUTPUT: Copy final frontend-spec.md to your project's {config.docsLocation}/ folder."
+      notes: "Creates UI/UX specification using frontend-spec-tmpl. SAVE OUTPUT: Copy final frontend-spec.md to your project's {config.docs.root}/ folder."
 
     - agent: ux-expert
       creates: v0_prompt (optional)
@@ -40,18 +40,18 @@ workflow:
       notes: "OPTIONAL BUT RECOMMENDED: Generate AI UI prompt for tools like v0, Lovable, etc. Use the generate-ai-frontend-prompt task. User can then generate UI in external tool and download project structure."
 
     - agent: architect
-      creates: front-end-architecture.md
+      creates: frontend-architecture.md
       requires: frontend-spec.md
       optional_steps:
         - technical_research_prompt
         - review_generated_ui_structure
-      notes: "Creates frontend architecture using front-end-architecture-tmpl. If user generated UI with v0/Lovable, can incorporate the project structure into architecture. May suggest changes to PRD stories or new stories. SAVE OUTPUT: Copy final front-end-architecture.md to your project's {config.docsLocation}/ folder."
+      notes: "Creates frontend architecture using frontend-architecture-tmpl. If user generated UI with v0/Lovable, can incorporate the project structure into architecture. May suggest changes to PRD stories or new stories. SAVE OUTPUT: Copy final frontend-architecture.md to your project's {config.docs.root}/ folder."
 
     - agent: pm
       updates: prd.md (if needed)
-      requires: front-end-architecture.md
+      requires: frontend-architecture.md
       condition: architecture_suggests_prd_changes
-      notes: "If architect suggests story changes, update PRD and re-export the complete unredacted prd.md to {config.docsLocation}/ folder."
+      notes: "If architect suggests story changes, update PRD and re-export the complete unredacted prd.md to {config.docs.root}/ folder."
 
     - agent: pdm
       validates: all_artifacts
@@ -61,7 +61,7 @@ workflow:
     - agent: various
       updates: any_flagged_documents
       condition: po_checklist_issues
-      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {config.docsLocation}/ folder."
+      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {config.docs.root}/ folder."
 
     - project_setup_guidance:
       action: guide_project_structure
@@ -74,8 +74,8 @@ workflow:
       requires: all_artifacts_in_project
       notes: |
         Shard documents for IDE development:
-        - Use md-tree: md-tree explode {config.docsLocation}/architecture.md {config.docsLocation}/architecture
-        - Creates {config.docsLocation}/architecture/ folder with sharded content
+        - Use md-tree: md-tree explode {config.docs.root}/architecture.md {config.docs.root}/architecture
+        - Creates {config.docs.root}/architecture/ folder with sharded content
 
     - agent: pdm
       action: create_story
@@ -163,7 +163,7 @@ workflow:
         C --> D[ux-expert: frontend-spec.md]
         D --> D2{Generate v0 prompt?}
         D2 -->|Yes| D3[ux-expert: create v0 prompt]
-        D2 -->|No| E[architect: front-end-architecture.md]
+        D2 -->|No| E[architect: frontend-architecture.md]
         D3 --> D4[User: generate UI in v0/Lovable]
         D4 --> E
         E --> F{Architecture suggests PRD changes?}
@@ -223,11 +223,11 @@ workflow:
       - Customer-facing applications
 
   handoff_prompts:
-    analyst_to_pm: "Project brief is complete. Save it as {config.docsLocation}/project-brief.md in your project, then create the PRD."
-    pm_to_ux: "PRD is ready. Save it as {config.docsLocation}/prd.md in your project, then create the UI/UX specification."
-    ux_to_architect: "UI/UX spec complete. Save it as {config.docsLocation}/frontend-spec.md in your project, then create the frontend architecture."
-    architect_review: "Frontend architecture complete. Save it as {config.docsLocation}/front-end-architecture.md. Do you suggest any changes to the PRD stories or need new stories added?"
-    architect_to_pm: "Please update the PRD with the suggested story changes, then re-export the complete prd.md to {config.docsLocation}/."
-    updated_to_po: "All documents ready in {config.docsLocation}/ folder. Please validate all artifacts for consistency."
+    analyst_to_pm: "Project brief is complete. Save it as {config.docs.root}/project-brief.md in your project, then create the PRD."
+    pm_to_ux: "PRD is ready. Save it as {config.docs.root}/prd.md in your project, then create the UI/UX specification."
+    ux_to_architect: "UI/UX spec complete. Save it as {config.docs.files.frontendSpec} in your project, then create the frontend architecture."
+    architect_review: "Frontend architecture complete. Save it as {config.docs.root}/frontend-architecture.md. Do you suggest any changes to the PRD stories or need new stories added?"
+    architect_to_pm: "Please update the PRD with the suggested story changes, then re-export the complete prd.md to {config.docs.root}/."
+    updated_to_po: "All documents ready in {config.docs.root}/ folder. Please validate all artifacts for consistency."
     po_issues: "PDM found issues with [document]. Please return to [agent] to fix and re-save the updated document."
-    complete: "All planning artifacts validated and saved in {config.docsLocation}/ folder. Move to IDE environment to begin development."
+    complete: "All planning artifacts validated and saved in {config.docs.root}/ folder. Move to IDE environment to begin development."

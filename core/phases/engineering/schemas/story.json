@@ -5,7 +5,7 @@
 		"version": "2.0",
 		"output": {
 			"format": "json",
-			"filename": "{config.storiesLocation}/{{epic_num}}.{{story_num}}.{{story_title_short}}.json",
+			"filename": "{config.docs.paths.stories}/{{epic_num}}.{{story_num}}.{{story_title_short}}.json",
 			"title": "Story {{epic_num}}.{{story_num}}: {{story_title_short}}"
 		}
 	},

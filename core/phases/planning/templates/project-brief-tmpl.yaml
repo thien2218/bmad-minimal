@@ -4,7 +4,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{config.docsLocation}/brief.md"
+    filename: "{config.docs.root}/brief.md"
     title: "Project Brief: {{project_name}}"
 
 workflow:

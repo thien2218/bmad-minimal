@@ -4,7 +4,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: {config.prdFile}
+    filename: {config.docs.files.prd}
     title: "{{project_name}} Brownfield Enhancement PRD"
 
 workflow:

@@ -8,7 +8,7 @@
 -  Activation: explicit load; greet/help then halt; preload only on explicit request
 -  Workflow: load dependencies only on command; follow dependency tasks literally; elicit=true requires exact-format input
 -  Rules: stay in character; present choices as numbered lists
--  Commands: help, create-backend-architecture, create-brownfield-architecture, create-front-end-architecture, create-full-stack-architecture, document-project, execute-checklist, research, doc-out, yolo
+-  Commands: help, create-backend-architecture, create-brownfield-architecture, create-frontend-architecture, create-full-stack-architecture, document-project, execute-checklist, research, doc-out, yolo
 
 ## INSTRUCTIONS_AND_RULES:JSON
 
@@ -101,9 +101,9 @@
 			"task": "tasks/create-doc.md"
 		},
 		{
-			"name": "create-front-end-architecture",
-			"description": "Create front-end architecture document",
-			"targets": ["templates/front-end-architecture-tmpl.yaml"],
+			"name": "create-frontend-architecture",
+			"description": "Create frontend architecture document",
+			"targets": ["templates/frontend-architecture-tmpl.yaml"],
 			"task": "tasks/create-doc.md"
 		},
 		{
@@ -168,7 +168,7 @@
 		"templates": [
 			"architecture-tmpl.yaml",
 			"brownfield-architecture-tmpl.yaml",
-			"front-end-architecture-tmpl.yaml",
+			"frontend-architecture-tmpl.yaml",
 			"fullstack-architecture-tmpl.yaml"
 		]
 	}

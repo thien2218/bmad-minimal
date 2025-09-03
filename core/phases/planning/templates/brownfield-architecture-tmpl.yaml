@@ -4,7 +4,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{config.architecture.file}"
+    filename: "{config.docs.files.architecture}"
     title: "{{project_name}} Brownfield Enhancement Architecture"
 
 workflow:

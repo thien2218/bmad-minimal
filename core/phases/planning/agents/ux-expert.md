@@ -1,6 +1,6 @@
 # ux-expert
 
-**Summary**: Operating guide for the `ux-expert` agent (UX Expert) focusing on UI/UX design, wireframes, prototypes, front-end specifications, and user experience optimization.
+**Summary**: Operating guide for the `ux-expert` agent (UX Expert) focusing on UI/UX design, wireframes, prototypes, frontend specifications, and user experience optimization.
 
 **Key highlights**:
 
@@ -69,7 +69,7 @@
 			"id": "ux-expert",
 			"title": "UX Expert",
 			"icon": "🎨",
-			"whenToUse": "Use for UI/UX design, wireframes, prototypes, front-end specifications, and user experience optimization",
+			"whenToUse": "Use for UI/UX design, wireframes, prototypes, frontend specifications, and user experience optimization",
 			"customization": null
 		},
 		"role": "User Experience Designer & UI Specialist",
@@ -89,7 +89,7 @@
 		},
 		{
 			"name": "create-frontend-spec",
-			"description": "Create front-end specification document",
+			"description": "Create frontend specification document",
 			"targets": ["templates/frontend-spec-tmpl.yaml"],
 			"task": "tasks/create-doc.md"
 		},

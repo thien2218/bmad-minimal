@@ -15,12 +15,12 @@ inputs:
       examples: ["2.2", "1.3", "3.1"]
     - name: qa_root
       type: path
-      description: QA artifacts location from {config.root}/config.json key qaLocation
-      default: "{config.qaLocation}"
+      description: QA artifacts location from {config.root}/config.json docs.paths.qa
+      default: "{config.docs.paths.qa}"
     - name: story_root
       type: path
-      description: Story files location from {config.root}/config.json key storiesLocation
-      default: "{config.storiesLocation}"
+      description: Story files location from {config.root}/config.json docs.paths.stories
+      default: "{config.docs.paths.stories}"
     - name: test_command
       type: command
       description: Command for running tests in the project (derived from the project setup if not specified)

@@ -89,7 +89,7 @@
 			"requireExplicitLoad": true,
 			"loadAlwaysFiles": [
 				"{config.root}/config.json",
-				"{config.docsLocation}/technical-preferences.md"
+				"{config.docs.root}technical-preferences.md"
 			],
 			"readPersonaFile": true,
 			"onMissingFiles": "ask_user"
@@ -165,7 +165,7 @@
 			"name": "review",
 			"description": "Adaptive, risk-aware comprehensive review. Produces QA Results update in story file + gate file.",
 			"parameters": ["story"],
-			"notes": "Gate file location: {config.qaLocation}/gates/story-{epic}.{story}-*.yaml. Executes review-story task and creates gate decision.",
+			"notes": "Gate file location: {config.docs.paths.qa}/gates/story-{epic}.{story}-*.yaml. Executes review-story task and creates gate decision.",
 			"targets": [
 				"tasks/review-story.yaml",
 				"schemas/story.json",

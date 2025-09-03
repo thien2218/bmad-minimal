@@ -24,22 +24,22 @@ inputs:
 
 outputs:
   updates:
-    - target: "{config.epicsLocation}/*.yaml"
+    - target: "{config.docs.paths.epics}/*.yaml"
       sections: ["User Stories", "Acceptance Criteria", "Priority"]
       restrictions: Only as specified in approved change proposal
-    - target: "{config.prd.shardedLocation}/*.md"
+    - target: "{config.docs.files.prd}"
       sections: ["Requirements", "Scope", "Technical Constraints"]
       restrictions: Only as specified in approved change proposal
-    - target: "{config.architecture.shardedLocation}/*.md"
+    - target: "{config.docs.paths.architecture}/*.md"
       sections: ["Components", "Diagrams", "Technology Stack"]
       restrictions: Only as specified in approved change proposal
 
 prerequisites:
   files:
     - checklists/change-checklist.yaml
-    - "{config.prd.shardedLocation}/**"
-    - "{config.epicsLocation}/**"
-    - "{config.architecture.shardedLocation}/**"
+    - "{config.docs.files.prd}"
+    - "{config.docs.paths.epics}/**"
+    - "{config.docs.paths.architecture}/**"
 
 process:
   mode: sequential

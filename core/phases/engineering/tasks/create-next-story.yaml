@@ -21,19 +21,19 @@ outputs:
   artifacts:
     - name: Story File
       type: file
-      path: "{config.storiesLocation}/story-{epic}.{story}-*.yaml"
+      path: "{config.docs.paths.stories}/story-{epic}.{story}-*.yaml"
       format: yaml
       description: Complete story ready for development with full technical context
   updates:
-    - target: "{config.storiesLocation}/*.yaml"
+    - target: "{config.docs.paths.stories}/*.yaml"
       sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
       restrictions: Only create new story, do not modify existing stories
 
 prerequisites:
   files:
     - "{config.root}/config.json"
-    - "{config.prd.shardedLocation}/**"
-    - "{config.architecture.shardedLocation}/**"
+    - "{config.docs.files.prd}"
+    - "{config.docs.paths.architecture}/**"
   commands:
     - command: "test -f config.json"
       expected_exit_code: 0
@@ -60,7 +60,7 @@ process:
         type: validation
         content: |
           Extract and validate:
-          - storiesLocation
+          - docs.paths.stories
           - prd.* settings
           - architecture.* settings
           - workflow.* settings
@@ -79,7 +79,7 @@ process:
         content: |
           Based on prdSharded from config:
           - Locate epic files (sharded location/pattern or monolithic PRD sections)
-          - If storiesLocation has story files, load highest story-{epic}.{story}-*.yaml
+          - If docs.paths.stories has story files, load highest story-{epic}.{story}-*.yaml
           - Determine next sequential story
 
     - id: IDENTIFY-2
@@ -130,7 +130,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{config.epicsLocation}/epic-{epic}-*.yaml"
+        target: "{config.docs.paths.epics}/epic-{epic}-*.yaml"
         content: |
           Extract:
           - Story title and description
@@ -143,7 +143,7 @@ process:
       description: If previous story exists, extract lessons learned
       action:
         type: analysis
-        target: "{config.storiesLocation}/{previousEpicNum}.{previousStoryNum}-*.yaml"
+        target: "{config.docs.paths.stories}/{previousEpicNum}.{previousStoryNum}-*.yaml"
         content: |
           Review Dev Agent Record sections for:
           - Completion Notes and Debug Log References
@@ -160,7 +160,7 @@ process:
       action:
         type: decision
         content: |
-          Read {config.architecture.shardedLocation}/*.md
+          Read {config.docs.paths.architecture}/*.md
           Follow structured reading order
 
     - id: ARCH-2
@@ -216,7 +216,7 @@ process:
       description: Cross-reference with Project Structure Guide
       action:
         type: validation
-        target: "{config.architecture.shardedLocation}/unified-project-structure.md"
+        target: "{config.docs.paths.docs.paths.architecture}/unified-project-structure.md"
         content: |
           - Cross-reference story requirements with Project Structure Guide
           - Ensure file paths, component locations, module names align
@@ -228,7 +228,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{config.storiesLocation}/story-{epic}.{story}-*.yaml"
+        target: "{config.docs.paths.stories}/story-{epic}.{story}-*.yaml"
         content: |
           story:
             id: "{epic}.{story}"
@@ -328,7 +328,7 @@ process:
       action:
         type: elicit
         prompt: |
-          Story created: {config.storiesLocation}/story-{epic}.{story}-*.yaml
+          Story created: {config.docs.paths.stories}/story-{epic}.{story}-*.yaml
           Status: Draft
           
           Key technical components included from architecture docs:

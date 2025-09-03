@@ -1,29 +1,20 @@
 {
 	"root": "bmad-minimal/.core/",
-	"docsLocation": "docs/",
-	"prdFile": "{docsLocation}/prd.md",
-	"architecture": {
-		"file": "{docsLocation}/architecture.md",
-		"shardedLocation": "{docsLocation}/architecture/"
-	},
 	"customTechnicalDocuments": null,
-	"qaLocation": "{docsLocation}/qa/",
-	"epicsLocation": "{docsLocation}/epics/",
-	"storiesLocation": "{docsLocation}/stories/",
 	"docs": {
 		"root": "docs/",
-		"directories": {
-			"architecture": "architecture/",
-			"qa": "qa/",
-			"epics": "epics/",
-			"stories": "stories/",
-			"frontend_architecture": "frontend-architecture/"
+		"paths": {
+			"architecture": "architecture",
+			"qa": "qa",
+			"epics": "epics",
+			"stories": "stories",
+			"feArchitecture": "frontend-architecture"
 		},
 		"files": {
 			"prd": "prd.md",
 			"architecture": "architecture.md",
-			"frontend_specs": "frontend-spec.md",
-			"frontend_architecture": "frontend-architecture.md"
+			"feSpecs": "frontend-spec.md",
+			"feArchitecture": "frontend-architecture.md"
 		}
 	}
 }

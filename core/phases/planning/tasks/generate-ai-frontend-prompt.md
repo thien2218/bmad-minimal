@@ -9,7 +9,7 @@ To generate a masterful, comprehensive, and optimized prompt that can be used wi
 ## Inputs
 
 -  Completed UI/UX Specification (`frontend-spec.md`)
--  Completed Frontend Architecture Document (`front-end-architecture`) or a full stack combined architecture such as `architecture.md`
+-  Completed Frontend Architecture Document (`frontend-architecture`) or a full stack combined architecture such as `architecture.md`
 -  Main System Architecture Document (`architecture` - for API contracts and tech stack to give further context)
 
 ## Key Activities & Instructions

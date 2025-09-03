@@ -4,7 +4,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{config.docsLocation}/frontend-spec.md"
+    filename: "{config.docs.files.frontendSpec}"
     title: "{{project_name}} UI/UX Specification"
 
 workflow:
@@ -166,7 +166,7 @@ sections:
   - id: component-library
     title: Component Library / Design System
     instruction: |
-      Discuss whether to use an existing design system or create a new one. If creating new, identify foundational components and their key states. Note that detailed technical specs belong in front-end-architecture.
+      Discuss whether to use an existing design system or create a new one. If creating new, identify foundational components and their key states. Note that detailed technical specs belong in frontend-architecture.
     elicit: true
     sections:
       - id: design-system-approach
