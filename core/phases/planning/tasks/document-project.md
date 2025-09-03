@@ -293,11 +293,11 @@ Based on the enhancement requirements, these files will be affected:
 1. **In Web UI (Gemini, ChatGPT, Claude)**:
 
    -  Present the entire document in one response (or multiple if too long)
-   -  Tell user to copy and save as `{config.docs.root}/brownfield-architecture.md` or `{config.docs.root}/project-architecture.md`
+   -  Tell user to copy and save as `{config.docs.files.architecture}`
    -  Mention it can be sharded later in IDE if needed
 
 2. **In IDE Environment**:
-   -  Create the document as `{config.docs.root}/brownfield-architecture.md`
+   -  Create the document as `{config.docs.files.architecture}`
    -  Inform user this single document contains all architectural information
    -  Can be sharded later using PDM agent if desired
 

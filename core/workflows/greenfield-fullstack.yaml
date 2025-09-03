@@ -39,18 +39,18 @@ workflow:
       notes: "OPTIONAL BUT RECOMMENDED: Generate AI UI prompt for tools like v0, Lovable, etc. Use the generate-ai-frontend-prompt task. User can then generate UI in external tool and download project structure."
 
     - agent: architect
-      creates: fullstack-architecture.md
+      creates: architecture.md
       requires:
         - prd.md
         - frontend-spec.md
       optional_steps:
         - technical_research_prompt
         - review_generated_ui_structure
-      notes: "Creates comprehensive architecture using fullstack-architecture-tmpl. If user generated UI with v0/Lovable, can incorporate the project structure into architecture. May suggest changes to PRD stories or new stories. SAVE OUTPUT: Copy final fullstack-architecture.md to your project's {config.docs.root} folder."
+      notes: "Creates comprehensive architecture using fullstack-architecture-tmpl. If user generated UI with v0/Lovable, can incorporate the project structure into architecture. May suggest changes to PRD stories or new stories. SAVE OUTPUT: Copy final architecture.md to your project's {config.docs.root} folder."
 
     - agent: pm
       updates: prd.md (if needed)
-      requires: fullstack-architecture.md
+      requires: architecture.md
       condition: architecture_suggests_prd_changes
       notes: "If architect suggests story changes, update PRD and re-export the complete unredacted prd.md to {config.docs.root} folder."
 
@@ -169,7 +169,7 @@ workflow:
         C --> D[ux-expert: frontend-spec.md]
         D --> D2{Generate v0 prompt?}
         D2 -->|Yes| D3[ux-expert: create v0 prompt]
-        D2 -->|No| E[architect: fullstack-architecture.md]
+        D2 -->|No| E[architect: architecture.md]
         D3 --> D4[User: generate UI in v0/Lovable]
         D4 --> E
         E --> F{Architecture suggests PRD changes?}
@@ -218,7 +218,7 @@ workflow:
     analyst_to_pm: "Project brief is complete. Save it as {config.docs.root}/project-brief.md in your project, then create the PRD."
     pm_to_ux: "PRD is ready. Save it as {config.docs.root}/prd.md in your project, then create the UI/UX specification."
     ux_to_architect: "UI/UX spec complete. Save it as {config.docs.files.frontendSpec} in your project, then create the fullstack architecture."
-    architect_review: "Architecture complete. Save it as {config.docs.root}/fullstack-architecture.md. Do you suggest any changes to the PRD stories or need new stories added?"
+    architect_review: "Architecture complete. Save it as {config.docs.files.architecture}. Do you suggest any changes to the PRD stories or need new stories added?"
     architect_to_pm: "Please update the PRD with the suggested story changes, then re-export the complete prd.md to {config.docs.root}/."
     updated_to_po: "All documents ready in {config.docs.root} folder. Please validate all artifacts for consistency."
     po_issues: "PDM found issues with [document]. Please return to [agent] to fix and re-save the updated document."

@@ -32,7 +32,7 @@ Check for available documentation in this order:
 
    -  If found, recommend using create-next-story task instead
 
-2. **Brownfield Architecture Document** ({config.docs.root}/brownfield-architecture.md or similar)
+2. **Brownfield Architecture Document** ({config.docs.files.architecture} or similar)
 
    -  Created by document-project task
    -  Contains actual system state, technical debt, workarounds
@@ -77,7 +77,7 @@ If any required information is missing, list the missing information and ask the
 
 #### 2.1 From Document-Project Output
 
-If using brownfield-architecture.md from document-project:
+If using architecture.md from document-project:
 
 -  **Technical Debt Section**: Note any workarounds affecting this story
 -  **Key Files Section**: Identify files that will need modification

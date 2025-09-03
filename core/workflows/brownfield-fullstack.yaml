@@ -52,7 +52,7 @@ workflow:
     - step: project_analysis
       agent: architect
       action: analyze existing project and use task document-project
-      creates: brownfield-architecture.md (or multiple documents)
+      creates: architecture.md (or multiple documents)
       condition: documentation_inadequate
       notes: "Run document-project to capture current system state, technical debt, and constraints. Pass findings to PRD creation."
 

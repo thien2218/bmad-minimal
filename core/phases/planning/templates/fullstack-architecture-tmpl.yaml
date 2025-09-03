@@ -555,7 +555,7 @@ sections:
         ├── docs/                       # Documentation
         │   ├── prd.md
         │   ├── frontend-spec.md
-        │   └── fullstack-architecture.md
+        │   └── architecture.md
         ├── .env.example                # Environment template
         ├── package.json                # Root package.json
         ├── {{monorepo_config}}         # Monorepo configuration
