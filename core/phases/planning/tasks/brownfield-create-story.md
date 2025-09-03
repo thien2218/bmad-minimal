@@ -78,9 +78,17 @@ So that {{clear benefit/value}}.
 2. {{Secondary functional requirement (if any)}}
 3. {{Integration requirement}}
 
-**Integration Requirements:** 4. Existing {{relevant functionality}} continues to work unchanged 5. New functionality follows existing {{pattern}} pattern 6. Integration with {{system/component}} maintains current behavior
+**Integration Requirements:**
 
-**Quality Requirements:** 7. Change is covered by appropriate tests 8. Documentation is updated if needed 9. No regression in existing functionality verified
+4. Existing {{relevant functionality}} continues to work unchanged
+5. New functionality follows existing {{pattern}} pattern
+6. Integration with {{system/component}} maintains current behavior
+
+**Quality Requirements:**
+
+7. Change is covered by appropriate tests
+8. Documentation is updated if needed
+9. No regression in existing functionality verified
 
 #### Technical Notes
 

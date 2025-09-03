@@ -102,7 +102,7 @@ workflow:
       notes: |
         Story creation cycle:
         - For architecture docs: @pdm → *create (uses create-next-story)
-        - For brownfield docs: @pdm → use create-brownfield-story task
+        - For brownfield docs: @pm → use brownfield-create-story task
         - Creates story from available documentation
         - Story starts in "Draft" status
         - May require additional context gathering for brownfield
@@ -204,7 +204,7 @@ workflow:
         
         P --> Q{Story Type?}
         Q -->|Architecture Docs| R[create-next-story]
-        Q -->|Brownfield Docs| S[create-brownfield-story]
+        Q -->|Brownfield Docs| S[brownfield-create-story]
         
         R --> T{Review draft?}
         S --> T
@@ -263,7 +263,7 @@ workflow:
       All artifacts validated. 
       Documentation type available: architecture docs or brownfield docs
       If architecture docs: Use standard create-next-story task.
-      {{if brownfield}}: Use create-brownfield-story task to handle varied documentation formats.
+      {{if brownfield}}: Use brownfield-create-story task to handle varied documentation formats.
     
     sm_story_creation: |
       Creating story from {{documentation_type}}.
