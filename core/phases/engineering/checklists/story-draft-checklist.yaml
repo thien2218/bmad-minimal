@@ -110,7 +110,7 @@ items:
       type: manual
       instructions: Check relevance of each reference is explained
   - id: REF-004
-    text: References use consistent format (e.g., {@docs.root}/<filename>.md#section)
+    text: References use consistent format (e.g., {@docs.root}/<file_name>.md#section)
     required: true
     category: documentation
     verification:

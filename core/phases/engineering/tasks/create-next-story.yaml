@@ -160,7 +160,7 @@ process:
       action:
         type: decision
         content: |
-          Read {@docs.architecture.root}*.md
+          Read {@docs.architecture.root}/*.md
           Follow structured reading order
 
     - id: ARCH-2
@@ -179,12 +179,12 @@ process:
           For Backend/API Stories, additionally:
           - data-models
           - database-schema
-          - {@docs.architecture.backend}
+          - {@docs.architecture.files.backend} file
           - rest-api-spec
           - external-apis
           
           For Frontend/UI Stories, additionally:
-          - {@docs.architecture.frontend}
+          - {@docs.architecture.files.frontend} file
           - components
           - core-workflows
           - data-models
@@ -209,7 +209,7 @@ process:
           - Testing requirements specific to the story's features
           - Security or performance considerations affecting the story
           
-          ALWAYS cite source. Example: [Source: architecture/<filename>.md#{section}]
+          ALWAYS cite source. Example: [Source: architecture/<file_name>.md#{section}]
 
     - id: STRUCTURE-1
       title: Verify Project Structure Alignment
@@ -242,22 +242,22 @@ process:
             previous_story_insights: "{previous_insights}"
             data_models:
               value: "{data_models}"
-              source: "{@docs.architecture.root}/*.md#{section}"
+              source: "{@docs.architecture.root}/<file_name>.md#{section}"
             api_specifications:
               value: "{api_specs}"
-              source: "{@docs.architecture.root}/*.md#{section}"
+              source: "{@docs.architecture.root}/<file_name>.md#{section}"
             component_specifications:
               value: "{component_specs}"
-              source: "{@docs.architecture.root}/*.md#{section}"
+              source: "{@docs.architecture.root}/<file_name>.md#{section}"
             file_locations:
               value: "{file_locations}"
-              source: "{@docs.architecture.root}/*.md#{section}"
+              source: "{@docs.architecture.root}/<file_name>.md#{section}"
             testing_requirements:
               value: "{testing_requirements}"
-              source: "{@docs.architecture.root}/*.md#{section}"
+              source: "{@docs.architecture.root}/<file_name>.md#{section}"
             technical_constraints:
               value: "{technical_constraints}"
-              source: "{@docs.architecture.root}/*.md#{section}"
+              source: "{@docs.architecture.root}/<file_name>.md#{section}"
             notes_missing_guidance: "If information for a category is not found in architecture docs, explicitly state: 'No specific guidance found in architecture docs'"
           tasks_subtasks: "{generated_tasks}"
           risk_mitigation:

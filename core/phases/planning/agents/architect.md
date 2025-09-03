@@ -91,7 +91,7 @@
 		{
 			"name": "create-backend-architecture",
 			"description": "Create backend architecture document",
-			"targets": ["templates/architecture-tmpl.yaml"],
+			"targets": ["templates/backend-architecture-tmpl.yaml"],
 			"task": "tasks/create-doc.md"
 		},
 		{
@@ -180,7 +180,7 @@
 			"execute-checklist.md"
 		],
 		"templates": [
-			"architecture-tmpl.yaml",
+			"backend-architecture-tmpl.yaml",
 			"brownfield-architecture-tmpl.yaml",
 			"frontend-architecture-tmpl.yaml",
 			"fullstack-architecture-tmpl.yaml"

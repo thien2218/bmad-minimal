@@ -31,7 +31,7 @@ workflow:
       requires: prd.md
       optional_steps:
         - technical_research_prompt
-      notes: "Creates backend/service architecture using architecture-tmpl. May suggest changes to PRD stories or new stories. SAVE OUTPUT: Copy final architecture.md to your project's {@docs.root} folder."
+      notes: "Creates backend/service architecture using backend-architecture-tmpl. May suggest changes to PRD stories or new stories. SAVE OUTPUT: Copy final architecture.md to your project's {@docs.root} folder."
 
     - agent: pm
       updates: prd.md (if needed)
@@ -177,7 +177,7 @@ workflow:
   handoff_prompts:
     analyst_to_pm: "Project brief is complete. Save it as {@docs.root}/project-brief.md in your project, then create the PRD."
     pm_to_architect: "PRD is ready. Save it as {@docs.files.prd} in your project, then create the service architecture."
-    architect_review: "Architecture complete. Save it as {@docs.architecture.backend}. Do you suggest any changes to the PRD stories or need new stories added?"
+    architect_review: "Architecture complete. Save it as {@docs.architecture.files.backend}. Do you suggest any changes to the PRD stories or need new stories added?"
     architect_to_pm: "Please update the PRD with the suggested story changes, then re-export the complete prd.md to {@docs.root}/."
     updated_to_po: "All documents ready in {@docs.root} folder. Please validate all artifacts for consistency."
     po_issues: "PDM found issues with [document]. Please return to [agent] to fix and re-save the updated document."
