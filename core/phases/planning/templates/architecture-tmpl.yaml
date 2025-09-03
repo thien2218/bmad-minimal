@@ -633,7 +633,7 @@ sections:
       - Provide this document as input
 
       2. For all projects:
-      - Review with Product Owner
+      - Review with Product Development Master
       - Begin story implementation with Dev agent
       - Set up infrastructure with DevOps agent
 

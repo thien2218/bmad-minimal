@@ -252,12 +252,12 @@ workflow:
       Use these findings to inform PRD creation and avoid re-analyzing the same aspects.
     
     pm_to_architect_decision: |
-      PRD complete and saved as {@docs.root}/prd.md. 
+      PRD complete and saved as {@docs.files.prd}. 
       Architectural changes identified: {{yes/no}}
       {{if yes}}: Proceeding to create architecture document for: {{specific_changes}}
       {{if no}}: No architectural changes needed. Proceeding to validation.
     
-    architect_to_po: "Architecture complete. Save it as {@docs.architecture.brownfield}. Please validate all artifacts for integration safety."
+    architect_to_po: "Architecture complete. Save it as {@docs.architecture.fullstack}. Please validate all artifacts for integration safety."
     
     po_to_sm: |
       All artifacts validated. 

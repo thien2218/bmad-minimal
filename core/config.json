@@ -1,8 +1,8 @@
 {
-	"root": "bmad-minimal/.core/",
+	"root": "bmad-minimal/.core",
 	"customTechnicalDocuments": null,
 	"docs": {
-		"root": "docs/",
+		"root": "docs",
 		"paths": {
 			"qa": "qa",
 			"epics": "epics",
@@ -14,12 +14,11 @@
 			"techPreferences": "technical-preferences.md"
 		},
 		"architecture": {
-			"root": "architecture/",
+			"root": "architecture",
 			"files": {
 				"frontend": "frontend.md",
 				"backend": "backend.md",
-				"fullstack": "fullstack.md",
-				"brownfield": "brownfield.md"
+				"fullstack": "fullstack.md"
 			}
 		}
 	}

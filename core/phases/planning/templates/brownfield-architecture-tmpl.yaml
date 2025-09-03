@@ -4,7 +4,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{@docs.architecture.brownfield}"
+    filename: "{@docs.architecture.root}"
     title: "{{project_name}} Brownfield Enhancement Architecture"
 
 workflow:
@@ -19,10 +19,10 @@ sections:
 
       This architecture document is for SIGNIFICANT enhancements to existing projects that require comprehensive architectural planning. Before proceeding:
 
-      1. **Verify Complexity**: Confirm this enhancement requires architectural planning. For simple additions, recommend: "For simpler changes that don't require architectural planning, consider using the brownfield-create-epic or brownfield-create-story task with the Product Owner instead."
+      1. **Verify Complexity**: Confirm this enhancement requires architectural planning. For simple additions, recommend: "For simpler changes that don't require architectural planning, consider using the brownfield-create-epic or brownfield-create-story task with the Product Development Master instead."
 
       2. **REQUIRED INPUTS**:
-         - Completed brownfield-prd.md
+         - Completed {@docs.files.prd}
          - Existing project technical documentation (from docs folder or user-provided)
          - Access to existing project structure (IDE or uploaded files)
 

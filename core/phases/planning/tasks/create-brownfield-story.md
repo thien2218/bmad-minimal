@@ -32,7 +32,7 @@ Check for available documentation in this order:
 
    -  If found, recommend using create-next-story task instead
 
-2. **Brownfield Architecture Document** ({@docs.architecture.brownfield} or similar)
+2. **Brownfield Architecture Document** ({@docs.architecture.root} or similar)
 
    -  Created by document-project task
    -  Contains actual system state, technical debt, workarounds

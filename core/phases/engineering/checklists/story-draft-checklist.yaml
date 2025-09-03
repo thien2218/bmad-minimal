@@ -2,7 +2,7 @@ $schema: ../../../internal/checklist.schema.json
 id: story-draft-checklist
 title: Story Draft Checklist
 version: 1.0.0
-description: The Project Development Master (PDM) should use this checklist to validate that each story contains sufficient context for a developer agent to implement it successfully, while assuming the dev agent has reasonable capabilities to figure things out.
+description: The Product Development Master (PDM) should use this checklist to validate that each story contains sufficient context for a developer agent to implement it successfully, while assuming the dev agent has reasonable capabilities to figure things out.
 category: planning
 scope: story
 items:

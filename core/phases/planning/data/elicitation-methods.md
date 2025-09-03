@@ -73,8 +73,8 @@
 **Agile Team Perspective Shift**
 
 -  Rotate through different Scrum team member viewpoints
--  Project Development Master (PDM) - Value: Focus on user value and business impact
--  Project Development Master (PDM) - Process: Examine process flow and team dynamics
+-  Product Development Master (PDM) - Value: Focus on user value and business impact
+-  Product Development Master (PDM) - Process: Examine process flow and team dynamics
 -  Developer: Assess technical implementation and complexity
 -  QA: Identify testing scenarios and quality concerns
 
