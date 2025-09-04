@@ -6,7 +6,8 @@
 		"paths": {
 			"qa": "qa",
 			"epics": "epics",
-			"stories": "stories"
+			"stories": "stories",
+			"changelog": "changelog"
 		},
 		"files": {
 			"prd": "prd.md",

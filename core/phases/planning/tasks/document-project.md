@@ -286,7 +286,7 @@ Based on the enhancement requirements, these files will be affected:
 
 -  **Logs**: Check `logs/app.log` for application logs
 -  **Debug Mode**: Set `DEBUG=app:*` for verbose logging
--  **Common Issues**: See `{@docs.root}/troubleshooting.md`
+-  **Common Issues**: See `{@docs.root}/troubleshooting.md`. Create one if doens't exist
 
 ### 4. Document Delivery
 

@@ -4,7 +4,13 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{@docs.architecture.root}"
+    filename: |
+      If project is a UI project, then:
+        {@docs.files.fe_architecture}
+      If project is a backend/system related project, then:
+        {@docs.files.be_architecture}
+      Else:
+        {@docs.files.fs_architecture}
     title: "{{project_name}} Brownfield Enhancement Architecture"
 
 workflow:

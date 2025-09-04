@@ -8,12 +8,13 @@ This checklist serves as a comprehensive framework for the Architect to validate
 
 Before proceeding with this checklist, ensure you have access to:
 
-1. architecture/\*.md - The primary architecture documents (check {@docs.architecture.root})
-2. prd.md - Product Requirements Document for requirements alignment (check {@docs.files.prd})
-3. frontend-architecture.md or fe-architecture.md - If this is a UI project (check {@docs.files.fe_architecture})
-4. Any system diagrams referenced in the architecture
-5. API documentation if available
-6. Technology stack details and version specifications
+1. {@docs.files.be-architecture} - If this is a backend/system related project
+2. {@docs.files.fs-architecture} - If this is a fullstack project with both frontend and backend involved
+3. {@docs.files.fe-architecture} - If this is a UI project
+4. {@docs.files.prd} - Product Requirements Document for requirements alignment
+5. Any system diagrams referenced in the architecture
+6. API documentation if available
+7. Technology stack details and version specifications
 
 IMPORTANT: If any required documents are missing or inaccessible, immediately ask the user for their location or content before proceeding.
 
