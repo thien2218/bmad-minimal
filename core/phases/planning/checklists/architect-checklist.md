@@ -8,9 +8,9 @@ This checklist serves as a comprehensive framework for the Architect to validate
 
 Before proceeding with this checklist, ensure you have access to:
 
-1. {@docs.files.be-architecture} - If this is a backend/system related project
-2. {@docs.files.fs-architecture} - If this is a fullstack project with both frontend and backend involved
-3. {@docs.files.fe-architecture} - If this is a UI project
+1. {@docs.files.be_architecture} - If this is a backend/system related project
+2. {@docs.files.fs_architecture} - If this is a fullstack project with both frontend and backend involved
+3. {@docs.files.fe_architecture} - If this is a UI project
 4. {@docs.files.prd} - Product Requirements Document for requirements alignment
 5. Any system diagrams referenced in the architecture
 6. API documentation if available
@@ -22,7 +22,7 @@ PROJECT TYPE DETECTION:
 First, determine the project type by checking:
 
 -  Does the architecture include a frontend/UI component?
--  Is there a frontend-architecture.md document?
+-  Is there a frontend architecture document?
 -  Does the PRD mention user interfaces or frontend requirements?
 
 If this is a backend-only or service-only project:

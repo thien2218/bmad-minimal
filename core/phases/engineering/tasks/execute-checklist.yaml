@@ -25,7 +25,7 @@ inputs:
 
 prerequisites:
   files:
-    - "{@root}/checklists/"
+    - "{@resource_dir}/checklists/"
 
 process:
   mode: sequential

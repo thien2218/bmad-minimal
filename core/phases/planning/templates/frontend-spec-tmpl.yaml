@@ -4,7 +4,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{@docs.files.frontendSpec}"
+    filename: "{@docs.files.fe_pec}"
     title: "{{project_name}} UI/UX Specification"
 
 workflow:

@@ -24,13 +24,13 @@ inputs:
 
 outputs:
   updates:
-    - target: "{@docs.paths.epics}/*.yaml"
+    - target: "{@docs.sub_dirs.epics}/*.yaml"
       sections: ["User Stories", "Acceptance Criteria", "Priority"]
       restrictions: Only as specified in approved change proposal
     - target: "{@docs.files.prd}"
       sections: ["Requirements", "Scope", "Technical Constraints"]
       restrictions: Only as specified in approved change proposal
-    - target: "{@docs.root}/*-architecture.md"
+    - target: "{@docs.dir}/*-architecture.md"
       sections: ["Components", "Diagrams", "Technology Stack"]
       restrictions: Only as specified in approved change proposal
 
@@ -38,7 +38,7 @@ prerequisites:
   files:
     - checklists/change-checklist.yaml
     - "{@docs.files.prd}"
-    - "{@docs.paths.epics}/**"
+    - "{@docs.sub_dirs.epics}/**"
     - "{@docs.files.fe_architecture}"
     - "{@docs.files.be_architecture}"
     - "{@docs.files.fs_architecture}"

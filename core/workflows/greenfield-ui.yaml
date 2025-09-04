@@ -19,19 +19,19 @@ workflow:
       optional_steps:
         - brainstorming_session
         - market_research_prompt
-      notes: "Can do brainstorming first, then optional deep research before creating project brief. SAVE OUTPUT: Copy final project-brief.md to your project's {@docs.root} folder."
+      notes: "Can do brainstorming first, then optional deep research before creating project brief. SAVE OUTPUT: Copy final project-brief.md to your project's {@docs.dir} folder."
 
     - agent: pm
       creates: prd.md
       requires: project-brief.md
-      notes: "Creates PRD from project brief using prd-tmpl, focused on UI/frontend requirements. SAVE OUTPUT: Copy final prd.md to your project's {@docs.root} folder."
+      notes: "Creates PRD from project brief using prd-tmpl, focused on UI/frontend requirements. SAVE OUTPUT: Copy final prd.md to your project's {@docs.dir} folder."
 
     - agent: ux-expert
       creates: frontend-spec.md
       requires: prd.md
       optional_steps:
         - user_research_prompt
-      notes: "Creates UI/UX specification using frontend-spec-tmpl. SAVE OUTPUT: Copy final frontend-spec.md to your project's {@docs.root} folder."
+      notes: "Creates UI/UX specification using frontend-spec-tmpl. SAVE OUTPUT: Copy final frontend-spec.md to your project's {@docs.dir} folder."
 
     - agent: ux-expert
       creates: v0_prompt (optional)
@@ -45,13 +45,13 @@ workflow:
       optional_steps:
         - technical_research_prompt
         - review_generated_ui_structure
-      notes: "Creates frontend architecture using frontend-architecture-tmpl. If user generated UI with v0/Lovable, can incorporate the project structure into architecture. May suggest changes to PRD stories or new stories. SAVE OUTPUT: Copy final frontend-architecture.md to your project's {@docs.root} folder."
+      notes: "Creates frontend architecture using frontend-architecture-tmpl. If user generated UI with v0/Lovable, can incorporate the project structure into architecture. May suggest changes to PRD stories or new stories. SAVE OUTPUT: Copy final frontend-architecture.md to your project's {@docs.dir} folder."
 
     - agent: pm
       updates: prd.md (if needed)
       requires: frontend-architecture.md
       condition: architecture_suggests_prd_changes
-      notes: "If architect suggests story changes, update PRD and re-export the complete unredacted prd.md to {@docs.root} folder."
+      notes: "If architect suggests story changes, update PRD and re-export the complete unredacted prd.md to {@docs.dir} folder."
 
     - agent: pdm
       validates: all_artifacts
@@ -61,7 +61,7 @@ workflow:
     - agent: various
       updates: any_flagged_documents
       condition: po_checklist_issues
-      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {@docs.root} folder."
+      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {@docs.dir} folder."
 
     - project_setup_guidance:
       action: guide_project_structure
@@ -145,7 +145,7 @@ workflow:
         All stories implemented and reviewed!
         Project development phase complete.
         
-        Reference: {@root}/data/bmad-kb.md#IDE Development Workflow
+        Reference: {@resource_dir}/data/bmad-kb.md#IDE Development Workflow
 
   flow_diagram: |
     ```mermaid
@@ -200,11 +200,11 @@ workflow:
       - Customer-facing applications
 
   handoff_prompts:
-    analyst_to_pm: "Project brief is complete. Save it as {@docs.root}/project-brief.md in your project, then create the PRD."
+    analyst_to_pm: "Project brief is complete. Save it as {@docs.dir}/project-brief.md in your project, then create the PRD."
     pm_to_ux: "PRD is ready. Save it as {@docs.files.prd} in your project, then create the UI/UX specification."
-    ux_to_architect: "UI/UX spec complete. Save it as {@docs.files.frontendSpec} in your project, then create the frontend architecture."
+    ux_to_architect: "UI/UX spec complete. Save it as {@docs.files.fe_pec} in your project, then create the frontend architecture."
     architect_review: "Frontend architecture complete. Save it as {@docs.files.fe_architecture}. Do you suggest any changes to the PRD stories or need new stories added?"
-    architect_to_pm: "Please update the PRD with the suggested story changes, then re-export the complete prd.md to {@docs.root}/."
-    updated_to_po: "All documents ready in {@docs.root} folder. Please validate all artifacts for consistency."
+    architect_to_pm: "Please update the PRD with the suggested story changes, then re-export the complete prd.md to {@docs.dir}/."
+    updated_to_po: "All documents ready in {@docs.dir} folder. Please validate all artifacts for consistency."
     po_issues: "PDM found issues with [document]. Please return to [agent] to fix and re-save the updated document."
-    complete: "All planning artifacts validated and saved in {@docs.root} folder. Move to IDE environment to begin development."
+    complete: "All planning artifacts validated and saved in {@docs.dir} folder. Move to IDE environment to begin development."

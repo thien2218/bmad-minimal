@@ -29,14 +29,14 @@
 		"persona"
 	],
 	"glossary": {
-		"dependencyTask": "Task loaded from {@root}/tasks/... and executed as an authoritative workflow.",
+		"dependencyTask": "Task loaded from {@resource_dir}/tasks/... and executed as an authoritative workflow.",
 		"executableCommand": "User-invoked action with prefix '*' that triggers a defined command workflow.",
 		"elicit": "A step that requires exact user input format before proceeding."
 	},
 	"activation": {
 		"preconditions": {
 			"requireExplicitLoad": true,
-			"loadAlwaysFiles": ["{@root}/config.json"],
+			"loadAlwaysFiles": ["{@resource_dir}/config.json"],
 			"readPersonaFile": true,
 			"onMissingFiles": "ask_user"
 		},
@@ -56,9 +56,9 @@
 	"workflow": {
 		"resolvePaths": {
 			"purpose": "Resolve dependency file paths for IDE-triggered actions; do not auto-activate on startup except explicit load",
-			"basePath": "{@root}",
+			"basePath": "{@resource_dir}",
 			"folderTypes": ["tasks", "templates", "checklists", "data"],
-			"pattern": "{@root}/{folderType}/{name}",
+			"pattern": "{@resource_dir}/{folderType}/{name}",
 			"loadPolicy": "Only load files when user requests specific command execution",
 			"onUnresolvablePath": "ask_user"
 		}
@@ -104,14 +104,7 @@
 		{
 			"id": "CFG-R001",
 			"title": "Resolve {@*} references from core config",
-			"description": "Whenever encountering a {@*} placeholder (curly braces starting with @), load and read {@root}/config.json to resolve the value before proceeding.",
-			"severity": "hard",
-			"actionOnViolation": "abort_and_report"
-		},
-		{
-			"id": "CFG-R002",
-			"title": "Resolve {@docs.*} paths by stacking root values",
-			"description": "When resolving a {@docs.*} placeholder, compute the path by: (1) read the leaf value (e.g., filename) at the referenced property; (2) walk up parent objects and, at each level that has a \"root\" property, prepend that root segment to the path; (3) stop after applying the docs-level root; do not prepend any higher-level runtime root reserved for agents; (4) normalize slashes. Example: {@docs.files.fe_architecture} → frontend.md → architecture/frontend.md → docs/architecture/frontend.md.",
+			"description": "Whenever encountering a {@*} placeholder (curly braces starting with @), load and read {@resource_dir}/config.json to resolve the value before proceeding.",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},

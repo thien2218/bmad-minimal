@@ -1,9 +1,9 @@
 {
-	"root": "bmad-minimal/.core",
+	"resource_dir": "bmad-minimal/.core",
 	"custom_technical_documents": null,
 	"docs": {
-		"root": "docs",
-		"paths": {
+		"dir": "docs",
+		"sub_dirs": {
 			"qa": "qa",
 			"epics": "epics",
 			"stories": "stories",

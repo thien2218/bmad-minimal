@@ -63,7 +63,7 @@ workflow:
       notes: |
         Creates PRD for major enhancement. If document-project was run, reference its output to avoid re-analysis.
         If skipped, use existing project documentation.
-        SAVE OUTPUT: Copy final prd.md to your project's {@docs.root} folder.
+        SAVE OUTPUT: Copy final prd.md to your project's {@docs.dir} folder.
 
     - step: architecture_decision
       agent: pm/architect
@@ -81,7 +81,7 @@ workflow:
       uses: brownfield-architecture-tmpl
       requires: prd.md
       condition: architecture_changes_needed
-      notes: "Creates architecture ONLY for significant architectural changes. SAVE OUTPUT: Copy final architecture.md to your project's {@docs.root} folder."
+      notes: "Creates architecture ONLY for significant architectural changes. SAVE OUTPUT: Copy final architecture.md to your project's {@docs.dir} folder."
 
     - agent: pdm
       validates: all_artifacts
@@ -91,7 +91,7 @@ workflow:
     - agent: various
       updates: any_flagged_documents
       condition: po_checklist_issues
-      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {@docs.root} folder."
+      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {@docs.dir} folder."
 
 
     - agent: pdm
@@ -172,7 +172,7 @@ workflow:
         All stories implemented and reviewed!
         Project development phase complete.
         
-        Reference: {@root}/data/bmad-kb.md#IDE Development Workflow
+        Reference: {@resource_dir}/data/bmad-kb.md#IDE Development Workflow
 
   flow_diagram: |
     ```mermaid

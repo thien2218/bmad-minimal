@@ -67,13 +67,13 @@ process:
       title: "Create documentation directories if not present"
       description: "Create documentation directory structure using root path from config.json only if documentation doesn't already exist"
       condition:
-        if: "!exists({@root}/api/) || !exists({@root}/components/)"
+        if: "!exists({@resource_dir}/api/) || !exists({@resource_dir}/components/)"
       action:
         type: "analysis"
         content: |
           Create documentation structure only if it doesn't exist:
-          - {@root}/api/ - for API documentation (Swagger/OpenAPI) 
-          - {@root}/components/ - for component documentation (Storybook)
+          - {@resource_dir}/api/ - for API documentation (Swagger/OpenAPI) 
+          - {@resource_dir}/components/ - for component documentation (Storybook)
 
     - id: "SETUP-BACKEND-DOCS"
       title: "Configure backend API documentation"
@@ -83,7 +83,7 @@ process:
       action:
         type: "analysis"
         content: |
-          Check if API documentation already exists in {@root}/api/
+          Check if API documentation already exists in {@resource_dir}/api/
           
           If updating existing documentation:
           - Update existing API documentation with in-place approach
@@ -105,7 +105,7 @@ process:
       action:
         type: "analysis"
         content: |
-          Check if component documentation already exists in {@root}/components/
+          Check if component documentation already exists in {@resource_dir}/components/
           
           If updating existing documentation:
           - Update existing component documentation with in-place approach
@@ -160,22 +160,22 @@ outputs:
   artifacts:
     - name: "api-docs"
       type: "directory"
-      path: "{@docs.root}/api/"
+      path: "{@docs.dir}/api/"
       format: "text"
       description: "API documentation (Swagger/OpenAPI)"
     - name: "component-docs"
       type: "directory"
-      path: "{@docs.root}/components/"
+      path: "{@docs.dir}/components/"
       format: "text"
       description: "Component documentation (Storybook)"
     - name: "documentation-config"
       type: "file"
-      path: "swagger.js|.storybook/main.js|{@docs.root}/openapi.yaml"
+      path: "swagger.js|.storybook/main.js|{@docs.dir}/openapi.yaml"
       format: "text"
       description: "Framework-specific configuration files"
     - name: "example-files"
       type: "directory"
-      path: "{@docs.root}/examples/"
+      path: "{@docs.dir}/examples/"
       format: "text"
       description: "In-place documentation examples"
 
