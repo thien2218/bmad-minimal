@@ -13,7 +13,7 @@ const {
 const {
 	detectLanguages,
 	getProjectMetadata,
-} = require("../utils/languageDetector");
+} = require("../utils/metadataExtractor");
 const {
 	generateTechnicalPreferences,
 } = require("../utils/techPreferencesGenerator");

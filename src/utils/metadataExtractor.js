@@ -209,315 +209,278 @@ async function getProjectMetadata(projectPath, languages) {
 		packageManager: null,
 	};
 
+	// Package manager (JS/TS only for now)
 	if (languages.includes("javascript") || languages.includes("typescript")) {
 		metadata.packageManager = await getPackageManager(projectPath);
+	}
 
+	// Extract libraries via helper
+	metadata.libraries = await extractLibrariesFromProject(
+		projectPath,
+		languages
+	);
+
+	// Derive test frameworks and build tools from libraries where applicable
+	if (languages.includes("javascript") || languages.includes("typescript")) {
+		const libs = new Set(metadata.libraries.map((l) => l.toLowerCase()));
+		// Test frameworks
+		if (libs.has("jest")) metadata.testFrameworks.push("Jest");
+		if (libs.has("vitest")) metadata.testFrameworks.push("Vitest");
+		if (libs.has("mocha")) metadata.testFrameworks.push("Mocha");
+		if (libs.has("playwright")) metadata.testFrameworks.push("Playwright");
+		if (libs.has("cypress")) metadata.testFrameworks.push("Cypress");
+		// Build tools
+		if (libs.has("vite")) metadata.buildTools.push("Vite");
+		if (libs.has("webpack")) metadata.buildTools.push("Webpack");
+		if (libs.has("esbuild")) metadata.buildTools.push("esbuild");
+		if (libs.has("@swc/core")) metadata.buildTools.push("SWC");
+	}
+
+	if (languages.includes("python")) {
+		// Detect pytest from libraries
+		if (metadata.libraries.some((l) => l.toLowerCase() === "pytest")) {
+			metadata.testFrameworks.push("pytest");
+		}
+	}
+
+	return metadata;
+}
+
+/**
+ * Extract library names from a project for the given languages
+ */
+async function extractLibrariesFromProject(projectPath, languages) {
+	const libs = new Set();
+
+	if (languages.includes("javascript") || languages.includes("typescript")) {
 		const packageJsonPath = path.join(projectPath, "package.json");
+
 		if (await fs.pathExists(packageJsonPath)) {
 			const packageJson = await fs.readJson(packageJsonPath);
 			const deps = {
 				...packageJson.dependencies,
 				...packageJson.devDependencies,
 			};
-
-			// Collect all libraries
-			metadata.libraries = Object.keys(deps || {}).sort();
-
-			// Detect test frameworks (keep for specific categorization)
-			if (deps["jest"]) metadata.testFrameworks.push("Jest");
-			if (deps["vitest"]) metadata.testFrameworks.push("Vitest");
-			if (deps["mocha"]) metadata.testFrameworks.push("Mocha");
-			if (deps["playwright"]) metadata.testFrameworks.push("Playwright");
-			if (deps["cypress"]) metadata.testFrameworks.push("Cypress");
-
-			// Detect build tools (keep for specific categorization)
-			if (deps["vite"]) metadata.buildTools.push("Vite");
-			if (deps["webpack"]) metadata.buildTools.push("Webpack");
-			if (deps["esbuild"]) metadata.buildTools.push("esbuild");
-			if (deps["@swc/core"]) metadata.buildTools.push("SWC");
+			Object.keys(deps || {}).forEach((name) => libs.add(name));
 		}
-
-		// Check for Node version
-		const nvmrcPath = path.join(projectPath, ".nvmrc");
-		const nodeVersionPath = path.join(projectPath, ".node-version");
 	}
 
 	if (languages.includes("python")) {
-		const libraries = [];
-
-		// Read from requirements.txt
+		// requirements.txt
 		const requirementsPath = path.join(projectPath, "requirements.txt");
+
 		if (await fs.pathExists(requirementsPath)) {
 			const requirements = await fs.readFile(requirementsPath, "utf-8");
-			const lines = requirements.split('\n').filter(line => line.trim() && !line.startsWith('#'));
-			for (const line of lines) {
-				// Extract package name (before any version specifier)
-				const packageName = line.split(/[<>=!~]/)[0].trim();
-				if (packageName) libraries.push(packageName);
-			}
+			const lines = requirements
+				.split("\n")
+				.filter((line) => line.trim() && !line.startsWith("#"));
 
-			// Detect test frameworks
-			if (requirements.includes("pytest"))
-				metadata.testFrameworks.push("pytest");
+			for (const line of lines) {
+				const packageName = line.split(/[<>=!~]/)[0].trim();
+				if (packageName) libs.add(packageName);
+			}
 		}
 
-		// Read from Pipfile
+		// Pipfile
 		const pipfilePath = path.join(projectPath, "Pipfile");
-		if (await fs.pathExists(pipfilePath) && libraries.length === 0) {
+
+		if (await fs.pathExists(pipfilePath)) {
 			const pipfile = await fs.readFile(pipfilePath, "utf-8");
-			// Simple parsing for [packages] and [dev-packages] sections
 			const packageMatches = pipfile.match(/^([a-zA-Z0-9-_]+)\s*=/gm);
+
 			if (packageMatches) {
 				for (const match of packageMatches) {
-					const packageName = match.replace(/\s*=.*/, '').trim();
-					if (!libraries.includes(packageName)) libraries.push(packageName);
+					const packageName = match.replace(/\s*=.*/, "").trim();
+					libs.add(packageName);
 				}
 			}
 		}
 
-		// Read from pyproject.toml
+		// pyproject.toml
 		const pyprojectPath = path.join(projectPath, "pyproject.toml");
-		if (await fs.pathExists(pyprojectPath) && libraries.length === 0) {
+
+		if (await fs.pathExists(pyprojectPath)) {
 			const pyproject = await fs.readFile(pyprojectPath, "utf-8");
-			// Look for dependencies in various formats
 			const depMatches = pyproject.match(/dependencies\s*=\s*\[([^\]]+)\]/s);
+
 			if (depMatches) {
-				const deps = depMatches[1].match(/"([^"]+)"/g);
-				if (deps) {
-					for (const dep of deps) {
-						const packageName = dep.replace(/"/g, '').split(/[<>=!~]/)[0].trim();
-						if (!libraries.includes(packageName)) libraries.push(packageName);
+				const depList = depMatches[1].match(/"([^"]+)"/g);
+
+				if (depList) {
+					for (const dep of depList) {
+						const packageName = dep
+							.replace(/"/g, "")
+							.split(/[<>=!~]/)[0]
+							.trim();
+						libs.add(packageName);
 					}
 				}
 			}
 		}
-
-		metadata.libraries = libraries.sort();
 	}
 
 	if (languages.includes("go")) {
 		const goModPath = path.join(projectPath, "go.mod");
+
 		if (await fs.pathExists(goModPath)) {
 			const goMod = await fs.readFile(goModPath, "utf-8");
-			const libraries = [];
-
-			// Extract require statements
 			const requireBlock = goMod.match(/require\s*\(([^)]+)\)/s);
+
 			if (requireBlock) {
 				const requires = requireBlock[1].match(/([^\s]+)\s+v[^\s]+/g);
+
 				if (requires) {
-					for (const req of requires) {
-						const packageName = req.split(/\s+/)[0];
-						libraries.push(packageName);
-					}
+					for (const req of requires) libs.add(req.split(/\s+/)[0]);
 				}
 			}
 
-			// Also check single-line require statements
 			const singleRequires = goMod.match(/^require\s+([^\s]+)/gm);
 			if (singleRequires) {
-				for (const req of singleRequires) {
-					const packageName = req.replace(/^require\s+/, '').split(/\s+/)[0];
-					if (!libraries.includes(packageName)) libraries.push(packageName);
-				}
+				for (const req of singleRequires)
+					libs.add(req.replace(/^require\s+/, "").split(/\s+/)[0]);
 			}
-
-			metadata.libraries = libraries.sort();
 		}
 	}
 
 	if (languages.includes("rust")) {
 		const cargoTomlPath = path.join(projectPath, "Cargo.toml");
+
 		if (await fs.pathExists(cargoTomlPath)) {
 			const cargoToml = await fs.readFile(cargoTomlPath, "utf-8");
-			const libraries = [];
-
-			// Extract dependencies
 			const depSection = cargoToml.match(/\[dependencies\]([^\[]+)/s);
+
 			if (depSection) {
 				const deps = depSection[1].match(/^([a-zA-Z0-9-_]+)\s*=/gm);
-				if (deps) {
-					for (const dep of deps) {
-						const packageName = dep.replace(/\s*=.*/, '').trim();
-						libraries.push(packageName);
-					}
-				}
+				if (deps)
+					deps.forEach((d) => libs.add(d.replace(/\s*=.*/, "").trim()));
 			}
 
-			// Extract dev-dependencies
 			const devDepSection = cargoToml.match(/\[dev-dependencies\]([^\[]+)/s);
+
 			if (devDepSection) {
 				const deps = devDepSection[1].match(/^([a-zA-Z0-9-_]+)\s*=/gm);
-				if (deps) {
-					for (const dep of deps) {
-						const packageName = dep.replace(/\s*=.*/, '').trim();
-						if (!libraries.includes(packageName)) libraries.push(packageName);
-					}
-				}
+				if (deps)
+					deps.forEach((d) => libs.add(d.replace(/\s*=.*/, "").trim()));
 			}
-
-			metadata.libraries = libraries.sort();
 		}
 	}
 
 	if (languages.includes("java")) {
-		const libraries = [];
-
-		// Check for pom.xml (Maven)
 		const pomPath = path.join(projectPath, "pom.xml");
+
 		if (await fs.pathExists(pomPath)) {
 			const pom = await fs.readFile(pomPath, "utf-8");
-			// Extract artifactId from dependencies
 			const artifactIds = pom.match(/<artifactId>([^<]+)<\/artifactId>/g);
+
 			if (artifactIds) {
-				for (const artifactId of artifactIds) {
-					const name = artifactId.replace(/<\/?artifactId>/g, '');
-					if (!libraries.includes(name) && name !== 'maven-compiler-plugin') {
-						libraries.push(name);
-					}
+				for (const a of artifactIds) {
+					const name = a.replace(/<\/?artifactId>/g, "");
+					if (name !== "maven-compiler-plugin") libs.add(name);
 				}
 			}
 		}
 
-		// Check for build.gradle (Gradle)
 		const gradlePath = path.join(projectPath, "build.gradle");
-		if (await fs.pathExists(gradlePath) && libraries.length === 0) {
+
+		if (await fs.pathExists(gradlePath)) {
 			const gradle = await fs.readFile(gradlePath, "utf-8");
-			// Extract dependencies (simplified parsing)
 			const depMatches = gradle.match(/['"]([^:]+:[^:]+:[^'"]+)['"]/g);
+
 			if (depMatches) {
 				for (const dep of depMatches) {
-					const parts = dep.replace(/['"]/g, '').split(':');
-					if (parts.length >= 2) {
-						const name = parts[1]; // Get artifact ID
-						if (!libraries.includes(name)) libraries.push(name);
-					}
+					const parts = dep.replace(/["']/g, "").split(":");
+					if (parts.length >= 2) libs.add(parts[1]);
 				}
 			}
 		}
-
-		metadata.libraries = libraries.sort();
-	}
-
-	if (languages.includes("csharp")) {
-		const libraries = [];
-
-		// Look for .csproj files
-		const files = await fs.readdir(projectPath).catch(() => []);
-		const csprojFiles = files.filter(f => f.endsWith('.csproj'));
-
-		for (const csprojFile of csprojFiles) {
-			const csprojPath = path.join(projectPath, csprojFile);
-			const csproj = await fs.readFile(csprojPath, "utf-8");
-
-			// Extract PackageReference
-			const packageRefs = csproj.match(/<PackageReference\s+Include="([^"]+)"/g);
-			if (packageRefs) {
-				for (const ref of packageRefs) {
-					const packageName = ref.match(/Include="([^"]+)"/)[1];
-					if (!libraries.includes(packageName)) libraries.push(packageName);
-				}
-			}
-		}
-
-		metadata.libraries = libraries.sort();
 	}
 
 	if (languages.includes("php")) {
 		const composerJsonPath = path.join(projectPath, "composer.json");
+
 		if (await fs.pathExists(composerJsonPath)) {
 			const composerJson = await fs.readJson(composerJsonPath);
-			const deps = { ...composerJson.require, ...composerJson['require-dev'] };
+			const deps = {
+				...composerJson.require,
+				...composerJson["require-dev"],
+			};
 
-			// Filter out PHP version and extensions
-			metadata.libraries = Object.keys(deps || {})
-				.filter(key => !key.startsWith('php') && !key.startsWith('ext-'))
-				.sort();
+			Object.keys(deps || {})
+				.filter((k) => !k.startsWith("php") && !k.startsWith("ext-"))
+				.forEach((k) => libs.add(k));
 		}
 	}
 
 	if (languages.includes("ruby")) {
-		const libraries = [];
-
 		const gemfilePath = path.join(projectPath, "Gemfile");
+
 		if (await fs.pathExists(gemfilePath)) {
 			const gemfile = await fs.readFile(gemfilePath, "utf-8");
-			// Extract gem declarations
 			const gemMatches = gemfile.match(/gem\s+['"]([^'"]+)['"]/g);
+
 			if (gemMatches) {
 				for (const gem of gemMatches) {
-					const gemName = gem.match(/['"]([^'"]+)['"]/);
-					if (gemName) libraries.push(gemName[1]);
+					const m = gem.match(/['"]([^'"]+)['"]/);
+					if (m) libs.add(m[1]);
 				}
 			}
-			metadata.libraries = libraries.sort();
 		}
 	}
 
 	if (languages.includes("dart")) {
 		const pubspecPath = path.join(projectPath, "pubspec.yaml");
+
 		if (await fs.pathExists(pubspecPath)) {
 			const pubspec = await fs.readFile(pubspecPath, "utf-8");
-			const libraries = [];
+			const depSection = pubspec.match(
+				/dependencies:([^:]+)(dev_dependencies:|$)/s
+			);
 
-			// Extract dependencies (simplified YAML parsing)
-			const depSection = pubspec.match(/dependencies:([^:]+)(dev_dependencies:|$)/s);
 			if (depSection) {
 				const deps = depSection[1].match(/^\s+([a-zA-Z0-9_]+):/gm);
-				if (deps) {
-					for (const dep of deps) {
-						const packageName = dep.trim().replace(':', '');
-						libraries.push(packageName);
-					}
-				}
+				if (deps) deps.forEach((d) => libs.add(d.trim().replace(":", "")));
 			}
-
-			metadata.libraries = libraries.sort();
 		}
 	}
 
 	if (languages.includes("swift")) {
 		const packageSwiftPath = path.join(projectPath, "Package.swift");
+
 		if (await fs.pathExists(packageSwiftPath)) {
 			const packageSwift = await fs.readFile(packageSwiftPath, "utf-8");
-			const libraries = [];
+			const depMatches = packageSwift.match(
+				/\.package\(.*?name:\s*"([^"]+)"/g
+			);
 
-			// Extract package dependencies
-			const depMatches = packageSwift.match(/\.package\(.*?name:\s*"([^"]+)"/g);
 			if (depMatches) {
 				for (const dep of depMatches) {
 					const nameMatch = dep.match(/name:\s*"([^"]+)"/);
-					if (nameMatch) libraries.push(nameMatch[1]);
+					if (nameMatch) libs.add(nameMatch[1]);
 				}
 			}
-
-			metadata.libraries = libraries.sort();
 		}
 	}
 
 	if (languages.includes("zig")) {
 		const buildZonPath = path.join(projectPath, "build.zig.zon");
+
 		if (await fs.pathExists(buildZonPath)) {
 			const buildZon = await fs.readFile(buildZonPath, "utf-8");
-			const libraries = [];
+			const depSection = buildZon.match(
+				/\.dependencies\s*=\s*\.\{([^}]+)\}/s
+			);
 
-			// Extract dependencies from .dependencies section
-			const depSection = buildZon.match(/\.dependencies\s*=\s*\.\{([^}]+)\}/s);
 			if (depSection) {
 				const deps = depSection[1].match(/\.([a-zA-Z0-9_-]+)\s*=/g);
-				if (deps) {
-					for (const dep of deps) {
-						const packageName = dep.replace(/^\.|\s*=.*/g, '').trim();
-						libraries.push(packageName);
-					}
-				}
+				if (deps)
+					deps.forEach((d) =>
+						libs.add(d.replace(/^\.|\s*=.*/g, "").trim())
+					);
 			}
-
-			metadata.libraries = libraries.sort();
 		}
 	}
 
-	return metadata;
+	return Array.from(libs).sort();
 }
 
 module.exports = {
