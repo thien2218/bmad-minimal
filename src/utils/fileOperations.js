@@ -52,21 +52,6 @@ async function writeJson(filePath, data) {
 }
 
 /**
- * Copy file with template variable replacement
- */
-async function copyWithReplacements(source, destination, replacements = {}) {
-	let content = await fs.readFile(source, "utf-8");
-
-	for (const [key, value] of Object.entries(replacements)) {
-		const regex = new RegExp(`<${key}>`, "g");
-		content = content.replace(regex, value);
-	}
-
-	await fs.ensureDir(path.dirname(destination));
-	await fs.writeFile(destination, content);
-}
-
-/**
  * Check if a directory or file exists
  */
 async function exists(path) {
@@ -96,7 +81,6 @@ module.exports = {
 	copyDirectory,
 	readJson,
 	writeJson,
-	copyWithReplacements,
 	exists,
 	getCoreDir,
 	ensureDir,

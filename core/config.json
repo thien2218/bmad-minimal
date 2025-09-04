@@ -1,7 +1,10 @@
 {
-	"projectName": null,
-	"backendDir": null,
-	"frontendDir": null,
+	"project": {
+		"name": null,
+		"appDir": null,
+		"backendDir": null,
+		"frontendDir": null
+	},
 	"baseDir": ".bmad-minimal",
 	"customTechnicalDocuments": null,
 	"docs": {

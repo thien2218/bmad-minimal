@@ -8,7 +8,6 @@ const {
 	exists,
 	getCoreDir,
 	ensureDir,
-	copyWithReplacements,
 } = require("../utils/fileOperations");
 
 async function install(options) {
@@ -67,9 +66,12 @@ async function install(options) {
 		// Write config.json
 		const configPath = path.join(baseDir, "config.json");
 		const configData = {
-			projectName: config.projectName,
-			backendDir: config.backendDir,
-			frontendDir: config.frontendDir,
+			project: {
+				name: config.projectName,
+				appDir: config.appDir,
+				backendDir: config.backendDir,
+				frontendDir: config.frontendDir,
+			},
 			baseDir: config.baseDir,
 			customTechnicalDocuments: null,
 			docs: {
@@ -108,7 +110,7 @@ async function install(options) {
 			"../templates/technical-preferences.md"
 		);
 		const techPrefsPath = path.join(docsDir, "technical-preferences.md");
-		await copyWithReplacements(templateTechPrefsPath, techPrefsPath);
+		await fs.copy(templateTechPrefsPath, techPrefsPath);
 
 		// Create .gitignore for bmad directory if it doesn't exist
 		const gitignorePath = path.join(baseDir, ".gitignore");
@@ -144,15 +146,17 @@ async function install(options) {
 		if (config.generateTPPrompt) {
 			// Suggest a ready-to-use prompt for an LLM/agent to help fill technical-preferences.md
 			const tpDisplayPath = `${config.docs.dir}/technical-preferences.md`;
-			const llmPrompt = `Task: Fill out ${tpDisplayPath} by replacing 'TBD' placeholders with concrete, project-appropriate choices.\n\nInstructions:\n- Inspect this workspace to infer languages/runtimes, package manager(s), frontend/backend libraries, testing tools, build tools, and high-level repo structure.\n- Prefer evidence from the repo (manifests, lockfiles, configs). If something is ambiguous or missing, use your domain knowledge to propose sensible defaults.\n- Modify only ${tpDisplayPath}. Do not add or reorder sections. Replace only the 'TBD' tokens (and any inline guidance comments) when you have a confident value; otherwise leave them as-is.\n\nContext:\n- Project name: ${
-				config.projectName || "N/A"
-			}\n- Backend directory: ${
-				config.backendDir || "N/A"
-			}\n- Frontend directory: ${
-				config.frontendDir || "N/A"
-			}\n- Docs directory: ${
-				config.docs.dir
-			}\n\nOutput: Provide either the edited markdown content of ${tpDisplayPath} or a unified diff that applies changes to that file only.`;
+			const contextLines = [`- Project name: ${config.projectName}`];
+			if (config.appDir)
+				contextLines.push(`- App directory: ${config.appDir}`);
+			if (config.backendDir)
+				contextLines.push(`- Backend directory: ${config.backendDir}`);
+			if (config.frontendDir)
+				contextLines.push(`- Frontend directory: ${config.frontendDir}`);
+			contextLines.push(`- Docs directory: ${config.docs.dir}`);
+			const llmPrompt = `Task: Fill out ${tpDisplayPath} by replacing 'TBD' placeholders with concrete, project-appropriate choices.\n\nInstructions:\n- Inspect this workspace to infer languages/runtimes, package manager(s), frontend/backend libraries, testing tools, build tools, and high-level repo structure.\n- Prefer evidence from the repo (manifests, lockfiles, configs). If something is ambiguous or missing, use your domain knowledge to propose sensible defaults.\n- Modify only ${tpDisplayPath}. Do not add or reorder sections. Replace only the 'TBD' tokens (and any inline guidance comments) when you have a confident value; otherwise leave them as-is.\n\nContext:\n${contextLines.join(
+				"\n"
+			)}\n\nOutput: Provide either the edited markdown content of ${tpDisplayPath} or a unified diff that applies changes to that file only.`;
 
 			console.log(
 				"\n" + chalk.cyan("Prompt for your LLM/agent (copy/paste):")
@@ -182,6 +186,7 @@ async function findExistingConfigs(cwd) {
 async function gatherConfiguration(options, cwd) {
 	const config = {
 		projectName: options.project,
+		appDir: null,
 		backendDir: null,
 		frontendDir: null,
 		baseDir: options.dir || ".bmad-minimal",
@@ -203,19 +208,33 @@ async function gatherConfiguration(options, cwd) {
 			type: "input",
 			name: "projectName",
 			message: "Project name:",
-			default: config.projectName || path.basename(cwd),
+			default: path.basename(cwd),
 			validate: (input) => input.trim() !== "" || "Project name is required",
 			when: () => !config.projectName,
+		},
+		{
+			type: "confirm",
+			name: "isSingular",
+			message:
+				"Is this a singular app (fullstack app or an app with no clear backend/frontend separation)?",
+		},
+		{
+			type: "input",
+			name: "appDir",
+			message: "App directory (relative to current directory):",
+			when: (answers) => answers.isSingular,
 		},
 		{
 			type: "input",
 			name: "backendDir",
 			message: "Backend directory (relative to current directory):",
+			when: (answers) => !answers.isSingular,
 		},
 		{
 			type: "input",
 			name: "frontendDir",
 			message: "Frontend directory (relative to current directory):",
+			when: (answers) => !answers.isSingular,
 		},
 		{
 			type: "input",
@@ -244,10 +263,9 @@ async function gatherConfiguration(options, cwd) {
 	]);
 
 	config.projectName = answers.projectName ?? config.projectName;
-	config.backendDir =
-		answers.backendDir.trim() !== "" ? answers.backendDir.trim() : null;
-	config.frontendDir =
-		answers.frontendDir.trim() !== "" ? answers.frontendDir.trim() : null;
+	config.appDir = answers.appDir?.trim() || null;
+	config.backendDir = answers.backendDir?.trim() || null;
+	config.frontendDir = answers.frontendDir?.trim() || null;
 	config.baseDir = answers.baseDir;
 	config.includePlanning = answers.includePlanning;
 	config.docs.dir = answers.docsDir;
@@ -265,6 +283,16 @@ async function gatherConfiguration(options, cwd) {
 			},
 		]);
 		config.projectName = projectName;
+	}
+
+	// Ensure at least one of appDir, backendDir, or frontendDir is provided
+	if (!config.appDir && !config.backendDir && !config.frontendDir) {
+		console.error(
+			chalk.red(
+				"❌ Installation aborted: provide at least one of App, Backend, or Frontend directory."
+			)
+		);
+		throw new Error("No app/backend/frontend directory provided");
 	}
 
 	return config;
