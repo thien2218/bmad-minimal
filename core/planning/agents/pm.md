@@ -111,6 +111,13 @@
 	"rules": [
 		{
 			"id": "CFG-R001",
+			"title": "Attachment-first resource resolution",
+			"description": "When the user attaches files or provides explicit file contents in the current request/session, treat those attachments as the primary source of truth for document discovery and validation. Use attached files first when they match the requested artifact or are relevant by name, path, or content. Only fall back to resolving paths if no relevant attachment exists.",
+			"severity": "soft",
+			"actionOnViolation": "warn_and_prefer_attachment"
+		},
+		{
+			"id": "CFG-R002",
 			"title": "Resolve {@*} references from core config",
 			"description": "Whenever encountering a {@*} placeholder (curly braces starting with @), load and read {@base_dir}/config.json to resolve the value before proceeding. Also resolve docs path tokens: treat {@docs.files.<key>} as {@docs.dir}/<filename> and {@docs.sub_dirs.<key>} as {@docs.dir}/<subdir>. Example: {@docs.files.fe_architecture} → docs/frontend-architecture.md; {@docs.sub_dirs.qa} → docs/qa.",
 			"severity": "hard",
