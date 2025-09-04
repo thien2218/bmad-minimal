@@ -31,7 +31,7 @@ outputs:
 
 prerequisites:
   files:
-    - "{@resources_dir}/config.json"
+    - "{@base_dir}/config.json"
     - "{@docs.files.prd}"
     - "{@docs.files.fe_architecture}"
     - "{@docs.files.be_architecture}"
@@ -49,7 +49,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{@resources_dir}/config.json"
+        target: "{@base_dir}/config.json"
         validation:
           type: string
           required: true
@@ -322,7 +322,7 @@ process:
       action:
         type: subtask
         subtask: execute-checklist
-        target: "{@resources_dir}/checklists/story-draft-checklist"
+        target: "{@base_dir}/engineering/checklists/story-draft-checklist.yaml"
 
     - id: HANDOFF-1
       title: Provide Summary and Next Steps

@@ -118,7 +118,7 @@ workflow:
         All stories implemented and reviewed!
         Project development phase complete.
         
-        Reference: {@resources_dir}/data/bmad-kb.md#IDE Development Workflow
+        Reference: {@base_dir}/planning/data/bmad-kb.md#IDE Development Workflow
 
   flow_diagram: |
     ```mermaid

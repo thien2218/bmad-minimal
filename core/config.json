@@ -1,8 +1,6 @@
 {
 	"project_path": "../<project_name>",
-	"resources_dir": ".bmad-minimal",
-	"engineering_dir": ".engineering",
-	"planning_dir": ".planning",
+	"base_dir": ".bmad-minimal",
 	"custom_technical_documents": null,
 	"docs": {
 		"dir": "docs",

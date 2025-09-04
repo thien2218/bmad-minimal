@@ -67,13 +67,13 @@ process:
       title: "Create documentation directories if not present"
       description: "Create documentation directory structure using root path from config.json only if documentation doesn't already exist"
       condition:
-        if: "!exists({@resources_dir}/api/) || !exists({@resources_dir}/components/)"
+        if: "!exists(api/) || !exists(components/)"
       action:
         type: "analysis"
         content: |
           Create documentation structure only if it doesn't exist:
-          - {@resources_dir}/api/ - for API documentation (Swagger/OpenAPI) 
-          - {@resources_dir}/components/ - for component documentation (Storybook)
+          - api/ - for API documentation (Swagger/OpenAPI) 
+          - components/ - for component documentation (Storybook)
 
     - id: "SETUP-BACKEND-DOCS"
       title: "Configure backend API documentation"
@@ -83,7 +83,7 @@ process:
       action:
         type: "analysis"
         content: |
-          Check if API documentation already exists in {@resources_dir}/api/
+          Check if API documentation already exists in api/
           
           If updating existing documentation:
           - Update existing API documentation with in-place approach
@@ -105,7 +105,7 @@ process:
       action:
         type: "analysis"
         content: |
-          Check if component documentation already exists in {@resources_dir}/components/
+          Check if component documentation already exists in components/
           
           If updating existing documentation:
           - Update existing component documentation with in-place approach

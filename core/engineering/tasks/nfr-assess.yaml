@@ -41,7 +41,7 @@ inputs:
 
 prerequisites:
   files:
-    - "{@resources_dir}/config.json"
+    - "{@base_dir}/config.json"
   status:
     - entity: story
       field: status
@@ -57,7 +57,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{@resources_dir}/config.json"
+        target: "{@base_dir}/config.json"
         content: |
           Extract config.docs.sub_dirs.qa and docs.sub_dirs.stories settings.
           Resolve story_path if not provided.

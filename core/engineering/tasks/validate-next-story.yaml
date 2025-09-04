@@ -24,9 +24,9 @@ inputs:
 
 prerequisites:
   files:
-    - "{@resources_dir}/config.json"
+    - "{@base_dir}/config.json"
     - "{story_file}"
-    - "{@resources_dir}/schemas/story.json"
+    - "{@base_dir}/schemas/story.json"
 
 process:
   mode: sequential
@@ -37,7 +37,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{@resources_dir}/config.json"
+        target: "{@base_dir}/config.json"
         validation:
           required: true
       on_failure: halt
@@ -51,7 +51,7 @@ process:
           type: checklist
           required: true
         prompt: |
-          Load {@resources_dir}/schemas/story.json and check:
+          Load {@base_dir}/schemas/story.json and check:
           - All required sections present
           - No template placeholders remaining ({{...}}, _TBD_)
           - Agent sections verified

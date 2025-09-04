@@ -56,7 +56,7 @@ outputs:
 
 prerequisites:
   files:
-    - "{@resources_dir}/config.json"
+    - "{@base_dir}/config.json"
     - "{story_path}"
   status:
     - entity: story
@@ -73,7 +73,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{@resources_dir}/config.json"
+        target: "{@base_dir}/config.json"
 
     - id: VERIFY-WIP
       title: Verify Story Status is WIP

@@ -25,7 +25,7 @@ inputs:
 
 prerequisites:
   files:
-    - "{@resources_dir}/checklists/"
+    - "{@base_dir}/engineering/checklists/"
 
 process:
   mode: sequential
@@ -39,7 +39,7 @@ process:
           If user provides checklist name:
           - Try fuzzy matching (e.g. "architecture checklist" -> "architect-checklist")
           - If multiple matches found, ask user to clarify
-          - Load the appropriate checklist from core/checklists/
+          - Load the appropriate checklist from checklists
           
           If no checklist specified:
           - Ask the user which checklist they want to use
