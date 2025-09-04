@@ -16,7 +16,6 @@ program
 program
   .command('install')
   .description('Install BMad Minimal configuration and documentation structure')
-  .option('-y, --yes', 'Use default configuration without prompts')
   .option('-p, --project <name>', 'Specify project name')
   .option('-d, --dir <path>', 'Base directory for BMad files (default: .bmad-minimal)')
   .action(async (options) => {

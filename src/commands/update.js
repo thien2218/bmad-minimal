@@ -10,13 +10,6 @@ const {
 	getCoreDir,
 	ensureDir,
 } = require("../utils/fileOperations");
-const {
-	detectLanguages,
-	getProjectMetadata,
-} = require("../utils/metadataExtractor");
-const {
-	generateTechnicalPreferences,
-} = require("../utils/techPreferencesGenerator");
 
 async function update(options) {
 	console.log(chalk.blue("🔄 BMad Minimal Update\n"));
@@ -115,15 +108,9 @@ async function update(options) {
 		const techPrefsPath = path.join(docsDir, "technical-preferences.md");
 
 		if (await exists(techPrefsPath)) {
-			console.log(chalk.gray("  Regenerating technical preferences..."));
-
-			const projectPath = path.resolve(cwd, config.projectPath);
-			const languages = await detectLanguages(projectPath);
-			const metadata = await getProjectMetadata(projectPath, languages);
-
-			const techPrefsContent = await generateTechnicalPreferences(metadata);
-
-			await fs.writeFile(techPrefsPath, techPrefsContent);
+			console.log(chalk.gray("  Updating technical preferences from template..."));
+			const templateTechPrefsPath = path.join(__dirname, "../templates/technical-preferences.md");
+			await fs.copy(templateTechPrefsPath, techPrefsPath);
 		}
 
 		// Ensure all doc directories still exist

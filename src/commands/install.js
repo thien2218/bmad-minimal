@@ -8,14 +8,8 @@ const {
 	exists,
 	getCoreDir,
 	ensureDir,
+	copyWithReplacements,
 } = require("../utils/fileOperations");
-const {
-	detectLanguages,
-	getProjectMetadata,
-} = require("../utils/metadataExtractor");
-const {
-	generateTechnicalPreferences,
-} = require("../utils/techPreferencesGenerator");
 
 async function install(options) {
 	console.log(chalk.blue("🚀 BMad Minimal Installation\n"));
@@ -107,33 +101,14 @@ async function install(options) {
 			await ensureDir(path.join(docsDir, subDir));
 		}
 
-		// Generate and write technical preferences
-		console.log(chalk.gray(`  Generating technical preferences...`));
-		const backendPath = config.backendDir && path.resolve(cwd, config.backendDir);
-		const frontendPath = config.frontendDir && path.resolve(cwd, config.frontendDir);
-
-		// Detect languages and collect metadata from both backend and frontend directories
-		const backendLangs = await detectLanguages(backendPath);
-		const frontendLangs = await detectLanguages(frontendPath);
-		const languages = Array.from(new Set([...backendLangs, ...frontendLangs]));
-
-		const backendMeta = await getProjectMetadata(backendPath, backendLangs);
-		const frontendMeta = await getProjectMetadata(frontendPath, frontendLangs);
-
-		const metadata = {
-			languages,
-			libraries: {
-        backend: backendMeta.libraries,
-        frontend: frontendMeta.libraries,
-      },
-			testFrameworks: Array.from(new Set([...backendMeta.testFrameworks, ...frontendMeta.testFrameworks])),
-			packageManager: backendMeta.packageManager || frontendMeta.packageManager || null,
-		};
-
-		const techPrefsContent = await generateTechnicalPreferences(metadata);
-
+		// Write technical preferences from template in src/templates
+		console.log(chalk.gray(`  Writing technical preferences...`));
+		const templateTechPrefsPath = path.join(
+			__dirname,
+			"../templates/technical-preferences.md"
+		);
 		const techPrefsPath = path.join(docsDir, "technical-preferences.md");
-		await fs.writeFile(techPrefsPath, techPrefsContent);
+		await copyWithReplacements(templateTechPrefsPath, techPrefsPath);
 
 		// Create .gitignore for bmad directory if it doesn't exist
 		const gitignorePath = path.join(baseDir, ".gitignore");
@@ -160,42 +135,30 @@ async function install(options) {
 		console.log(`   ├── ${config.docs.subDirs.changelog}/`);
 		console.log(`   └── technical-preferences.md`);
 
-		if (languages.length > 0) {
-			console.log(
-				chalk.cyan("\n🔍 Detected languages:"),
-				languages.join(", ")
-			);
-			if (metadata.libraries && metadata.libraries.length > 0) {
-				console.log(
-					chalk.cyan("📚 Detected libraries:"),
-					metadata.libraries.length,
-					"packages"
-				);
-				// Show first few major libraries if any
-				const majorLibs = metadata.libraries
-					.filter((lib) =>
-						[
-							"react",
-							"vue",
-							"angular",
-							"express",
-							"django",
-							"flask",
-							"rails",
-						].some((major) => lib.toLowerCase().includes(major))
-					)
-					.slice(0, 5);
-				if (majorLibs.length > 0) {
-					console.log(chalk.gray("   Including:"), majorLibs.join(", "));
-				}
-			}
-		}
-
 		console.log(
 			chalk.gray(
-				'\\nRun "bmad-minimal update" to update files to the latest version.'
+				'\nRun "bmad-minimal update" to update files to the latest version.'
 			)
 		);
+
+		if (config.generateTPPrompt) {
+			// Suggest a ready-to-use prompt for an LLM/agent to help fill technical-preferences.md
+			const tpDisplayPath = `${config.docs.dir}/technical-preferences.md`;
+			const llmPrompt = `Task: Fill out ${tpDisplayPath} by replacing 'TBD' placeholders with concrete, project-appropriate choices.\n\nInstructions:\n- Inspect this workspace to infer languages/runtimes, package manager(s), frontend/backend libraries, testing tools, build tools, and high-level repo structure.\n- Prefer evidence from the repo (manifests, lockfiles, configs). If something is ambiguous or missing, use your domain knowledge to propose sensible defaults.\n- Modify only ${tpDisplayPath}. Do not add or reorder sections. Replace only the 'TBD' tokens (and any inline guidance comments) when you have a confident value; otherwise leave them as-is.\n\nContext:\n- Project name: ${
+				config.projectName || "N/A"
+			}\n- Backend directory: ${
+				config.backendDir || "N/A"
+			}\n- Frontend directory: ${
+				config.frontendDir || "N/A"
+			}\n- Docs directory: ${
+				config.docs.dir
+			}\n\nOutput: Provide either the edited markdown content of ${tpDisplayPath} or a unified diff that applies changes to that file only.`;
+
+			console.log(
+				"\n" + chalk.cyan("Prompt for your LLM/agent (copy/paste):")
+			);
+			console.log(llmPrompt + "\n");
+		}
 	} catch (error) {
 		console.error(chalk.red("❌ Installation failed:"), error.message);
 		throw error;
@@ -235,54 +198,62 @@ async function gatherConfiguration(options, cwd) {
 	};
 
 	// If not using defaults, prompt for configuration
-	if (!options.yes) {
-		const answers = await inquirer.prompt([
-			{
-				type: "input",
-				name: "projectName",
-				message: "Project name:",
-				default: config.projectName || path.basename(cwd),
-				validate: (input) =>
-					input.trim() !== "" || "Project name is required",
-				when: () => !config.projectName,
-			},
-			{
-				type: "input",
-				name: "backendDir",
-				message: "Backend directory (relative to current directory):",
-			},
-			{
-				type: "input",
-				name: "frontendDir",
-				message: "Frontend directory (relative to current directory):",
-			},
-			{
-				type: "input",
-				name: "baseDir",
-				message: "Base directory for BMad files:",
-				default: config.baseDir,
-			},
-			{
-				type: "confirm",
-				name: "includePlanning",
-				message: "Include planning templates?",
-				default: config.includePlanning,
-			},
-			{
-				type: "input",
-				name: "docsDir",
-				message: "Documentation directory:",
-				default: config.docs.dir,
-			},
-		]);
+	const answers = await inquirer.prompt([
+		{
+			type: "input",
+			name: "projectName",
+			message: "Project name:",
+			default: config.projectName || path.basename(cwd),
+			validate: (input) => input.trim() !== "" || "Project name is required",
+			when: () => !config.projectName,
+		},
+		{
+			type: "input",
+			name: "backendDir",
+			message: "Backend directory (relative to current directory):",
+		},
+		{
+			type: "input",
+			name: "frontendDir",
+			message: "Frontend directory (relative to current directory):",
+		},
+		{
+			type: "input",
+			name: "baseDir",
+			message: "Base directory for BMad files:",
+			default: config.baseDir,
+		},
+		{
+			type: "confirm",
+			name: "includePlanning",
+			message: "Include planning templates?",
+			default: config.includePlanning,
+		},
+		{
+			type: "input",
+			name: "docsDir",
+			message: "Documentation directory:",
+			default: config.docs.dir,
+		},
+		{
+			type: "confirm",
+			name: "generateTPPrompt",
+			message: "Generate technical preferences prompt?",
+			default: true,
+		},
+	]);
 
-		config.projectName = answers.projectName ?? config.projectName;
-		config.backendDir = answers.backendDir.trim() !== "" ? answers.backendDir.trim() : null;
-		config.frontendDir = answers.frontendDir.trim() !== "" ? answers.frontendDir.trim() : null;
-		config.baseDir = answers.baseDir;
-		config.includePlanning = answers.includePlanning;
-		config.docs.dir = answers.docsDir;
-	} else if (!config.projectName) {
+	config.projectName = answers.projectName ?? config.projectName;
+	config.backendDir =
+		answers.backendDir.trim() !== "" ? answers.backendDir.trim() : null;
+	config.frontendDir =
+		answers.frontendDir.trim() !== "" ? answers.frontendDir.trim() : null;
+	config.baseDir = answers.baseDir;
+	config.includePlanning = answers.includePlanning;
+	config.docs.dir = answers.docsDir;
+	config.generateTPPrompt = answers.generateTPPrompt;
+
+	if (!config.projectName) {
 		const { projectName } = await inquirer.prompt([
 			{
 				type: "input",
