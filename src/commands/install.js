@@ -146,11 +146,29 @@ async function install(options) {
 				chalk.cyan("\\n🔍 Detected languages:"),
 				languages.join(", ")
 			);
-			if (metadata.frameworks.length > 0) {
+			if (metadata.libraries && metadata.libraries.length > 0) {
 				console.log(
-					chalk.cyan("📚 Detected frameworks:"),
-					metadata.frameworks.join(", ")
+					chalk.cyan("📚 Detected libraries:"),
+					metadata.libraries.length,
+					"packages"
 				);
+				// Show first few major libraries if any
+				const majorLibs = metadata.libraries
+					.filter((lib) =>
+						[
+							"react",
+							"vue",
+							"angular",
+							"express",
+							"django",
+							"flask",
+							"rails",
+						].some((major) => lib.toLowerCase().includes(major))
+					)
+					.slice(0, 5);
+				if (majorLibs.length > 0) {
+					console.log(chalk.gray("   Including:"), majorLibs.join(", "));
+				}
 			}
 		}
 
@@ -167,7 +185,7 @@ async function install(options) {
 
 async function findExistingConfigs(cwd) {
 	const configs = [];
-	const possibleDirs = [".bmad-minimal", ".bmad", "bmad"];
+	const possibleDirs = [".bmad-minimal"];
 
 	for (const dir of possibleDirs) {
 		const configPath = path.join(cwd, dir, "config.json");

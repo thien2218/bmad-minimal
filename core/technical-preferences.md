@@ -17,20 +17,11 @@ A living document that captures product-wide technical decisions, defaults, and 
 
 ## Basic information (fill these first)
 
-### R1) Languages and runtimes
-
-<!-- Choose primary language and LTS runtime. -->
-
--  Primary language(s) and version(s): <!-- e.g., TypeScript 5.x -->
--  Runtime baseline & policy: <!-- e.g., Node.js 20 LTS; upgrade to next LTS within 60 days -->
--  Type/strictness: <!-- e.g., TypeScript "strict": true -->
-
----
-
-### R2) Frameworks and libraries
+### R1) Frameworks and libraries
 
 <!-- List only what you will use now. Add more later via ADRs. -->
 
+-  Language(s): <!-- e.g., TypeScript 5.x -->
 -  Frontend: <!-- e.g., React 18, Next.js 14, UI kit -->
 -  Backend: <!-- e.g., Fastify/Express/NestJS; ORM (Prisma) -->
 -  Testing: <!-- e.g., Vitest/Jest; E2E: Playwright/Cypress -->
@@ -38,7 +29,7 @@ A living document that captures product-wide technical decisions, defaults, and 
 
 ---
 
-### R3) Project structure and package management
+### R2) Project structure and package management
 
 <!-- Standardize repo shape and package manager. -->
 
@@ -49,7 +40,7 @@ A living document that captures product-wide technical decisions, defaults, and 
 
 ---
 
-### R4) Code quality
+### R3) Code quality
 
 <!-- Make code readable and consistent. -->
 
@@ -59,7 +50,7 @@ A living document that captures product-wide technical decisions, defaults, and 
 
 ---
 
-### R5) API style and versioning
+### R4) API style and versioning
 
 <!-- Pick one: REST, GraphQL, gRPC, or hybrid. -->
 
@@ -69,7 +60,7 @@ A living document that captures product-wide technical decisions, defaults, and 
 
 ---
 
-### R6) Data and storage
+### R5) Data and storage
 
 <!-- Choose one primary database and a migration tool. -->
 
@@ -79,7 +70,7 @@ A living document that captures product-wide technical decisions, defaults, and 
 
 ---
 
-### R7) High-level infrastructure and environments
+### R6) High-level infrastructure and environments
 
 <!-- Define where it runs and how secrets/config are handled. -->
 
@@ -89,7 +80,7 @@ A living document that captures product-wide technical decisions, defaults, and 
 
 ---
 
-### R8) Security
+### R7) Security
 
 <!-- Baseline controls to avoid surprises. Keep it practical. -->
 
@@ -99,7 +90,7 @@ A living document that captures product-wide technical decisions, defaults, and 
 
 ---
 
-### R9) Observability
+### R8) Observability
 
 <!-- Enough to debug production issues. -->
 
@@ -109,7 +100,7 @@ A living document that captures product-wide technical decisions, defaults, and 
 
 ---
 
-### R10) Testing strategy
+### R9) Testing strategy
 
 <!-- Pyramid overview; define gates. -->
 
