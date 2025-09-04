@@ -1,10 +1,10 @@
 {
-	"project_path": "../<project_name>",
-	"base_dir": ".bmad-minimal",
-	"custom_technical_documents": null,
+	"projectPath": "../<project_name>",
+	"baseDir": ".bmad-minimal",
+	"customTechnicalDocuments": null,
 	"docs": {
 		"dir": "docs",
-		"sub_dirs": {
+		"subDirs": {
 			"qa": "qa",
 			"epics": "epics",
 			"stories": "stories",
@@ -12,11 +12,11 @@
 		},
 		"files": {
 			"prd": "prd.md",
-			"fe_spec": "frontend-spec.md",
-			"fe_architecture": "frontend-architecture.md",
-			"be_architecture": "backend-architecture.md",
-			"fs_architecture": "fullstack-architecture.md",
-			"technical_preferences": "technical-preferences.md"
+			"feSpec": "frontend-spec.md",
+			"feArchitecture": "frontend-architecture.md",
+			"beArchitecture": "backend-architecture.md",
+			"fsArchitecture": "fullstack-architecture.md",
+			"technicalPreferences": "technical-preferences.md"
 		}
 	}
 }

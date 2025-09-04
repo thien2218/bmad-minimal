@@ -21,21 +21,21 @@ outputs:
   artifacts:
     - name: Story File
       type: file
-      path: "{@docs.sub_dirs.stories}/story-{epic}.{story}-*.yaml"
+      path: "{@docs.subDirs.stories}/story-{epic}.{story}-*.yaml"
       format: yaml
       description: Complete story ready for development with full technical context
   updates:
-    - target: "{@docs.sub_dirs.stories}/*.yaml"
+    - target: "{@docs.subDirs.stories}/*.yaml"
       sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
       restrictions: Only create new story, do not modify existing stories
 
 prerequisites:
   files:
-    - "{@base_dir}/config.json"
+    - "{@baseDir}/config.json"
     - "{@docs.files.prd}"
-    - "{@docs.files.fe_architecture}"
-    - "{@docs.files.be_architecture}"
-    - "{@docs.files.fs_architecture}"
+    - "{@docs.files.feArchitecture}"
+    - "{@docs.files.beArchitecture}"
+    - "{@docs.files.fsArchitecture}"
   commands:
     - command: "test -f config.json"
       expected_exit_code: 0
@@ -49,7 +49,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{@base_dir}/config.json"
+        target: "{@baseDir}/config.json"
         validation:
           type: string
           required: true
@@ -62,7 +62,7 @@ process:
         type: validation
         content: |
           Extract and validate:
-          - docs.sub_dirs.stories
+          - docs.subDirs.stories
           - prd.* settings
           - architecture.* settings
           - workflow.* settings
@@ -81,7 +81,7 @@ process:
         content: |
           Based on configured PRD/epic locations:
           - Locate epic files (from configured epics path or monolithic PRD sections)
-          - If docs.sub_dirs.stories has story files, load highest story-{epic}.{story}-*.yaml
+          - If docs.subDirs.stories has story files, load highest story-{epic}.{story}-*.yaml
           - Determine next sequential story
 
     - id: IDENTIFY-2
@@ -132,7 +132,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{@docs.sub_dirs.epics}/epic-{epic}-*.yaml"
+        target: "{@docs.subDirs.epics}/epic-{epic}-*.yaml"
         content: |
           Extract:
           - Story title and description
@@ -145,7 +145,7 @@ process:
       description: If previous story exists, extract lessons learned
       action:
         type: analysis
-        target: "{@docs.sub_dirs.stories}/{previousEpicNum}.{previousStoryNum}-*.yaml"
+        target: "{@docs.subDirs.stories}/{previousEpicNum}.{previousStoryNum}-*.yaml"
         content: |
           Review Dev Agent Record sections for:
           - Completion Notes and Debug Log References
@@ -181,12 +181,12 @@ process:
           For Backend/API Stories, additionally:
           - data-models
           - database-schema
-          - {@docs.files.be_architecture} file
+          - {@docs.files.beArchitecture} file
           - rest-api-spec
           - external-apis
           
           For Frontend/UI Stories, additionally:
-          - {@docs.files.fe_architecture} file
+          - {@docs.files.feArchitecture} file
           - components
           - core-workflows
           - data-models
@@ -230,7 +230,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{@docs.sub_dirs.stories}/story-{epic}.{story}-*.yaml"
+        target: "{@docs.subDirs.stories}/story-{epic}.{story}-*.yaml"
         content: |
           story:
             id: "{epic}.{story}"
@@ -322,7 +322,7 @@ process:
       action:
         type: subtask
         subtask: execute-checklist
-        target: "{@base_dir}/engineering/checklists/story-draft-checklist.yaml"
+        target: "{@baseDir}/engineering/checklists/story-draft-checklist.yaml"
 
     - id: HANDOFF-1
       title: Provide Summary and Next Steps
@@ -330,7 +330,7 @@ process:
       action:
         type: elicit
         prompt: |
-          Story created: {@docs.sub_dirs.stories}/story-{epic}.{story}-*.yaml
+          Story created: {@docs.subDirs.stories}/story-{epic}.{story}-*.yaml
           Status: Draft
           
           Key technical components included from architecture docs:

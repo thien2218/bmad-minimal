@@ -172,7 +172,7 @@ workflow:
         All stories implemented and reviewed!
         Project development phase complete.
         
-        Reference: {@base_dir}/planning/data/bmad-kb.md#IDE Development Workflow
+        Reference: {@baseDir}/planning/data/bmad-kb.md#IDE Development Workflow
 
   flow_diagram: |
     ```mermaid
@@ -257,7 +257,7 @@ workflow:
       {{if yes}}: Proceeding to create architecture document for: {{specific_changes}}
       {{if no}}: No architectural changes needed. Proceeding to validation.
     
-    architect_to_po: "Architecture complete. Save it as {@docs.files.fs_architecture}. Please validate all artifacts for integration safety."
+    architect_to_po: "Architecture complete. Save it as {@docs.files.fsArchitecture}. Please validate all artifacts for integration safety."
     
     po_to_sm: |
       All artifacts validated. 

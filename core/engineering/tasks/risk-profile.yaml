@@ -16,7 +16,7 @@ inputs:
     - name: story_path
       type: path
       description: Path to story file
-      pattern: "{@docs.sub_dirs.stories}/story-{epic}.{story}-*.yaml"
+      pattern: "{@docs.subDirs.stories}/story-{epic}.{story}-*.yaml"
     - name: story_title
       type: string
       description: Story title (derive from story file H1 if missing)
@@ -29,10 +29,10 @@ inputs:
       type: path
       description: Path to architecture documents from config.json
       pattern: "{@docs.dir}/*-architecture.md"
-    - name: technical_preferences
+    - name: technicalPreferences
       type: path
       description: Path to technical preferences file
-      location: "{@docs.files.technical_preferences}"
+      location: "{@docs.files.technicalPreferences}"
 
 process:
   mode: sequential
@@ -200,7 +200,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{@docs.sub_dirs.qa}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
+        target: "{@docs.subDirs.qa}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
         content: |
           Create comprehensive risk report with:
           - Executive summary
@@ -216,7 +216,7 @@ outputs:
   artifacts:
     - name: risk_assessment_report
       type: report
-      path: "{@docs.sub_dirs.qa}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
+      path: "{@docs.subDirs.qa}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
       format: markdown
       description: Comprehensive risk assessment report
     - name: gate_risk_block
@@ -238,7 +238,7 @@ completion:
     - Risk report created
     - Gate block generated
   validations:
-    - command: "test -f {@docs.sub_dirs.qa}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
+    - command: "test -f {@docs.subDirs.qa}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
       expected_output: "file exists"
 
 metadata:

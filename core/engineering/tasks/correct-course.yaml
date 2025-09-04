@@ -24,7 +24,7 @@ inputs:
 
 outputs:
   updates:
-    - target: "{@docs.sub_dirs.epics}/*.yaml"
+    - target: "{@docs.subDirs.epics}/*.yaml"
       sections: ["User Stories", "Acceptance Criteria", "Priority"]
       restrictions: Only as specified in approved change proposal
     - target: "{@docs.files.prd}"
@@ -38,10 +38,10 @@ prerequisites:
   files:
     - checklists/change-checklist.yaml
     - "{@docs.files.prd}"
-    - "{@docs.sub_dirs.epics}/**"
-    - "{@docs.files.fe_architecture}"
-    - "{@docs.files.be_architecture}"
-    - "{@docs.files.fs_architecture}"
+    - "{@docs.subDirs.epics}/**"
+    - "{@docs.files.feArchitecture}"
+    - "{@docs.files.beArchitecture}"
+    - "{@docs.files.fsArchitecture}"
 
 process:
   mode: sequential

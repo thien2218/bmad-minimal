@@ -25,7 +25,7 @@ inputs:
 
 prerequisites:
   files:
-    - "{@base_dir}/engineering/checklists/"
+    - "{@baseDir}/engineering/checklists/"
 
 process:
   mode: sequential

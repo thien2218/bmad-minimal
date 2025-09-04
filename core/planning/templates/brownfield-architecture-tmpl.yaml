@@ -6,11 +6,11 @@ template:
     format: markdown
     filename: |
       If project is a UI project, then:
-        {@docs.files.fe_architecture}
+        {@docs.files.feArchitecture}
       If project is a backend/system related project, then:
-        {@docs.files.be_architecture}
+        {@docs.files.beArchitecture}
       Else:
-        {@docs.files.fs_architecture}
+        {@docs.files.fsArchitecture}
     title: "{{project_name}} Brownfield Enhancement Architecture"
 
 workflow:

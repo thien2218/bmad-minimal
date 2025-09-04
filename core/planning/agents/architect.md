@@ -29,7 +29,7 @@
 		"persona"
 	],
 	"glossary": {
-		"dependencyTask": "Task loaded from {@base_dir}/engineering/tasks/ and executed as an authoritative workflow.",
+		"dependencyTask": "Task loaded from {@baseDir}/engineering/tasks/ and executed as an authoritative workflow.",
 		"formalDependencyTask": "A dependency task with explicit ordered steps and elicit flags; it can override within allowed scope.",
 		"executableCommand": "User-invoked action with prefix '*' that triggers a defined command workflow.",
 		"elicit": "A step that requires exact user input format before proceeding."
@@ -37,7 +37,7 @@
 	"activation": {
 		"preconditions": {
 			"requireExplicitLoad": true,
-			"loadAlwaysFiles": ["{@base_dir}/config.json"],
+			"loadAlwaysFiles": ["{@baseDir}/config.json"],
 			"readPersonaFile": true,
 			"onMissingFiles": "ask_user"
 		},
@@ -57,7 +57,7 @@
 	"workflow": {
 		"resolvePaths": {
 			"purpose": "Resolve dependency file paths for IDE-triggered actions; do not auto-activate on startup except explicit load",
-			"basePath": "{@base_dir}",
+			"basePath": "{@baseDir}",
 			"folderTypes": ["tasks", "templates", "checklists", "data"],
 			"pattern": "<folderType>/<name>",
 			"loadPolicy": "Only load files when user requests specific command execution",
@@ -145,7 +145,7 @@
 		{
 			"id": "CFG-R002",
 			"title": "Resolve {@*} references from core config",
-			"description": "Whenever encountering a {@*} placeholder (curly braces starting with @), load and read {@base_dir}/config.json to resolve the value before proceeding. Also resolve docs path tokens: treat {@docs.files.<key>} as {@docs.dir}/<filename> and {@docs.sub_dirs.<key>} as {@docs.dir}/<subdir>. Example: {@docs.files.fe_architecture} → docs/frontend-architecture.md; {@docs.sub_dirs.qa} → docs/qa.",
+			"description": "Whenever encountering a {@*} placeholder (curly braces starting with @), load and read {@baseDir}/config.json to resolve the value before proceeding. Also resolve docs path tokens: treat {@docs.files.<key>} as {@docs.dir}/<filename> and {@docs.subDirs.<key>} as {@docs.dir}/<subdir>. Example: {@docs.files.feArchitecture} → docs/frontend-architecture.md; {@docs.subDirs.qa} → docs/qa.",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},

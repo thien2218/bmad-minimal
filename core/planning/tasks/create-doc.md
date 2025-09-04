@@ -17,7 +17,7 @@ When this task is invoked:
 
 ## Critical: Template Discovery
 
-If a YAML Template has not been provided, list all templates from {@base_dir}/planning/templates or ask the user to provide another.
+If a YAML Template has not been provided, list all templates from {@baseDir}/planning/templates or ask the user to provide another.
 
 ## CRITICAL: Mandatory Elicitation Format
 
