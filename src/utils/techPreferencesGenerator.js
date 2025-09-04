@@ -22,10 +22,9 @@ async function generateTechnicalPreferences(metadata) {
 	const testingContent = generateTestingContent(languages, testFrameworks);
 
 	// Replace placeholders by keys only when we have a non-falsy value.
-	const langLine = humanizeLanguages(languages);
 	const testingLine = testingContent.tools || null;
 
-	content = replaceTbdForKey(content, "Language(s)", langLine);
+	content = replaceTbdForKey(content, "Language(s)", languages.join(", "));
 	content = replaceTbdForKey(
 		content,
 		"Frontend",
@@ -64,59 +63,6 @@ async function generateTechnicalPreferences(metadata) {
 		testingContent.integration
 	);
 	content = replaceTbdForKey(content, "Quality gates", null);
-
-	return content;
-}
-
-function humanizeLanguages(languages) {
-	let content = null;
-
-	const langMap = {
-		typescript: "TypeScript",
-		javascript: "JavaScript",
-		python: "Python",
-		rust: "Rust",
-		go: "Go",
-		zig: "Zig",
-		csharp: "C#",
-		java: "Java",
-		swift: "Swift",
-		php: "PHP",
-		dart: "Dart",
-		ruby: "Ruby",
-	};
-
-	// Handle multiple languages
-	if (languages.length > 1) {
-		const langList = languages.map((lang) => langMap[lang] || lang);
-		content = langList.join(", ");
-	} else {
-		if (languages.includes("typescript")) {
-			content = langMap["typescript"];
-		} else if (languages.includes("javascript")) {
-			content = langMap["javascript"];
-		} else if (languages.includes("python")) {
-			content = langMap["python"];
-		} else if (languages.includes("rust")) {
-			content = langMap["rust"];
-		} else if (languages.includes("go")) {
-			content = langMap["go"];
-		} else if (languages.includes("zig")) {
-			content = langMap["zig"];
-		} else if (languages.includes("csharp")) {
-			content = langMap["csharp"];
-		} else if (languages.includes("java")) {
-			content = langMap["java"];
-		} else if (languages.includes("swift")) {
-			content = langMap["swift"];
-		} else if (languages.includes("php")) {
-			content = langMap["php"];
-		} else if (languages.includes("dart")) {
-			content = langMap["dart"];
-		} else if (languages.includes("ruby")) {
-			content = langMap["ruby"];
-		}
-	}
 
 	return content;
 }

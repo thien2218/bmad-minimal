@@ -10,17 +10,17 @@ async function detectLanguages(projectPath) {
 	const languages = new Set();
 	const detectionRules = [
 		{
-			language: "typescript",
+			language: "Typescript",
 			files: ["tsconfig.json", "tsconfig.*.json"],
 			extensions: [".ts", ".tsx"],
 		},
 		{
-			language: "javascript",
+			language: "Javascript",
 			files: ["package.json", ".npmrc"],
 			extensions: [".js", ".jsx", ".mjs", ".cjs"],
 		},
 		{
-			language: "python",
+			language: "Python",
 			files: [
 				"requirements.txt",
 				"Pipfile",
@@ -31,27 +31,27 @@ async function detectLanguages(projectPath) {
 			extensions: [".py", ".pyi"],
 		},
 		{
-			language: "rust",
+			language: "Rust",
 			files: ["Cargo.toml", "Cargo.lock"],
 			extensions: [".rs"],
 		},
 		{
-			language: "go",
+			language: "Go",
 			files: ["go.mod", "go.sum"],
 			extensions: [".go"],
 		},
 		{
-			language: "zig",
+			language: "Zig",
 			files: ["build.zig", "build.zig.zon"],
 			extensions: [".zig"],
 		},
 		{
-			language: "csharp",
+			language: "C#",
 			files: ["*.csproj", "*.sln", "global.json"],
 			extensions: [".cs", ".csx"],
 		},
 		{
-			language: "java",
+			language: "Java",
 			files: [
 				"pom.xml",
 				"build.gradle",
@@ -61,22 +61,22 @@ async function detectLanguages(projectPath) {
 			extensions: [".java"],
 		},
 		{
-			language: "swift",
+			language: "Swift",
 			files: ["Package.swift", "*.xcodeproj", "*.xcworkspace"],
 			extensions: [".swift"],
 		},
 		{
-			language: "php",
+			language: "PHP",
 			files: ["composer.json", "composer.lock"],
 			extensions: [".php"],
 		},
 		{
-			language: "dart",
+			language: "Dart",
 			files: ["pubspec.yaml", "pubspec.lock"],
 			extensions: [".dart"],
 		},
 		{
-			language: "ruby",
+			language: "Ruby",
 			files: ["Gemfile", "Gemfile.lock", "*.gemspec"],
 			extensions: [".rb", ".rake"],
 		},
