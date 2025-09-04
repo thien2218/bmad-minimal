@@ -119,7 +119,7 @@
 		{
 			"id": "CFG-R002",
 			"title": "Resolve {@docs.*} paths by stacking root values",
-			"description": "When resolving a {@docs.*} placeholder, compute the path by: (1) read the leaf value (e.g., filename) at the referenced property; (2) walk up parent objects and, at each level that has a \"root\" property, prepend that root segment to the path; (3) stop after applying the docs-level root; do not prepend any higher-level runtime root reserved for agents; (4) normalize slashes. Example: {@docs.architecture.files.frontend} → frontend.md → architecture/frontend.md → docs/architecture/frontend.md.",
+			"description": "When resolving a {@docs.*} placeholder, compute the path by: (1) read the leaf value (e.g., filename) at the referenced property; (2) walk up parent objects and, at each level that has a \"root\" property, prepend that root segment to the path; (3) stop after applying the docs-level root; do not prepend any higher-level runtime root reserved for agents; (4) normalize slashes. Example: {@docs.files.fe_architecture} → frontend.md → architecture/frontend.md → docs/architecture/frontend.md.",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},

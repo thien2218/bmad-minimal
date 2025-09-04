@@ -1,6 +1,6 @@
 {
 	"root": "bmad-minimal/.core",
-	"customTechnicalDocuments": null,
+	"custom_technical_documents": null,
 	"docs": {
 		"root": "docs",
 		"paths": {
@@ -10,16 +10,11 @@
 		},
 		"files": {
 			"prd": "prd.md",
-			"feSpecs": "frontend-spec.md",
-			"techPreferences": "technical-preferences.md"
-		},
-		"architecture": {
-			"root": "architecture",
-			"files": {
-				"frontend": "frontend.md",
-				"backend": "backend.md",
-				"fullstack": "fullstack.md"
-			}
+			"fe_specs": "frontend-spec.md",
+			"fe_architecture": "frontend-architecture.md",
+			"be_architecture": "backend-architecture.md",
+			"fs_architecture": "fullstack-architecture.md",
+			"technical_preferences": "technical-preferences.md"
 		}
 	}
 }

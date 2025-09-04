@@ -293,10 +293,10 @@ Based on the enhancement requirements, these files will be affected:
 1. **In Web UI (Gemini, ChatGPT, Claude)**:
 
    -  Present the entire document in one response (or multiple if too long)
-   -  Tell user to copy and save as `{@docs.architecture.root}/*.md`
+   -  Tell user to copy and save as `{@docs.root}/*-architecture.md`
 
 2. **In IDE Environment**:
-   -  Create the document as `{@docs.architecture.root}/*.md`
+   -  Create the document as `{@docs.root}/*-architecture.md`
    -  Inform user this single document contains all architectural information
 
 The document should be comprehensive enough that future agents can understand:

@@ -28,11 +28,11 @@ inputs:
     - name: architecture_refs
       type: path
       description: Path to architecture documents from config.json
-      location: "{@docs.architecture.root}"
+      pattern: "{@docs.root}/*-architecture.md"
     - name: technical_preferences
       type: path
       description: Path to technical preferences file
-      location: "{@docs.files.techPreferences)"
+      location: "{@docs.files.technical_preferences)"
 
 process:
   mode: sequential

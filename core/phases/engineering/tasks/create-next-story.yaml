@@ -33,7 +33,9 @@ prerequisites:
   files:
     - "{@root}/config.json"
     - "{@docs.files.prd}"
-    - "{@docs.architecture.root}/**"
+    - "{@docs.files.fe_architecture}"
+    - "{@docs.files.be_architecture}"
+    - "{@docs.files.fs_architecture}"
   commands:
     - command: "test -f config.json"
       expected_exit_code: 0
@@ -160,7 +162,7 @@ process:
       action:
         type: decision
         content: |
-          Read {@docs.architecture.root}/*.md
+          Read {@docs.root}/*-architecture.md
           Follow structured reading order
 
     - id: ARCH-2
@@ -179,12 +181,12 @@ process:
           For Backend/API Stories, additionally:
           - data-models
           - database-schema
-          - {@docs.architecture.files.backend} file
+          - {@docs.files.be_architecture} file
           - rest-api-spec
           - external-apis
           
           For Frontend/UI Stories, additionally:
-          - {@docs.architecture.files.frontend} file
+          - {@docs.files.fe_architecture} file
           - components
           - core-workflows
           - data-models
@@ -216,7 +218,7 @@ process:
       description: Cross-reference with Project Structure Guide
       action:
         type: validation
-        target: "{@docs.architecture.root}/*.md#unified-project-structure"
+        target: "{@docs.root}/*-architecture.md#unified-project-structure"
         content: |
           - Cross-reference story requirements with Project Structure Guide
           - Ensure file paths, component locations, module names align
@@ -242,22 +244,22 @@ process:
             previous_story_insights: "{previous_insights}"
             data_models:
               value: "{data_models}"
-              source: "{@docs.architecture.root}/<file_name>.md#{section}"
+              source: "{@docs.root}/<scope>-architecture.md#{section}"
             api_specifications:
               value: "{api_specs}"
-              source: "{@docs.architecture.root}/<file_name>.md#{section}"
+              source: "{@docs.root}/<scope>-architecture.md#{section}"
             component_specifications:
               value: "{component_specs}"
-              source: "{@docs.architecture.root}/<file_name>.md#{section}"
+              source: "{@docs.root}/<scope>-architecture.md#{section}"
             file_locations:
               value: "{file_locations}"
-              source: "{@docs.architecture.root}/<file_name>.md#{section}"
+              source: "{@docs.root}/<scope>-architecture.md#{section}"
             testing_requirements:
               value: "{testing_requirements}"
-              source: "{@docs.architecture.root}/<file_name>.md#{section}"
+              source: "{@docs.root}/<scope>-architecture.md#{section}"
             technical_constraints:
               value: "{technical_constraints}"
-              source: "{@docs.architecture.root}/<file_name>.md#{section}"
+              source: "{@docs.root}/<scope>-architecture.md#{section}"
             notes_missing_guidance: "If information for a category is not found in architecture docs, explicitly state: 'No specific guidance found in architecture docs'"
           tasks_subtasks: "{generated_tasks}"
           risk_mitigation:

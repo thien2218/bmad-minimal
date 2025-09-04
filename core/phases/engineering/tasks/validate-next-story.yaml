@@ -20,7 +20,7 @@ inputs:
     - name: architecture_docs
       type: path
       description: Path to architecture documents
-      location: "{@docs.architecture.root}"
+      pattern: "{@docs.root}/*-architecture.md"
 
 prerequisites:
   files:
