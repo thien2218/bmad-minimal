@@ -1,0 +1,195 @@
+$schema: "../../../internal/task.schema.json"
+id: "update-docs"
+title: "Update Project Documentation"
+version: "1.0.0"
+purpose: "Update or create project documentation (API docs via Swagger/OpenAPI for backend, component docs via Storybook for frontend). Prefers in-place documentation over generated artifacts."
+category: "documentation"
+agent: "dev"
+
+inputs:
+  optional:
+    - name: "type"
+      type: "string"
+      description: "Type of documentation to update: api, components, or both"
+      default: "both"
+      examples: ["api", "components", "both"]
+    - name: "method"
+      type: "string"
+      description: "Custom documentation method (e.g., markdown, docusaurus, gitbook, sphinx)"
+      examples: ["markdown", "docusaurus", "gitbook"]
+
+process:
+  mode: "sequential"
+  steps:
+    - id: "ASSESS-PROJECT"
+      title: "Analyze project structure"
+      description: "Identify backend and frontend frameworks, existing documentation, and package managers"
+      action:
+        type: "analysis"
+        content: |
+          Documentation Philosophy: In-place documentation is always preferred
+          Priority: 1) JSDoc/type hints/decorators 2) Framework integration 3) Generated artifacts
+          
+          Analyze project for:
+          - Package files: package.json, requirements.txt, go.mod, Cargo.toml, composer.json
+          - Backend frameworks: Express.js, FastAPI, Flask, Django, NestJS, Gin, Echo, etc.
+          - Frontend frameworks: React, Vue, Angular, Svelte, Web Components
+          - Existing documentation tools (Swagger libs, Storybook)
+          - Package managers: npm, yarn, pnpm, pip, go mod, cargo, composer
+
+    - id: "STRATEGY-SELECTION"
+      title: "Select documentation strategy"
+      description: "Choose approach based on project analysis and user preferences"
+      elicit: true
+      action:
+        type: "elicit"
+        prompt: |
+          Based on project analysis:
+          
+          Backend: {detected_backend}
+          Frontend: {detected_frontend} 
+          Package Manager: {detected_pm}
+          Existing Docs: {existing_docs}
+          
+          Strategy options:
+          1. Framework-integrated (Recommended) - Use native Swagger/Storybook integration with in-place docs
+          2. Custom method ({method}) - Use specified method while preferring in-place documentation
+          3. Hybrid - Combine framework integration with custom documentation
+          
+          Select approach (1-3):
+        options: ["Framework-integrated", "Custom method", "Hybrid"]
+        validation:
+          type: "string"
+          pattern: "^[1-3]$"
+          required: true
+
+    - id: "CREATE-DOC-STRUCTURE"
+      title: "Create documentation directories if not present"
+      description: "Create documentation directory structure using root path from config.json only if documentation doesn't already exist"
+      condition:
+        if: "!exists({@resources_dir}/api/) || !exists({@resources_dir}/components/)"
+      action:
+        type: "analysis"
+        content: |
+          Create documentation structure only if it doesn't exist:
+          - {@resources_dir}/api/ - for API documentation (Swagger/OpenAPI) 
+          - {@resources_dir}/components/ - for component documentation (Storybook)
+
+    - id: "SETUP-BACKEND-DOCS"
+      title: "Configure backend API documentation"
+      description: "Install and configure Swagger/OpenAPI documentation for backend, or update existing documentation"
+      condition:
+        if: "inputs.type == 'api' || inputs.type == 'both'"
+      action:
+        type: "analysis"
+        content: |
+          Check if API documentation already exists in {@resources_dir}/api/
+          
+          If updating existing documentation:
+          - Update existing API documentation with in-place approach
+          
+          If creating new documentation:
+          - Framework-specific setup with in-place documentation emphasis:
+            * Express: swagger-jsdoc + JSDoc comments in routes
+            * FastAPI: Built-in docs with Pydantic models + type hints
+            * NestJS: @nestjs/swagger with decorators
+            * Flask: Flask-RESTX with decorators
+            * Go: gin-swagger with structured comments
+            * Generic: OpenAPI YAML template
+
+    - id: "SETUP-FRONTEND-DOCS"
+      title: "Configure frontend component documentation"
+      description: "Install and configure Storybook for component documentation, or update existing documentation"
+      condition:
+        if: "inputs.type == 'components' || inputs.type == 'both'"
+      action:
+        type: "analysis"
+        content: |
+          Check if component documentation already exists in {@resources_dir}/components/
+          
+          If updating existing documentation:
+          - Update existing component documentation with in-place approach
+          
+          If creating new documentation:
+          - Framework-specific Storybook setup:
+            * React: Storybook with PropTypes/TypeScript + JSDoc
+            * Vue: Storybook for Vue with component props
+            * Angular: Storybook with Compodoc integration  
+            * Svelte: Storybook for Svelte/SvelteKit
+            * Generic: Basic Storybook setup
+
+    - id: "CUSTOM-METHOD-SETUP"
+      title: "Configure custom documentation method"
+      description: "Set up custom documentation method if specified"
+      condition:
+        if: "inputs.method != null && inputs.method != ''"
+      action:
+        type: "analysis"
+        content: |
+          Custom documentation setup for: {method}
+          Still emphasizing in-place documentation within chosen method
+          
+          Set up {method} documentation structure
+
+    - id: "CREATE-EXAMPLES"
+      title: "Generate documentation examples"
+      description: "Create comprehensive examples showing in-place documentation best practices"
+      action:
+        type: "file_operation"
+        operation: "create"
+        target: "examples/"
+        content: |
+          Create in-place documentation examples:
+          - JSDoc comments for APIs
+          - PropTypes for React components
+          - Type hints for Python
+          - Structured comments for Go
+          
+          Generate examples showing in-place documentation patterns
+
+    - id: "CONFIGURE-AUTOMATION"
+      title: "Set up documentation automation"
+      description: "Configure build scripts and automation for documentation"
+      action:
+        type: "file_operation"
+        operation: "update"
+        target: "package.json"
+        content: "Add documentation build scripts if package.json exists"
+
+outputs:
+  artifacts:
+    - name: "api-docs"
+      type: "directory"
+      path: "{@docs.dir}/api/"
+      format: "text"
+      description: "API documentation (Swagger/OpenAPI)"
+    - name: "component-docs"
+      type: "directory"
+      path: "{@docs.dir}/components/"
+      format: "text"
+      description: "Component documentation (Storybook)"
+    - name: "documentation-config"
+      type: "file"
+      path: "swagger.js|.storybook/main.js|{@docs.dir}/openapi.yaml"
+      format: "text"
+      description: "Framework-specific configuration files"
+    - name: "example-files"
+      type: "directory"
+      path: "{@docs.dir}/examples/"
+      format: "text"
+      description: "In-place documentation examples"
+
+completion:
+  criteria:
+    - "Documentation tools are installed and configured"
+    - "In-place documentation examples are provided"
+    - "Framework integration is working"
+    - "User can generate and view documentation"
+    - "Guidelines for maintenance are established"
+
+metadata:
+  author: "Thien Huynh"
+  created: "2025-08-23"
+  tags: ["documentation", "swagger", "storybook", "api", "components"]
+  complexity: "moderate"
+  estimated_duration: "30m"

@@ -1,0 +1,184 @@
+workflow:
+  id: greenfield-service
+  name: Greenfield Service/API Development
+  description: >-
+    Agent workflow for building backend services from concept to development.
+    Supports both comprehensive planning for complex services and rapid prototyping for simple APIs.
+  type: greenfield
+  project_types:
+    - rest-api
+    - graphql-api
+    - microservice
+    - backend-service
+    - api-prototype
+    - simple-service
+
+  sequence:
+    - agent: analyst
+      creates: project-brief.md
+      optional_steps:
+        - brainstorming_session
+        - market_research_prompt
+      notes: "Can do brainstorming first, then optional deep research before creating project brief. SAVE OUTPUT: Copy final project-brief.md to your project's {@docs.dir} folder."
+
+    - agent: pm
+      creates: prd.md
+      requires: project-brief.md
+      notes: "Creates PRD from project brief using prd-tmpl, focused on API/service requirements. SAVE OUTPUT: Copy final prd.md to your project's {@docs.dir} folder."
+
+    - agent: architect
+      creates: architecture.md
+      requires: prd.md
+      optional_steps:
+        - technical_research_prompt
+      notes: "Creates backend/service architecture using backend-architecture-tmpl. May suggest changes to PRD stories or new stories. SAVE OUTPUT: Copy final architecture.md to your project's {@docs.dir} folder."
+
+    - agent: pm
+      updates: prd.md (if needed)
+      requires: architecture.md
+      condition: architecture_suggests_prd_changes
+      notes: "If architect suggests story changes, update PRD and re-export the complete unredacted prd.md to {@docs.dir} folder."
+
+    - agent: pdm
+      validates: all_artifacts
+      uses: pd-master-checklist
+      notes: "Validates all documents for consistency and completeness. May require updates to any document."
+
+    - agent: various
+      updates: any_flagged_documents
+      condition: po_checklist_issues
+      notes: "If PDM finds issues, return to relevant agent to fix and re-export updated documents to {@docs.dir} folder."
+
+
+    - agent: pdm
+      action: create_story
+      creates: story.yaml
+      requires: all_artifacts_in_project
+      repeats: for_each_epic
+      notes: |
+        Story creation cycle:
+        - PDM Agent (New Chat): @pdm → *create
+        - Creates next story from architecture docs
+        - Story starts in "Draft" status
+
+    - agent: analyst/pm
+      action: review_draft_story
+      updates: story.yaml
+      requires: story.yaml
+      optional: true
+      condition: user_wants_story_review
+      notes: |
+        OPTIONAL: Review and approve draft story
+        - NOTE: story-review task coming soon
+        - Review story completeness and alignment
+        - Update story status: Draft → Approved
+
+    - agent: dev
+      action: implement_story
+      creates: implementation_files
+      requires: story.md
+      notes: |
+        Dev Agent (New Chat): @dev
+        - Implements approved story
+        - Updates File List with all changes
+        - Marks story as "Review" when complete
+
+    - agent: qa
+      action: review_implementation
+      updates: implementation_files
+      requires: implementation_files
+      optional: true
+      notes: |
+        OPTIONAL: QA Agent (New Chat): @qa → review-story
+        - Advisory review
+        - Leaves prioritized checklist for Dev
+        - Recommends status (owner decides)
+
+    - agent: dev
+      action: address_qa_feedback
+      updates: implementation_files
+      condition: qa_left_unchecked_items
+      notes: |
+        If QA left unchecked items:
+        - Dev Agent (New Chat): Address remaining items
+        - Return to QA for final approval
+
+    - repeat_development_cycle:
+      action: continue_for_all_stories
+      notes: |
+        Repeat story cycle (PDM → Dev → QA) for all epic stories
+        Continue until all stories in PRD are complete
+
+    - agent: pdm
+      action: epic_retrospective
+      creates: epic-retrospective.md
+      condition: epic_complete
+      optional: true
+      notes: |
+        OPTIONAL: After epic completion
+        - NOTE: epic-retrospective task coming soon
+        - Validate epic was completed correctly
+        - Document learnings and improvements
+
+    - workflow_end:
+      action: project_complete
+      notes: |
+        All stories implemented and reviewed!
+        Service development phase complete.
+        
+        Reference: {@resources_dir}/data/bmad-kb.md#IDE Development Workflow
+
+  flow_diagram: |
+    ```mermaid
+    graph TD
+        A[Start: Service Development] --> B[analyst: project-brief.md]
+        B --> C[pm: prd.md]
+        C --> D[architect: architecture.md]
+        D --> E{Architecture suggests PRD changes?}
+        E -->|Yes| F[pm: update prd.md]
+        E -->|No| G[pdm: validate all artifacts]
+        F --> G
+        G --> H{PDM finds issues?}
+        H -->|Yes| I[Return to relevant agent for fixes]
+        H -->|No| K[pdm: create story]
+        I --> G
+        
+        K --> L{Review draft story?}
+        L -->|Yes| M[analyst/pm: review & approve story]
+        L -->|No| N[dev: implement story]
+        M --> N
+        N --> O{QA review?}
+        O -->|Yes| P[qa: review implementation]
+        O -->|No| Q{More stories?}
+        P --> R{QA found issues?}
+        R -->|Yes| S[dev: address QA feedback]
+        R -->|No| Q
+        S --> P
+        Q -->|Yes| K
+        Q -->|No| T{Epic retrospective?}
+        T -->|Yes| U[pdm: epic retrospective]
+        T -->|No| V[Project Complete]
+        U --> V
+
+        B -.-> B1[Optional: brainstorming]
+        B -.-> B2[Optional: market research]
+        D -.-> D1[Optional: technical research]
+    ```
+
+  decision_guidance:
+    when_to_use:
+      - Building production APIs or microservices
+      - Multiple endpoints and complex business logic
+      - Need comprehensive documentation and testing
+      - Multiple team members will be involved
+      - Long-term maintenance expected
+      - Enterprise or external-facing APIs
+
+  handoff_prompts:
+    analyst_to_pm: "Project brief is complete. Save it as {@docs.dir}/project-brief.md in your project, then create the PRD."
+    pm_to_architect: "PRD is ready. Save it as {@docs.files.prd} in your project, then create the service architecture."
+    architect_review: "Architecture complete. Save it as {@docs.files.be_architecture}. Do you suggest any changes to the PRD stories or need new stories added?"
+    architect_to_pm: "Please update the PRD with the suggested story changes, then re-export the complete prd.md to {@docs.dir}/."
+    updated_to_po: "All documents ready in {@docs.dir} folder. Please validate all artifacts for consistency."
+    po_issues: "PDM found issues with [document]. Please return to [agent] to fix and re-save the updated document."
+    complete: "All planning artifacts validated and saved in {@docs.dir} folder. Move to IDE environment to begin development."

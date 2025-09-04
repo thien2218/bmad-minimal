@@ -1,5 +1,7 @@
 {
-	"resource_dir": "bmad-minimal/.core",
+	"resources_dir": ".bmad-minimal",
+	"engineering_dir": ".engineering",
+	"planning_dir": ".planning",
 	"custom_technical_documents": null,
 	"docs": {
 		"dir": "docs",
@@ -11,7 +13,7 @@
 		},
 		"files": {
 			"prd": "prd.md",
-			"fe_specs": "frontend-spec.md",
+			"fe_spec": "frontend-spec.md",
 			"fe_architecture": "frontend-architecture.md",
 			"be_architecture": "backend-architecture.md",
 			"fs_architecture": "fullstack-architecture.md",
