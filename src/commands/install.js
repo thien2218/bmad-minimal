@@ -73,7 +73,9 @@ async function install(options) {
 		// Write config.json
 		const configPath = path.join(baseDir, "config.json");
 		const configData = {
-			projectPath: config.projectPath,
+			projectName: config.projectName,
+			backendDir: config.backendDir,
+			frontendDir: config.frontendDir,
 			baseDir: config.baseDir,
 			customTechnicalDocuments: null,
 			docs: {
@@ -107,9 +109,27 @@ async function install(options) {
 
 		// Generate and write technical preferences
 		console.log(chalk.gray(`  Generating technical preferences...`));
-		const projectPath = path.resolve(cwd, config.projectPath);
-		const languages = await detectLanguages(projectPath);
-		const metadata = await getProjectMetadata(projectPath, languages);
+		const backendPath = path.resolve(cwd, config.backendDir);
+		const frontendPath = path.resolve(cwd, config.frontendDir);
+
+		// Detect languages and collect metadata from both backend and frontend directories
+		const backendLangs = await detectLanguages(backendPath);
+		const frontendLangs = await detectLanguages(frontendPath);
+		const languages = Array.from(new Set([...(backendLangs || []), ...(frontendLangs || [])]));
+
+		const backendMeta = await getProjectMetadata(backendPath, backendLangs || []);
+		const frontendMeta = await getProjectMetadata(frontendPath, frontendLangs || []);
+
+		const metadata = {
+			languages: Array.from(new Set([...(backendMeta.languages || []), ...(frontendMeta.languages || [])])),
+			libraries: {
+        backend: backendMeta.libraries || [],
+        frontend: frontendMeta.libraries || [],
+      },
+			testFrameworks: Array.from(new Set([...(backendMeta.testFrameworks || []), ...(frontendMeta.testFrameworks || [])])),
+			buildTools: Array.from(new Set([...(backendMeta.buildTools || []), ...(frontendMeta.buildTools || [])])),
+			packageManager: backendMeta.packageManager || frontendMeta.packageManager || null,
+		};
 
 		const techPrefsContent = await generateTechnicalPreferences(metadata);
 
@@ -200,7 +220,8 @@ async function findExistingConfigs(cwd) {
 async function gatherConfiguration(options, cwd) {
 	const config = {
 		projectName: options.project,
-		projectPath: "../",
+		backendDir: "backend",
+		frontendDir: "frontend",
 		baseDir: options.dir || ".bmad-minimal",
 		includePlanning: true,
 		docs: {
@@ -227,16 +248,15 @@ async function gatherConfiguration(options, cwd) {
 			},
 			{
 				type: "input",
-				name: "projectPath",
-				message: "Path to project (relative to current directory):",
-				default: config.projectPath,
-				validate: async (input) => {
-					const projectPath = path.resolve(cwd, input);
-					if (await exists(projectPath)) {
-						return true;
-					}
-					return `Path ${input} does not exist`;
-				},
+				name: "backendDir",
+				message: "Backend directory (relative to current directory):",
+				default: config.backendDir,
+			},
+			{
+				type: "input",
+				name: "frontendDir",
+				message: "Frontend directory (relative to current directory):",
+				default: config.frontendDir,
 			},
 			{
 				type: "input",
@@ -259,7 +279,8 @@ async function gatherConfiguration(options, cwd) {
 		]);
 
 		config.projectName = answers.projectName;
-		config.projectPath = answers.projectPath;
+		config.backendDir = answers.backendDir;
+		config.frontendDir = answers.frontendDir;
 		config.baseDir = answers.baseDir;
 		config.includePlanning = answers.includePlanning;
 		config.docs.dir = answers.docsDir;

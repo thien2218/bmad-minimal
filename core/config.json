@@ -1,5 +1,7 @@
 {
-	"projectPath": "../<project_name>",
+	"projectName": "",
+	"backendDir": "",
+	"frontendDir": "",
 	"baseDir": ".bmad-minimal",
 	"customTechnicalDocuments": null,
 	"docs": {
