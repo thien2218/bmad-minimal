@@ -207,7 +207,6 @@ async function getProjectMetadata(projectPath, languages) {
 		languages,
 		libraries: [],
 		testFrameworks: [],
-		buildTools: [],
 		packageManager: null,
 	};
 
@@ -233,11 +232,6 @@ async function getProjectMetadata(projectPath, languages) {
 		if (libs.has("mocha")) metadata.testFrameworks.push("Mocha");
 		if (libs.has("playwright")) metadata.testFrameworks.push("Playwright");
 		if (libs.has("cypress")) metadata.testFrameworks.push("Cypress");
-		// Build tools
-		if (libs.has("vite")) metadata.buildTools.push("Vite");
-		if (libs.has("webpack")) metadata.buildTools.push("Webpack");
-		if (libs.has("esbuild")) metadata.buildTools.push("esbuild");
-		if (libs.has("@swc/core")) metadata.buildTools.push("SWC");
 	}
 
 	if (languages.includes("python")) {

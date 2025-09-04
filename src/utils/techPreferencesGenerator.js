@@ -5,13 +5,7 @@ const path = require("path");
  * Generate technical preferences content based on project metadata
  */
 async function generateTechnicalPreferences(metadata) {
-	const {
-		languages,
-		libraries,
-		testFrameworks,
-		buildTools,
-		packageManager,
-	} = metadata;
+	const { languages, libraries, testFrameworks, packageManager } = metadata;
 
 	// Read the base template
 	const templatePath = path.join(
@@ -25,35 +19,50 @@ async function generateTechnicalPreferences(metadata) {
 		languages,
 		packageManager
 	);
-	const codeQualityContent = generateCodeQualityContent(languages);
 	const testingContent = generateTestingContent(languages, testFrameworks);
-	const buildContent = generateBuildContent(languages, buildTools);
 
-// Replace placeholders by keys only when we have a non-falsy value.
+	// Replace placeholders by keys only when we have a non-falsy value.
 	const langLine = humanizeLanguages(languages);
 	const testingLine = testingContent.tools || null;
-	const buildToolsLine = buildContent.tools || null;
 
 	content = replaceTbdForKey(content, "Language(s)", langLine);
-	content = replaceTbdForKey(content, "Frontend", libraries.frontend.join(", "));
+	content = replaceTbdForKey(
+		content,
+		"Frontend",
+		libraries.frontend.join(", ")
+	);
 	content = replaceTbdForKey(content, "Backend", libraries.backend.join(", "));
 	content = replaceTbdForKey(content, "Testing", testingLine);
-	content = replaceTbdForKey(content, "Build tools", buildToolsLine);
 
 	// Project structure and package management
-	content = replaceTbdForKey(content, "Repo model", projectStructureContent.repoModel);
-	content = replaceTbdForKey(content, "Directory layout (high-level)", projectStructureContent.directories);
-	content = replaceTbdForKey(content, "Package manager & version", projectStructureContent.packageManager);
-	content = replaceTbdForKey(content, "Workspaces", projectStructureContent.workspaces);
-
-	// Code quality
-	content = replaceTbdForKey(content, "Formatting", codeQualityContent.formatter);
-	content = replaceTbdForKey(content, "Linting", codeQualityContent.linter);
-	content = replaceTbdForKey(content, "Commit convention", null);
+	content = replaceTbdForKey(
+		content,
+		"Repo model",
+		projectStructureContent.repoModel
+	);
+	content = replaceTbdForKey(
+		content,
+		"Directory layout (high-level)",
+		projectStructureContent.directories
+	);
+	content = replaceTbdForKey(
+		content,
+		"Package manager & version",
+		projectStructureContent.packageManager
+	);
+	content = replaceTbdForKey(
+		content,
+		"Workspaces",
+		projectStructureContent.workspaces
+	);
 
 	// Testing strategy details
 	content = replaceTbdForKey(content, "Unit tests", testingContent.unitTests);
-	content = replaceTbdForKey(content, "Integration/E2E", testingContent.integration);
+	content = replaceTbdForKey(
+		content,
+		"Integration/E2E",
+		testingContent.integration
+	);
 	content = replaceTbdForKey(content, "Quality gates", null);
 
 	return content;
@@ -62,52 +71,51 @@ async function generateTechnicalPreferences(metadata) {
 function humanizeLanguages(languages) {
 	let content = null;
 
-	if (languages.includes("typescript")) {
-		content = "TypeScript 5.x";
-	} else if (languages.includes("javascript")) {
-		content = "JavaScript (ES2022+)";
-	} else if (languages.includes("python")) {
-		content = "Python 3.11+";
-	} else if (languages.includes("rust")) {
-		content = "Rust (latest stable)";
-	} else if (languages.includes("go")) {
-		content = "Go 1.21+";
-	} else if (languages.includes("zig")) {
-		content = "Zig 0.11+";
-	} else if (languages.includes("csharp")) {
-		content = "C# 12 / .NET 8";
-	} else if (languages.includes("java")) {
-		content = "Java 17 LTS";
-	} else if (languages.includes("swift")) {
-		content = "Swift 5.9+";
-	} else if (languages.includes("php")) {
-		content = "PHP 8.2+";
-	} else if (languages.includes("dart")) {
-		content = "Dart 3.0+";
-	} else if (languages.includes("ruby")) {
-		content = "Ruby 3.2+";
-	}
+	const langMap = {
+		typescript: "TypeScript",
+		javascript: "JavaScript",
+		python: "Python",
+		rust: "Rust",
+		go: "Go",
+		zig: "Zig",
+		csharp: "C#",
+		java: "Java",
+		swift: "Swift",
+		php: "PHP",
+		dart: "Dart",
+		ruby: "Ruby",
+	};
 
 	// Handle multiple languages
 	if (languages.length > 1) {
-		const langList = languages.map((lang) => {
-			const langMap = {
-				typescript: "TypeScript",
-				javascript: "JavaScript",
-				python: "Python",
-				rust: "Rust",
-				go: "Go",
-				zig: "Zig",
-				csharp: "C#",
-				java: "Java",
-				swift: "Swift",
-				php: "PHP",
-				dart: "Dart",
-				ruby: "Ruby",
-			};
-			return langMap[lang] || lang;
-		});
+		const langList = languages.map((lang) => langMap[lang] || lang);
 		content = langList.join(", ");
+	} else {
+		if (languages.includes("typescript")) {
+			content = langMap["typescript"];
+		} else if (languages.includes("javascript")) {
+			content = langMap["javascript"];
+		} else if (languages.includes("python")) {
+			content = langMap["python"];
+		} else if (languages.includes("rust")) {
+			content = langMap["rust"];
+		} else if (languages.includes("go")) {
+			content = langMap["go"];
+		} else if (languages.includes("zig")) {
+			content = langMap["zig"];
+		} else if (languages.includes("csharp")) {
+			content = langMap["csharp"];
+		} else if (languages.includes("java")) {
+			content = langMap["java"];
+		} else if (languages.includes("swift")) {
+			content = langMap["swift"];
+		} else if (languages.includes("php")) {
+			content = langMap["php"];
+		} else if (languages.includes("dart")) {
+			content = langMap["dart"];
+		} else if (languages.includes("ruby")) {
+			content = langMap["ruby"];
+		}
 	}
 
 	return content;
@@ -154,50 +162,6 @@ function generateProjectStructureContent(languages, packageManager) {
 	} else if (languages.includes("ruby")) {
 		content.directories = "lib/, spec/, docs/";
 		content.packageManager = "Bundler/RubyGems";
-	}
-
-	return content;
-}
-
-function generateCodeQualityContent(languages) {
-	const content = {
-		formatter: null,
-		linter: null,
-	};
-
-	if (languages.includes("typescript") || languages.includes("javascript")) {
-		content.formatter = "Prettier; .prettierrc.json";
-		content.linter = "ESLint; recommended + custom rules";
-	} else if (languages.includes("python")) {
-		content.formatter = "Black; default config";
-		content.linter = "flake8/pylint; PEP 8 compliance";
-	} else if (languages.includes("rust")) {
-		content.formatter = "rustfmt; default config";
-		content.linter = "clippy; pedantic level";
-	} else if (languages.includes("go")) {
-		content.formatter = "gofmt/goimports";
-		content.linter = "golangci-lint; recommended presets";
-	} else if (languages.includes("zig")) {
-		content.formatter = "zig fmt";
-		content.linter = "built-in compiler checks";
-	} else if (languages.includes("csharp")) {
-		content.formatter = "dotnet format";
-		content.linter = "Roslyn analyzers";
-	} else if (languages.includes("java")) {
-		content.formatter = "Google Java Format";
-		content.linter = "SpotBugs/Checkstyle";
-	} else if (languages.includes("swift")) {
-		content.formatter = "swift-format";
-		content.linter = "SwiftLint";
-	} else if (languages.includes("php")) {
-		content.formatter = "PHP CS Fixer";
-		content.linter = "PHPStan/Psalm";
-	} else if (languages.includes("dart")) {
-		content.formatter = "dart format";
-		content.linter = "dart analyze";
-	} else if (languages.includes("ruby")) {
-		content.formatter = "RuboCop formatter";
-		content.linter = "RuboCop; standard config";
 	}
 
 	return content;
@@ -263,52 +227,14 @@ function generateTestingContent(languages, testFrameworks) {
 	return content;
 }
 
-function generateBuildContent(languages, buildTools) {
-	const content = {
-		tools: null,
-	};
-
-	if (buildTools.length > 0) {
-		content.tools = buildTools.join(", ");
-	}
-
-	if (!content.tools) {
-		if (
-			languages.includes("typescript") ||
-			languages.includes("javascript")
-		) {
-			content.tools = "Vite/Webpack; esbuild/SWC for transpilation";
-		} else if (languages.includes("python")) {
-			content.tools = "setuptools/poetry; wheel for distribution";
-		} else if (languages.includes("rust")) {
-			content.tools = "cargo build; release profile optimization";
-		} else if (languages.includes("go")) {
-			content.tools = "go build; CGO_ENABLED=0 for static binaries";
-		} else if (languages.includes("zig")) {
-			content.tools = "zig build; ReleaseSafe mode";
-		} else if (languages.includes("csharp")) {
-			content.tools = "dotnet build; Release configuration";
-		} else if (languages.includes("java")) {
-			content.tools = "Maven/Gradle; shade plugin for fat JARs";
-		} else if (languages.includes("swift")) {
-			content.tools = "swift build; release configuration";
-		} else if (languages.includes("php")) {
-			content.tools = "Composer; opcache for production";
-		} else if (languages.includes("dart")) {
-			content.tools = "dart compile; AOT compilation";
-		} else if (languages.includes("ruby")) {
-			content.tools = "Bundler; rake for tasks";
-		}
-	}
-
-	return content;
-}
-
 // Replace only the 'TBD' and any following inline comment for a given key
 function replaceTbdForKey(content, key, value) {
 	if (!value) return content;
 	const esc = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-	const re = new RegExp(`(^\\s*-\\s*${esc}\\s*:\\s*)TBD(\\s*(?:<!--[^>]*-->)?)`, "mi");
+	const re = new RegExp(
+		`(^\\s*-\\s*${esc}\\s*:\\s*)TBD(\\s*(?:<!--[^>]*-->)?)`,
+		"mi"
+	);
 	return content.replace(re, (_, p1) => `${p1}${value}`);
 }
 

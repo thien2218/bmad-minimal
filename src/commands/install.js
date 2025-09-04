@@ -127,7 +127,6 @@ async function install(options) {
         frontend: frontendMeta.libraries,
       },
 			testFrameworks: Array.from(new Set([...backendMeta.testFrameworks, ...frontendMeta.testFrameworks])),
-			buildTools: Array.from(new Set([...backendMeta.buildTools, ...frontendMeta.buildTools])),
 			packageManager: backendMeta.packageManager || frontendMeta.packageManager || null,
 		};
 
