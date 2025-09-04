@@ -1,4 +1,4 @@
-$schema: ../../../internal/data.schema.json
+$schema: ../../.internal/data.schema.json
 id: advanced-elicitation-config
 title: Advanced Elicitation Process Configuration
 version: 1.0.0

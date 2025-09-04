@@ -1,4 +1,4 @@
-$schema: "../../../internal/task.schema.json"
+$schema: "../../.internal/task.schema.json"
 id: "update-docs"
 title: "Update Project Documentation"
 version: "1.0.0"

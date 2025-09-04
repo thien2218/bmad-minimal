@@ -1,4 +1,4 @@
-$schema: ../../../internal/task.schema.json
+$schema: ../../.internal/task.schema.json
 id: create-next-story
 title: Create Next Story Task
 version: 1.0.0

@@ -1,4 +1,5 @@
 {
+	"project_path": "../<project_name>",
 	"resources_dir": ".bmad-minimal",
 	"engineering_dir": ".engineering",
 	"planning_dir": ".planning",

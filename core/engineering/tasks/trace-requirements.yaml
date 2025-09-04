@@ -1,4 +1,4 @@
-$schema: ../../../internal/task.schema.json
+$schema: ../../.internal/task.schema.json
 id: trace-requirements
 title: Trace Requirements
 version: 1.0.0

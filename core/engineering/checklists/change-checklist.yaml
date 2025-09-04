@@ -1,4 +1,4 @@
-$schema: ../../../internal/checklist.schema.json
+$schema: ../../.internal/checklist.schema.json
 id: change-checklist
 title: Change Navigation Checklist
 version: 1.0.0

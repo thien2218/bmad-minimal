@@ -1,4 +1,4 @@
-$schema: ../../../internal/task.schema.json
+$schema: ../../.internal/task.schema.json
 id: spec-review
 title: Spec Review
 version: 1.0.0

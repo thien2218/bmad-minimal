@@ -1,4 +1,4 @@
-$schema: ../../../internal/task.schema.json
+$schema: ../../.internal/task.schema.json
 id: execute-checklist
 title: Checklist Validation Task
 version: 1.0.0
