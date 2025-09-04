@@ -1,0 +1,285 @@
+$schema: ../../.internal/data.schema.json
+id: elicitation-methods
+title: Elicitation Methods Framework
+version: 1.0.0
+description: Comprehensive collection of elicitation methods for enhancing content quality through structured analysis and reflection
+type: framework
+category: process
+scope: project
+
+content:
+  framework:
+    name: Advanced Elicitation Framework
+    version: "2025.1"
+    components:
+      - id: core-reflective
+        name: Core Reflective Methods
+        description: Fundamental methods for content refinement and analysis
+        required: true
+      - id: structural-analysis
+        name: Structural Analysis Methods
+        description: Methods for analyzing logical flow and alignment
+        required: true
+      - id: risk-challenge
+        name: Risk and Challenge Methods
+        description: Methods for identifying risks and challenging assumptions
+        required: false
+      - id: creative-exploration
+        name: Creative Exploration Methods
+        description: Advanced methods for creative problem-solving
+        required: false
+      - id: multi-persona
+        name: Multi-Persona Collaboration Methods
+        description: Methods leveraging different stakeholder perspectives
+        required: false
+      - id: game-based
+        name: Game-Based Elicitation Methods
+        description: Competitive and game-theory based approaches
+        required: false
+    
+    levels:
+      - level: basic
+        description: Core methods for standard content refinement
+        criteria:
+          - "Expand or Contract for Audience"
+          - "Critique and Refine"
+          - "Identify Potential Risks"
+          - "Assess Alignment with Goals"
+      
+      - level: intermediate
+        description: Enhanced methods for complex content analysis
+        criteria:
+          - "All basic methods"
+          - "Agile Team Perspective Shift"
+          - "Stakeholder Round Table"
+          - "Challenge from Critical Perspective"
+          - "Analyze Logical Flow and Dependencies"
+      
+      - level: advanced
+        description: Sophisticated methods for innovation and deep analysis
+        criteria:
+          - "All intermediate methods"
+          - "Tree of Thoughts Deep Dive"
+          - "ReWOO (Reasoning Without Observation)"
+          - "Self-Consistency Validation"
+          - "Red Team vs Blue Team"
+          - "Innovation Tournament"
+
+methods:
+  # Core Reflective Methods
+  - id: expand-contract-audience
+    name: "Expand or Contract for Audience"
+    category: core-reflective
+    description: "Ask whether to 'expand' (add detail, elaborate) or 'contract' (simplify, clarify)"
+    instructions:
+      - "Ask whether to 'expand' (add detail, elaborate) or 'contract' (simplify, clarify)"
+      - "Identify specific target audience if relevant"
+      - "Tailor content complexity and depth accordingly"
+    priority: required
+    
+  - id: explain-reasoning
+    name: "Explain Reasoning (CoT Step-by-Step)"
+    category: core-reflective
+    description: "Walk through the step-by-step thinking process"
+    instructions:
+      - "Walk through the step-by-step thinking process"
+      - "Reveal underlying assumptions and decision points"
+      - "Show how conclusions were reached from current role's perspective"
+    priority: preferred
+    
+  - id: critique-refine
+    name: "Critique and Refine"
+    category: core-reflective
+    description: "Review output for flaws, inconsistencies, or improvement areas"
+    instructions:
+      - "Review output for flaws, inconsistencies, or improvement areas"
+      - "Identify specific weaknesses from role's expertise"
+      - "Suggest refined version reflecting domain knowledge"
+    priority: required
+  
+  # Structural Analysis Methods
+  - id: analyze-logical-flow
+    name: "Analyze Logical Flow and Dependencies"
+    category: structural-analysis
+    description: "Examine content structure for logical progression"
+    instructions:
+      - "Examine content structure for logical progression"
+      - "Check internal consistency and coherence"
+      - "Identify and validate dependencies between elements"
+      - "Confirm effective ordering and sequencing"
+    priority: preferred
+    
+  - id: assess-alignment-goals
+    name: "Assess Alignment with Overall Goals"
+    category: structural-analysis
+    description: "Evaluate content contribution to stated objectives"
+    instructions:
+      - "Evaluate content contribution to stated objectives"
+      - "Identify any misalignments or gaps"
+      - "Interpret alignment from specific role's perspective"
+      - "Suggest adjustments to better serve goals"
+    priority: required
+  
+  # Risk and Challenge Methods
+  - id: identify-risks
+    name: "Identify Potential Risks and Unforeseen Issues"
+    category: risk-challenge
+    description: "Brainstorm potential risks from role's expertise"
+    instructions:
+      - "Brainstorm potential risks from role's expertise"
+      - "Identify overlooked edge cases or scenarios"
+      - "Anticipate unintended consequences"
+      - "Highlight implementation challenges"
+    priority: required
+    
+  - id: challenge-critical-perspective
+    name: "Challenge from Critical Perspective"
+    category: risk-challenge
+    description: "Adopt critical stance on current content"
+    instructions:
+      - "Adopt critical stance on current content"
+      - "Play devil's advocate from specified viewpoint"
+      - "Argue against proposal highlighting weaknesses"
+      - "Apply YAGNI principles when appropriate (scope trimming)"
+    priority: preferred
+  
+  # Creative Exploration Methods
+  - id: tree-of-thoughts
+    name: "Tree of Thoughts Deep Dive"
+    category: creative-exploration
+    description: "Break problem into discrete thoughts or intermediate steps"
+    instructions:
+      - "Break problem into discrete 'thoughts' or intermediate steps"
+      - "Explore multiple reasoning paths simultaneously"
+      - "Use self-evaluation to classify each path as 'sure', 'likely', or 'impossible'"
+      - "Apply search algorithms (BFS/DFS) to find optimal solution paths"
+    priority: optional
+    
+  - id: hindsight-reflection
+    name: "Hindsight is 20/20: The 'If Only...' Reflection"
+    category: creative-exploration
+    description: "Imagine retrospective scenario based on current content"
+    instructions:
+      - "Imagine retrospective scenario based on current content"
+      - "Identify the one 'if only we had known/done X...' insight"
+      - "Describe imagined consequences humorously or dramatically"
+      - "Extract actionable learnings for current context"
+    priority: optional
+  
+  # Multi-Persona Collaboration Methods
+  - id: agile-team-perspective
+    name: "Agile Team Perspective Shift"
+    category: multi-persona
+    description: "Rotate through different Scrum team member viewpoints"
+    instructions:
+      - "Product Development Master (PDM) - Value: Focus on user value and business impact"
+      - "Product Development Master (PDM) - Process: Examine process flow and team dynamics"
+      - "Developer: Assess technical implementation and complexity"
+      - "QA: Identify testing scenarios and quality concerns"
+    priority: preferred
+    
+  - id: stakeholder-roundtable
+    name: "Stakeholder Round Table"
+    category: multi-persona
+    description: "Convene virtual meeting with multiple personas"
+    instructions:
+      - "Convene virtual meeting with multiple personas"
+      - "Each persona contributes unique perspective on content"
+      - "Identify conflicts and synergies between viewpoints"
+      - "Synthesize insights into actionable recommendations"
+    priority: preferred
+    
+  - id: meta-prompting-analysis
+    name: "Meta-Prompting Analysis"
+    category: multi-persona
+    description: "Step back to analyze the structure and logic of current approach"
+    instructions:
+      - "Step back to analyze the structure and logic of current approach"
+      - "Question the format and methodology being used"
+      - "Suggest alternative frameworks or mental models"
+      - "Optimize the elicitation process itself"
+    priority: optional
+  
+  # Advanced 2025 Techniques
+  - id: self-consistency-validation
+    name: "Self-Consistency Validation"
+    category: advanced-techniques
+    description: "Generate multiple reasoning paths for same problem"
+    instructions:
+      - "Generate multiple reasoning paths for same problem"
+      - "Compare consistency across different approaches"
+      - "Identify most reliable and robust solution"
+      - "Highlight areas where approaches diverge and why"
+    priority: optional
+    
+  - id: rewoo
+    name: "ReWOO (Reasoning Without Observation)"
+    category: advanced-techniques
+    description: "Separate parametric reasoning from tool-based actions"
+    instructions:
+      - "Separate parametric reasoning from tool-based actions"
+      - "Create reasoning plan without external dependencies"
+      - "Identify what can be solved through pure reasoning"
+      - "Optimize for efficiency and reduced token usage"
+    priority: optional
+    
+  - id: persona-pattern-hybrid
+    name: "Persona-Pattern Hybrid"
+    category: advanced-techniques
+    description: "Combine specific role expertise with elicitation pattern"
+    instructions:
+      - "Architect + Risk Analysis: Deep technical risk assessment"
+      - "UX Expert + User Journey: End-to-end experience critique"
+      - "PM + Stakeholder Analysis: Multi-perspective impact review"
+    priority: optional
+  
+  # Game-Based Elicitation Methods
+  - id: red-team-blue-team
+    name: "Red Team vs Blue Team"
+    category: game-based
+    description: "Competitive analysis to reveal blind spots"
+    instructions:
+      - "Red Team: Attack the proposal, find vulnerabilities"
+      - "Blue Team: Defend and strengthen the approach"
+      - "Competitive analysis reveals blind spots"
+      - "Results in more robust, battle-tested solutions"
+    priority: optional
+    
+  - id: innovation-tournament
+    name: "Innovation Tournament"
+    category: game-based
+    description: "Pit multiple alternative approaches against each other"
+    instructions:
+      - "Pit multiple alternative approaches against each other"
+      - "Score each approach across different criteria"
+      - "Crowd-source evaluation from different personas"
+      - "Identify winning combination of features"
+    priority: optional
+    
+  - id: escape-room-challenge
+    name: "Escape Room Challenge"
+    category: game-based
+    description: "Present content as constraints to work within"
+    instructions:
+      - "Present content as constraints to work within"
+      - "Find creative solutions within tight limitations"
+      - "Identify minimum viable approach"
+      - "Discover innovative workarounds and optimizations"
+    priority: optional
+
+usage:
+  agents: ["all"]
+  phases: ["planning", "engineering"]
+  tasks: ["advanced-elicitation", "create-doc", "create-next-story", "brownfield-create-epic"]
+  load_when: "on_demand"
+
+metadata:
+  author: "Thien Huynh"
+  created: "2025-01-23"
+  lastModified: "2025-01-23"
+  tags:
+    - "elicitation"
+    - "analysis"
+    - "reflection"
+    - "quality"
+    - "process"

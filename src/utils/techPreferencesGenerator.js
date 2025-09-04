@@ -31,14 +31,12 @@ async function generateTechnicalPreferences(metadata) {
 
 // Replace placeholders by keys only when we have a non-falsy value.
 	const langLine = humanizeLanguages(languages);
-	const libsArray = Array.isArray(libraries) ? libraries : [];
-	const libContent = getLibraryContent(libsArray);
 	const testingLine = testingContent.tools || null;
 	const buildToolsLine = buildContent.tools || null;
 
 	content = replaceTbdForKey(content, "Language(s)", langLine);
-	content = replaceTbdForKey(content, "Frontend", libContent.frontend);
-	content = replaceTbdForKey(content, "Backend", libContent.backend);
+	content = replaceTbdForKey(content, "Frontend", libraries.frontend);
+	content = replaceTbdForKey(content, "Backend", libraries.backend);
 	content = replaceTbdForKey(content, "Testing", testingLine);
 	content = replaceTbdForKey(content, "Build tools", buildToolsLine);
 

@@ -1,0 +1,24 @@
+{
+	"projectName": "TestReplaceAll2",
+	"backendDir": "./",
+	"frontendDir": "frontend",
+	"baseDir": ".bmad-minimal",
+	"customTechnicalDocuments": null,
+	"docs": {
+		"dir": "docs",
+		"subDirs": {
+			"qa": "qa",
+			"epics": "epics",
+			"stories": "stories",
+			"changelog": "changelog"
+		},
+		"files": {
+			"prd": "prd.md",
+			"feSpec": "frontend-spec.md",
+			"feArchitecture": "frontend-architecture.md",
+			"beArchitecture": "backend-architecture.md",
+			"fsArchitecture": "fullstack-architecture.md",
+			"technicalPreferences": "technical-preferences.md"
+		}
+	}
+}

@@ -1,0 +1,249 @@
+$schema: ../../.internal/task.schema.json
+id: validate-next-story
+title: Validate Next Story Task
+version: 1.0.0
+purpose: To comprehensively validate a story draft before implementation begins, ensuring it is complete, accurate, and provides sufficient context for successful development. This task identifies issues and gaps that need to be addressed, preventing hallucinations and ensuring implementation readiness.
+category: quality
+agent: pdm
+
+inputs:
+  required:
+    - name: story_file
+      type: path
+      description: Path to the drafted story to validate
+      pattern: "{@docs.subDirs.stories}/story-{epic}.{story}-*.yaml"
+    - name: parent_epic
+      type: epic_id
+      description: Epic containing this story's requirements
+      pattern: "^\\d+$"
+  optional:
+    - name: architecture_docs
+      type: path
+      description: Path to architecture documents
+      pattern: "{@docs.dir}/*-architecture.md"
+
+prerequisites:
+  files:
+    - "{@baseDir}/config.json"
+    - "{story_file}"
+    - "{@baseDir}/schemas/story.json"
+
+process:
+  mode: sequential
+  steps:
+    - id: LOAD-CONFIG
+      title: Load Core Configuration and Inputs
+      description: Load config.json and identify required inputs
+      action:
+        type: file_operation
+        operation: read
+        target: "{@baseDir}/config.json"
+        validation:
+          required: true
+      on_failure: halt
+
+    - id: TEMPLATE-CHECK
+      title: Template Completeness Validation
+      description: Verify story follows template structure
+      action:
+        type: validation
+        validation:
+          type: checklist
+          required: true
+        prompt: |
+          Load {@baseDir}/schemas/story.json and check:
+          - All required sections present
+          - No template placeholders remaining ({{...}}, _TBD_)
+          - Agent sections verified
+          - Structure compliance
+
+    - id: FILE-STRUCTURE
+      title: File Structure and Source Tree Validation
+      description: Validate file paths and project structure
+      action:
+        type: validation
+        validation:
+          type: checklist
+          required: true
+        prompt: |
+          Verify:
+          - File paths clarity: new/existing files clearly specified
+          - Source tree relevance: project structure in Dev Notes
+          - Directory structure: proper location per project structure
+          - File creation sequence: logical order
+          - Path accuracy: consistency with architecture docs
+
+    - id: UI-FRONTEND
+      title: UI/Frontend Completeness Validation
+      description: Check UI component specifications if applicable
+      action:
+        type: validation
+        validation:
+          type: checklist
+          required: false
+        prompt: |
+          If UI components present, verify:
+          - Component specifications detailed
+          - Styling/design guidance clear
+          - User interaction flows specified
+          - Responsive/accessibility addressed
+          - Integration points clear
+
+    - id: AC-SATISFACTION
+      title: Acceptance Criteria Satisfaction Assessment
+      description: Ensure all ACs will be satisfied
+      action:
+        type: validation
+        validation:
+          type: requirements
+          required: true
+        prompt: |
+          Assess:
+          - AC coverage: all criteria addressed by tasks
+          - AC testability: measurable and verifiable
+          - Missing scenarios: edge cases covered
+          - Success definition: "done" clearly defined
+          - Task-AC mapping: proper linkage
+
+    - id: TESTING-REVIEW
+      title: Validation and Testing Instructions Review
+      description: Check testing approach clarity
+      action:
+        type: validation
+        validation:
+          type: checklist
+          required: true
+        prompt: |
+          Verify:
+          - Test approach clarity
+          - Test scenarios identified
+          - Validation steps clear
+          - Testing tools specified
+          - Test data requirements identified
+
+    - id: SECURITY-CHECK
+      title: Security Considerations Assessment
+      description: Evaluate security requirements if applicable
+      action:
+        type: validation
+        validation:
+          type: checklist
+          required: false
+        prompt: |
+          If security relevant, check:
+          - Security requirements identified
+          - Authentication/authorization specified
+          - Data protection addressed
+          - Vulnerability prevention considered
+          - Compliance requirements addressed
+
+    - id: TASK-SEQUENCE
+      title: Tasks/Subtasks Sequence Validation
+      description: Validate task ordering and dependencies
+      action:
+        type: validation
+        validation:
+          type: checklist
+          required: true
+        prompt: |
+          Verify:
+          - Logical order: proper implementation sequence
+          - Dependencies: clear and correct
+          - Granularity: appropriately sized
+          - Completeness: all requirements covered
+          - Blocking issues: none identified
+
+    - id: ANTI-HALLUCINATION
+      title: Anti-Hallucination Verification
+      description: Ensure all technical claims are verifiable
+      action:
+        type: validation
+        validation:
+          type: checklist
+          required: true
+        prompt: |
+          Verify:
+          - Source verification: claims traceable to documents
+          - Architecture alignment: matches specifications
+          - No invented details: all supported by sources
+          - Reference accuracy: sources correct and accessible
+          - Fact checking: cross-reference against documents
+
+    - id: DEV-READINESS
+      title: Dev Agent Implementation Readiness
+      description: Check if story is ready for implementation
+      action:
+        type: analysis
+        prompt: |
+          Assess:
+          - Self-contained context: implementable without external docs
+          - Clear instructions: unambiguous steps
+          - Complete technical context: all details in Dev Notes
+          - Missing information: identify critical gaps
+          - Actionability: all tasks actionable by agent
+
+    - id: REPORT-FINDINGS
+      title: Report Validation Findings
+      description: Present comprehensive validation findings directly to user
+      action:
+        type: analysis
+        content: |
+          Present validation findings in structured format to user:
+          
+          ## Validation Report for Story {story_id}
+          
+          ### Schema Compliance Issues
+          [List any missing sections, unfilled placeholders, structural issues]
+          
+          ### Critical Issues (Must Fix - Story Blocked)
+          [List missing essential info, unverifiable claims, incomplete AC coverage, missing sections]
+          
+          ### Should-Fix Issues (Important Quality Improvements)
+          [List unclear guidance, missing security considerations, sequencing problems, incomplete testing]
+          
+          ### Nice-to-Have Improvements (Optional Enhancements)
+          [List additional context, efficiency clarifications, documentation improvements]
+          
+          ### Anti-Hallucination Findings
+          [List unverifiable claims, missing references, architecture inconsistencies, invented details]
+          
+          ### Final Assessment
+          - **Status:** GO / NO-GO
+          - **Implementation Readiness Score:** X/10
+          - **Confidence Level:** High/Medium/Low
+          
+          Provide clear recommendation on whether story is ready for development.
+
+outputs:
+  direct_report: true
+
+blocking_conditions:
+  - condition: "config.json not found"
+    message: "config.json is required for story validation"
+    severity: critical
+  - condition: "Story file not found"
+    message: "Story file must exist for validation"
+    severity: critical
+  - condition: "Story schema not found"
+    message: "Story schema required for completeness check"
+    severity: error
+
+completion:
+  criteria:
+    - All validation checks completed
+    - Findings reported to user in chat
+    - GO/NO-GO decision made
+    - Readiness score assigned
+    - All issues documented and communicated
+
+metadata:
+  author: Thien Huynh
+  created: "2024-01-01"
+  lastModified: "2024-01-01"
+  tags:
+    - validation
+    - quality
+    - story
+    - readiness
+  complexity: complex
+  estimated_duration: "30m-1h"

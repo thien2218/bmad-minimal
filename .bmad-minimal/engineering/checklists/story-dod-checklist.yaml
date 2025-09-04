@@ -1,0 +1,239 @@
+$schema: ../../.internal/checklist.schema.json
+id: story-dod-checklist
+title: Story Definition of Done (DoD) Checklist
+version: 1.0.0
+description: Developer agent self-validation checklist to ensure story completeness before marking for review. This is a self-assessment to identify issues early rather than in review.
+category: development
+scope: story
+items:
+  # Requirements Met
+  - id: REQ-001
+    text: All functional requirements specified in the story are implemented
+    required: true
+    category: requirements
+    verification:
+      type: manual
+      instructions: Be specific - list each requirement and whether it's complete
+  - id: REQ-002
+    text: All acceptance criteria defined in the story are met
+    required: true
+    category: requirements
+    verification:
+      type: manual
+      instructions: Verify each acceptance criterion is fully satisfied
+
+  # Coding Standards & Project Structure
+  - id: CODE-001
+    text: All new/modified code strictly adheres to Operational Guidelines
+    required: true
+    category: code-quality
+    verification:
+      type: manual
+      instructions: Code quality matters for maintainability - check adherence carefully
+  - id: CODE-002
+    text: All new/modified code aligns with Project Structure (file locations, naming, etc.)
+    required: true
+    category: code-quality
+    verification:
+      type: manual
+      instructions: Verify proper file organization and naming conventions
+  - id: CODE-003
+    text: Adherence to Tech Stack for technologies/versions used
+    required: true
+    category: code-quality
+    notes: Only applicable if story introduces or modifies tech usage
+    verification:
+      type: manual
+      instructions: Check against defined tech stack in architecture docs
+  - id: CODE-004
+    text: Adherence to API Reference and Data Models
+    required: true
+    category: code-quality
+    notes: Only applicable if story involves API or data model changes
+    verification:
+      type: manual
+      instructions: Verify consistency with API specs and data model definitions
+  - id: CODE-005
+    text: Basic security best practices applied (input validation, error handling, no hardcoded secrets)
+    required: true
+    category: security
+    verification:
+      type: manual
+      instructions: Review code for common security vulnerabilities
+  - id: CODE-006
+    text: No new linter errors or warnings introduced
+    required: true
+    category: code-quality
+    verification:
+      type: command
+      command: "{lint_command}"
+      pattern: "0 problems"
+  - id: CODE-007
+    text: Code is well-commented where necessary (complex logic, not obvious statements)
+    required: true
+    category: documentation
+    verification:
+      type: manual
+      instructions: Ensure complex logic has explanatory comments
+
+  # Testing
+  - id: TEST-001
+    text: All required unit tests as per story and Testing Strategy are implemented
+    required: true
+    category: testing
+    verification:
+      type: manual
+      instructions: Testing proves your code works - be honest about test coverage
+  - id: TEST-002
+    text: All required integration tests (if applicable) are implemented
+    required: false
+    category: testing
+    verification:
+      type: manual
+      instructions: Verify integration tests cover component interactions
+  - id: TEST-003
+    text: All tests (unit, integration, E2E if applicable) pass successfully
+    required: true
+    category: testing
+    verification:
+      type: command
+      command: "{test_command}"
+      pattern: "ok"
+  - id: TEST-004
+    text: Test coverage meets project standards (if defined)
+    required: false
+    category: testing
+    verification:
+      type: manual
+      instructions: Check coverage reports against project thresholds
+
+  # Functionality & Verification
+  - id: FUNC-001
+    text: Functionality manually verified by developer (running app, checking UI, testing endpoints)
+    required: true
+    category: testing
+    verification:
+      type: manual
+      instructions: Did you actually run and test your code? Be specific about what you tested
+  - id: FUNC-002
+    text: Edge cases and error conditions considered and handled gracefully
+    required: true
+    category: testing
+    verification:
+      type: manual
+      instructions: Test boundary conditions and error scenarios
+
+  # Story Administration
+  - id: ADMIN-001
+    text: All tasks within the story file are marked as complete
+    required: true
+    category: documentation
+    verification:
+      type: file-exists
+      path: "{story_file}"
+      pattern: "\\[x\\]"
+  - id: ADMIN-002
+    text: Clarifications or decisions made during development are documented
+    required: true
+    category: documentation
+    verification:
+      type: manual
+      instructions: Document any deviations or important decisions in story file
+  - id: ADMIN-003
+    text: Story wrap-up section completed with changes, agent model used, and changelog updated
+    required: true
+    category: documentation
+    verification:
+      type: manual
+      instructions: Documentation helps the next developer - what should they know?
+
+  # Dependencies, Build & Configuration
+  - id: BUILD-001
+    text: Project builds successfully without errors
+    required: true
+    category: testing
+    verification:
+      type: command
+      command: "{build_command}"
+      pattern: "success|complete"
+    notes: Build issues block everyone - ensure everything compiles cleanly
+  - id: BUILD-002
+    text: Project linting passes
+    required: true
+    category: testing
+    verification:
+      type: command
+      command: "{lint_command}"
+      pattern: "0 problems"
+  - id: BUILD-003
+    text: New dependencies were pre-approved or explicitly approved during development
+    required: true
+    category: testing
+    verification:
+      type: manual
+      instructions: Check story requirements or document user approval
+  - id: BUILD-004
+    text: New dependencies recorded in appropriate project files with justification
+    required: true
+    category: testing
+    notes: Only if new dependencies were added
+    verification:
+      type: manual
+      instructions: Verify package.json, deno.json, or equivalent updated
+  - id: BUILD-005
+    text: No known security vulnerabilities in newly added dependencies
+    required: true
+    category: security
+    verification:
+      type: manual
+      instructions: Check for security advisories on new dependencies
+  - id: BUILD-006
+    text: New environment variables or configurations documented and handled securely
+    required: false
+    category: testing
+    notes: Only if new env vars or configs were introduced
+    verification:
+      type: manual
+      instructions: Document in .env.example and ensure secure handling
+
+  # Documentation
+  - id: DOC-001
+    text: Inline code documentation (JSDoc, TSDoc, docstrings) for new public APIs or complex logic
+    required: false
+    category: documentation
+    verification:
+      type: manual
+      instructions: Good documentation prevents future confusion - what needs explaining?
+  - id: DOC-002
+    text: User-facing documentation updated if changes impact users
+    required: false
+    category: documentation
+    verification:
+      type: manual
+      instructions: Update user guides, API docs, or help text as needed
+  - id: DOC-003
+    text: Technical documentation (READMEs, diagrams) updated for architectural changes
+    required: false
+    category: documentation
+    verification:
+      type: manual
+      instructions: Update architecture docs for significant structural changes
+
+  # Final Confirmation
+  - id: FINAL-001
+    text: Developer Agent confirms all applicable items have been addressed
+    required: true
+    category: documentation
+    verification:
+      type: manual
+      instructions: |
+        After completing checklist:
+        1. Summarize what was accomplished
+        2. List any unchecked items with explanations
+        3. Identify technical debt or follow-up work
+        4. Note challenges or learnings
+        5. Confirm story readiness for review
+metadata:
+  author: Thien Huynh
+  created: "2025-08-21"
+  tags: ["development", "story", "dod", "validation"]
