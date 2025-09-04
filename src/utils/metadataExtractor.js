@@ -5,6 +5,8 @@ const path = require("path");
  * Detect project languages based on file patterns
  */
 async function detectLanguages(projectPath) {
+	if (!projectPath) return [];
+
 	const languages = new Set();
 	const detectionRules = [
 		{
@@ -208,6 +210,8 @@ async function getProjectMetadata(projectPath, languages) {
 		buildTools: [],
 		packageManager: null,
 	};
+
+	if (!projectPath) return metadata;
 
 	// Package manager (JS/TS only for now)
 	if (languages.includes("javascript") || languages.includes("typescript")) {

@@ -35,8 +35,8 @@ async function generateTechnicalPreferences(metadata) {
 	const buildToolsLine = buildContent.tools || null;
 
 	content = replaceTbdForKey(content, "Language(s)", langLine);
-	content = replaceTbdForKey(content, "Frontend", libraries.frontend);
-	content = replaceTbdForKey(content, "Backend", libraries.backend);
+	content = replaceTbdForKey(content, "Frontend", libraries.frontend.join(", "));
+	content = replaceTbdForKey(content, "Backend", libraries.backend.join(", "));
 	content = replaceTbdForKey(content, "Testing", testingLine);
 	content = replaceTbdForKey(content, "Build tools", buildToolsLine);
 

@@ -109,25 +109,25 @@ async function install(options) {
 
 		// Generate and write technical preferences
 		console.log(chalk.gray(`  Generating technical preferences...`));
-		const backendPath = path.resolve(cwd, config.backendDir);
-		const frontendPath = path.resolve(cwd, config.frontendDir);
+		const backendPath = config.backendDir && path.resolve(cwd, config.backendDir);
+		const frontendPath = config.frontendDir && path.resolve(cwd, config.frontendDir);
 
 		// Detect languages and collect metadata from both backend and frontend directories
 		const backendLangs = await detectLanguages(backendPath);
 		const frontendLangs = await detectLanguages(frontendPath);
-		const languages = Array.from(new Set([...(backendLangs || []), ...(frontendLangs || [])]));
+		const languages = Array.from(new Set([...backendLangs, ...frontendLangs]));
 
-		const backendMeta = await getProjectMetadata(backendPath, backendLangs || []);
-		const frontendMeta = await getProjectMetadata(frontendPath, frontendLangs || []);
+		const backendMeta = await getProjectMetadata(backendPath, backendLangs);
+		const frontendMeta = await getProjectMetadata(frontendPath, frontendLangs);
 
 		const metadata = {
-			languages: Array.from(new Set([...(backendMeta.languages || []), ...(frontendMeta.languages || [])])),
+			languages,
 			libraries: {
-        backend: backendMeta.libraries || [],
-        frontend: frontendMeta.libraries || [],
+        backend: backendMeta.libraries,
+        frontend: frontendMeta.libraries,
       },
-			testFrameworks: Array.from(new Set([...(backendMeta.testFrameworks || []), ...(frontendMeta.testFrameworks || [])])),
-			buildTools: Array.from(new Set([...(backendMeta.buildTools || []), ...(frontendMeta.buildTools || [])])),
+			testFrameworks: Array.from(new Set([...backendMeta.testFrameworks, ...frontendMeta.testFrameworks])),
+			buildTools: Array.from(new Set([...backendMeta.buildTools, ...frontendMeta.buildTools])),
 			packageManager: backendMeta.packageManager || frontendMeta.packageManager || null,
 		};
 
@@ -163,7 +163,7 @@ async function install(options) {
 
 		if (languages.length > 0) {
 			console.log(
-				chalk.cyan("\\n🔍 Detected languages:"),
+				chalk.cyan("\n🔍 Detected languages:"),
 				languages.join(", ")
 			);
 			if (metadata.libraries && metadata.libraries.length > 0) {
@@ -220,8 +220,8 @@ async function findExistingConfigs(cwd) {
 async function gatherConfiguration(options, cwd) {
 	const config = {
 		projectName: options.project,
-		backendDir: "backend",
-		frontendDir: "frontend",
+		backendDir: null,
+		frontendDir: null,
 		baseDir: options.dir || ".bmad-minimal",
 		includePlanning: true,
 		docs: {
@@ -245,18 +245,17 @@ async function gatherConfiguration(options, cwd) {
 				default: config.projectName || path.basename(cwd),
 				validate: (input) =>
 					input.trim() !== "" || "Project name is required",
+				when: () => !config.projectName,
 			},
 			{
 				type: "input",
 				name: "backendDir",
 				message: "Backend directory (relative to current directory):",
-				default: config.backendDir,
 			},
 			{
 				type: "input",
 				name: "frontendDir",
 				message: "Frontend directory (relative to current directory):",
-				default: config.frontendDir,
 			},
 			{
 				type: "input",
@@ -278,9 +277,9 @@ async function gatherConfiguration(options, cwd) {
 			},
 		]);
 
-		config.projectName = answers.projectName;
-		config.backendDir = answers.backendDir;
-		config.frontendDir = answers.frontendDir;
+		config.projectName = answers.projectName ?? config.projectName;
+		config.backendDir = answers.backendDir.trim() !== "" ? answers.backendDir.trim() : null;
+		config.frontendDir = answers.frontendDir.trim() !== "" ? answers.frontendDir.trim() : null;
 		config.baseDir = answers.baseDir;
 		config.includePlanning = answers.includePlanning;
 		config.docs.dir = answers.docsDir;
