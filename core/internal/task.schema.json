@@ -87,7 +87,11 @@
 							},
 							"pattern": {
 								"type": "string",
-								"description": "Regex pattern for validation (if type is string)"
+								"description": "Regex pattern for path matching and validation"
+							},
+							"location": {
+								"type": "string",
+								"description": "Exact location of a file or folder where needed docs and resources can be found"
 							},
 							"default": {
 								"description": "Default value if not provided"

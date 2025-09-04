@@ -28,11 +28,11 @@ inputs:
     - name: architecture_refs
       type: path
       description: Path to architecture documents from config.json
-      examples: ["{@docs.architecture.root}"]
+      location: "{@docs.architecture.root}"
     - name: technical_preferences
       type: path
       description: Path to technical preferences file
-      examples: ["{@docs.files.techPreferences)"]
+      location: "{@docs.files.techPreferences)"
     - name: interaction_mode
       type: string
       description: Assessment interaction mode
