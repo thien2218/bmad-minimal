@@ -20,8 +20,7 @@ async function generateTechnicalPreferences(metadata) {
 	);
 	let content = await fs.readFile(templatePath, "utf-8");
 
-	// Generate language-specific content
-	const langContent = generateLanguageContent(languages);
+	// Generate supporting content
 	const projectStructureContent = generateProjectStructureContent(
 		languages,
 		packageManager
@@ -30,67 +29,39 @@ async function generateTechnicalPreferences(metadata) {
 	const testingContent = generateTestingContent(languages, testFrameworks);
 	const buildContent = generateBuildContent(languages, buildTools);
 
-	// Replace placeholders in the template
-	content = content.replace(
-		/<!-- e\.g\., TypeScript 5\.x -->/g,
-		langContent || "TBD"
-	);
-	content = content.replace(
-		/<!-- e\.g\., React 18, Next\.js 14, UI kit -->/g,
-		libraries.frontend.join(", ") || "N/A"
-	);
-	content = content.replace(
-		/<!-- e\.g\., Fastify\/Express\/NestJS; ORM \(Prisma\) -->/g,
-		libraries.backend.join(", ") || "TBD"
-	);
-	content = content.replace(
-		/<!-- e\.g\., Vitest\/Jest; E2E: Playwright\/Cypress -->/g,
-		testingContent.tools || "TBD"
-	);
-	content = content.replace(
-		/<!-- e\.g\., Vite, SWC\/esbuild -->/g,
-		buildContent.tools || "TBD"
-	);
+// Replace placeholders by keys only when we have a non-falsy value.
+	const langLine = humanizeLanguages(languages);
+	const libsArray = Array.isArray(libraries) ? libraries : [];
+	const libContent = getLibraryContent(libsArray);
+	const testingLine = testingContent.tools || null;
+	const buildToolsLine = buildContent.tools || null;
 
-	content = content.replace(
-		/<!-- monorepo or polyrepo -->/g,
-		projectStructureContent.repoModel || "polyrepo"
-	);
-	content = content.replace(
-		/<!-- e\.g\., apps\/, packages\/, infra\/, docs\/ -->/g,
-		projectStructureContent.directories || "src/, tests/, docs/"
-	);
-	content = content.replace(
-		/<!-- pnpm\|npm\|yarn and version -->/g,
-		projectStructureContent.packageManager || "TBD"
-	);
-	content = content.replace(
-		/<!-- yes\/no; how to add a new package -->/g,
-		projectStructureContent.workspaces || "no"
-	);
+	content = replaceTbdForKey(content, "Language(s)", langLine);
+	content = replaceTbdForKey(content, "Frontend", libContent.frontend);
+	content = replaceTbdForKey(content, "Backend", libContent.backend);
+	content = replaceTbdForKey(content, "Testing", testingLine);
+	content = replaceTbdForKey(content, "Build tools", buildToolsLine);
 
-	content = content.replace(
-		/<!-- Prettier\/Black\/gofmt; config link -->/g,
-		codeQualityContent.formatter || "TBD"
-	);
-	content = content.replace(
-		/<!-- ESLint\/flake8\/golangci-lint; rule set -->/g,
-		codeQualityContent.linter || "TBD"
-	);
+	// Project structure and package management
+	content = replaceTbdForKey(content, "Repo model", projectStructureContent.repoModel);
+	content = replaceTbdForKey(content, "Directory layout (high-level)", projectStructureContent.directories);
+	content = replaceTbdForKey(content, "Package manager & version", projectStructureContent.packageManager);
+	content = replaceTbdForKey(content, "Workspaces", projectStructureContent.workspaces);
 
-	content = content.replace(
-		/<!-- framework; coverage target \(e\.g\., 80%\) -->/g,
-		testingContent.unitTests || "TBD; coverage target: 80%"
-	);
-	content = content.replace(
-		/<!-- tools and environment -->/g,
-		testingContent.integration || "TBD"
-	);
+	// Code quality
+	content = replaceTbdForKey(content, "Formatting", codeQualityContent.formatter);
+	content = replaceTbdForKey(content, "Linting", codeQualityContent.linter);
+	content = replaceTbdForKey(content, "Commit convention", null);
+
+	// Testing strategy details
+	content = replaceTbdForKey(content, "Unit tests", testingContent.unitTests);
+	content = replaceTbdForKey(content, "Integration/E2E", testingContent.integration);
+	content = replaceTbdForKey(content, "Quality gates", null);
 
 	return content;
 }
 
-function generateLanguageContent(languages) {
+function humanizeLanguages(languages) {
 	let content = null;
 
 	if (languages.includes("typescript")) {
@@ -333,6 +304,14 @@ function generateBuildContent(languages, buildTools) {
 	}
 
 	return content;
+}
+
+// Replace only the 'TBD' and any following inline comment for a given key
+function replaceTbdForKey(content, key, value) {
+	if (!value) return content;
+	const esc = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+	const re = new RegExp(`(^\\s*-\\s*${esc}\\s*:\\s*)TBD(\\s*(?:<!--[^>]*-->)?)`, "mi");
+	return content.replace(re, (_, p1) => `${p1}${value}`);
 }
 
 module.exports = {
