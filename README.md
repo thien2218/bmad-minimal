@@ -1,307 +1,143 @@
 # BMAD Minimal
 
-A streamlined CLI tool for setting up BMAD (Better Method for AI Development) workspaces. This tool creates an organized, AI-friendly project structure that helps teams collaborate effectively with AI-assisted development tools.
+BMAD Minimal is a lightweight, batteries-included starter for running BMAD (Bright Method for AI-Driven Development) processes inside any codebase. It ships a curated core of planning and engineering assets (agents, tasks, checklists, data, templates) and a simple CLI to install/update them into your repository.
 
-## Features
+The CLI copies the core content into your project and scaffolds a docs structure so your team (or AI agents) can execute consistent, repeatable workflows.
 
-🚀 **Quick Setup**: One command to create a complete BMAD workspace  
-🔍 **Auto-Detection**: Automatically detects your project technology stack  
-⚙️ **Configurable**: Customize folder locations and features  
-🎯 **IDE-Friendly**: Optimized for AI-assisted IDEs like Cursor and Windsurf  
-📝 **Pre-filled Templates**: Generate technical preferences based on your project  
-🌳 **Git Integration**: Automatic git initialization with proper .gitignore  
+## Requirements
 
-## Installation
+-  Node.js 16+ and npm
+-  Run the CLI from the root of the target repository
 
-```bash
-# Install BMAD workspace (recommended)
-npx @thienhuynh/bmad-minimal install
+## Quick Start
 
-# Or install globally
-npm install -g @thienhuynh/bmad-minimal
-bmad-minimal install
-```
-
-## Usage
-
-### Install Command
+Install the core assets and docs structure into your project. This is safe to run in any repo you control.
 
 ```bash
-# Create workspace in current directory
-npx @thienhuynh/bmad-minimal install
-npx @thienhuynh/bmad-minimal i  # short alias
+# Recommended: always use the latest version
+npx @thienhuynh/bmad-minimal@latest install
 
-# Create workspace in specific directory
-npx @thienhuynh/bmad-minimal install /path/to/project
-
-# Skip interactive prompts (use defaults)
-npx @thienhuynh/bmad-minimal install -y
-
-# Backward compatibility - install is default command
-npx @thienhuynh/bmad-minimal  # same as 'install'
+# Or accept prompts automatically when npm asks to install the package
+npx -y @thienhuynh/bmad-minimal install
 ```
 
-### Update Command
+During installation you will be prompted for:
+
+-  Project name
+-  Whether your app is singular (single app dir) or split into backend/frontend
+-  App directory (or backend/frontend directories)
+-  Base directory for BMAD files (default: `.bmad-minimal`)
+-  Whether to include planning templates (default: Yes)
+-  Documentation directory (default: `docs`)
+-  Whether to generate a technical-preferences authoring prompt
+
+At least one of: App, Backend, or Frontend directory must be provided.
+
+What gets created:
+
+```
+.bmad-minimal/
+├── config.json
+├── engineering/
+├── planning/                 # only if you selected Include planning templates
+└── .gitignore
+
+docs/
+├── qa/
+├── epics/
+├── stories/
+├── brownfield/
+└── technical-preferences.md
+```
+
+The CLI also merges your answers into `.bmad-minimal/config.json` based on the default template in `core/config.json`.
+
+## Updating to the Latest Core
+
+Pull in the latest planning/engineering assets while preserving your configuration.
 
 ```bash
-# Update existing workspace to latest version
-npx @thienhuynh/bmad-minimal update
-npx @thienhuynh/bmad-minimal u  # short alias
+# Interactive (asks for confirmation)
+npx @thienhuynh/bmad-minimal@latest update
 
-# Update specific workspace directory
-npx @thienhuynh/bmad-minimal update /path/to/bmad-minimal
-
-# Skip confirmation prompts
-npx @thienhuynh/bmad-minimal update -y
-
-# Update without creating backup
-npx @thienhuynh/bmad-minimal update --no-backup
+# Non-interactive (skip confirmation)
+npx @thienhuynh/bmad-minimal@latest update --force
 ```
 
-### Interactive Setup
+-  Preserves: `.bmad-minimal/config.json`
+-  Overwrites with latest: `.bmad-minimal/engineering/` and, if present, `.bmad-minimal/planning/`
+-  Ensures `docs/` subdirectories exist and refreshes `technical-preferences.md` from the template if found
 
-When you run the command, you'll be prompted to configure:
+## Command Reference
 
-1. **Planning Files**: Whether to include planning folder for web-based planning
-2. **Documentation Location**: Where to store documentation files (default: `docs`)
-3. **Epic Files Location**: Where to store epic files (default: `docs/epics`)
-4. **Story Files Location**: Where to store story files (default: `docs/stories`)
-5. **QA Files Location**: Where to store QA files (default: `docs/qa`)
+The CLI is defined in `bin/cli.js` and exposes two commands:
 
-## Workspace Structure
+-  `install`
 
-The tool creates the following structure:
+   -  Description: Install BMAD Minimal configuration and documentation structure
+   -  Options:
+      -  `-p, --project <name>` Project name (defaults to current folder name if not provided)
+      -  `-d, --dir <path>` Base directory for BMAD files (default: `.bmad-minimal`)
 
-```
-bmad-minimal/
-├── .agents/              # Agent configurations (hidden from AI IDEs)
-│   ├── config.json      # Agent settings
-│   └── README.md        # Agent documentation
-├── .bmad-core/          # Core BMAD files (hidden from AI IDEs)
-│   ├── config.json      # BMAD configuration
-│   ├── technical-preferences.md  # Auto-generated tech preferences
-│   └── docs/            # Documentation structure
-│       ├── prd.md       # Product Requirements Document
-│       ├── architecture.md  # Architecture document
-│       ├── architecture/ # Optional architecture subdocuments
-│       ├── epics/       # Epic files
-│       ├── stories/     # Story files
-│       └── qa/          # QA files
-├── planning/            # Optional: Web-based planning (excluded from git)
-│   ├── sessions/        # Planning sessions
-│   ├── roadmaps/        # Product roadmaps
-│   └── research/        # Research documents
-├── .gitignore          # Pre-configured gitignore
-└── README.md           # This file
-```
+-  `update`
+   -  Description: Update documentation to the latest version while preserving `config.json`
+   -  Options:
+      -  `-f, --force` Force update without confirmation
 
-## Auto-Detection Features
-
-The CLI automatically detects your project type and pre-fills technical preferences:
-
-### Supported Technologies
-
-- **Node.js**: Detects package.json, frameworks (React, Vue, Angular, Express, etc.)
-- **Python**: Detects requirements.txt, pyproject.toml, Pipfile
-- **Go**: Detects go.mod
-- **Rust**: Detects Cargo.toml
-- **Java**: Detects pom.xml, build.gradle
-- **Docker**: Detects Dockerfile, docker-compose.yml
-
-### Package Managers
-
-- **npm**: Default for Node.js projects
-- **yarn**: Detected via yarn.lock
-- **pnpm**: Detected via pnpm-lock.yaml
-
-## Configuration
-
-The generated `config.json` includes:
-
-```json
-{
-  "root": ".bmad-core/",
-  "prd": {
-    "file": "docs/prd.md",
-    "version": "v4"
-  },
-  "architecture": {
-    "file": "docs/architecture.md", 
-    "version": "v4"
-  },
-  "qaLocation": "docs/qa",
-  "epic": {
-    "location": "docs/epics",
-    "fileNamePattern": "epic-{epic_number}-*.yaml"
-  },
-  "story": {
-    "location": "docs/stories", 
-    "fileNamePattern": "story-{epic_number}.{story_number}-*.yaml"
-  }
-}
-```
-
-## Why Hidden Folders?
-
-The `.agents` and `.bmad-core` folders are intentionally hidden (dotfiles) to:
-
-- Prevent accidental modifications by AI-assisted IDEs
-- Keep the workspace clean and organized
-- Ensure consistent agent behavior
-- Maintain separation between project code and BMAD configuration
-
-## Update Management
-
-BMAD Minimal includes built-in update functionality to keep your workspace current:
-
-### Version Tracking
-- Each workspace includes a `.bmad-version` file to track the installed version
-- Update command compares current vs latest version
-- Automatic backup creation before updates (can be disabled)
-
-### Update Process
-1. **Backup Creation**: Automatically backs up your workspace (excludes .git)
-2. **Configuration Preservation**: Maintains your custom folder structure
-3. **Template Updates**: Updates core templates with latest improvements
-4. **Customization Protection**: Preserves manual changes to technical-preferences.md
-5. **Rollback Support**: Can restore from backup if update fails
-
-### What Gets Updated
-- Core template files (config.json, agents configuration)
-- Auto-generated documentation templates
-- .gitignore improvements
-- New features and bug fixes
-
-### What's Preserved
-- Custom folder configurations
-- Manual changes to technical-preferences.md (with backup)
-- All your documentation content
-- Git history
-- Planning files
-
-## CLI Commands
-
-### Install Command
-```
-Usage: bmad-minimal install [target-directory] [options]
-
-Arguments:
-  target-directory     Directory where to create the bmad-minimal workspace (default: ".")
-
-Options:
-  -y, --yes           Skip interactive prompts and use defaults
-  -h, --help          Display help for command
-```
-
-### Update Command
-```
-Usage: bmad-minimal update [workspace-directory] [options]
-
-Arguments:
-  workspace-directory  Directory containing the bmad-minimal workspace (default: "bmad-minimal")
-
-Options:
-  -y, --yes           Skip confirmation prompts
-      --backup        Create backup before updating (default: true)
-      --no-backup     Skip backup creation
-  -h, --help          Display help for command
-```
-
-## Examples
-
-### New Project Setup
+Examples:
 
 ```bash
-# In a new empty directory
-npx @thienhuynh/bmad-minimal
-# Creates bmad-minimal/ with default configuration
+# Install with custom project name and base dir
+npx @thienhuynh/bmad-minimal@latest install \
+  --project "Acme Shop" \
+  --dir .bmad-minimal
+
+# Update without prompts
+npx @thienhuynh/bmad-minimal@latest update --force
 ```
 
-### Existing Project Integration
+## What’s Included
 
-```bash
-# In an existing Node.js project
-cd my-existing-project
-npx @thienhuynh/bmad-minimal
-# Detects Node.js, React, TypeScript, etc. and pre-fills preferences
-```
+Content under `.bmad-minimal/` directory during install will include:
 
-### Custom Configuration
+-  Engineering
 
-```bash
-# Interactive setup with custom paths
-npx @thienhuynh/bmad-minimal
-# Follow prompts to customize folder locations
-```
+   -  Agents (`core/engineering/agents/`): operating guides for `dev`, `pdm`, and `qa`
+   -  Tasks (`core/engineering/tasks/`): executable YAML workflows (e.g., `develop-story.yaml`, `test-design.yaml`)
+   -  Checklists (`core/engineering/checklists/`): quality gates (e.g., `story-dod-checklist.yaml`)
+   -  Data (`core/engineering/data/`): structured knowledge (e.g., `test-levels-framework.yaml`)
+   -  Schemas (`core/engineering/schemas/`): JSON structures for story/epic/QA gate
 
-### Quick Setup
+-  Planning (optional)
 
-```bash
-# Use defaults, no prompts
-npx @thienhuynh/bmad-minimal -y
-```
+   -  Agents (`core/planning/agents/`): `pm`, `architect`, `ux-expert`
+   -  Tasks (`core/planning/tasks/`): PM/Architecture task flows
+   -  Checklists (`core/planning/checklists/`): e.g., Architect Validation
+   -  Templates (`core/planning/templates/`): PRD and architecture templates
+   -  Workflows (`core/planning/workflows/`): greenfield/brownfield flows
 
-## Integration with AI IDEs
-
-### Cursor
-
-The workspace structure is optimized for Cursor's context system:
-- Git repository provides version control context
-- Hidden folders prevent AI from modifying core configurations
-- Documentation structure helps with code understanding
-
-### Windsurf
-
-Similar benefits for Windsurf and other AI-assisted development tools:
-- Organized documentation for better context
-- Clear separation of concerns
-- Consistent project structure
+-  Configuration
+   -  `core/config.json` → used to seed `.bmad-minimal/config.json` (paths for docs, subdir names, etc.)
 
 ## Troubleshooting
 
-### Permission Issues
+-  Update says "No BMad Minimal configuration found":
 
-```bash
-# If you get permission errors
-sudo npm install -g @thienhuynh/bmad-minimal
-```
+   -  Run `npx @thienhuynh/bmad-minimal install` first in the repository root.
 
-### Git Not Found
+-  Install aborts with "provide at least one of App, Backend, or Frontend directory":
 
-If git initialization fails:
-```bash
-# Install git first
-sudo apt-get install git  # Ubuntu/Debian
-brew install git          # macOS
+   -  Re-run install and provide `App directory`, or `Backend` and/or `Frontend` directories when prompted.
 
-# Then re-run the setup
-npx @thienhuynh/bmad-minimal
-```
+-  Where did my docs go?
 
-### Existing Folder Conflicts
-
-The CLI will prompt you to overwrite existing `bmad-minimal` folders. Choose:
-- **Yes**: Remove existing folder and create new one
-- **No**: Cancel setup
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+   -  The docs directory defaults to `docs/`. You can customize this during install. Subdirectories (`qa/`, `epics/`, `stories/`, `brownfield/`) are created for you.
 
 ## License
 
-ISC License - see LICENSE file for details.
+ISC
 
 ## Links
 
-- [GitHub Repository](https://github.com/thien2218/bmad-improved)
-- [NPM Package](https://www.npmjs.com/package/@thienhuynh/bmad-minimal)
-- [Issues](https://github.com/thien2218/bmad-improved/issues)
-
----
-
-Made with ❤️ for AI-assisted development teams.
+-  Repository: https://github.com/thien2218/bmad-minimal
+-  Issues: https://github.com/thien2218/bmad-minimal/issues

@@ -59,41 +59,25 @@ async function install(options) {
 
 		// Write config.json
 		const configPath = path.join(baseDir, "config.json");
-		const configData = {
-			project: {
-				name: config.projectName,
-				projectDir: config.projectDir,
-				backendDir: config.backendDir,
-				frontendDir: config.frontendDir,
-			},
-			baseDir: config.baseDir,
-			customTechnicalDocuments: null,
-			docs: {
-				dir: config.docsDir,
-				subdirs: {
-					qa: "qa",
-					epics: "epics",
-					stories: "stories",
-					brownfield: "brownfield",
-				},
-				files: {
-					prd: "prd.md",
-					feSpec: "frontend-spec.md",
-					feArchitecture: "frontend-architecture.md",
-					beArchitecture: "backend-architecture.md",
-					architecture: "fullstack-architecture.md",
-					technicalPreferences: "technical-preferences.md",
-				},
-			},
-		};
+		const defaultConfigPath = path.join(coreDir, "config.json");
+		const configData = await fs.readJson(defaultConfigPath);
+
+		// Merge defaults with gathered configuration
+		configData.baseDir = config.baseDir;
+		configData.project.name = config.projectName;
+		configData.project.projectDir = config.projectDir;
+		configData.project.backendDir = config.backendDir;
+		configData.project.frontendDir = config.frontendDir;
+		configData.docs.dir = config.docsDir;
+
 		console.log(chalk.gray(`  Writing configuration...`));
 		await writeJson(configPath, configData);
 
-		// Create docs directory structure
-		const docsDir = path.join(cwd, config.docsDir);
+		// Create docs directory structure (use merged defaults)
+		const docsDir = path.join(cwd, configData.docs.dir);
 		await fs.ensureDir(docsDir);
 
-		for (const subDir of Object.values(config.docs.subdirs)) {
+		for (const subDir of Object.values(configData.docs.subdirs)) {
 			await fs.ensureDir(path.join(docsDir, subDir));
 		}
 
@@ -124,11 +108,11 @@ async function install(options) {
 			console.log(`   ├── planning/`);
 		}
 		console.log(`   └── .gitignore`);
-		console.log(`   ${config.docs.dir}/`);
-		console.log(`   ├── ${config.docs.subdirs.epics}/`);
-		console.log(`   ├── ${config.docs.subdirs.stories}/`);
-		console.log(`   ├── ${config.docs.subdirs.qa}/`);
-		console.log(`   ├── ${config.docs.subdirs.brownfield}/`);
+		console.log(`   ${configData.docs.dir}/`);
+		console.log(`   ├── ${configData.docs.subdirs.epics}/`);
+		console.log(`   ├── ${configData.docs.subdirs.stories}/`);
+		console.log(`   ├── ${configData.docs.subdirs.qa}/`);
+		console.log(`   ├── ${configData.docs.subdirs.brownfield}/`);
 		console.log(`   └── technical-preferences.md`);
 
 		console.log(
@@ -139,15 +123,21 @@ async function install(options) {
 
 		if (config.generateTPPrompt) {
 			// Suggest a ready-to-use prompt for an LLM/agent to help fill technical-preferences.md
-			const tpDisplayPath = `${config.docs.dir}/technical-preferences.md`;
+			const tpDisplayPath = `${configData.docs.dir}/technical-preferences.md`;
 			const contextLines = [`- Project name: ${config.projectName}`];
-			if (config.projectDir)
-				contextLines.push(`- App directory: ${config.projectDir}`);
-			if (config.backendDir)
-				contextLines.push(`- Backend directory: ${config.backendDir}`);
-			if (config.frontendDir)
-				contextLines.push(`- Frontend directory: ${config.frontendDir}`);
-			contextLines.push(`- Docs directory: ${config.docs.dir}`);
+			if (configData.project.projectDir)
+				contextLines.push(
+					`- App directory: ${configData.project.projectDir}`
+				);
+			if (configData.project.backendDir)
+				contextLines.push(
+					`- Backend directory: ${configData.project.backendDir}`
+				);
+			if (configData.project.frontendDir)
+				contextLines.push(
+					`- Frontend directory: ${configData.project.frontendDir}`
+				);
+			contextLines.push(`- Docs directory: ${configData.docs.dir}`);
 			const llmPrompt = `Task: Fill out ${tpDisplayPath} by replacing 'TBD' placeholders with concrete, project-appropriate choices.\n\nInstructions:\n- Inspect this workspace to infer languages/runtimes, package manager(s), frontend/backend libraries, testing tools, build tools, and high-level repo structure.\n- Prefer evidence from the repo (manifests, lockfiles, configs). If something is ambiguous or missing, use your domain knowledge to propose sensible defaults.\n- Modify only ${tpDisplayPath}. Do not add or reorder sections. Replace only the 'TBD' tokens (and any inline guidance comments) when you have a confident value; otherwise leave them as-is.\n\nContext:\n${contextLines.join(
 				"\n"
 			)}\n\nOutput: Provide either the edited markdown content of ${tpDisplayPath} or a unified diff that applies changes to that file only.`;
