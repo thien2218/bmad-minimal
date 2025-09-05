@@ -16,7 +16,7 @@ inputs:
     - name: story_path
       type: path
       description: Path to story file from docs.subDirs.stories in config.json
-      pattern: "{@docs.subDirs.stories}/story-{epic}.{story}-*.yaml"
+      pattern: "{@docs.subDirs.stories}/{epic}.{story}-*.yaml"
     - name: test_command
       type: command
       description: Command for running tests in the project (derived from the project setup if not specified)

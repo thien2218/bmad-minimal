@@ -13,7 +13,7 @@
 			"qa": "qa",
 			"epics": "epics",
 			"stories": "stories",
-			"changelog": "changelog"
+			"brownfield": "brownfield"
 		},
 		"files": {
 			"prd": "prd.md",

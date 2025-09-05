@@ -42,7 +42,7 @@ outputs:
   artifacts:
     - name: epic_document
       type: file
-      path: "{@docs.subDirs.epics}/epic-{epic_number}-{enhancement_name}.yaml"
+      path: "{@docs.subDirs.epics}/{epic_number}-{enhancement_name}.yaml"
       format: yaml
       description: Brownfield epic document with all required sections in YAML
 
@@ -95,7 +95,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{@docs.subDirs.epics}/epic-{epic_number}-{enhancement_name}.yaml"
+        target: "{@docs.subDirs.epics}/{epic_number}-{enhancement_name}.yaml"
         content: |
           status: Draft
           epic-overview:
@@ -121,7 +121,7 @@ process:
       action:
         type: file_operation
         operation: update
-        target: "{@docs.subDirs.epics}/epic-{epic_number}-{enhancement_name}.yaml"
+        target: "{@docs.subDirs.epics}/{epic_number}-{enhancement_name}.yaml"
         content: |
           epic-overview:
             description: |
@@ -158,7 +158,7 @@ process:
       action:
         type: file_operation
         operation: update
-        target: "{@docs.subDirs.epics}/epic-{epic_number}-{enhancement_name}.yaml"
+        target: "{@docs.subDirs.epics}/{epic_number}-{enhancement_name}.yaml"
         content: |
           story-breakdown:
             story-list:
@@ -175,7 +175,7 @@ process:
       action:
         type: file_operation
         operation: update
-        target: "{@docs.subDirs.epics}/epic-{epic_number}-{enhancement_name}.yaml"
+        target: "{@docs.subDirs.epics}/{epic_number}-{enhancement_name}.yaml"
         content: |
           scope-boundaries:
             in-scope:
@@ -194,7 +194,7 @@ process:
       action:
         type: file_operation
         operation: update
-        target: "{@docs.subDirs.epics}/epic-{epic_number}-{enhancement_name}.yaml"
+        target: "{@docs.subDirs.epics}/{epic_number}-{enhancement_name}.yaml"
         content: |
           epic-overview:
             definition_of_done:

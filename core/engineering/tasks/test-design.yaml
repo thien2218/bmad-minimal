@@ -16,7 +16,7 @@ inputs:
     - name: story_path
       type: path
       description: Path to story file from docs.subDirs.stories
-      pattern: "{@docs.subDirs.stories}/story-{epic}.{story}-*.yaml"
+      pattern: "{@docs.subDirs.stories}/{epic}.{story}-*.yaml"
     - name: story_title
       type: string
       description: Story title (derive from story file H1 if missing)

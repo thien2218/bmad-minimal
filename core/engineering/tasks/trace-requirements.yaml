@@ -16,7 +16,7 @@ inputs:
     - name: story_path
       type: path
       description: Path to story file
-      pattern: "{@docs.subDirs.stories}/story-{epic}.{story}-*.yaml"
+      pattern: "{@docs.subDirs.stories}/{epic}.{story}-*.yaml"
 
 prerequisites:
   files:

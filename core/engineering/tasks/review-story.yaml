@@ -16,7 +16,7 @@ inputs:
     - name: story_path
       type: path
       description: Path to story file from docs.subDirs.stories
-      pattern: "{@docs.subDirs.stories}/story-{epic}.{story}-*.yaml"
+      pattern: "{@docs.subDirs.stories}/{epic}.{story}-*.yaml"
     - name: story_title
       type: string
       description: Story title (derive from story file H1 if missing)
@@ -185,7 +185,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{@docs.subDirs.qa}/gates/story-{epic}.{story}-*.yaml"
+        target: "{@docs.subDirs.qa}/gates/{epic}.{story}-*.yaml"
         content: |
           Render from {@baseDir}/engineering/schemas/qa-gate.json
           Include gate decision, risk summary, NFR validation
@@ -194,7 +194,7 @@ outputs:
   artifacts:
     - name: quality_gate
       type: file
-      path: "{@docs.subDirs.qa}/gates/story-{epic}.{story}-*.yaml"
+      path: "{@docs.subDirs.qa}/gates/{epic}.{story}-*.yaml"
       format: yaml
       description: Quality gate assessment file with pass/fail decision
     - name: risk_profile
@@ -242,7 +242,7 @@ completion:
     - All findings documented
     - Actionable recommendations provided
   validations:
-    - command: "test -f {@docs.subDirs.qa}/gates/story-{epic}.{story}-*.yaml"
+    - command: "test -f {@docs.subDirs.qa}/gates/{epic}.{story}-*.yaml"
       expected_output: "file exists"
 
 metadata:

@@ -4,7 +4,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{@docs.files.prd}"
+    filename: "{@docs.subDirs.brownfield}/prd-{enhancement_number}.md"
     title: "{{project_name}} Brownfield Enhancement PRD"
 
 workflow:
