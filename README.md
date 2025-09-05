@@ -15,10 +15,10 @@ Install the core assets and docs structure into your project. This is safe to ru
 
 ```bash
 # Recommended: always use the latest version
-npx @thienhuynh/bmad-minimal@latest install
+npx bmad-minimal@latest install
 
 # Or accept prompts automatically when npm asks to install the package
-npx -y @thienhuynh/bmad-minimal install
+npx -y bmad-minimal install
 ```
 
 During installation you will be prompted for:
@@ -58,10 +58,10 @@ Pull in the latest planning/engineering assets while preserving your configurati
 
 ```bash
 # Interactive (asks for confirmation)
-npx @thienhuynh/bmad-minimal@latest update
+npx bmad-minimal@latest update
 
 # Non-interactive (skip confirmation)
-npx @thienhuynh/bmad-minimal@latest update --force
+npx bmad-minimal@latest update --force
 ```
 
 -  Preserves: `.bmad-minimal/config.json`
@@ -88,12 +88,12 @@ Examples:
 
 ```bash
 # Install with custom project name and base dir
-npx @thienhuynh/bmad-minimal@latest install \
+npx bmad-minimal@latest install \
   --project "Acme Shop" \
   --dir .bmad-minimal
 
 # Update without prompts
-npx @thienhuynh/bmad-minimal@latest update --force
+npx bmad-minimal@latest update --force
 ```
 
 ## What’s Included
@@ -123,7 +123,7 @@ Content under `.bmad-minimal/` directory during install will include:
 
 -  Update says "No BMad Minimal configuration found":
 
-   -  Run `npx @thienhuynh/bmad-minimal install` first in the repository root.
+   -  Run `npx bmad-minimal install` first in the repository root.
 
 -  Install aborts with "provide at least one of App, Backend, or Frontend directory":
 

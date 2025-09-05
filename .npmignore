@@ -36,6 +36,3 @@ coverage/
 .env
 .env.local
 .env.*.local
-
-# Core template files (will be copied to package)
-core/

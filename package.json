@@ -1,52 +1,52 @@
 {
-  "name": "@thienhuynh/bmad-minimal",
-  "version": "1.0.0",
-  "description": "A minimal version of BMad Method, streamlined for developers",
-  "main": "src/index.js",
-  "bin": {
-    "bmad-minimal": "./bin/cli.js"
-  },
-  "files": [
-    "bin/",
-    "src/",
-    "core/"
-  ],
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "chmod +x bin/cli.js",
-    "start": "node bin/cli.js",
-    "dev": "node bin/cli.js",
-    "lint": "echo \"No linter configured\"",
-    "prepack": "npm run prepare",
-    "postpack": "echo \"Package created successfully\""
-  },
-  "dependencies": {
-    "commander": "^11.0.0",
-    "inquirer": "^8.2.6",
-    "chalk": "^4.1.2",
-    "fs-extra": "^11.1.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/thien2218/bmad-improved.git"
-  },
-  "keywords": [
-    "bmad",
-    "bmad-minimal",
-    "bmad-dev",
-    "bmad-developer",
-    "ai",
-    "llm",
-    "workflow",
-    "ai-workflow",
-    "agent",
-    "agentic",
-    "agents"
-  ],
-  "author": "Thien Huynh",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/thien2218/bmad-improved/issues"
-  },
-  "homepage": "https://github.com/thien2218/bmad-improved#readme"
+	"name": "bmad-minimal",
+	"version": "1.0.0",
+	"description": "A minimal version of BMad Method, streamlined for developers",
+	"main": "src/index.js",
+	"bin": {
+		"bmad-minimal": "./bin/cli.js"
+	},
+	"files": [
+		"bin/",
+		"src/",
+		"core/"
+	],
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"prepare": "chmod +x bin/cli.js",
+		"start": "node bin/cli.js",
+		"dev": "node bin/cli.js",
+		"lint": "echo \"No linter configured\"",
+		"prepack": "npm run prepare",
+		"postpack": "echo \"Package created successfully\""
+	},
+	"dependencies": {
+		"commander": "^11.0.0",
+		"inquirer": "^8.2.6",
+		"chalk": "^4.1.2",
+		"fs-extra": "^11.1.1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/thien2218/bmad-minimal.git"
+	},
+	"keywords": [
+		"bmad",
+		"bmad-minimal",
+		"bmad-dev",
+		"bmad-developer",
+		"ai",
+		"llm",
+		"workflow",
+		"ai-workflow",
+		"agent",
+		"agentic",
+		"agents"
+	],
+	"author": "Thien Huynh",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/thien2218/bmad-minimal/issues"
+	},
+	"homepage": "https://github.com/thien2218/bmad-minimal#readme"
 }
