@@ -1,7 +1,7 @@
 {
 	"project": {
 		"name": null,
-		"appDir": null,
+		"projectDir": null,
 		"backendDir": null,
 		"frontendDir": null
 	},
@@ -17,10 +17,11 @@
 		},
 		"files": {
 			"prd": "prd.md",
+			"architecture": "architecture.md",
 			"feSpec": "frontend-spec.md",
 			"feArchitecture": "frontend-architecture.md",
 			"beArchitecture": "backend-architecture.md",
-			"architecture": "architecture.md",
+			"fsArchitecture": "fullstack-architecture.md",
 			"technicalPreferences": "technical-preferences.md"
 		}
 	}

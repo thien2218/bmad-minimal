@@ -2,19 +2,13 @@ const inquirer = require("inquirer");
 const chalk = require("chalk");
 const path = require("path");
 const fs = require("fs-extra");
-const {
-	copyDirectory,
-	writeJson,
-	exists,
-	getCoreDir,
-	ensureDir,
-} = require("../utils/fileOperations");
+const { copyDirectory, writeJson, exists } = require("../utils/fileOperations");
 
 async function install(options) {
 	console.log(chalk.blue("🚀 BMad Minimal Installation\n"));
 
 	const cwd = process.cwd();
-	const coreDir = getCoreDir();
+	const coreDir = path.join(__dirname, "../../core");
 
 	// Check if already installed
 	const existingConfigs = await findExistingConfigs(cwd);
@@ -47,7 +41,7 @@ async function install(options) {
 	try {
 		// Create base directory structure
 		const baseDir = path.join(cwd, config.baseDir);
-		await ensureDir(baseDir);
+		await fs.ensureDir(baseDir);
 
 		// Copy engineering directory
 		const engineeringSource = path.join(coreDir, "engineering");
@@ -68,19 +62,19 @@ async function install(options) {
 		const configData = {
 			project: {
 				name: config.projectName,
-				appDir: config.appDir,
+				projectDir: config.projectDir,
 				backendDir: config.backendDir,
 				frontendDir: config.frontendDir,
 			},
 			baseDir: config.baseDir,
 			customTechnicalDocuments: null,
 			docs: {
-				dir: config.docs.dir,
+				dir: config.docsDir,
 				subdirs: {
-					qa: config.docs.subdirs.qa || "qa",
-					epics: config.docs.subdirs.epics || "epics",
-					stories: config.docs.subdirs.stories || "stories",
-					changelog: config.docs.subdirs.changelog || "changelog",
+					qa: "qa",
+					epics: "epics",
+					stories: "stories",
+					brownfield: "brownfield",
 				},
 				files: {
 					prd: "prd.md",
@@ -96,11 +90,11 @@ async function install(options) {
 		await writeJson(configPath, configData);
 
 		// Create docs directory structure
-		const docsDir = path.join(cwd, config.docs.dir);
-		await ensureDir(docsDir);
+		const docsDir = path.join(cwd, config.docsDir);
+		await fs.ensureDir(docsDir);
 
 		for (const subDir of Object.values(config.docs.subdirs)) {
-			await ensureDir(path.join(docsDir, subDir));
+			await fs.ensureDir(path.join(docsDir, subDir));
 		}
 
 		// Write technical preferences from template in src/templates
@@ -134,7 +128,7 @@ async function install(options) {
 		console.log(`   ├── ${config.docs.subdirs.epics}/`);
 		console.log(`   ├── ${config.docs.subdirs.stories}/`);
 		console.log(`   ├── ${config.docs.subdirs.qa}/`);
-		console.log(`   ├── ${config.docs.subdirs.changelog}/`);
+		console.log(`   ├── ${config.docs.subdirs.brownfield}/`);
 		console.log(`   └── technical-preferences.md`);
 
 		console.log(
@@ -147,8 +141,8 @@ async function install(options) {
 			// Suggest a ready-to-use prompt for an LLM/agent to help fill technical-preferences.md
 			const tpDisplayPath = `${config.docs.dir}/technical-preferences.md`;
 			const contextLines = [`- Project name: ${config.projectName}`];
-			if (config.appDir)
-				contextLines.push(`- App directory: ${config.appDir}`);
+			if (config.projectDir)
+				contextLines.push(`- App directory: ${config.projectDir}`);
 			if (config.backendDir)
 				contextLines.push(`- Backend directory: ${config.backendDir}`);
 			if (config.frontendDir)
@@ -186,20 +180,12 @@ async function findExistingConfigs(cwd) {
 async function gatherConfiguration(options, cwd) {
 	const config = {
 		projectName: options.project,
-		appDir: null,
+		projectDir: null,
 		backendDir: null,
 		frontendDir: null,
 		baseDir: options.dir || ".bmad-minimal",
 		includePlanning: true,
-		docs: {
-			dir: "docs",
-			subdirs: {
-				epics: "epics",
-				stories: "stories",
-				qa: "qa",
-				changelog: "changelog",
-			},
-		},
+		docsDir: "docs",
 	};
 
 	// If not using defaults, prompt for configuration
@@ -220,7 +206,7 @@ async function gatherConfiguration(options, cwd) {
 		},
 		{
 			type: "input",
-			name: "appDir",
+			name: "projectDir",
 			message: "App directory (relative to current directory):",
 			when: (answers) => answers.isSingular,
 		},
@@ -252,7 +238,7 @@ async function gatherConfiguration(options, cwd) {
 			type: "input",
 			name: "docsDir",
 			message: "Documentation directory:",
-			default: config.docs.dir,
+			default: config.docsDir,
 		},
 		{
 			type: "confirm",
@@ -263,12 +249,12 @@ async function gatherConfiguration(options, cwd) {
 	]);
 
 	config.projectName = answers.projectName ?? config.projectName;
-	config.appDir = answers.appDir?.trim() || null;
+	config.projectDir = answers.projectDir?.trim() || null;
 	config.backendDir = answers.backendDir?.trim() || null;
 	config.frontendDir = answers.frontendDir?.trim() || null;
 	config.baseDir = answers.baseDir;
 	config.includePlanning = answers.includePlanning;
-	config.docs.dir = answers.docsDir;
+	config.docsDir = answers.docsDir;
 	config.generateTPPrompt = answers.generateTPPrompt;
 
 	if (!config.projectName) {
@@ -285,8 +271,8 @@ async function gatherConfiguration(options, cwd) {
 		config.projectName = projectName;
 	}
 
-	// Ensure at least one of appDir, backendDir, or frontendDir is provided
-	if (!config.appDir && !config.backendDir && !config.frontendDir) {
+	// Ensure at least one of projectDir, backendDir, or frontendDir is provided
+	if (!config.projectDir && !config.backendDir && !config.frontendDir) {
 		console.error(
 			chalk.red(
 				"❌ Installation aborted: provide at least one of App, Backend, or Frontend directory."

@@ -4,7 +4,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{@docs.files.architecture}"
+    filename: "{@docs.files.fsArchitecture}"
     title: "{{project_name}} Fullstack Architecture Document"
 
 workflow:

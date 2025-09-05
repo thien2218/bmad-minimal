@@ -35,7 +35,7 @@ prerequisites:
     - "{@docs.files.prd}"
     - "{@docs.files.feArchitecture}"
     - "{@docs.files.beArchitecture}"
-    - "{@docs.files.architecture}"
+    - "{@docs.files.fsArchitecture}"
   commands:
     - command: "test -f config.json"
       expected_exit_code: 0

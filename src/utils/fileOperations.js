@@ -63,25 +63,9 @@ async function exists(path) {
 	}
 }
 
-/**
- * Get the core directory path
- */
-function getCoreDir() {
-	return path.join(__dirname, "../../core");
-}
-
-/**
- * Ensure directory exists
- */
-async function ensureDir(dir) {
-	await fs.ensureDir(dir);
-}
-
 module.exports = {
 	copyDirectory,
 	readJson,
 	writeJson,
 	exists,
-	getCoreDir,
-	ensureDir,
 };
