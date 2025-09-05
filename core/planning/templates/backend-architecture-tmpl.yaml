@@ -1,11 +1,11 @@
 template:
-  id: architecture-template-v2
-  name: Architecture Document
+  id: backend-architecture-template-v2
+  name: Backend Architecture Document
   version: 2.0
   output:
     format: markdown
     filename: "{@docs.files.beArchitecture}"
-    title: "{{project_name}} Architecture Document"
+    title: "{{project_name}} Backend Architecture Document"
 
 workflow:
   mode: interactive

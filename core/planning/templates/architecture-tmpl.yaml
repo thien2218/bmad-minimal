@@ -1,0 +1,264 @@
+template:
+  id: architecture-template-v2
+  name: Generic Architecture Document
+  version: 2.0
+  output:
+    format: markdown
+    filename: "{@docs.files.architecture}"
+    title: "{{project_name}} Architecture Document"
+
+workflow:
+  mode: interactive
+  elicitation: advanced-elicitation
+
+sections:
+  - id: introduction
+    title: Introduction
+    instruction: |
+      This template produces a generic architecture document for applications that do not cleanly fit into the typical fullstack/backend/frontend web categories. Example targets include CLI tools, desktop apps, games, systems/infra tools, embedded, data science/ML pipelines, batch jobs, scripting utilities, etc.
+
+      If available, review provided documents before proceeding (e.g., {@docs.files.prd}, brainstorming outputs, technical preferences). Ask the user for any missing context critical to architectural decisions.
+    elicit: true
+    sections:
+      - id: context
+        title: Project Context
+        template: |
+          **Purpose:** {{short_purpose}}
+          **Primary Users/Operators:** {{primary_users}}
+          **Runtime Environment(s):** {{target_runtimes}}
+          **Distribution Channel(s):** {{distribution}}
+          **Constraints:** {{key_constraints}}
+      - id: starter-template
+        title: Starter Template or Existing Project
+        instruction: |
+          Determine if a starter, engine, or an existing codebase will be used:
+          - If using a starter/tooling scaffold (e.g., game engine, CLI scaffolder, SDK templates), analyze its constraints and conventions.
+          - If extending an existing project, analyze its structure, patterns, and technology choices.
+          - If none, proceed as greenfield and document implications.
+        elicit: true
+      - id: changelog
+        title: Change Log
+        type: table
+        columns: [Date, Version, Description, Author]
+        instruction: Track document versions and changes
+
+  - id: high-level-architecture
+    title: High Level Architecture
+    instruction: Present the following subsections together, then elicit feedback.
+    elicit: true
+    sections:
+      - id: technical-summary
+        title: Technical Summary
+        instruction: |
+          Provide a concise overview (4–6 sentences) covering:
+          - Overall architecture style (e.g., modular CLI, plugin-based, engine-driven, pipeline DAG, service or daemon, batch)
+          - Primary runtime(s) and key platform targets (OS/CPU/GPU/accelerators)
+          - Key external integrations (filesystems, APIs, SDKs, hardware, data stores)
+          - Packaging/distribution model (single binary, installers, containers, wheels, etc.)
+          - How the architecture supports PRD goals
+      - id: platform-targets
+        title: Platform Targets & Environments
+        template: |
+          **Operating Systems:** {{os_list}}
+          **CPU/GPU/Accelerators:** {{hardware_targets}}
+          **Runtime(s):** {{runtime_list}}
+          **Containerization:** {{containerization}}
+          **Sandbox/Permissions Model:** {{permissions}}
+      - id: repository-structure
+        title: Repository Structure
+        instruction: |
+          Define repository approach and module boundaries (monorepo/polyrepo; packages/modules/plugins). Describe how shared utilities and assets are organized for your app type.
+        template: |
+          **Repo Structure:** {{repo_structure_choice}}
+          **Modules/Packages:** {{module_boundaries}}
+          **Shared Utilities/Assets:** {{shared_assets}}
+      - id: architecture-diagram
+        title: High Level Architecture Diagram
+        type: mermaid
+        mermaid_type: graph
+        instruction: Provide a diagram suitable for the app type (e.g., module graph, data flow, subsystem interactions).
+      - id: architectural-patterns
+        title: Architectural and Design Patterns
+        instruction: |
+          List selected patterns with rationale (e.g., plugin architecture, event bus, ECS (entity-component-system) for games, pipeline DAG, hexagonal/ports-and-adapters, actor model, etc.).
+        repeatable: true
+        template: "- **{{pattern_name}}:** {{pattern_description}} — _Rationale:_ {{rationale}}"
+
+  - id: tech-stack
+    title: Tech Stack
+    instruction: This is the definitive technology selection. Elicit and pin exact versions.
+    elicit: true
+    sections:
+      - id: technology-stack-table
+        title: Technology Stack Table
+        type: table
+        columns: [Category, Technology, Version, Purpose, Rationale]
+        rows:
+          - ["Language", "{{language}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - ["Runtime/VM", "{{runtime}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - ["Framework/Engine", "{{framework_or_engine}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - ["Build Tool", "{{build_tool}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - ["Package Manager", "{{pkg_manager}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - ["Native SDKs/Bindings", "{{native_sdks}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - ["Data Store/Files", "{{data_store}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - ["Messaging/IPC", "{{messaging}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - ["GPU/Accel Libraries", "{{accel_libs}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - ["Testing", "{{test_tooling}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - ["Packaging/Distribution", "{{packaging}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - ["CI/CD", "{{cicd}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - ["Observability", "{{observability}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+
+  - id: data-and-io
+    title: Data & I/O Contracts
+    instruction: Define data models or I/O schemas appropriate to the app type (files, streams, sockets, IPC, controllers).
+    elicit: true
+    sections:
+      - id: data-models
+        title: Data Models
+        repeatable: true
+        template: |
+          **Model/Schema:** {{name}}
+          **Purpose:** {{purpose}}
+          **Format:** {{format_or_type}}
+          **Key Fields/Contracts:** {{fields_or_contracts}}
+      - id: io-interfaces
+        title: Interfaces & Protocols
+        repeatable: true
+        template: |
+          **Interface/Protocol:** {{name}}
+          **Direction:** {{inbound_or_outbound}}
+          **Transport/Medium:** {{transport}}
+          **Contract/Schema:** {{contract_ref}}
+
+  - id: components
+    title: Components / Subsystems
+    instruction: Identify major components/subsystems and their responsibilities and APIs.
+    elicit: true
+    repeatable: true
+    sections:
+      - id: component
+        title: "{{component_name}}"
+        template: |
+          **Responsibility:** {{responsibility}}
+          **Interfaces/APIs:** {{interfaces}}
+          **Dependencies:** {{dependencies}}
+          **Configuration:** {{configuration}}
+          **Persistence/State:** {{state_persistence}}
+
+  - id: configuration
+    title: Configuration & Secrets
+    instruction: Define configuration sources, precedence, schema, and secret handling.
+    elicit: true
+    sections:
+      - id: config-sources
+        title: Sources & Precedence
+        template: |
+          **Sources:** {{sources_list}}
+          **Precedence:** {{precedence_rules}}
+          **Schema/Validation:** {{validation_method}}
+      - id: secrets
+        title: Secrets Handling
+        template: |
+          **Secret Manager/Method:** {{secret_store}}
+          **At-Rest/In-Transit Protections:** {{protections}}
+          **Access Controls:** {{access_controls}}
+
+  - id: error-logging
+    title: Error Handling, Logging & Telemetry
+    instruction: Define error taxonomy, logging formats/levels, and telemetry metrics/traces.
+    elicit: true
+    sections:
+      - id: errors
+        title: Error Strategy
+        template: |
+          **Error Types:** {{types}}
+          **Propagation/Retry:** {{strategy}}
+          **User/Operator Feedback:** {{feedback}}
+      - id: logging
+        title: Logging
+        template: |
+          **Format:** {{format}}
+          **Levels:** {{levels}}
+          **Sinks:** {{sinks}}
+          **Correlation/Tracing:** {{correlation}}
+      - id: telemetry
+        title: Telemetry/Observability
+        template: |
+          **Metrics:** {{metrics}}
+          **Tracing:** {{tracing}}
+          **Dashboards/Alerts:** {{dashboards_alerts}}
+
+  - id: performance
+    title: Performance & Resource Targets
+    instruction: Define performance budgets and resource constraints (CPU, memory, GPU/VRAM, IO throughput/latency).
+    elicit: true
+    template: |
+      **Latency Targets:** {{latency_targets}}
+      **Throughput/Frame Rate:** {{throughput_fps}}
+      **CPU/Memory Budgets:** {{cpu_mem_budgets}}
+      **GPU/VRAM Budgets:** {{gpu_budgets}}
+      **IO Constraints:** {{io_constraints}}
+
+  - id: security
+    title: Security & Compliance
+    instruction: Document security posture relevant to the app (sandboxing, permissions, supply-chain security, signatures, compliance needs).
+    elicit: true
+    template: |
+      **Threat Model Highlights:** {{threats}}
+      **Permissions/Sandbox:** {{permissions}}
+      **Supply Chain (Deps/Build):** {{supply_chain}}
+      **Binary/Artifact Signing:** {{signing}}
+      **Compliance Considerations:** {{compliance}}
+
+  - id: testing
+    title: Testing Strategy
+    instruction: Define testing layers applicable to the app type (unit/integration/e2e/simulation/replay/benchmarks/property-based testing).
+    elicit: true
+    sections:
+      - id: layers
+        title: Layers & Tools
+        template: |
+          **Unit:** {{unit_tooling}}
+          **Integration/System:** {{integration_tooling}}
+          **E2E/Scenario:** {{e2e_tooling}}
+          **Performance/Benchmarks:** {{perf_tooling}}
+          **Property-Based/Fuzz:** {{pbt_fuzz}}
+      - id: artifacts
+        title: Test Artifacts & Data
+        template: |
+          **Fixtures/Replays:** {{fixtures}}
+          **Golden Files/Snapshots:** {{goldens}}
+          **Synthetic Data:** {{synthetic}}
+
+  - id: deployment
+    title: Packaging, Distribution & Operations
+    instruction: Define how the app is built, packaged, distributed, and operated (if long-running).
+    elicit: true
+    sections:
+      - id: packaging
+        title: Packaging/Artifacts
+        template: |
+          **Formats:** {{artifact_formats}}
+          **Targets:** {{platform_targets}}
+          **Signing/Notarization:** {{signing}}
+      - id: distribution
+        title: Distribution/Release Channels
+        template: |
+          **Channels:** {{channels}}
+          **Versioning/Release Policy:** {{versioning}}
+          **Update/Auto-Update:** {{updates}}
+      - id: runtime-ops
+        title: Runtime & Operations (if applicable)
+        template: |
+          **Process Model/Service Management:** {{process_mgmt}}
+          **Monitoring/Health Checks:** {{health_checks}}
+          **Rollbacks/Canaries:** {{rollbacks}}
+
+  - id: risks
+    title: Risks & Mitigations
+    instruction: List top technical risks with mitigations and rollback plans.
+    elicit: true
+    template: |
+      - **Risk:** {{risk_1}} — **Mitigation:** {{mitigation_1}} — **Rollback:** {{rollback_1}}
+      - **Risk:** {{risk_2}} — **Mitigation:** {{mitigation_2}} — **Rollback:** {{rollback_2}}
+

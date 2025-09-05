@@ -2,7 +2,7 @@ workflow:
   id: brownfield-fullstack
   name: Brownfield Full-Stack Enhancement
   description: >-
-    Agent workflow for enhancing existing full-stack applications with new features,
+    Agent workflow for enhancing existing fullstack applications with new features,
     modernization, or significant changes. Handles existing system analysis and safe integration.
   type: brownfield
   project_types:

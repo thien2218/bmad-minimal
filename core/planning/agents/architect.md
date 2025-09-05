@@ -8,7 +8,7 @@
 -  Activation: explicit load; greet/help then halt; preload only on explicit request
 -  Workflow: load dependencies only on command; follow dependency tasks literally; elicit=true requires exact-format input
 -  Rules: stay in character; present choices as numbered lists
--  Commands: help, create-backend-architecture, create-brownfield-architecture, create-frontend-architecture, create-full-stack-architecture, document-project, execute-checklist, research, doc-out, yolo
+-  Commands: help, create-app-architecture, create-backend-architecture, create-brownfield-architecture, create-frontend-architecture, create-fullstack-architecture, document-project, execute-checklist, research, doc-out, yolo
 
 ## INSTRUCTIONS_AND_RULES:JSON
 
@@ -89,15 +89,21 @@
 			"description": "Show numbered list of available commands"
 		},
 		{
-			"name": "create-backend-architecture",
-			"description": "Create backend architecture document",
-			"targets": ["templates/backend-architecture-tmpl.yaml"],
+			"name": "create-app-architecture",
+			"description": "Create app architecture document",
+			"targets": ["templates/architecture-tmpl.yaml"],
 			"task": "tasks/create-doc.md"
 		},
 		{
-			"name": "create-brownfield-architecture",
-			"description": "Create brownfield architecture document",
-			"targets": ["templates/brownfield-architecture-tmpl.yaml"],
+			"name": "create-fullstack-architecture",
+			"description": "Create fullstack architecture document",
+			"targets": ["templates/fullstack-architecture-tmpl.yaml"],
+			"task": "tasks/create-doc.md"
+		},
+		{
+			"name": "create-backend-architecture",
+			"description": "Create backend architecture document",
+			"targets": ["templates/backend-architecture-tmpl.yaml"],
 			"task": "tasks/create-doc.md"
 		},
 		{
@@ -107,9 +113,9 @@
 			"task": "tasks/create-doc.md"
 		},
 		{
-			"name": "create-full-stack-architecture",
-			"description": "Create full-stack architecture document",
-			"targets": ["templates/fullstack-architecture-tmpl.yaml"],
+			"name": "create-brownfield-architecture",
+			"description": "Create brownfield architecture document",
+			"targets": ["templates/brownfield-architecture-tmpl.yaml"],
 			"task": "tasks/create-doc.md"
 		},
 		{
