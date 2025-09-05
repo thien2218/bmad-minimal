@@ -201,6 +201,16 @@
 			"description": "Create the next story for the highest ordered epic or the one specified by user.",
 			"parameters": ["epic"],
 			"targets": ["tasks/create-next-story.yaml"]
+		},
+		{
+			"name": "create-enh-epic",
+			"description": "Create enhancement epic from brownfield docs",
+			"targets": ["tasks/brownfield-create-enh-epic.yaml"]
+		},
+		{
+			"name": "create-next-enh-story",
+			"description": "Create next enhancement story for highest enhancement epic",
+			"targets": ["tasks/create-next-enh-story.yaml"]
 		}
 	],
 	"rules": [

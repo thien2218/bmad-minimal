@@ -57,13 +57,13 @@ workflow:
       notes: "Run document-project to capture current system state, technical debt, and constraints. Pass findings to PRD creation."
 
     - agent: pm
-      creates: prd.md
+      creates: "{@docs.subdirs.brownfield}/prd-enh-{enhancement_number}.md"
       uses: brownfield-prd-tmpl
       requires: existing_documentation_or_analysis
       notes: |
         Creates PRD for major enhancement. If document-project was run, reference its output to avoid re-analysis.
         If skipped, use existing project documentation.
-        SAVE OUTPUT: Copy final prd.md to your project's {@docs.dir} folder.
+        SAVE OUTPUT: Copy final prd-enh-{enhancement_number}.md to {@docs.subdirs.brownfield}.
 
     - step: architecture_decision
       agent: pm/architect
@@ -77,11 +77,11 @@ workflow:
         - Following existing patterns → Skip to story creation
 
     - agent: architect
-      creates: architecture.md
+      creates: "{@docs.subdirs.brownfield}/architecture-enh-{enhancement_number}.md"
       uses: brownfield-architecture-tmpl
-      requires: prd.md
+      requires: "{@docs.subdirs.brownfield}/prd-enh-{enhancement_number}.md"
       condition: architecture_changes_needed
-      notes: "Creates architecture ONLY for significant architectural changes. SAVE OUTPUT: Copy final architecture.md to your project's {@docs.dir} folder."
+      notes: "Creates architecture ONLY for significant architectural changes. SAVE OUTPUT: Copy final architecture-enh-{enhancement_number}.md to {@docs.subdirs.brownfield}."
 
     - agent: pdm
       validates: all_artifacts
@@ -189,11 +189,11 @@ workflow:
         
         F --> G{Docs Adequate?}
         G -->|No| H[architect: document-project]
-        G -->|Yes| I[pm: brownfield PRD]
+        G -->|Yes| I[pm: prd-enh-{enhancement_number}.md]
         H --> I
         
         I --> J{Architecture Needed?}
-        J -->|Yes| K[architect: architecture.md]
+        J -->|Yes| K[architect: architecture-enh-{enhancement_number}.md]
         J -->|No| L[pdm: validate artifacts]
         K --> L
         
@@ -252,12 +252,12 @@ workflow:
       Use these findings to inform PRD creation and avoid re-analyzing the same aspects.
     
     pm_to_architect_decision: |
-      PRD complete and saved as {@docs.files.prd}. 
+      PRD complete and saved as {@docs.subdirs.brownfield}/prd-enh-{enhancement_number}.md. 
       Architectural changes identified: {{yes/no}}
       {{if yes}}: Proceeding to create architecture document for: {{specific_changes}}
       {{if no}}: No architectural changes needed. Proceeding to validation.
     
-    architect_to_po: "Architecture complete. Save it as {@docs.files.architecture}. Please validate all artifacts for integration safety."
+    architect_to_po: "Architecture complete. Save it as {@docs.subdirs.brownfield}/architecture-enh-{enhancement_number}.md. Please validate all artifacts for integration safety."
     
     po_to_sm: |
       All artifacts validated. 

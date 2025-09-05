@@ -19,10 +19,10 @@ workflow:
       notes: "Review existing frontend application, user feedback, analytics data, and identify improvement areas."
 
     - agent: pm
-      creates: prd.md
+      creates: "{@docs.subdirs.brownfield}/prd-enh-{enhancement_number}.md"
       uses: brownfield-prd-tmpl
       requires: existing_ui_analysis
-      notes: "Creates comprehensive PRD focused on UI enhancement with existing system analysis. SAVE OUTPUT: Copy final prd.md to your project's {@docs.dir} folder."
+      notes: "Creates comprehensive PRD focused on UI enhancement with existing system analysis. SAVE OUTPUT: Copy final prd-enh-{enhancement_number}.md to {@docs.subdirs.brownfield}."
 
     - agent: ux-expert
       creates: frontend-spec.md
@@ -31,12 +31,12 @@ workflow:
       notes: "Creates UI/UX specification that integrates with existing design patterns. SAVE OUTPUT: Copy final frontend-spec.md to your project's {@docs.dir} folder."
 
     - agent: architect
-      creates: architecture.md
+      creates: "{@docs.subdirs.brownfield}/architecture-enh-{enhancement_number}.md"
       uses: brownfield-architecture-tmpl
       requires:
-        - prd.md
+        - "{@docs.subdirs.brownfield}/prd-enh-{enhancement_number}.md"
         - frontend-spec.md
-      notes: "Creates frontend architecture with component integration strategy and migration planning. SAVE OUTPUT: Copy final architecture.md to your project's {@docs.dir} folder."
+      notes: "Creates frontend architecture with component integration strategy and migration planning. SAVE OUTPUT: Copy final architecture-enh-{enhancement_number}.md to {@docs.subdirs.brownfield}."
 
     - agent: pdm
       validates: all_artifacts
@@ -131,9 +131,9 @@ workflow:
     ```mermaid
     graph TD
         A[Start: UI Enhancement] --> B[analyst: analyze existing UI]
-        B --> C[pm: prd.md]
+        B --> C[pm: prd-enh-{enhancement_number}.md]
         C --> D[ux-expert: frontend-spec.md]
-        D --> E[architect: architecture.md]
+        D --> E[architect: architecture-enh-{enhancement_number}.md]
         E --> F[pdm: validate with pd-master-checklist]
         F --> G{PDM finds issues?}
         G -->|Yes| H[Return to relevant agent for fixes]
@@ -168,8 +168,8 @@ workflow:
 
   handoff_prompts:
     analyst_to_pm: "UI analysis complete. Create comprehensive PRD with UI integration strategy."
-    pm_to_ux: "PRD ready. Save it as {@docs.files.prd}, then create the UI/UX specification."
+    pm_to_ux: "PRD ready. Save it as {@docs.subdirs.brownfield}/prd-enh-{enhancement_number}.md, then create the UI/UX specification."
     ux_to_architect: "UI/UX spec complete. Save it as {@docs.files.feSpec}, then create the frontend architecture."
-    architect_to_po: "Architecture complete. Save it as {@docs.files.feArchitecture}. Please validate all artifacts for UI integration safety."
+    architect_to_po: "Architecture complete. Save it as {@docs.subdirs.brownfield}/architecture-enh-{enhancement_number}.md. Please validate all artifacts for UI integration safety."
     po_issues: "PDM found issues with [document]. Please return to [agent] to fix and re-save the updated document."
     complete: "All planning artifacts validated and saved in {@docs.dir} folder. Move to IDE environment to begin development."
