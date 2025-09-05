@@ -135,7 +135,7 @@ qa_results: ""
 Evaluate whether this story has any impact on the PRD and/or architecture documents. Only update the affected parts; if the change is small with no lasting impact, do not update any documents.
 
 -  PRD: update relevant sections (e.g., scope, requirements, constraints) if behavior or requirements change
--  Architecture: update affected files/sections (e.g., `{@docs.files.feArchitecture}`, `{@docs.files.beArchitecture}`, `{@docs.files.fsArchitecture}`) if component responsibilities, data models, APIs, or patterns are affected
+-  Architecture: update affected files/sections (e.g., `{@docs.files.feArchitecture}`, `{@docs.files.beArchitecture}`, `{@docs.files.architecture}`) if component responsibilities, data models, APIs, or patterns are affected
 -  Record a brief note in the story YAML under `dev_notes.doc_impact_summary` summarizing any documentation updates (or state "No updates needed")
 
 Checklist:

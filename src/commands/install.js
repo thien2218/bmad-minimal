@@ -87,7 +87,7 @@ async function install(options) {
 					feSpec: "frontend-spec.md",
 					feArchitecture: "frontend-architecture.md",
 					beArchitecture: "backend-architecture.md",
-					fsArchitecture: "fullstack-architecture.md",
+					architecture: "fullstack-architecture.md",
 					technicalPreferences: "technical-preferences.md",
 				},
 			},

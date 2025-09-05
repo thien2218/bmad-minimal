@@ -27,15 +27,15 @@ workflow:
       notes: "Creates PRD from project brief using prd-tmpl, focused on API/service requirements. SAVE OUTPUT: Copy final prd.md to your project's {@docs.dir} folder."
 
     - agent: architect
-      creates: architecture.md
+      creates: backend-architecture.md
       requires: prd.md
       optional_steps:
         - technical_research_prompt
-      notes: "Creates backend/service architecture using backend-architecture-tmpl. May suggest changes to PRD stories or new stories. SAVE OUTPUT: Copy final architecture.md to your project's {@docs.dir} folder."
+      notes: "Creates backend/service architecture using backend-architecture-tmpl. May suggest changes to PRD stories or new stories. SAVE OUTPUT: Copy final backend-architecture.md to your project's {@docs.dir} folder."
 
     - agent: pm
       updates: prd.md (if needed)
-      requires: architecture.md
+      requires: backend-architecture.md
       condition: architecture_suggests_prd_changes
       notes: "If architect suggests story changes, update PRD and re-export the complete unredacted prd.md to {@docs.dir} folder."
 
@@ -133,7 +133,7 @@ workflow:
     graph TD
         A[Start: Service Development] --> B[analyst: project-brief.md]
         B --> C[pm: prd.md]
-        C --> D[architect: architecture.md]
+        C --> D[architect: backend-architecture.md]
         D --> E{Architecture suggests PRD changes?}
         E -->|Yes| F[pm: update prd.md]
         E -->|No| G[pdm: validate all artifacts]

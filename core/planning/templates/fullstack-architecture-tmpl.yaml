@@ -4,7 +4,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{@docs.files.fsArchitecture}"
+    filename: "{@docs.files.architecture}"
     title: "{{project_name}} Fullstack Architecture Document"
 
 workflow:
@@ -555,7 +555,7 @@ sections:
         ├── docs/                       # Documentation
         │   ├── prd.md
         │   ├── frontend-spec.md
-        │   └── architecture.md
+        │   └── frontend-architecture.md
         ├── .env.example                # Environment template
         ├── package.json                # Root package.json
         ├── {{monorepo_config}}         # Monorepo configuration

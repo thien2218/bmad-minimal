@@ -41,7 +41,7 @@ prerequisites:
     - "{@docs.subdirs.epics}/**"
     - "{@docs.files.feArchitecture}"
     - "{@docs.files.beArchitecture}"
-    - "{@docs.files.fsArchitecture}"
+    - "{@docs.files.architecture}"
 
 process:
   mode: sequential
