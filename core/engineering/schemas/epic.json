@@ -5,7 +5,7 @@
 		"version": "2.0",
 		"output": {
 			"format": "json",
-			"filename": "{@docs.subDirs.epics}/{{epic_number}}.{{epic_title_short}}.json",
+			"filename": "{@docs.subdirs.epics}/{{epic_number}}.{{epic_title_short}}.json",
 			"title": "Epic {{epic_number}}: {{epic_title}}"
 		}
 	},

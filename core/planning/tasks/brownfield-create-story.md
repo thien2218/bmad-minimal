@@ -51,8 +51,8 @@ Gather minimal but essential context about the existing project:
 
 Create a single focused story and save it as a YAML file using this naming convention:
 
--  Destination path: `{@docs.subDirs.stories}/standln-{story_enhancement_number}-*.yaml`
--  Choose a short, kebab-case slug for `*` that describes the enhancement (e.g., `-login-redirect-fix`).
+-  Destination path: `{@docs.subdirs.stories}/standln-{story_enhancement_number}-*.yaml`
+-  Choose a short, kebab-case slug for `*` that describes the enhancement (e.g., `login-redirect-fix`).
 
 Use the following YAML template (aligned with core/engineering/schemas/story.json):
 
@@ -190,7 +190,7 @@ The story creation is successful when:
 3. Existing system patterns are identified and will be followed
 4. Rollback plan is simple and feasible
 5. Acceptance criteria include existing functionality verification
-6. Story file is created at `{@docs.subDirs.stories}/standln-{story_enhancement_number}-*.yaml`
+6. Story file is created at `{@docs.subdirs.stories}/standln-{story_enhancement_number}-*.yaml`
 7. PRD and/or architecture docs are updated where impacted, or explicitly confirmed as not requiring updates
 
 ## Important Notes

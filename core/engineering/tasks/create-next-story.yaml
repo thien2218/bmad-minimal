@@ -21,11 +21,11 @@ outputs:
   artifacts:
     - name: Story File
       type: file
-      path: "{@docs.subDirs.stories}/{epic}.{story}-*.yaml"
+      path: "{@docs.subdirs.stories}/{epic}.{story}-*.yaml"
       format: yaml
       description: Complete story ready for development with full technical context
   updates:
-    - target: "{@docs.subDirs.stories}/*.yaml"
+    - target: "{@docs.subdirs.stories}/*.yaml"
       sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
       restrictions: Only create new story, do not modify existing stories
 
@@ -62,7 +62,7 @@ process:
         type: validation
         content: |
           Extract and validate:
-          - docs.subDirs.stories
+          - docs.subdirs.stories
           - prd.* settings
           - architecture.* settings
           - workflow.* settings
@@ -81,7 +81,7 @@ process:
         content: |
           Based on configured PRD/epic locations:
           - Locate epic files (from configured epics path or monolithic PRD sections)
-          - If docs.subDirs.stories has story files, load highest {epic}.{story}-*.yaml
+          - If docs.subdirs.stories has story files, load highest {epic}.{story}-*.yaml
           - Determine next sequential story
 
     - id: IDENTIFY-2
@@ -132,7 +132,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{@docs.subDirs.epics}/{epic}-*.yaml"
+        target: "{@docs.subdirs.epics}/{epic}-*.yaml"
         content: |
           Extract:
           - Story title and description
@@ -145,7 +145,7 @@ process:
       description: If previous story exists, extract lessons learned
       action:
         type: analysis
-        target: "{@docs.subDirs.stories}/{previousEpicNum}.{previousStoryNum}-*.yaml"
+        target: "{@docs.subdirs.stories}/{previousEpicNum}.{previousStoryNum}-*.yaml"
         content: |
           Review Dev Agent Record sections for:
           - Completion Notes and Debug Log References
@@ -230,7 +230,7 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{@docs.subDirs.stories}/{epic}.{story}-*.yaml"
+        target: "{@docs.subdirs.stories}/{epic}.{story}-*.yaml"
         content: |
           story:
             id: "{epic}.{story}"
@@ -330,7 +330,7 @@ process:
       action:
         type: elicit
         prompt: |
-          Story created: {@docs.subDirs.stories}/{epic}.{story}-*.yaml
+          Story created: {@docs.subdirs.stories}/{epic}.{story}-*.yaml
           Status: Draft
           
           Key technical components included from architecture docs:

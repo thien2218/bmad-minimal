@@ -5,7 +5,7 @@
 		"version": "1.0",
 		"output": {
 			"format": "json",
-			"filename": "{@docs.subDirs.qa}/gates/{{epic_num}}.{{story_num}}-{{story_slug}}.json",
+			"filename": "{@docs.subdirs.qa}/gates/{{epic_num}}.{{story_num}}-{{story_slug}}.json",
 			"title": "Quality Gate: {{epic_num}}.{{story_num}}"
 		}
 	},

@@ -76,11 +76,11 @@ async function install(options) {
 			customTechnicalDocuments: null,
 			docs: {
 				dir: config.docs.dir,
-				subDirs: {
-					qa: config.docs.subDirs.qa || "qa",
-					epics: config.docs.subDirs.epics || "epics",
-					stories: config.docs.subDirs.stories || "stories",
-					changelog: config.docs.subDirs.changelog || "changelog",
+				subdirs: {
+					qa: config.docs.subdirs.qa || "qa",
+					epics: config.docs.subdirs.epics || "epics",
+					stories: config.docs.subdirs.stories || "stories",
+					changelog: config.docs.subdirs.changelog || "changelog",
 				},
 				files: {
 					prd: "prd.md",
@@ -99,7 +99,7 @@ async function install(options) {
 		const docsDir = path.join(cwd, config.docs.dir);
 		await ensureDir(docsDir);
 
-		for (const subDir of Object.values(config.docs.subDirs)) {
+		for (const subDir of Object.values(config.docs.subdirs)) {
 			await ensureDir(path.join(docsDir, subDir));
 		}
 
@@ -131,10 +131,10 @@ async function install(options) {
 		}
 		console.log(`   └── .gitignore`);
 		console.log(`   ${config.docs.dir}/`);
-		console.log(`   ├── ${config.docs.subDirs.epics}/`);
-		console.log(`   ├── ${config.docs.subDirs.stories}/`);
-		console.log(`   ├── ${config.docs.subDirs.qa}/`);
-		console.log(`   ├── ${config.docs.subDirs.changelog}/`);
+		console.log(`   ├── ${config.docs.subdirs.epics}/`);
+		console.log(`   ├── ${config.docs.subdirs.stories}/`);
+		console.log(`   ├── ${config.docs.subdirs.qa}/`);
+		console.log(`   ├── ${config.docs.subdirs.changelog}/`);
 		console.log(`   └── technical-preferences.md`);
 
 		console.log(
@@ -193,7 +193,7 @@ async function gatherConfiguration(options, cwd) {
 		includePlanning: true,
 		docs: {
 			dir: "docs",
-			subDirs: {
+			subdirs: {
 				epics: "epics",
 				stories: "stories",
 				qa: "qa",

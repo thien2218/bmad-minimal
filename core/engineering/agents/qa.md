@@ -165,7 +165,7 @@
 			"name": "review",
 			"description": "Adaptive, risk-aware comprehensive review. Produces QA Results update in story file + gate file.",
 			"parameters": ["story"],
-			"notes": "Gate file location: {@docs.subDirs.qa}/gates/{epic}.{story}-*.yaml. Executes review-story task and creates gate decision.",
+			"notes": "Gate file location: {@docs.subdirs.qa}/gates/{epic}.{story}-*.yaml. Executes review-story task and creates gate decision.",
 			"targets": [
 				"tasks/review-story.yaml",
 				"schemas/story.json",
@@ -208,7 +208,7 @@
 		{
 			"id": "CFG-R001",
 			"title": "Resolve {@*} references from core config",
-			"description": "Whenever encountering a {@*} placeholder (curly braces starting with @), load and read {@baseDir}/config.json to resolve the value before proceeding. Also resolve docs path tokens: treat {@docs.files.<key>} as {@docs.dir}/<filename> and {@docs.subDirs.<key>} as {@docs.dir}/<subdir>. Example: {@docs.files.feArchitecture} → docs/frontend-architecture.md; {@docs.subDirs.qa} → docs/qa.",
+			"description": "Whenever encountering a {@*} placeholder (curly braces starting with @), load and read {@baseDir}/config.json to resolve the value before proceeding. Also resolve docs path tokens: treat {@docs.files.<key>} as {@docs.dir}/<filename> and {@docs.subdirs.<key>} as {@docs.dir}/<subdir>. Example: {@docs.files.feArchitecture} → docs/frontend-architecture.md; {@docs.subdirs.qa} → docs/qa.",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},

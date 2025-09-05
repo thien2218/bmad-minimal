@@ -9,7 +9,7 @@
 	"customTechnicalDocuments": null,
 	"docs": {
 		"dir": "docs",
-		"subDirs": {
+		"subdirs": {
 			"qa": "qa",
 			"epics": "epics",
 			"stories": "stories",

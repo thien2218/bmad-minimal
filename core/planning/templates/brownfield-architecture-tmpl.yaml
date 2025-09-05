@@ -4,7 +4,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{@docs.subDirs.brownfield}/architecture-{enhancement_number}.md"
+    filename: "{@docs.subdirs.brownfield}/architecture-enh-{enhancement_number}.md"
     title: "{{project_name}} Brownfield Enhancement Architecture"
 
 workflow:

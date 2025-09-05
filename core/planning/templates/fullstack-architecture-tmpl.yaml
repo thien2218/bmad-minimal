@@ -238,7 +238,7 @@ sections:
       1. If REST API, create an OpenAPI 3.0 specification
       2. If GraphQL, provide the GraphQL schema
       3. If tRPC, show router definitions
-      4. Include all endpoints from {@docs.subDirs.epics}/stories
+      4. Include all endpoints from {@docs.subdirs.epics}/stories
       5. Define request/response schemas based on data models
       6. Document authentication requirements
       7. Include example requests/responses

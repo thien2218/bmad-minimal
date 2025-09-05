@@ -111,7 +111,7 @@
 		{
 			"id": "CFG-R002",
 			"title": "Resolve {@*} references from core config",
-			"description": "Whenever encountering a {@*} placeholder (curly braces starting with @), load and read {@baseDir}/config.json to resolve the value before proceeding. Also resolve docs path tokens: treat {@docs.files.<key>} as {@docs.dir}/<filename> and {@docs.subDirs.<key>} as {@docs.dir}/<subdir>. Example: {@docs.files.feArchitecture} → docs/frontend-architecture.md; {@docs.subDirs.qa} → docs/qa.",
+			"description": "Whenever encountering a {@*} placeholder (curly braces starting with @), load and read {@baseDir}/config.json to resolve the value before proceeding. Also resolve docs path tokens: treat {@docs.files.<key>} as {@docs.dir}/<filename> and {@docs.subdirs.<key>} as {@docs.dir}/<subdir>. Example: {@docs.files.feArchitecture} → docs/frontend-architecture.md; {@docs.subdirs.qa} → docs/qa.",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},

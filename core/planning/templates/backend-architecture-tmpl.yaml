@@ -285,7 +285,7 @@ sections:
       If the project includes a REST API:
 
       1. Create an OpenAPI 3.0 specification
-      2. Include all endpoints from {@docs.subDirs.epics}/stories
+      2. Include all endpoints from {@docs.subdirs.epics}/stories
       3. Define request/response schemas based on data models
       4. Document authentication requirements
       5. Include example requests/responses
