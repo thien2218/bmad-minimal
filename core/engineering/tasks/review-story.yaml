@@ -28,7 +28,7 @@ inputs:
     - name: architecture_refs
       type: path
       description: Path to architecture documents from config.json
-      pattern: "{@docs.dir}/*-architecture.md"
+      pattern: "{@docs.dir}/?(*-)architecture.md"
     - name: technicalPreferences
       type: path
       description: Path to technical preferences file

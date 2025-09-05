@@ -162,7 +162,7 @@ process:
       action:
         type: decision
         content: |
-          Read {@docs.dir}/*-architecture.md
+          Read {@docs.dir}/?(*-)architecture.md
           Follow structured reading order
 
     - id: ARCH-2
@@ -218,7 +218,7 @@ process:
       description: Cross-reference with Project Structure Guide
       action:
         type: validation
-        target: "{@docs.dir}/*-architecture.md#unified-project-structure"
+        target: "{@docs.dir}/?(*-)architecture.md#unified-project-structure"
         content: |
           - Cross-reference story requirements with Project Structure Guide
           - Ensure file paths, component locations, module names align

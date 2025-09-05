@@ -30,7 +30,7 @@ outputs:
     - target: "{@docs.files.prd}"
       sections: ["Requirements", "Scope", "Technical Constraints"]
       restrictions: Only as specified in approved change proposal
-    - target: "{@docs.dir}/*-architecture.md"
+    - target: "{@docs.dir}/?(*-)architecture.md"
       sections: ["Components", "Diagrams", "Technology Stack"]
       restrictions: Only as specified in approved change proposal
 

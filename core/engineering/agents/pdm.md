@@ -87,7 +87,7 @@
 			"loadAlwaysFiles": [
 				"{@baseDir}/config.json",
 				"{@docs.files.prd}",
-				"{@docs.dir}/*-architecture.md"
+				"{@docs.dir}/?(*-)architecture.md"
 			],
 			"readPersonaFile": true,
 			"onMissingFiles": "ask_user"
