@@ -173,7 +173,7 @@ async function findExistingConfigs(cwd) {
 }
 
 async function gatherConfiguration(options, cwd) {
-	const answers = await inquirer.prompt(getConfigFields({ cwd, options }));
+	const answers = await inquirer.prompt(getConfigFields(cwd, options));
 
 	if (!answers.projectName) {
 		const { projectName } = await inquirer.prompt([

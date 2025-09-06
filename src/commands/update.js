@@ -183,14 +183,12 @@ function setValueByPath(object, accessKey, value) {
 }
 
 async function promptForMissingConfig({ cwd, config, configPath }) {
-	const allFields = getConfigFields({ cwd, config });
+	const allFields = getConfigFields(cwd);
 	const configurable = allFields.filter((f) => !!f.accessKey);
 
 	const missing = configurable.filter((field) => {
 		const val = getValueByPath(config, field.accessKey);
-		if (val === undefined || val === null) return true;
-		if (typeof val === "string" && val.trim() === "") return true;
-		return false;
+		return val === undefined;
 	});
 
 	if (missing.length === 0) return;

@@ -1,6 +1,6 @@
 const path = require("path");
 
-function getConfigFields({ cwd, options }) {
+function getConfigFields(cwd, options) {
 	return [
 		{
 			type: "input",
@@ -9,7 +9,7 @@ function getConfigFields({ cwd, options }) {
 			message: "Project name:",
 			default: path.basename(cwd),
 			validate: (input) => input.trim() !== "" || "Project name is required",
-			when: () => !options.project,
+			when: () => !options?.project,
 		},
 		{
 			type: "confirm",
@@ -55,7 +55,7 @@ function getConfigFields({ cwd, options }) {
 			name: "baseDir",
 			accessKey: "baseDir",
 			message: "Base directory for BMad files:",
-			default: options.dir || ".bmad-minimal",
+			default: options?.dir || ".bmad-minimal",
 		},
 		{
 			type: "input",
