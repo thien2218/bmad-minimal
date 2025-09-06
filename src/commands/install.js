@@ -71,6 +71,9 @@ async function install(options) {
 		configData.project.projectDir = config.projectDir;
 		configData.project.backendDir = config.backendDir;
 		configData.project.frontendDir = config.frontendDir;
+		configData.project.testDirs = Array.isArray(config.testDirs)
+			? config.testDirs
+			: [];
 		configData.docs.dir = config.docsDir;
 
 		console.log(chalk.gray(`  Writing configuration...`));
@@ -174,6 +177,7 @@ async function gatherConfiguration(options, cwd) {
 		projectDir: null,
 		backendDir: null,
 		frontendDir: null,
+		testDirs: [],
 		baseDir: options.dir || ".bmad-minimal",
 		docsDir: "docs",
 	};
@@ -225,6 +229,17 @@ async function gatherConfiguration(options, cwd) {
 			default: config.docsDir,
 		},
 		{
+			type: "input",
+			name: "testDirs",
+			message:
+				"Test directories (comma-separated, relative to current directory):",
+			filter: (input) =>
+				input
+					.split(",")
+					.map((d) => d.trim())
+					.filter((d) => d.length > 0),
+		},
+		{
 			type: "confirm",
 			name: "generateTPPrompt",
 			message: "Generate technical preferences prompt?",
@@ -238,6 +253,7 @@ async function gatherConfiguration(options, cwd) {
 	config.frontendDir = answers.frontendDir?.trim() || null;
 	config.baseDir = answers.baseDir;
 	config.docsDir = answers.docsDir;
+	config.testDirs = Array.isArray(answers.testDirs) ? answers.testDirs : [];
 	config.generateTPPrompt = answers.generateTPPrompt;
 
 	if (!config.projectName) {

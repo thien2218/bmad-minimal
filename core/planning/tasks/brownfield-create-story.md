@@ -54,7 +54,7 @@ Create a single focused story and save it as a YAML file using this naming conve
 -  Destination path: `{@docs.subdirs.stories}/standln-{story_enhancement_number}-*.yaml`
 -  Choose a short, kebab-case slug for `*` that describes the enhancement (e.g., `login-redirect-fix`).
 
-Use the following YAML template (aligned with core/engineering/schemas/story.json):
+Use the following YAML template to create story file with YAML format (aligned with core/engineering/schemas/story.json):
 
 ```
 # Brownfield Story (YAML)

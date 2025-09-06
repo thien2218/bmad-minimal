@@ -3,7 +3,8 @@
 		"name": null,
 		"projectDir": null,
 		"backendDir": null,
-		"frontendDir": null
+		"frontendDir": null,
+		"testDirs": []
 	},
 	"baseDir": ".bmad-minimal",
 	"customTechnicalDocuments": null,

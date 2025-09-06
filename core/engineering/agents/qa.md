@@ -94,7 +94,7 @@
 		"preconditions": {
 			"requireExplicitLoad": true,
 			"loadAlwaysFiles": [
-				"{@baseDir}/config.json",
+				"../../config.json",
 				"{@docs.files.technicalPreferences}"
 			],
 			"readPersonaFile": true,
@@ -214,7 +214,14 @@
 		{
 			"id": "CFG-R001",
 			"title": "Resolve {@*} references from core config",
-			"description": "Whenever encountering a {@*} placeholder (curly braces starting with @), load and read {@baseDir}/config.json to resolve the value before proceeding. Also resolve docs path tokens: treat {@docs.files.<key>} as {@docs.dir}/<filename> and {@docs.subdirs.<key>} as {@docs.dir}/<subdir>. Example: {@docs.files.feArchitecture} → docs/frontend-architecture.md; {@docs.subdirs.qa} → docs/qa.",
+			"description": "Whenever encountering a {@*} placeholder (curly braces starting with @), load and read ../../config.json to resolve the value before proceeding. Also resolve docs path tokens: treat {@docs.files.<key>} as {@docs.dir}/<filename> and {@docs.subdirs.<key>} as {@docs.dir}/<subdir>. Example: {@docs.files.feArchitecture} → docs/frontend-architecture.md; {@docs.subdirs.qa} → docs/qa.",
+			"severity": "hard",
+			"actionOnViolation": "abort_and_report"
+		},
+		{
+			"id": "CFG-R002",
+			"title": "Non-padded numbering in epic/story/enhancement filenames",
+			"description": "Enforce that epic, story, and enhancement numbers in file names are NOT zero-padded. File name's index numbers always starts from '1' unless user explicitly states otherwise. Examples: correct - '1', '2', '3'; incorrect - '001', '002', '003'.",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},
