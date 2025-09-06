@@ -9,6 +9,7 @@ const {
 	exists,
 	getCoreDir,
 } = require("../utils/fileOperations");
+const { getConfigFields } = require("../utils/configFields");
 
 async function update(options) {
 	console.log(chalk.blue("🔄 BMad Minimal Update\n"));
@@ -39,6 +40,9 @@ async function update(options) {
 		console.error(chalk.red("❌ Failed to read configuration file."));
 		return;
 	}
+
+	// Prompt for any missing configurable fields before proceeding
+	await promptForMissingConfig({ cwd, config, configPath });
 
 	// Confirm update
 	if (!options.force) {
@@ -153,6 +157,62 @@ async function findConfig(cwd) {
 	}
 
 	return null;
+}
+
+function getValueByPath(object, accessKey) {
+	const parts = accessKey.split(".");
+	let current = object;
+	for (const part of parts) {
+		if (current == null || typeof current !== "object") return undefined;
+		current = current[part];
+	}
+	return current;
+}
+
+function setValueByPath(object, accessKey, value) {
+	const parts = accessKey.split(".");
+	let current = object;
+	for (let i = 0; i < parts.length - 1; i++) {
+		const part = parts[i];
+		if (current[part] == null || typeof current[part] !== "object") {
+			current[part] = {};
+		}
+		current = current[part];
+	}
+	current[parts[parts.length - 1]] = value;
+}
+
+async function promptForMissingConfig({ cwd, config, configPath }) {
+	const allFields = getConfigFields({ cwd, config });
+	const configurable = allFields.filter((f) => !!f.accessKey);
+
+	const missing = configurable.filter((field) => {
+		const val = getValueByPath(config, field.accessKey);
+		if (val === undefined || val === null) return true;
+		if (typeof val === "string" && val.trim() === "") return true;
+		return false;
+	});
+
+	if (missing.length === 0) return;
+
+	const prompts = missing.map((field) => {
+		return {
+			type: field.type || "input",
+			name: field.name,
+			message: field.message,
+			default: typeof field.default === "function" ? field.default() : field.default,
+		};
+	});
+
+	const answers = await inquirer.prompt(prompts);
+
+	for (const field of missing) {
+		const rawValue = answers[field.name];
+		const value = typeof field.filter === "function" ? field.filter(rawValue) : rawValue;
+		setValueByPath(config, field.accessKey, value);
+	}
+
+	await writeJson(configPath, config);
 }
 
 module.exports = update;

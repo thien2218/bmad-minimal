@@ -8,6 +8,7 @@ const {
 	exists,
 	getCoreDir,
 } = require("../utils/fileOperations");
+const { getConfigFields } = require("../utils/configFields");
 
 async function install(options) {
 	console.log(chalk.blue("🚀 BMad Minimal Installation\n"));
@@ -172,91 +173,9 @@ async function findExistingConfigs(cwd) {
 }
 
 async function gatherConfiguration(options, cwd) {
-	const config = {
-		projectName: options.project,
-		projectDir: null,
-		backendDir: null,
-		frontendDir: null,
-		testDirs: [],
-		baseDir: options.dir || ".bmad-minimal",
-		docsDir: "docs",
-	};
+	const answers = await inquirer.prompt(getConfigFields({ cwd, options }));
 
-	// If not using defaults, prompt for configuration
-	const answers = await inquirer.prompt([
-		{
-			type: "input",
-			name: "projectName",
-			message: "Project name:",
-			default: path.basename(cwd),
-			validate: (input) => input.trim() !== "" || "Project name is required",
-			when: () => !config.projectName,
-		},
-		{
-			type: "confirm",
-			name: "isSingular",
-			message:
-				"Is this a singular app (fullstack app or an app with no clear backend/frontend separation)?",
-		},
-		{
-			type: "input",
-			name: "projectDir",
-			message: "App directory (relative to current directory):",
-			when: (answers) => answers.isSingular,
-		},
-		{
-			type: "input",
-			name: "backendDir",
-			message: "Backend directory (relative to current directory):",
-			when: (answers) => !answers.isSingular,
-		},
-		{
-			type: "input",
-			name: "frontendDir",
-			message: "Frontend directory (relative to current directory):",
-			when: (answers) => !answers.isSingular,
-		},
-		{
-			type: "input",
-			name: "baseDir",
-			message: "Base directory for BMad files:",
-			default: config.baseDir,
-		},
-		{
-			type: "input",
-			name: "docsDir",
-			message: "Documentation directory:",
-			default: config.docsDir,
-		},
-		{
-			type: "input",
-			name: "testDirs",
-			message:
-				"Test directories (comma-separated, relative to current directory):",
-			filter: (input) =>
-				input
-					.split(",")
-					.map((d) => d.trim())
-					.filter((d) => d.length > 0),
-		},
-		{
-			type: "confirm",
-			name: "generateTPPrompt",
-			message: "Generate technical preferences prompt?",
-			default: true,
-		},
-	]);
-
-	config.projectName = answers.projectName ?? config.projectName;
-	config.projectDir = answers.projectDir?.trim() || null;
-	config.backendDir = answers.backendDir?.trim() || null;
-	config.frontendDir = answers.frontendDir?.trim() || null;
-	config.baseDir = answers.baseDir;
-	config.docsDir = answers.docsDir;
-	config.testDirs = Array.isArray(answers.testDirs) ? answers.testDirs : [];
-	config.generateTPPrompt = answers.generateTPPrompt;
-
-	if (!config.projectName) {
+	if (!answers.projectName) {
 		const { projectName } = await inquirer.prompt([
 			{
 				type: "input",
@@ -267,11 +186,11 @@ async function gatherConfiguration(options, cwd) {
 					input.trim() !== "" || "Project name is required",
 			},
 		]);
-		config.projectName = projectName;
+		answers.projectName = projectName;
 	}
 
 	// Ensure at least one of projectDir, backendDir, or frontendDir is provided
-	if (!config.projectDir && !config.backendDir && !config.frontendDir) {
+	if (!answers.projectDir && !answers.backendDir && !answers.frontendDir) {
 		console.error(
 			chalk.red(
 				"❌ Installation aborted: provide at least one of App, Backend, or Frontend directory."
@@ -280,7 +199,7 @@ async function gatherConfiguration(options, cwd) {
 		throw new Error("No app/backend/frontend directory provided");
 	}
 
-	return config;
+	return answers;
 }
 
 module.exports = install;
