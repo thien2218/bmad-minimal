@@ -49,13 +49,11 @@ async function install(options) {
 		console.log(chalk.gray(`  Copying engineering files...`));
 		await copyDirectory(engineeringSource, engineeringDest);
 
-		// Copy planning directory if requested
-		if (config.includePlanning) {
-			const planningSource = path.join(coreDir, "planning");
-			const planningDest = path.join(baseDir, "planning");
-			console.log(chalk.gray(`  Copying planning files...`));
-			await copyDirectory(planningSource, planningDest);
-		}
+		// Copy planning directory
+		const planningSource = path.join(coreDir, "planning");
+		const planningDest = path.join(baseDir, "planning");
+		console.log(chalk.gray(`  Copying planning files...`));
+		await copyDirectory(planningSource, planningDest);
 
 		// Write config.json
 		const configPath = path.join(baseDir, "config.json");
@@ -104,9 +102,7 @@ async function install(options) {
 		console.log(`   ${config.baseDir}/`);
 		console.log(`   ├── config.json`);
 		console.log(`   ├── engineering/`);
-		if (config.includePlanning) {
-			console.log(`   ├── planning/`);
-		}
+		console.log(`   ├── planning/`);
 		console.log(`   └── .gitignore`);
 		console.log(`   ${configData.docs.dir}/`);
 		console.log(`   ├── ${configData.docs.subdirs.epics}/`);
@@ -174,7 +170,6 @@ async function gatherConfiguration(options, cwd) {
 		backendDir: null,
 		frontendDir: null,
 		baseDir: options.dir || ".bmad-minimal",
-		includePlanning: true,
 		docsDir: "docs",
 	};
 
@@ -219,12 +214,6 @@ async function gatherConfiguration(options, cwd) {
 			default: config.baseDir,
 		},
 		{
-			type: "confirm",
-			name: "includePlanning",
-			message: "Include planning templates?",
-			default: config.includePlanning,
-		},
-		{
 			type: "input",
 			name: "docsDir",
 			message: "Documentation directory:",
@@ -243,7 +232,6 @@ async function gatherConfiguration(options, cwd) {
 	config.backendDir = answers.backendDir?.trim() || null;
 	config.frontendDir = answers.frontendDir?.trim() || null;
 	config.baseDir = answers.baseDir;
-	config.includePlanning = answers.includePlanning;
 	config.docsDir = answers.docsDir;
 	config.generateTPPrompt = answers.generateTPPrompt;
 
