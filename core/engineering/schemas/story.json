@@ -59,7 +59,7 @@
 			"editors": ["product-development-master"]
 		},
 		{
-			"id": "tasks-subtasks",
+			"id": "tasks-and-subtasks",
 			"title": "Tasks / Subtasks",
 			"type": "bullet-list",
 			"instruction": "Break down the story into specific tasks and subtasks needed for implementation.\nReference applicable acceptance criteria numbers where relevant.\nAssign a Difficulty for each task and subtask (integer 1–10) capturing both complexity and uncertainty.",
@@ -74,17 +74,15 @@
 			"instruction": "Leave this section empty at first on initialization as it will be populated later on.\nPopulate relevant information, only what was pulled from actual artifacts from docs folder, relevant to this story:\n- Do not invent information\n- If known add Relevant Source Tree info that relates to this story\n- If there were important notes from previous story that are relevant to this one, include them here\n- Put enough information in this section so that the dev agent should NEVER need to read the architecture documents, these notes along with the tasks and subtasks must give the Dev Agent the complete context it needs to comprehend with the least amount of overhead the information to complete the story, meeting all AC and completing all tasks+subtasks",
 			"elicit": true,
 			"owner": "product-development-master",
-			"editors": ["product-development-master"],
-			"sections": [
-				{
-					"id": "testing-standards",
-					"title": "Testing",
-					"instruction": "List Relevant Testing Standards from Architecture the Developer needs to conform to:\n- Test file location\n- Test standards\n- Testing frameworks and patterns to use\n- Any specific testing requirements for this story",
-					"elicit": true,
-					"owner": "product-development-master",
-					"editors": ["product-development-master"]
-				}
-			]
+			"editors": ["product-development-master"]
+		},
+		{
+			"id": "testing-standards",
+			"title": "Testing",
+			"instruction": "List Relevant Testing Standards from Architecture the Developer needs to conform to:\n- Test file location\n- Test standards\n- Testing frameworks and patterns to use\n- Any specific testing requirements for this story",
+			"elicit": true,
+			"owner": "product-development-master",
+			"editors": ["product-development-master"]
 		},
 		{
 			"id": "test-specs",

@@ -100,7 +100,7 @@ process:
       description: Select next incomplete task/subtask
       action:
         type: analysis
-        target: "{story_path}#tasks-subtasks"
+        target: "{story_path}#tasks-and-subtasks"
         content: |
           - Parse the story's "Tasks / Subtasks" list
           - Select the first incomplete task/subtask in order
