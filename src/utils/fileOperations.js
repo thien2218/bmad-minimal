@@ -52,6 +52,14 @@ async function writeJson(filePath, data) {
 }
 
 /**
+ * Get the core/ directory
+ */
+function getCoreDir() {
+	const corePath = "../../core";
+	return path.join(__dirname, corePath);
+}
+
+/**
  * Check if a directory or file exists
  */
 async function exists(path) {
@@ -68,4 +76,5 @@ module.exports = {
 	readJson,
 	writeJson,
 	exists,
+	getCoreDir,
 };

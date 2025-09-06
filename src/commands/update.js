@@ -8,7 +8,6 @@ const {
 	writeJson,
 	exists,
 	getCoreDir,
-	ensureDir,
 } = require("../utils/fileOperations");
 
 async function update(options) {
@@ -115,7 +114,7 @@ async function update(options) {
 
 		// Ensure all doc directories still exist
 		for (const subDir of Object.values(config.docs.subdirs)) {
-			await ensureDir(path.join(docsDir, subDir));
+			await fs.ensureDir(path.join(docsDir, subDir));
 		}
 
 		console.log(chalk.green("\n✅ BMad Minimal update complete!"));

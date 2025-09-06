@@ -1,6 +1,6 @@
 {
 	"name": "bmad-minimal",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "A minimal version of BMad Method, streamlined for developers",
 	"main": "src/index.js",
 	"bin": {

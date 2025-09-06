@@ -2,13 +2,18 @@ const inquirer = require("inquirer");
 const chalk = require("chalk");
 const path = require("path");
 const fs = require("fs-extra");
-const { copyDirectory, writeJson, exists } = require("../utils/fileOperations");
+const {
+	copyDirectory,
+	writeJson,
+	exists,
+	getCoreDir,
+} = require("../utils/fileOperations");
 
 async function install(options) {
 	console.log(chalk.blue("🚀 BMad Minimal Installation\n"));
 
 	const cwd = process.cwd();
-	const coreDir = path.join(__dirname, "../../core");
+	const coreDir = getCoreDir();
 
 	// Check if already installed
 	const existingConfigs = await findExistingConfigs(cwd);
