@@ -10,7 +10,7 @@
 		"$schema": {
 			"type": "string",
 			"description": "Reference to this schema file (for validation)",
-			"const": "../../../internal/checklist.schema.json"
+			"const": "../../.internal/checklist.schema.json"
 		},
 		"id": {
 			"type": "string",

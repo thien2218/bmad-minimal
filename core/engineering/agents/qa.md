@@ -94,7 +94,7 @@
 		"preconditions": {
 			"requireExplicitLoad": true,
 			"loadAlwaysFiles": [
-				"../../config.json",
+				"{@baseDir}/config.json",
 				"{@docs.files.technicalPreferences}"
 			],
 			"readPersonaFile": true,
@@ -213,7 +213,7 @@
 		{
 			"id": "CFG-R001",
 			"title": "Resolve {@*} references from core config",
-			"description": "Whenever encountering a {@*} placeholder (curly braces starting with @), load and read ../../config.json to resolve the value before proceeding. Also resolve docs path tokens: treat {@docs.files.<key>} as {@docs.dir}/<filename> and {@docs.subdirs.<key>} as {@docs.dir}/<subdir>. Example: {@docs.files.feArchitecture} → docs/frontend-architecture.md; {@docs.subdirs.qa} → docs/qa.",
+			"description": "Before resolving any {@*} placeholder (curly braces starting with @), first run a terminal command to locate the project's config.json if the file hasn't been loaded to your context (e.g., sh -lc 'find . -type f -name config.json | head -1'). Load and read the found config.json path to resolve values. Also resolve docs path tokens: treat {@docs.files.<key>} as {@docs.dir}/<filename> and {@docs.subdirs.<key>} as {@docs.dir}/<subdir>. Example: {@docs.files.feArchitecture} → docs/frontend-architecture.md; {@docs.subdirs.qa} → docs/qa.",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},
