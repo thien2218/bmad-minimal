@@ -54,7 +54,7 @@ prerequisites:
   status:
     - entity: story
       field: status
-      value: "Ready for QA"
+      value: "WIP"
       operator: in
 
 process:
@@ -165,8 +165,7 @@ process:
           - Status (apply Status Rule)
           
           Status Rule:
-          - If gate was PASS and all identified gaps are closed → set Status: Ready for Done
-          - Otherwise → set Status: Ready for Review and notify QA to re-run the review
+          - Set Status: Review and notify QA to re-run the review
 
     - id: COMPLETE
       title: Complete Fix Application

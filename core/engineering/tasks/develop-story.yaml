@@ -212,7 +212,7 @@ process:
           - execute-checklist has been run with story-dod-checklist
           - Story Status is updated:
             * "Blocked" if any blocking condition is met
-            * "Ready for Review" otherwise
+            * "Review" otherwise
           - HALT
 
 dependencies:

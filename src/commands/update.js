@@ -42,20 +42,19 @@ async function update(options) {
 	}
 
 	// Prompt for any missing configurable fields before proceeding
-	await promptForMissingConfig({ cwd, config, configPath });
+	const updatedConfig = await promptForMissingConfig({ cwd, config, configPath });
 
 	// Confirm update
 	if (!options.force) {
 		console.log(
 			chalk.yellow(
-				"\n⚠️ This will update all BMad files to the latest version."
+				"\n⚠️  This will update all BMad files to the latest version."
 			)
 		);
-		console.log(
-			chalk.yellow(
-				"   Your config.json will be preserved, but all other files will be overwritten."
-			)
-		);
+		const preserveMessage = updatedConfig
+			? "   Your config.json was updated with missing fields and other fields will be preserved; all other files will be overwritten."
+			: "   Your config.json will be preserved, but all other files will be overwritten.";
+		console.log(chalk.yellow(preserveMessage));
 
 		const { proceed } = await inquirer.prompt([
 			{
@@ -191,7 +190,7 @@ async function promptForMissingConfig({ cwd, config, configPath }) {
 		return val === undefined;
 	});
 
-	if (missing.length === 0) return;
+	if (missing.length === 0) return false;
 
 	const prompts = missing.map((field) => {
 		return {
@@ -211,6 +210,7 @@ async function promptForMissingConfig({ cwd, config, configPath }) {
 	}
 
 	await writeJson(configPath, config);
+	return true;
 }
 
 module.exports = update;

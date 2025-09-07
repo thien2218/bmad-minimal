@@ -45,7 +45,7 @@ prerequisites:
   status:
     - entity: story
       field: status
-      value: "Ready for Review"
+      value: "Review"
       operator: in
 
 process:

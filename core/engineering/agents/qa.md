@@ -179,11 +179,10 @@
 			]
 		},
 		{
-			"name": "spec-review",
-			"description": "Evaluate test specs for completeness, coverage, and quality; produce a concise improvement plan.",
-			"parameters": ["story", "specs"],
-			"preconditions": { "storyStatusMustBe": "Spec Review" },
-			"targets": ["tasks/spec-review.yaml"]
+			"name": "spec-outline-review",
+			"description": "Review a plain-English outline of test cases for clarity, coverage, and traceability (optional story), and produce an actionable improvement report.",
+			"parameters": ["outline", "story"],
+			"targets": ["tasks/spec-outline-review.yaml"]
 		},
 		{
 			"name": "risk-profile",
@@ -253,7 +252,7 @@
 			"review-story.yaml",
 			"risk-profile.yaml",
 			"test-design.yaml",
-			"spec-review.yaml",
+			"spec-outline-review.yaml",
 			"nfr-assess.yaml",
 			"trace-requirements.yaml"
 		],
