@@ -97,22 +97,12 @@ async function install(options) {
 		const techPrefsPath = path.join(docsDir, "technical-preferences.md");
 		await fs.copy(templateTechPrefsPath, techPrefsPath);
 
-		// Create .gitignore for bmad directory if it doesn't exist
-		const gitignorePath = path.join(baseDir, ".gitignore");
-		if (!(await exists(gitignorePath))) {
-			await fs.writeFile(
-				gitignorePath,
-				"# BMad Minimal temporary files\\n*.tmp\\n*.log\\n"
-			);
-		}
-
 		console.log(chalk.green("\n✅ BMad Minimal installation complete!\n"));
 		console.log(chalk.cyan("📁 Structure created:"));
 		console.log(`   ${config.baseDir}/`);
 		console.log(`   ├── config.json`);
 		console.log(`   ├── engineering/`);
-		console.log(`   ├── planning/`);
-		console.log(`   └── .gitignore`);
+		console.log(`   └── planning/`);
 		console.log(`   ${configData.docs.dir}/`);
 		console.log(`   ├── ${configData.docs.subdirs.epics}/`);
 		console.log(`   ├── ${configData.docs.subdirs.stories}/`);
@@ -160,7 +150,7 @@ async function install(options) {
 
 async function findExistingConfigs(cwd) {
 	const configs = [];
-	const possibleDirs = [".bmad-minimal"];
+	const possibleDirs = ["bmad-minimal"];
 
 	for (const dir of possibleDirs) {
 		const configPath = path.join(cwd, dir, "config.json");

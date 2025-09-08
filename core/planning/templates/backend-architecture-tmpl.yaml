@@ -276,31 +276,48 @@ sections:
       Focus on workflows that clarify architecture decisions or complex interactions.
     elicit: true
 
-  - id: rest-api-spec
-    title: REST API Spec
-    condition: Project includes REST API
-    type: code
-    language: yaml
+  - id: api-spec
+    title: API Specification
     instruction: |
-      If the project includes a REST API:
+      Based on the chosen API style from Tech Stack:
 
-      1. Create an OpenAPI 3.0 specification
-      2. Include all endpoints from {@docs.subdirs.epics}/stories
-      3. Define request/response schemas based on data models
-      4. Document authentication requirements
-      5. Include example requests/responses
+      1. If REST API, create an OpenAPI 3.0 specification
+      2. If GraphQL, provide the GraphQL schema
+      3. If tRPC, show router definitions
+      4. Include all endpoints from {@docs.subdirs.epics}/stories
+      5. Define request/response schemas based on data models
+      6. Document authentication requirements
+      7. Include example requests/responses
 
-      Use YAML format for better readability. If no REST API, skip this section.
+      Use appropriate format for the chosen API style. If no API (e.g., static site), skip this section.
     elicit: true
-    template: |
-      openapi: 3.0.0
-      info:
-        title: {{api_title}}
-        version: {{api_version}}
-        description: {{api_description}}
-      servers:
-        - url: {{server_url}}
-          description: {{server_description}}
+    sections:
+      - id: rest-api
+        title: REST API Specification
+        condition: API style is REST
+        type: code
+        language: yaml
+        template: |
+          openapi: 3.0.0
+          info:
+            title: {{api_title}}
+            version: {{api_version}}
+            description: {{api_description}}
+          servers:
+            - url: {{server_url}}
+              description: {{server_description}}
+      - id: graphql-api
+        title: GraphQL Schema
+        condition: API style is GraphQL
+        type: code
+        language: graphql
+        template: "{{graphql_schema}}"
+      - id: trpc-api
+        title: tRPC Router Definitions
+        condition: API style is tRPC
+        type: code
+        language: typescript
+        template: "{{trpc_routers}}"
 
   - id: database-schema
     title: Database Schema

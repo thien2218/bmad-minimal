@@ -6,7 +6,7 @@
 		"frontendDir": null,
 		"testDirs": []
 	},
-	"baseDir": ".bmad-minimal",
+	"baseDir": "bmad-minimal",
 	"customTechnicalDocuments": null,
 	"docs": {
 		"dir": "docs",

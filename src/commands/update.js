@@ -146,7 +146,7 @@ async function update(options) {
 }
 
 async function findConfig(cwd) {
-	const possibleDirs = [".bmad-minimal", ".bmad", "bmad"];
+	const possibleDirs = ["bmad-minimal", ".bmad", "bmad"];
 
 	for (const dir of possibleDirs) {
 		const configPath = path.join(cwd, dir, "config.json");

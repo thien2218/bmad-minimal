@@ -26,7 +26,7 @@ During installation you will be prompted for:
 -  Project name
 -  Whether your app is singular (single app dir) or split into backend/frontend
 -  App directory (or backend/frontend directories)
--  Base directory for BMAD files (default: `.bmad-minimal`)
+-  Base directory for BMAD files (default: `bmad-minimal`)
 -  Whether to include planning templates (default: Yes)
 -  Documentation directory (default: `docs`)
 -  Whether to generate a technical-preferences authoring prompt
@@ -36,7 +36,7 @@ At least one of: App, Backend, or Frontend directory must be provided.
 What gets created:
 
 ```
-.bmad-minimal/
+bmad-minimal/
 ├── config.json
 ├── engineering/
 ├── planning/                 # only if you selected Include planning templates
@@ -50,7 +50,7 @@ docs/
 └── technical-preferences.md
 ```
 
-The CLI also merges your answers into `.bmad-minimal/config.json` based on the default template in `core/config.json`.
+The CLI also merges your answers into `bmad-minimal/config.json` based on the default template in `core/config.json`.
 
 ## Updating to the Latest Core
 
@@ -64,8 +64,8 @@ npx bmad-minimal@latest update
 npx bmad-minimal@latest update --force
 ```
 
--  Preserves: `.bmad-minimal/config.json`
--  Overwrites with latest: `.bmad-minimal/engineering/` and, if present, `.bmad-minimal/planning/`
+-  Preserves: `bmad-minimal/config.json`
+-  Overwrites with latest: `bmad-minimal/engineering/` and, if present, `bmad-minimal/planning/`
 -  Ensures `docs/` subdirectories exist and refreshes `technical-preferences.md` from the template if found
 
 ## Command Reference
@@ -77,7 +77,7 @@ The CLI is defined in `bin/cli.js` and exposes two commands:
    -  Description: Install BMAD Minimal configuration and documentation structure
    -  Options:
       -  `-p, --project <name>` Project name (defaults to current folder name if not provided)
-      -  `-d, --dir <path>` Base directory for BMAD files (default: `.bmad-minimal`)
+      -  `-d, --dir <path>` Base directory for BMAD files (default: `bmad-minimal`)
 
 -  `update`
    -  Description: Update documentation to the latest version while preserving `config.json`
@@ -90,7 +90,7 @@ Examples:
 # Install with custom project name and base dir
 npx bmad-minimal@latest install \
   --project "Acme Shop" \
-  --dir .bmad-minimal
+  --dir bmad-minimal
 
 # Update without prompts
 npx bmad-minimal@latest update --force
@@ -98,7 +98,7 @@ npx bmad-minimal@latest update --force
 
 ## What’s Included
 
-Content under `.bmad-minimal/` directory during install will include:
+Content under `bmad-minimal/` directory during install will include:
 
 -  Engineering
 
@@ -117,7 +117,7 @@ Content under `.bmad-minimal/` directory during install will include:
    -  Workflows (`core/planning/workflows/`): greenfield/brownfield flows
 
 -  Configuration
-   -  `core/config.json` → used to seed `.bmad-minimal/config.json` (paths for docs, subdir names, etc.)
+   -  `core/config.json` → used to seed `bmad-minimal/config.json` (paths for docs, subdir names, etc.)
 
 ## Troubleshooting
 

@@ -23,7 +23,7 @@ program
 	.option("-p, --project <name>", "Specify project name")
 	.option(
 		"-d, --dir <path>",
-		"Base directory for BMad files (default: .bmad-minimal)"
+		"Base directory for BMad files (default: bmad-minimal)"
 	)
 	.action(async (options) => {
 		try {

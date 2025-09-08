@@ -55,7 +55,7 @@ function getConfigFields(cwd, options) {
 			name: "baseDir",
 			accessKey: "baseDir",
 			message: "Base directory for BMad files:",
-			default: options?.dir || ".bmad-minimal",
+			default: options?.dir || "bmad-minimal",
 		},
 		{
 			type: "input",
