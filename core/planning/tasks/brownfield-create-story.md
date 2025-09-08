@@ -278,6 +278,7 @@ Evaluate whether this story has any impact on the PRD and/or architecture docume
 -  PRD: update relevant sections (e.g., scope, requirements, constraints) if behavior or requirements change
 -  Architecture: update affected files/sections (e.g., `{@docs.files.feArchitecture}`, `{@docs.files.beArchitecture}`, `{@docs.files.fsArchitecture}`) if component responsibilities, data models, APIs, or patterns are affected
 -  Record a brief note in the story YAML under `dev-notes` summarizing any documentation updates (or state "No updates needed")
+-  If PRD or Architecture are impacted, also create a brownfield record file under `{@docs.subdirs.brownfield}` using the schema below to permanently record delta changes introduced by this standalone story.
 
 Checklist:
 
@@ -287,7 +288,135 @@ Checklist:
 -  [ ] Architecture docs updated where applicable, or explicitly confirmed "no updates"
 -  [ ] Story Technical Notes updated with a one-line summary of doc impact decision
 -  [ ] Confirm no new architecture/design introduced; if required, escalate to brownfield-create-epic or full PRD/Architecture
--  [ ] Save any updated docs to {@docs.dir}
+-  [ ] Save any updated docs to {@docs.dir} (if PRD/Architecture impacted)
+-  [ ] Brownfield record created and saved to {@docs.subdirs.brownfield} (if PRD/Architecture impacted)
+
+#### Brownfield Record Schema (JSON)
+
+Create a brownfield record JSON file if PRD/Architecture are impacted. Save to `{@docs.subdirs.brownfield}` with a descriptive, kebab-case filename:
+
+```json
+{
+	"template": {
+		"id": "brownfield-record-template-v1",
+		"name": "Brownfield Record",
+		"version": "1.0",
+		"output": {
+			"format": "json",
+			"filename": "{@docs.subdirs.brownfield}/{{brownfield_change_number}}-{{change_title_short}}.json",
+			"title": "Brownfield: {{change_title_short}} for standln-{{story_enhancement_number}} story"
+		}
+	},
+	"workflow": {
+		"mode": "interactive",
+		"elicitation": "advanced-elicitation"
+	},
+	"sections": [
+		{
+			"id": "context",
+			"title": "Context",
+			"sections": [
+				{
+					"id": "source-story",
+					"title": "Source Story",
+					"template": "standln-{{story_enhancement_number}} — {{story_title}}"
+				},
+				{
+					"id": "change-type",
+					"title": "Change Type",
+					"type": "choice",
+					"choices": ["PRD", "Architecture", "Both"],
+					"instruction": "Select which documents are impacted"
+				},
+				{
+					"id": "impact-summary",
+					"title": "Impact Summary",
+					"type": "paragraph",
+					"instruction": "Briefly summarize the change and its purpose"
+				}
+			]
+		},
+		{
+			"id": "impacted-documents",
+			"title": "Impacted Documents",
+			"type": "table",
+			"columns": ["Doc Type", "File", "Section/ID", "Description of Change"],
+			"instruction": "List affected PRD/Architecture files and specific sections"
+		},
+		{
+			"id": "change-details",
+			"title": "Change Details",
+			"sections": [
+				{
+					"id": "rationale",
+					"title": "Rationale",
+					"type": "paragraph",
+					"instruction": "Explain why this change was necessary"
+				},
+				{
+					"id": "additions",
+					"title": "Additions / New Content",
+					"type": "bullet-list",
+					"instruction": "New sections, requirements, or constructs added"
+				},
+				{
+					"id": "modifications",
+					"title": "Modifications",
+					"type": "bullet-list",
+					"instruction": "Edits to existing content"
+				},
+				{
+					"id": "removals",
+					"title": "Removals",
+					"type": "bullet-list",
+					"instruction": "Content removed or deprecated"
+				}
+			]
+		},
+		{
+			"id": "diffs-artifacts",
+			"title": "Diffs & Artifacts",
+			"sections": [
+				{
+					"id": "links",
+					"title": "Links",
+					"type": "bullet-list",
+					"instruction": "Links to PRs/commits or external references",
+					"template": "- {{url}} — {{purpose}}"
+				},
+				{
+					"id": "attachments",
+					"title": "Attachments",
+					"type": "bullet-list",
+					"instruction": "Related files stored in repo (paths with brief purpose)",
+					"template": "- {{path}} — {{purpose}}"
+				}
+			]
+		},
+		{
+			"id": "approvals",
+			"title": "Approvals",
+			"type": "table",
+			"columns": ["Role", "Name", "Decision", "Date"],
+			"instruction": "Record approvals for this brownfield change"
+		},
+		{
+			"id": "status",
+			"title": "Record Status",
+			"type": "choice",
+			"choices": ["Draft", "Proposed", "Approved", "Applied", "Revoked"],
+			"instruction": "Track lifecycle of this record"
+		},
+		{
+			"id": "change-log",
+			"title": "Change Log",
+			"type": "table",
+			"columns": ["Date", "Version", "Description", "Author"],
+			"instruction": "Track updates to this brownfield record"
+		}
+	]
+}
+```
 
 ### 4. Risk and Compatibility Check
 
@@ -332,7 +461,7 @@ The story creation is successful when:
 4. Rollback plan is simple and feasible
 5. Acceptance criteria include existing functionality verification
 6. Story file is created at `{@docs.subdirs.stories}/standln-{story_enhancement_number}-*.yaml`
-7. PRD and/or architecture docs are updated where impacted, or explicitly confirmed as not requiring updates
+7. PRD and/or architecture docs are updated where impacted along with brownfield record creation, or explicitly confirmed as not requiring updates
 
 ## Important Notes
 
