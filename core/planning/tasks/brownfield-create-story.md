@@ -56,87 +56,228 @@ Create a single focused story and save it as a YAML file using this naming conve
 
 Use the following YAML template to create story file with YAML format (aligned with core/engineering/schemas/story.json):
 
+```json
+{
+	"template": {
+		"id": "story-template-v2",
+		"name": "Story Document",
+		"version": "2.0",
+		"output": {
+			"format": "json",
+			"filename": "{@docs.subdirs.stories}/standln-{{story_enhancement_number}}-{{story_title_short}}.json",
+			"title": "Story {{story_enhancement_number}}: {{story_title_short}}"
+		}
+	},
+	"workflow": {
+		"mode": "interactive",
+		"elicitation": "advanced-elicitation"
+	},
+	"sections": [
+		{
+			"id": "status",
+			"title": "Status",
+			"type": "choice",
+			"choices": [
+				"Draft",
+				"Spec Review",
+				"WIP",
+				"Blocked",
+				"Review",
+				"Done"
+			],
+			"instruction": "Select the current status of the story",
+			"owner": "product-development-master",
+			"editors": [
+				"product-development-master",
+				"product-master",
+				"developer",
+				"qa-agent"
+			]
+		},
+		{
+			"id": "priority",
+			"title": "Priority",
+			"type": "choice",
+			"choices": ["1", "2", "3", "4", "5"],
+			"instruction": "Story priority (1 = highest). Used by PDM for sequencing.",
+			"owner": "product-development-master",
+			"editors": ["product-development-master", "product-master"]
+		},
+		{
+			"id": "story",
+			"title": "Story",
+			"type": "template-text",
+			"template": "**As a** {{role}},\n**I want** {{action}},\n**so that** {{benefit}}",
+			"instruction": "Define the user story using the standard format with role, action, and benefit",
+			"elicit": true,
+			"owner": "product-development-master",
+			"editors": ["product-development-master", "product-master"]
+		},
+		{
+			"id": "acceptance-criteria",
+			"title": "Acceptance Criteria",
+			"type": "numbered-list",
+			"instruction": "Copy the acceptance criteria numbered list from the epic file",
+			"elicit": true,
+			"owner": "product-development-master",
+			"editors": ["product-development-master", "product-master"]
+		},
+		{
+			"id": "tasks-and-subtasks",
+			"title": "Tasks / Subtasks",
+			"type": "bullet-list",
+			"instruction": "Break down the story into specific tasks and subtasks needed for implementation.\nReference applicable acceptance criteria numbers where relevant.\nAssign a Difficulty for each task and subtask (integer 1–10) capturing both complexity and uncertainty.",
+			"template": "- [ ] Task 1 (AC: # if applicable) [Diff: 1-10]\n  - [ ] Subtask 1.1... [Diff: 1-10]\n- [ ] Task 2 (AC: # if applicable) [Diff: 1-10]\n  - [ ] Subtask 2.1... [Diff: 1-10]\n- [ ] Task 3 (AC: # if applicable) [Diff: 1-10]\n  - [ ] Subtask 3.1... [Diff: 1-10]",
+			"elicit": true,
+			"owner": "product-development-master",
+			"editors": [
+				"product-development-master",
+				"product-master",
+				"developer"
+			]
+		},
+		{
+			"id": "dev-notes",
+			"title": "Dev Notes",
+			"instruction": "Leave this section empty at first on initialization as it will be populated later on.\nPopulate relevant information, only what was pulled from actual artifacts from docs folder, relevant to this story:\n- Do not invent information\n- If known add Relevant Source Tree info that relates to this story\n- If there were important notes from previous story that are relevant to this one, include them here\n- Put enough information in this section so that the dev agent should NEVER need to read the architecture documents, these notes along with the tasks and subtasks must give the Dev Agent the complete context it needs to comprehend with the least amount of overhead the information to complete the story, meeting all AC and completing all tasks+subtasks",
+			"elicit": true,
+			"owner": "product-development-master",
+			"editors": ["product-development-master", "product-master"]
+		},
+		{
+			"id": "testing-standards",
+			"title": "Testing",
+			"instruction": "List Relevant Testing Standards from Architecture the Developer needs to conform to:\n- Test file location\n- Test standards\n- Testing frameworks and patterns to use\n- Any specific testing requirements for this story",
+			"elicit": true,
+			"owner": "product-development-master",
+			"editors": ["product-development-master", "product-master"]
+		},
+		{
+			"id": "test-specs",
+			"title": "Test Specs",
+			"instruction": "Maintain both test specifications and a list of relevant test files for this story.",
+			"owner": "qa-agent",
+			"editors": ["qa-agent", "developer"],
+			"sections": [
+				{
+					"id": "specs",
+					"title": "Specifications",
+					"type": "numbered-list",
+					"instruction": "List concise Given-When-Then (or equivalent) specs. Include AC references.",
+					"template": "{{spec_number}}: [AC {{ac_numbers}}] {{short_description}} — Given {{given}}, When {{when}}, Then {{then}}",
+					"elicit": true
+				},
+				{
+					"id": "artifacts",
+					"title": "Artifacts",
+					"type": "bullet-list",
+					"instruction": "List existing or planned test files relevant to this story (paths with brief purpose).",
+					"template": "- {{path}} — {{purpose}}",
+					"elicit": false
+				}
+			]
+		},
+		{
+			"id": "risk-mitigation",
+			"title": "Risk Mitigation",
+			"instruction": "Document risks and mitigation strategies for this story implementation.",
+			"owner": "product-development-master",
+			"editors": ["product-development-master", "product-master"],
+			"sections": [
+				{
+					"id": "primary-risk",
+					"title": "Primary Risk",
+					"type": "paragraph",
+					"instruction": "Describe the main risk this story poses to the existing system and users.",
+					"elicit": true
+				},
+				{
+					"id": "mitigation-strategies",
+					"title": "Mitigation Strategies",
+					"type": "bullet-list",
+					"instruction": "List concrete mitigation actions to reduce likelihood/impact of the risk.",
+					"template": "- {{mitigation_action}}",
+					"elicit": true
+				},
+				{
+					"id": "rollback-plan",
+					"title": "Rollback Plan",
+					"type": "paragraph",
+					"instruction": "Outline how to quickly revert changes if needed, including preconditions and steps.",
+					"elicit": true
+				}
+			]
+		},
+		{
+			"id": "change-log",
+			"title": "Change Log",
+			"type": "table",
+			"columns": ["Date", "Version", "Description", "Author"],
+			"instruction": "Track changes made to this story document",
+			"owner": "product-development-master",
+			"editors": [
+				"product-development-master",
+				"product-master",
+				"developer",
+				"qa-agent"
+			]
+		},
+		{
+			"id": "developer-record",
+			"title": "Dev Agent Record",
+			"instruction": "This section is populated by the development agent during implementation",
+			"owner": "developer",
+			"editors": ["developer"],
+			"sections": [
+				{
+					"id": "agent-model",
+					"title": "Agent Model Used",
+					"template": "{{agent_model_name_version}}",
+					"instruction": "Record the specific AI agent model and version used for development",
+					"owner": "developer",
+					"editors": ["developer"]
+				},
+				{
+					"id": "debug-log-references",
+					"title": "Debug Log References",
+					"instruction": "Reference any debug logs or traces generated during development",
+					"owner": "developer",
+					"editors": ["developer"]
+				},
+				{
+					"id": "completion-notes",
+					"title": "Completion Notes List",
+					"instruction": "Notes about the completion of tasks and any issues encountered",
+					"owner": "developer",
+					"editors": ["developer"]
+				},
+				{
+					"id": "file-list",
+					"title": "File List",
+					"instruction": "List all files created, modified, or affected during story implementation",
+					"owner": "developer",
+					"editors": ["developer"]
+				}
+			]
+		},
+		{
+			"id": "qa-results",
+			"title": "QA Results",
+			"instruction": "Results from QA Agent QA review of the completed story implementation",
+			"owner": "qa-agent",
+			"editors": ["qa-agent"]
+		}
+	]
+}
 ```
-# Brownfield Story (YAML)
-story:
-  id: "standln-{story_enhancement_number}"
-  title: "{Specific Enhancement} - Brownfield Addition"
-  status: Draft
-  priority: "{1-5}"
-  statement: "As a {user_role}, I want {specific_action}, so that {benefit}."
 
-acceptance_criteria:
-  - "{Primary functional requirement}"
-  - "{Secondary functional requirement (if any)}"
-  - "{Integration requirement}"
-
-tasks_subtasks:
-  - "- [ ] Task 1 (AC: #) [Diff: 1-10]"
-  - "  - [ ] Subtask 1.1 [Diff: 1-10]"
-  - "- [ ] Task 2 (AC: #) [Diff: 1-10]"
-
-dev_notes:
-  doc_impact_summary: "{Updated PRD sections: ..., Architecture: ... | No updates needed}"
-  testing_standards:
-    - "{test standard 1}"
-    - "{test standard 2}"
-  previous_story_insights: "{prior insights if any}"
-  data_models:
-    value: "{data models used}"
-    source: "{@docs.dir}/<scope>-architecture.md#{section}"
-  api_specifications:
-    value: "{API specs}"
-    source: "{@docs.dir}/<scope>-architecture.md#{section}"
-  component_specifications:
-    value: "{component specs}"
-    source: "{@docs.dir}/<scope>-architecture.md#{section}"
-  file_locations:
-    value: "{file paths and naming conventions}"
-    source: "{@docs.dir}/<scope>-architecture.md#{section}"
-  testing_requirements:
-    value: "{testing requirements}"
-    source: "{@docs.dir}/<scope>-architecture.md#{section}"
-  technical_constraints:
-    value: "{constraints}"
-    source: "{@docs.dir}/<scope>-architecture.md#{section}"
-  notes_missing_guidance: "If a category lacks architecture guidance, state: 'No specific guidance found in architecture docs'."
-
-test_specs:
-  specs:
-    - "1: [AC 1] Given ..., When ..., Then ..."
-  artifacts:
-    - path: "path/to/test_file"
-      purpose: "what it covers"
-
-risk_mitigation:
-  primary_risk: "{main risk}"
-  mitigation_strategies:
-    - "{strategy 1}"
-    - "{strategy 2}"
-  rollback_plan: "{how to undo if needed}"
-
-change_log:
-  - date: "{YYYY-MM-DD}"
-    version: "{v0.1}"
-    description: "Initial draft"
-    author: "{name}"
-
-developer_record:
-  agent_model: "{agent_model_name_version}"
-  debug_log_references: []
-  completion_notes: []
-  file_list: []
-
-qa_results: ""
-```
-
-### 3. PM Document Impact Assessment
+### 3. Document Impact Assessment
 
 Evaluate whether this story has any impact on the PRD and/or architecture documents. Only update the affected parts; if the change is small with no lasting impact, do not update any documents.
 
 -  PRD: update relevant sections (e.g., scope, requirements, constraints) if behavior or requirements change
 -  Architecture: update affected files/sections (e.g., `{@docs.files.feArchitecture}`, `{@docs.files.beArchitecture}`, `{@docs.files.fsArchitecture}`) if component responsibilities, data models, APIs, or patterns are affected
--  Record a brief note in the story YAML under `dev_notes.doc_impact_summary` summarizing any documentation updates (or state "No updates needed")
+-  Record a brief note in the story YAML under `dev-notes` summarizing any documentation updates (or state "No updates needed")
 
 Checklist:
 
