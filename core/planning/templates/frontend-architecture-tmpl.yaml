@@ -201,6 +201,63 @@ sections:
     instruction: List required environment variables based on the chosen framework. Show the appropriate format and naming conventions for the framework.
     elicit: true
 
+  - id: analytics-telemetry
+    title: Analytics & Telemetry
+    instruction: Define product analytics events for the frontend and engineering telemetry needed to measure UX and success. Align with PRD Success Metrics and the main Architecture Document.
+    elicit: true
+    sections:
+      - id: analytics-events
+        title: Analytics Events Catalog
+        type: table
+        columns: [Event, Trigger, Properties, Metric, Destination]
+        instruction: List key UI events, their triggers, attached properties, the metric(s) they inform, and destinations (e.g., GA4, Segment, Amplitude).
+      - id: telemetry-metrics
+        title: Telemetry Metrics
+        type: table
+        columns: [Metric, Source, Aggregation, SLI/SLO, Dashboard]
+        instruction: Define frontend-focused engineering metrics (Core Web Vitals, JS errors, API latency) including aggregation windows and mapping to SLIs/SLOs and dashboards.
+
+  - id: performance-scalability
+    title: Performance & Scalability
+    instruction: Define frontend performance targets and scalability strategies (bundling, caching, edge/CDN). Provide concrete thresholds where possible.
+    elicit: true
+    sections:
+      - id: targets-and-budgets
+        title: Targets and Budgets
+        template: |
+          **Core Web Vitals Targets:** {{web_vitals_targets}}
+          **Bundle Size Budget:** {{bundle_budget}}
+          **Render/Interaction Targets:** {{render_targets}}
+          **API Latency Budget (FE-visible):** {{api_latency_budget}}
+      - id: scalability-strategy
+        title: Scalability Strategy
+        template: |
+          **Edge/CDN Strategy:** {{edge_cdn_strategy}}
+          **Client Caching:** {{client_cache_strategy}}
+          **SSR/ISR/SSG Strategy (if applicable):** {{ssr_isr_strategy}}
+
+  - id: observability-operations
+    title: Observability & Operations
+    instruction: Define monitoring, alerting policies, dashboards, and runbooks for frontend operations.
+    elicit: true
+    sections:
+      - id: monitoring-alerting
+        title: Monitoring & Alerting
+        template: |
+          **Monitoring Stack:** {{monitoring_stack}}
+          **Key Alerts:** {{alert_policies}}
+          **Dashboards:** {{dashboards_links}}
+      - id: service-level-objectives
+        title: Service Level Objectives
+        type: table
+        columns: [Area, SLI, SLO Target, Error Budget Policy, Alerting]
+        instruction: Define SLOs for user-facing performance and availability.
+      - id: runbooks-oncall
+        title: Runbooks & On-call
+        template: |
+          **Incident Response:** {{incident_process}}
+          **Runbooks:** {{runbook_index}}
+
   - id: frontend-developer-standards
     title: Frontend Developer Standards
     sections:

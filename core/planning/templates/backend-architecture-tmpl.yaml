@@ -455,6 +455,65 @@ sections:
               - **Compensation Logic:** {{compensation_patterns}}
               - **Idempotency:** {{idempotency_approach}}
 
+  - id: analytics-telemetry
+    title: Analytics & Telemetry
+    instruction: Define backend analytics events (if applicable) and engineering telemetry. Align with PRD Success Metrics and ensure data governance.
+    elicit: true
+    sections:
+      - id: analytics-events
+        title: Analytics Events Catalog
+        type: table
+        columns: [Event, Trigger, Properties, Metric, Destination]
+        instruction: List business/product events emitted by the backend, their triggers, properties, the metric(s) they inform, and where they are sent.
+      - id: telemetry-metrics
+        title: Telemetry Metrics
+        type: table
+        columns: [Metric, Source, Aggregation, SLI/SLO, Dashboard]
+        instruction: Define engineering metrics (latency, error rate, saturation) with aggregation windows, SLI/SLO mappings, and dashboard links.
+
+  - id: performance-scalability
+    title: Performance & Scalability
+    instruction: Define targets and the scalability strategy for backend services including capacity planning and backpressure.
+    elicit: true
+    sections:
+      - id: targets-and-budgets
+        title: Targets and Budgets
+        template: |
+          **Latency (P50/P95/P99):** {{latency_targets_detail}}
+          **Throughput/QPS:** {{throughput_targets}}
+          **Concurrency:** {{concurrency_limits}}
+          **Resource Budgets:** {{resource_budgets_detail}}
+      - id: scalability-strategy
+        title: Scalability Strategy
+        template: |
+          **Scaling Model:** {{scaling_model}} (e.g., horizontal, vertical, sharding)
+          **Autoscaling Signals:** {{autoscale_signals}}
+          **Capacity Planning Assumptions:** {{capacity_assumptions}}
+          **Backpressure/Load Shedding:** {{backpressure_strategy}}
+
+  - id: observability-operations
+    title: Observability & Operations
+    instruction: Define monitoring, alerting, SLOs, incident response, and runbooks for backend operations.
+    elicit: true
+    sections:
+      - id: monitoring-alerting
+        title: Monitoring & Alerting
+        template: |
+          **Monitoring Stack:** {{monitoring_stack}}
+          **Key Alerts:** {{alert_policies}}
+          **Dashboards:** {{dashboards_links}}
+      - id: service-level-objectives
+        title: Service Level Objectives
+        type: table
+        columns: [Service, SLI, SLO Target, Error Budget Policy, Alerting]
+        instruction: Define SLOs for critical backend services and how they trigger alerts.
+      - id: runbooks-oncall
+        title: Runbooks & On-call
+        template: |
+          **On-call Rotation:** {{oncall_rotation}}
+          **Incident Response:** {{incident_process}}
+          **Runbooks:** {{runbook_index}}
+
   - id: coding-standards
     title: Coding Standards
     instruction: |

@@ -199,6 +199,65 @@ sections:
       **GPU/VRAM Budgets:** {{gpu_budgets}}
       **IO Constraints:** {{io_constraints}}
 
+  - id: analytics-telemetry
+    title: Analytics & Telemetry
+    instruction: Define product analytics events and engineering telemetry needed to measure success and user experience. Keep this aligned with PRD Success Metrics.
+    elicit: true
+    sections:
+      - id: analytics-events
+        title: Analytics Events Catalog
+        type: table
+        columns: [Event, Trigger, Properties, Metric, Destination]
+        instruction: List key events, their triggers, attached properties, the metric(s) they inform, and where they are sent (e.g., GA4, Segment, Amplitude).
+      - id: telemetry-metrics
+        title: Telemetry Metrics
+        type: table
+        columns: [Metric, Source, Aggregation, SLI/SLO, Dashboard]
+        instruction: Define engineering metrics (latency, error rate, saturation) including aggregation and linkage to SLIs/SLOs and dashboards.
+
+  - id: performance-scalability
+    title: Performance & Scalability
+    instruction: Extend performance targets with scalability strategy, capacity planning, and backpressure. Provide concrete thresholds where possible.
+    elicit: true
+    sections:
+      - id: targets-and-budgets
+        title: Targets and Budgets
+        template: |
+          **Latency (P50/P95/P99):** {{latency_targets_detail}}
+          **Throughput/QPS:** {{throughput_targets}}
+          **Concurrency:** {{concurrency_limits}}
+          **Resource Budgets:** {{resource_budgets_detail}}
+      - id: scalability-strategy
+        title: Scalability Strategy
+        template: |
+          **Scaling Model:** {{scaling_model}} (e.g., horizontal, vertical, sharding)
+          **Autoscaling Signals:** {{autoscale_signals}}
+          **Capacity Planning Assumptions:** {{capacity_assumptions}}
+          **Backpressure/Load Shedding:** {{backpressure_strategy}}
+
+  - id: observability-operations
+    title: Observability & Operations
+    instruction: Define operational readiness including monitoring, alerting policies, SLOs, runbooks, and on-call procedures.
+    elicit: true
+    sections:
+      - id: monitoring-alerting
+        title: Monitoring & Alerting
+        template: |
+          **Monitoring Stack:** {{monitoring_stack}}
+          **Key Alerts:** {{alert_policies}}
+          **Dashboards:** {{dashboards_links}}
+      - id: service-level-objectives
+        title: Service Level Objectives
+        type: table
+        columns: [Service, SLI, SLO Target, Error Budget Policy, Alerting]
+        instruction: Define SLOs for critical services and how they trigger alerts.
+      - id: runbooks-oncall
+        title: Runbooks & On-call
+        template: |
+          **On-call Rotation:** {{oncall_rotation}}
+          **Incident Response:** {{incident_process}}
+          **Runbooks:** {{runbook_index}}
+
   - id: security
     title: Security & Compliance
     instruction: Document security posture relevant to the app (sandboxing, permissions, supply-chain security, signatures, compliance needs).

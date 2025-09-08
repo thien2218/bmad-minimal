@@ -30,7 +30,15 @@ sections:
         type: table
         columns: [Date, Version, Description, Author]
         instruction: Track document versions and changes
-
+      - id: non-goals
+        title: Non-Goals
+        type: bullet-list
+        instruction: Clearly list items and areas intentionally not addressed in this PRD/MVP to avoid scope creep.
+      - id: user-journeys
+        title: Key User Journeys / Use Cases
+        type: numbered-list
+        elicit: true
+        instruction: High-level narratives of critical flows that connect user goals to Functional Requirements; do not specify UI details.
   - id: requirements
     title: Requirements
     instruction: Draft the list of functional and non functional requirements under the two child sections
@@ -141,52 +149,6 @@ sections:
       - "Epic 2: Core Business Entities: Create and manage primary domain objects with CRUD operations"
       - "Epic 3: User Workflows & Interactions: Enable key user journeys and business processes"
       - "Epic 4: Reporting & Analytics: Provide insights and data visualization for users"
-
-  - id: epic-details
-    title: Epic {{epic_number}} {{epic_title}}
-    repeatable: true
-    instruction: |
-      After the epic list is approved, present each epic with all its stories and acceptance criteria as a complete review unit.
-
-      For each epic provide expanded goal (2-3 sentences describing the objective and value all the stories will achieve).
-
-      CRITICAL STORY SEQUENCING REQUIREMENTS:
-
-      - Stories within each epic MUST be logically sequential
-      - Each story should be a "vertical slice" delivering complete functionality aside from early enabler stories for project foundation
-      - No story should depend on work from a later story or epic
-      - Identify and note any direct prerequisite stories
-      - Record a Priority (1–5, 1 = highest) for each story and, after satisfying dependencies, order by priority to deliver highest value earlier where safe
-      - Focus on "what" and "why" not "how" (leave technical implementation to Architect) yet be precise enough to support a logical sequential order of operations from story to story.
-      - Ensure each story delivers clear user or business value, try to avoid enablers and build them into stories that deliver value.
-      - Size stories for AI agent execution: Each story must be completable by a single AI agent in one focused session without context overflow
-      - Think "junior developer working for 2-4 hours" - stories must be small, focused, and self-contained
-      - If a story seems complex, break it down further as long as it can deliver a vertical slice
-    elicit: true
-    template: "{{epic_goal}}"
-    sections:
-      - id: story
-        title: Story {{epic_number}}.{{story_number}} {{story_title}}
-        repeatable: true
-        template: |
-          As a {{user_type}},
-          I want {{action}},
-          so that {{benefit}}.
-        sections:
-          - id: acceptance-criteria
-            title: Acceptance Criteria
-            type: numbered-list
-            item_template: "{{criterion_number}}: {{criteria}}"
-            repeatable: true
-            instruction: |
-              Define clear, comprehensive, and testable acceptance criteria that:
-
-              - Precisely define what "done" means from a functional perspective
-              - Are unambiguous and serve as basis for verification
-              - Include any critical non-functional requirements from the PRD
-              - Consider local testability for backend/data components
-              - Specify UI/UX requirements and framework adherence where applicable
-              - Avoid cross-cutting concerns that should be in other stories or PRD sections
 
   - id: checklist-results
     title: Checklist Results Report
