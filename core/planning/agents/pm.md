@@ -108,6 +108,12 @@
 			"task": "tasks/create-standalone-story.md"
 		},
 		{
+			"name": "research",
+			"description": "Create deep research prompt",
+			"parameters": ["topic"],
+			"targets": ["tasks/create-deep-research-prompt.md"]
+		},
+		{
 			"name": "doc-out",
 			"description": "Output full document to current destination file"
 		},

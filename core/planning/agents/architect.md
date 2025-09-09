@@ -95,32 +95,39 @@
 		{
 			"name": "create-app-architecture",
 			"description": "Create app architecture document",
-			"targets": ["templates/architecture-tmpl.yaml"],
-			"task": "tasks/create-doc.md"
+			"targets": ["tasks/create-doc.md", "templates/architecture-tmpl.yaml"]
 		},
 		{
 			"name": "create-fullstack-architecture",
 			"description": "Create fullstack architecture document",
-			"targets": ["templates/fullstack-architecture-tmpl.yaml"],
-			"task": "tasks/create-doc.md"
+			"targets": [
+				"tasks/create-doc.md",
+				"templates/fullstack-architecture-tmpl.yaml"
+			]
 		},
 		{
 			"name": "create-backend-architecture",
 			"description": "Create backend architecture document",
-			"targets": ["templates/backend-architecture-tmpl.yaml"],
-			"task": "tasks/create-doc.md"
+			"targets": [
+				"tasks/create-doc.md",
+				"templates/backend-architecture-tmpl.yaml"
+			]
 		},
 		{
 			"name": "create-frontend-architecture",
 			"description": "Create frontend architecture document",
-			"targets": ["templates/frontend-architecture-tmpl.yaml"],
-			"task": "tasks/create-doc.md"
+			"targets": [
+				"tasks/create-doc.md",
+				"templates/frontend-architecture-tmpl.yaml"
+			]
 		},
 		{
 			"name": "create-brownfield-architecture",
 			"description": "Create brownfield architecture document",
-			"targets": ["templates/brownfield-architecture-tmpl.yaml"],
-			"task": "tasks/create-doc.md"
+			"targets": [
+				"tasks/create-doc.md",
+				"templates/brownfield-architecture-tmpl.yaml"
+			]
 		},
 		{
 			"name": "document-project",
@@ -131,17 +138,14 @@
 			"name": "execute-checklist",
 			"description": "Run checklist",
 			"parameters": ["checklist"],
-			"targets": ["tasks/execute-checklist.md"]
+			"targets": [
+				"tasks/execute-checklist.md",
+				"checklists/architect-checklist.md"
+			]
 		},
 		{
-			"name": "research",
-			"description": "Create deep research prompt",
-			"parameters": ["topic"],
-			"targets": ["tasks/create-deep-research-prompt.md"]
-		},
-		{
-			"name": "doc-out",
-			"description": "Output full document to current destination file"
+			"name": "document-out",
+			"description": "Output full document in markdown format to current destination file"
 		}
 	],
 	"rules": [
@@ -190,12 +194,7 @@
 	],
 	"dependencies": {
 		"checklists": ["architect-checklist.md"],
-		"tasks": [
-			"create-deep-research-prompt.md",
-			"create-doc.md",
-			"document-project.md",
-			"execute-checklist.md"
-		],
+		"tasks": ["create-doc.md", "document-project.md", "execute-checklist.md"],
 		"templates": [
 			"backend-architecture-tmpl.yaml",
 			"brownfield-architecture-tmpl.yaml",
