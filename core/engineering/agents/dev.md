@@ -158,11 +158,6 @@
 			"description": "Show numbered list of available commands"
 		},
 		{
-			"name": "run-tests",
-			"system": false,
-			"description": "Execute linting and tests"
-		},
-		{
 			"name": "explain",
 			"description": "Explain recent actions and rationale as if you are training a junior engineer"
 		},

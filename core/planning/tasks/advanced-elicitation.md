@@ -1,5 +1,3 @@
-<!-- Powered by BMAD™ Core -->
-
 # Advanced Elicitation Task
 
 ## Purpose

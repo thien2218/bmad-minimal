@@ -127,12 +127,12 @@
 				{
 					"userPhrase": "draft story",
 					"action": "execute_dependency_task",
-					"targets": ["tasks/create-next-story.yaml"]
+					"targets": ["tasks/create-story.yaml"]
 				},
 				{
 					"userPhrase": "create epic",
 					"action": "execute_dependency_task",
-					"targets": ["tasks/brownfield-create-epic.yaml"]
+					"targets": ["tasks/create-epic.yaml"]
 				}
 			]
 		},
@@ -172,8 +172,8 @@
 		},
 		{
 			"name": "create-epic",
-			"description": "Create epic for brownfield projects",
-			"targets": ["tasks/brownfield-create-epic.yaml"]
+			"description": "Create the next highest order epic for project",
+			"targets": ["tasks/create-epic.yaml"]
 		},
 		{
 			"name": "execute-checklist",
@@ -198,25 +198,26 @@
 		},
 		{
 			"name": "create-epic-stories",
-			"description": "Create all stories for the highest ordered epic or the epic specified by user in a single batched operation (multiple iterations of create-next-story).",
+			"description": "Create all stories for the highest ordered epic or the epic specified by user in a single batched operation (multiple iterations of create-story).",
 			"parameters": ["epic"],
-			"targets": ["tasks/create-next-story.yaml"]
+			"targets": ["tasks/create-story.yaml"]
 		},
 		{
 			"name": "create-story",
 			"description": "Create the next story for the highest ordered epic or the one specified by user.",
 			"parameters": ["epic"],
-			"targets": ["tasks/create-next-story.yaml"]
+			"targets": ["tasks/create-story.yaml"]
 		},
 		{
-			"name": "create-enh-epic",
-			"description": "Create enhancement epic from brownfield docs",
-			"targets": ["tasks/brownfield-create-enh-epic.yaml"]
+			"name": "create-brownfield-epic",
+			"description": "Create the next highest order brownfield enhancement epic",
+			"targets": ["tasks/create-brownfield-epic.yaml"]
 		},
 		{
-			"name": "create-next-enh-story",
-			"description": "Create next enhancement story for highest enhancement epic",
-			"targets": ["tasks/create-next-enh-story.yaml"]
+			"name": "create-brownfield-story",
+			"description": "Create next brownfield enhancement story for highest order or targeted enhancement epic",
+			"parameters": ["enhancement_epic"],
+			"targets": ["tasks/create-brownfield-story.yaml"]
 		}
 	],
 	"rules": [
@@ -272,8 +273,8 @@
 		"tasks": [
 			"correct-course.yaml",
 			"execute-checklist.yaml",
-			"brownfield-create-epic.yaml",
-			"create-next-story.yaml"
+			"create-epic.yaml",
+			"create-story.yaml"
 		],
 		"schemas": ["story.json", "epic.json"]
 	}

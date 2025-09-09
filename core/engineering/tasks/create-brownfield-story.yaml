@@ -1,6 +1,6 @@
 $schema: ../../.internal/task.schema.json
-id: brownfield-create-enh-story
-title: Create Enhancement Story from Highest Brownfield Epic
+id: create-brownfield-story
+title: Create Brownfield Enhancement Story from Highest Brownfield Epic
 version: 1.0.0
 purpose: Create one story for the highest-order brownfield enhancement epic, referencing its epic YAML and the corresponding PRD/Architecture docs. Output YAML strictly follows the story schema.
 category: planning

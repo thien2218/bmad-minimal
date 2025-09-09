@@ -1,5 +1,3 @@
-<!-- Powered by BMAD™ Core -->
-
 # Create AI Frontend Prompt Task
 
 ## Purpose

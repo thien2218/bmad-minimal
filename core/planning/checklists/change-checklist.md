@@ -1,5 +1,3 @@
-<!-- Powered by BMAD™ Core -->
-
 # Change Navigation Checklist
 
 **Purpose:** To systematically guide the selected Agent and user through the analysis and planning required when a significant change (pivot, tech issue, missing requirement, failed story) is identified during the BMad workflow.

@@ -1,5 +1,5 @@
 $schema: ../../.internal/task.schema.json
-id: create-next-story
+id: create-story
 title: Create Next Story Task
 version: 1.0.0
 purpose: Identify the next logical story based on project progress and epic definitions, then prepare a comprehensive, self-contained story file ready for implementation

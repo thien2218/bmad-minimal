@@ -1,227 +1,226 @@
 workflow:
-  id: brownfield-generic
-  name: Brownfield Generic Enhancement
-  description: >-
-    Agent workflow for enhancing existing non-web applications (CLI, desktop, games, systems/infra,
-    embedded, data/ML pipelines, batch apps). Uses the generic architecture template when
-    enhancements are large enough to require architectural planning.
-  type: brownfield
-  project_types:
-    - cli
-    - desktop
-    - game
-    - systems-tool
-    - embedded
-    - data-ml
-    - batch
+   id: brownfield-generic
+   name: Brownfield Generic Enhancement
+   description: >-
+      Agent workflow for enhancing existing non-web applications (CLI, desktop, games, systems/infra,
+      embedded, data/ML pipelines, batch apps). Uses the generic architecture template when
+      enhancements are large enough to require architectural planning.
+   type: brownfield
+   project_types:
+      - cli
+      - desktop
+      - game
+      - systems-tool
+      - embedded
+      - data-ml
+      - batch
 
-  sequence:
-    - step: enhancement_classification
-      agent: analyst
-      action: classify enhancement scope
-      notes: |
-        Determine enhancement complexity to route to appropriate path:
-        - Single story (< 4 hours) → Use brownfield-create-story task
-        - Small feature (1-3 stories) → Use brownfield-create-epic task
-        - Major enhancement (multiple epics) → Proceed with PRD + Generic Architecture
-        
-        Ask user: "Describe the enhancement scope. Is this a small fix, a small feature, or a major enhancement requiring architectural changes?"
+   sequence:
+      - step: enhancement_classification
+        agent: analyst
+        action: classify enhancement scope
+        notes: |
+           Determine enhancement complexity to route to appropriate path:
+           - Single story (< 4 hours) → Use create-standalone-story task
+           - Small feature (1-3 stories) → Use create-epic task
+           - Major enhancement (multiple epics) → Proceed with PRD + Generic Architecture
 
-    - step: routing_decision
-      condition: based_on_classification
-      routes:
-        single_story:
-          agent: pm
-          uses: brownfield-create-story
-          notes: "Create a single story for immediate implementation. Exit workflow after story creation."
-        small_feature:
-          agent: pm
-          uses: brownfield-create-epic
-          notes: "Create a focused epic (1-3 stories). Exit workflow after epic creation."
-        major_enhancement:
-          continue: to_next_step
-          notes: "Continue with PRD and Generic Architecture."
+           Ask user: "Describe the enhancement scope. Is this a small fix, a small feature, or a major enhancement requiring architectural changes?"
 
-    - step: documentation_check
-      agent: analyst
-      action: check existing documentation
-      condition: major_enhancement_path
-      notes: |
-        Check if adequate project documentation exists:
-        - Look for existing architecture docs, technical specs, coding standards
-        - Assess if documentation is current and comprehensive
-        - If adequate: Skip document-project, proceed to PRD
-        - If inadequate: Run document-project first
+      - step: routing_decision
+        condition: based_on_classification
+        routes:
+           single_story:
+              agent: pm
+              uses: create-standalone-story
+              notes: "Create a single story for immediate implementation. Exit workflow after story creation."
+           small_feature:
+              agent: pm
+              uses: create-epic
+              notes: "Create a focused epic (1-3 stories). Exit workflow after epic creation."
+           major_enhancement:
+              continue: to_next_step
+              notes: "Continue with PRD and Generic Architecture."
 
-    - step: project_analysis
-      agent: architect
-      action: analyze existing project and use task document-project
-      creates: architecture.md (or multiple documents)
-      condition: documentation_inadequate
-      notes: "Run document-project to capture current system state, technical debt, and constraints. Pass findings to PRD creation."
+      - step: documentation_check
+        agent: analyst
+        action: check existing documentation
+        condition: major_enhancement_path
+        notes: |
+           Check if adequate project documentation exists:
+           - Look for existing architecture docs, technical specs, coding standards
+           - Assess if documentation is current and comprehensive
+           - If adequate: Skip document-project, proceed to PRD
+           - If inadequate: Run document-project first
 
-    - agent: pm
-      creates: prd.md
-      requires: existing_documentation_or_analysis
-      notes: |
-        Create PRD for major enhancement (prd-tmpl). If document-project was run, reference its output to avoid re-analysis.
-        SAVE OUTPUT: Copy final prd.md to your project's {@docs.dir} folder.
+      - step: project_analysis
+        agent: architect
+        action: analyze existing project and use task document-project
+        creates: architecture.md (or multiple documents)
+        condition: documentation_inadequate
+        notes: "Run document-project to capture current system state, technical debt, and constraints. Pass findings to PRD creation."
 
-    - agent: architect
-      creates: architecture.md
-      requires: prd.md
-      notes: |
-        Create architecture using architecture-tmpl.yaml (generic). Focus on the specific non-web app domain (CLI, game, system tool, etc.).
-        SAVE OUTPUT: Copy final architecture.md to your project's {@docs.dir} folder ({@docs.files.architecture}).
+      - agent: pm
+        creates: prd.md
+        requires: existing_documentation_or_analysis
+        notes: |
+           Create PRD for major enhancement (prd-tmpl). If document-project was run, reference its output to avoid re-analysis.
+           SAVE OUTPUT: Copy final prd.md to your project's {@docs.dir} folder.
 
-    - agent: pdm
-      validates: all_artifacts
-      uses: pd-master-checklist
-      notes: "Validate all documents for integration safety and completeness. May require updates to any document."
+      - agent: architect
+        creates: architecture.md
+        requires: prd.md
+        notes: |
+           Create architecture using architecture-tmpl.yaml (generic). Focus on the specific non-web app domain (CLI, game, system tool, etc.).
+           SAVE OUTPUT: Copy final architecture.md to your project's {@docs.dir} folder ({@docs.files.architecture}).
 
-    - agent: various
-      updates: any_flagged_documents
-      condition: po_checklist_issues
-      notes: "If issues are found, return to relevant agent to fix and re-export updated documents to {@docs.dir} folder."
+      - agent: pdm
+        validates: all_artifacts
+        uses: pd-master-checklist
+        notes: "Validate all documents for integration safety and completeness. May require updates to any document."
 
-    - agent: pdm
-      action: create_story
-      creates: story.yaml
-      requires: all_artifacts_in_project
-      repeats: for_each_epic_or_enhancement
-      notes: |
-        Story creation cycle:
-        - For generic architecture docs: @pdm → *create (uses create-next-story)
-        - Creates story from available documentation
-        - Story starts in "Draft" status
-        - May require additional context gathering for brownfield
+      - agent: various
+        updates: any_flagged_documents
+        condition: po_checklist_issues
+        notes: "If issues are found, return to relevant agent to fix and re-export updated documents to {@docs.dir} folder."
 
-    - agent: analyst/pm
-      action: review_draft_story
-      updates: story.yaml
-      requires: story.yaml
-      optional: true
-      condition: user_wants_story_review
-      notes: |
-        OPTIONAL: Review and approve draft story
-        - NOTE: story-review task coming soon
-        - Review story completeness and alignment
-        - Update story status: Draft → Approved
+      - agent: pdm
+        action: create_story
+        creates: story.yaml
+        requires: all_artifacts_in_project
+        repeats: for_each_epic_or_enhancement
+        notes: |
+           Story creation cycle:
+           - For generic architecture docs: @pdm → *create (uses create-story)
+           - Creates story from available documentation
+           - Story starts in "Draft" status
+           - May require additional context gathering for brownfield
 
-    - agent: dev
-      action: implement_story
-      creates: implementation_files
-      requires: story.yaml
-      notes: |
-        Dev Agent (New Chat): @dev
-        - Implements approved story
-        - Updates File List with all changes
-        - Marks story as "Review" when complete
+      - agent: analyst/pm
+        action: review_draft_story
+        updates: story.yaml
+        requires: story.yaml
+        optional: true
+        condition: user_wants_story_review
+        notes: |
+           OPTIONAL: Review and approve draft story
+           - NOTE: story-review task coming soon
+           - Review story completeness and alignment
+           - Update story status: Draft → Approved
 
-    - agent: qa
-      action: review_implementation
-      updates: implementation_files
-      requires: implementation_files
-      optional: true
-      notes: |
-        OPTIONAL: QA Agent (New Chat): @qa → review-story
-        - Advisory review
-        - Leaves prioritized checklist for Dev
-        - Recommends status (owner decides)
+      - agent: dev
+        action: implement_story
+        creates: implementation_files
+        requires: story.yaml
+        notes: |
+           Dev Agent (New Chat): @dev
+           - Implements approved story
+           - Updates File List with all changes
+           - Marks story as "Review" when complete
 
-    - agent: dev
-      action: address_qa_feedback
-      updates: implementation_files
-      condition: qa_left_unchecked_items
-      notes: |
-        If QA left unchecked items:
-        - Dev Agent (New Chat): Address remaining items
-        - Return to QA for final approval
+      - agent: qa
+        action: review_implementation
+        updates: implementation_files
+        requires: implementation_files
+        optional: true
+        notes: |
+           OPTIONAL: QA Agent (New Chat): @qa → review-story
+           - Advisory review
+           - Leaves prioritized checklist for Dev
+           - Recommends status (owner decides)
 
-    - repeat_development_cycle:
-      action: continue_for_all_stories
-      notes: |
-        Repeat story cycle (PDM → Dev → QA) for all epic stories
-        Continue until all stories in PRD are complete
+      - agent: dev
+        action: address_qa_feedback
+        updates: implementation_files
+        condition: qa_left_unchecked_items
+        notes: |
+           If QA left unchecked items:
+           - Dev Agent (New Chat): Address remaining items
+           - Return to QA for final approval
 
-    - agent: pdm
-      action: epic_retrospective
-      creates: epic-retrospective.md
-      condition: epic_complete
-      optional: true
-      notes: |
-        OPTIONAL: After epic completion
-        - NOTE: epic-retrospective task coming soon
-        - Validate epic was completed correctly
-        - Document learnings and improvements
+      - repeat_development_cycle:
+        action: continue_for_all_stories
+        notes: |
+           Repeat story cycle (PDM → Dev → QA) for all epic stories
+           Continue until all stories in PRD are complete
 
-    - workflow_end:
-      action: project_complete
-      notes: |
-        All stories implemented and reviewed!
-        Enhancement development phase complete.
-        
-        Reference: {@baseDir}/planning/data/bmad-kb.md#IDE Development Workflow
+      - agent: pdm
+        action: epic_retrospective
+        creates: epic-retrospective.md
+        condition: epic_complete
+        optional: true
+        notes: |
+           OPTIONAL: After epic completion
+           - NOTE: epic-retrospective task coming soon
+           - Validate epic was completed correctly
+           - Document learnings and improvements
 
-  flow_diagram: |
-    ```mermaid
-    graph TD
-        A[Start: Brownfield Generic] --> B[analyst: classify enhancement scope]
-        B --> C{Enhancement Size?}
-        
-        C -->|Single Story| D[pm: brownfield-create-story]
-        C -->|1-3 Stories| E[pm: brownfield-create-epic]
-        C -->|Major Enhancement| F[analyst: check documentation]
-        
-        F --> G{Docs Adequate?}
-        G -->|No| H[architect: document-project]
-        G -->|Yes| I[pm: prd.md]
-        H --> I
-        
-        I --> J[architect: architecture.md]
-        J --> K[pdm: validate all artifacts]
-        K --> L{Issues?}
-        L -->|Yes| M[Return for fixes]
-        L -->|No| N[pdm: create story]
-        M --> K
-        
-        N --> O{Review draft?}
-        O -->|Yes| P[analyst/pm: review & approve]
-        O -->|No| Q[dev: implement]
-        P --> Q
-        
-        Q --> R{QA review?}
-        R -->|Yes| S[qa: review]
-        R -->|No| T{More stories?}
-        S --> U{Issues?}
-        U -->|Yes| V[dev: fix]
-        U -->|No| T
-        V --> S
-        T -->|Yes| N
-        T -->|No| W{Retrospective?}
-        W -->|Yes| X[pdm: retrospective]
-        W -->|No| Y[Complete]
-        X --> Y
-    ```
+      - workflow_end:
+        action: project_complete
+        notes: |
+           All stories implemented and reviewed!
+           Enhancement development phase complete.
 
-  decision_guidance:
-    when_to_use:
-      - Enhancement requires architectural planning in a non-web domain
-      - Significant integration or platform constraints exist
-      - Risk assessment and mitigation planning necessary
-      - Multiple team members will work on related changes
+           Reference: {@baseDir}/planning/data/bmad-kb.md#IDE Development Workflow
 
-  handoff_prompts:
-    classification_complete: |
-      Enhancement classified as: {{enhancement_type}}
-      {{if single_story}}: Proceeding with brownfield-create-story task.
-      {{if small_feature}}: Creating focused epic with brownfield-create-epic task.
-      {{if major_enhancement}}: Proceeding to PRD and Generic Architecture.
-    document_project_to_pm: |
-      Project analysis complete. Key findings documented in:
-      - {{document_list}}
-      Use these findings to inform PRD creation and avoid re-analyzing the same aspects.
-    pm_to_architect: "PRD complete and saved as {@docs.files.prd}. Create the generic architecture next."
-    architect_to_po: "Architecture complete. Save it as {@docs.files.architecture}. Please validate all artifacts for integration safety."
-    complete: "All planning artifacts validated and development can begin. Stories will be created based on the generic architecture."
+   flow_diagram: |
+      ```mermaid
+      graph TD
+          A[Start: Brownfield Generic] --> B[analyst: classify enhancement scope]
+          B --> C{Enhancement Size?}
+          
+          C -->|Single Story| D[pm: create-standalone-story]
+          C -->|1-3 Stories| E[pm: create-epic]
+          C -->|Major Enhancement| F[analyst: check documentation]
+          
+          F --> G{Docs Adequate?}
+          G -->|No| H[architect: document-project]
+          G -->|Yes| I[pm: prd.md]
+          H --> I
+          
+          I --> J[architect: architecture.md]
+          J --> K[pdm: validate all artifacts]
+          K --> L{Issues?}
+          L -->|Yes| M[Return for fixes]
+          L -->|No| N[pdm: create story]
+          M --> K
+          
+          N --> O{Review draft?}
+          O -->|Yes| P[analyst/pm: review & approve]
+          O -->|No| Q[dev: implement]
+          P --> Q
+          
+          Q --> R{QA review?}
+          R -->|Yes| S[qa: review]
+          R -->|No| T{More stories?}
+          S --> U{Issues?}
+          U -->|Yes| V[dev: fix]
+          U -->|No| T
+          V --> S
+          T -->|Yes| N
+          T -->|No| W{Retrospective?}
+          W -->|Yes| X[pdm: retrospective]
+          W -->|No| Y[Complete]
+          X --> Y
+      ```
 
+   decision_guidance:
+      when_to_use:
+         - Enhancement requires architectural planning in a non-web domain
+         - Significant integration or platform constraints exist
+         - Risk assessment and mitigation planning necessary
+         - Multiple team members will work on related changes
+
+   handoff_prompts:
+      classification_complete: |
+         Enhancement classified as: {{enhancement_type}}
+         {{if single_story}}: Proceeding with create-standalone-story task.
+         {{if small_feature}}: Creating focused epic with create-epic task.
+         {{if major_enhancement}}: Proceeding to PRD and Generic Architecture.
+      document_project_to_pm: |
+         Project analysis complete. Key findings documented in:
+         - {{document_list}}
+         Use these findings to inform PRD creation and avoid re-analyzing the same aspects.
+      pm_to_architect: "PRD complete and saved as {@docs.files.prd}. Create the generic architecture next."
+      architect_to_po: "Architecture complete. Save it as {@docs.files.architecture}. Please validate all artifacts for integration safety."
+      complete: "All planning artifacts validated and development can begin. Stories will be created based on the generic architecture."

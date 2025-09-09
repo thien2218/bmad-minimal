@@ -1,10 +1,3 @@
-## <!-- Powered by BMAD™ Core -->
-
-docOutputLocation: {@docs.dir}/brainstorming-session-results.md
-template: '.bmad-method/templates/brainstorming-output-tmpl.yaml'
-
----
-
 # Facilitate Brainstorming Session Task
 
 Facilitate interactive brainstorming sessions with users. Be creative and adaptive in applying techniques.

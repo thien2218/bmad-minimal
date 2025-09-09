@@ -1,10 +1,8 @@
-<!-- Powered by BMAD™ Core -->
-
-# Create Brownfield Story Task
+# Create Standalone Story Task
 
 ## Purpose
 
-Create a single user story for very small brownfield enhancements that can be completed in one focused development session. This task is for minimal additions or bug fixes that require existing system integration awareness.
+Create a single user story for very small brownfield standalone enhancements that can be completed in one focused development session. This task is for minimal additions or bug fixes that require existing system integration awareness.
 
 ## When to Use This Task
 
@@ -16,7 +14,7 @@ Create a single user story for very small brownfield enhancements that can be co
 -  Integration is straightforward with minimal risk
 -  Change is isolated with clear boundaries
 
-**Use brownfield-create-epic when:**
+**Use create-epic when:**
 
 -  The enhancement requires 2-3 coordinated stories
 -  Some design work is needed
@@ -287,7 +285,7 @@ Checklist:
 -  [ ] Architecture impact assessed; impacted files/sections identified (or "none")
 -  [ ] Architecture docs updated where applicable, or explicitly confirmed "no updates"
 -  [ ] Story Technical Notes updated with a one-line summary of doc impact decision
--  [ ] Confirm no new architecture/design introduced; if required, escalate to brownfield-create-epic or full PRD/Architecture
+-  [ ] Confirm no new architecture/design introduced; if required, escalate to create-epic or full PRD/Architecture
 -  [ ] Save any updated docs to {@docs.dir} (if PRD/Architecture impacted)
 -  [ ] Brownfield record created and saved to {@docs.subdirs.brownfield} (if PRD/Architecture impacted)
 
@@ -466,7 +464,7 @@ The story creation is successful when:
 ## Important Notes
 
 -  This task is for VERY SMALL brownfield changes only
--  If complexity grows during analysis, escalate to brownfield-create-epic
+-  If complexity grows during analysis, escalate to create-epic
 -  Always prioritize existing system integrity
--  When in doubt about integration complexity, use brownfield-create-epic instead
+-  When in doubt about integration complexity, use create-epic instead
 -  Stories should take no more than 4 hours of focused development work

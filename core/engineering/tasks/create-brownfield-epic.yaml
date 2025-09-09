@@ -1,5 +1,5 @@
 $schema: ../../.internal/task.schema.json
-id: brownfield-create-enh-epic
+id: create-brownfield-epic
 title: Create Enhancement Epic from Brownfield Docs
 version: 1.0.0
 purpose: Create a single epic for the highest-order brownfield enhancement using PRD and Architecture docs in {@docs.subdirs.brownfield} as authoritative references. Output YAML strictly follows the epic schema.

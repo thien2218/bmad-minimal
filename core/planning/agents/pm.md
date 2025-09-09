@@ -103,9 +103,9 @@
 			"task": "tasks/create-doc.md"
 		},
 		{
-			"name": "create-brownfield-story",
+			"name": "create-standalone-story",
 			"description": "Create a single brownfield story",
-			"task": "tasks/brownfield-create-story.md"
+			"task": "tasks/create-standalone-story.md"
 		},
 		{
 			"name": "doc-out",
@@ -167,7 +167,7 @@
 			"create-deep-research-prompt.md",
 			"create-doc.md",
 			"execute-checklist.md",
-			"brownfield-create-story.md"
+			"create-standalone-story.md"
 		],
 		"templates": ["brownfield-prd-tmpl.yaml", "prd-tmpl.yaml"]
 	}
