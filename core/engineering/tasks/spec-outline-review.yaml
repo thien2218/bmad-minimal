@@ -21,13 +21,13 @@ inputs:
   optional:
     - name: story_id
       type: story_id
-      description: Story identifier in format {epic}.{story}
+      description: Story identifier in format {epic}.{story} or standln-{story_number} or enh-{epic_number}.{story_number}
       pattern: "^\\d+\\.\\d+$"
       examples: ["1.3", "2.5"]
     - name: story_path
       type: path
       description: Optional path to the story file from docs.subdirs.stories in config.json, used for AC traceability if provided
-      pattern: "{@docs.subdirs.stories}/{epic}.{story}-*.yaml"
+      pattern: "{@docs.subdirs.stories}/{story_id}-*.yaml"
 
 prerequisites:
   files:

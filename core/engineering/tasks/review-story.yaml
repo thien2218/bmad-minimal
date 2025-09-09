@@ -10,7 +10,7 @@ inputs:
   required:
     - name: story_id
       type: story_id
-      description: Story identifier in format {epic}.{story} or standln-{story_enhancement_number} or enh-{epic_enhancement_number}.{story_enhancement_number}
+      description: Story identifier in format {epic}.{story} or standln-{story_number} or enh-{epic_number}.{story_number}
       pattern: "^\\d+\\.\\d+$"
       examples: ["1.3", "2.5"]
     - name: story_path
@@ -197,17 +197,17 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{@docs.subdirs.qa}/gates/{{story_id}}-*.yaml"
+        target: "{@docs.subdirs.qa}/gates/{story_id}-*.yaml"
         content: |
           Load qa-gate.json and use it as the contract to generate the gate artifact based on the assessment done above.
-          Serialize as YAML and write to {@docs.subdirs.qa}/gates/{{story_id}}-{story_slug}.yaml.
+          Serialize as YAML and write to {@docs.subdirs.qa}/gates/{story_id}-{story_slug}.yaml.
           Do not modify the story file.
 
 outputs:
   artifacts:
     - name: quality_gate
       type: file
-      path: "{@docs.subdirs.qa}/gates/{{story_id}}-*.yaml"
+      path: "{@docs.subdirs.qa}/gates/{story_id}-*.yaml"
       format: yaml
       description: Quality gate assessment file with pass/fail decision
   updates:
