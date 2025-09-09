@@ -10,7 +10,7 @@ inputs:
   required:
     - name: story_id
       type: story_id
-      description: Story identifier in format {epic}.{story}
+      description: Story identifier in format {epic}.{story} or standln-{story_enhancement_number} or enh-{epic_enhancement_number}.{story_enhancement_number}
       pattern: "^\\d+\\.\\d+$"
       examples: ["1.3", "2.5"]
     - name: story_path
@@ -175,9 +175,21 @@ process:
         operation: update
         target: "{story_path}"
         content: |
-          Append to QA Results section only.
-          If section doesn't exist, append at end.
-          Never edit other sections.
+          Append to "QA Results" only; if absent, add a new "## QA Results" at end. Do not edit other sections.
+          Use and fill this template (avoid gate-like labels, risk totals, or NFR statuses here):
+          Summary: [1–2 sentence narrative of scope and outcome]
+          Evidence Highlights:
+          - Reviewed: [key files/areas]
+          - Context: [diff size, notable triggers]
+          Requirements Traceability (Narrative): [brief mapping; suspected gaps with reasoning]
+          Test Architecture Notes: [coverage approach, levels used, reliability]
+          Testability: [controllability / observability / debuggability]
+          Code Quality (Advisory): [notable patterns/smells; refactor suggestions]
+          Risks/Concerns (Narrative): [qualitative risks; no severities/totals]
+          Advisory Actions:
+          - Must-fix (advisory): [bullets]
+          - Follow-up (advisory): [bullets]
+          Next Steps (Advisory, not a gate): [guidance]
 
     - id: CREATE-GATE
       title: Create Quality Gate File
@@ -185,28 +197,19 @@ process:
       action:
         type: file_operation
         operation: create
-        target: "{@docs.subdirs.qa}/gates/{epic}.{story}-*.yaml"
+        target: "{@docs.subdirs.qa}/gates/{{story_id}}-*.yaml"
         content: |
-          Render from {@baseDir}/engineering/schemas/qa-gate.json
-          Include gate decision, risk summary, NFR validation
+          Load qa-gate.json and use it as the contract to generate the gate artifact based on the assessment done above.
+          Serialize as YAML and write to {@docs.subdirs.qa}/gates/{{story_id}}-{story_slug}.yaml.
+          Do not modify the story file.
 
 outputs:
   artifacts:
     - name: quality_gate
       type: file
-      path: "{@docs.subdirs.qa}/gates/{epic}.{story}-*.yaml"
+      path: "{@docs.subdirs.qa}/gates/{{story_id}}-*.yaml"
       format: yaml
       description: Quality gate assessment file with pass/fail decision
-    - name: risk_profile
-      type: file
-      path: "{@docs.subdirs.qa}/assessments/{epic}.{story}-risk-{YYYYMMDD}.md"
-      format: markdown
-      description: Risk assessment matrix
-    - name: nfr_assessment
-      type: file
-      path: "{@docs.subdirs.qa}/assessments/{epic}.{story}-nfr-{YYYYMMDD}.md"
-      format: markdown
-      description: Non-functional requirements assessment
   updates:
     - target: "{story_path}"
       sections:
