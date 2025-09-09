@@ -280,6 +280,8 @@ sections:
       2. Identify where new files/folders will be placed
       3. Ensure consistency with existing naming conventions
       4. Plan for minimal disruption to existing structure
+
+      Document the structure at folder level only, except for first level files (i.e. files in the root directory).
     elicit: true
     sections:
       - id: existing-structure
@@ -295,14 +297,12 @@ sections:
         instruction: Show only new additions to existing structure
         template: |
           {{project-root}}/
-          ├── {{existing_structure_context}}
-          │   ├── {{new_folder_1}}/           # {{purpose_1}}
-          │   │   ├── {{new_file_1}}
-          │   │   └── {{new_file_2}}
-          │   ├── {{existing_folder}}/        # Existing folder with additions
-          │   │   ├── {{existing_file}}       # Existing file
-          │   │   └── {{new_file_3}}          # New addition
-          │   └── {{new_folder_2}}/           # {{purpose_2}}
+          └── {{existing_structure_context}}
+              ├── {{new_folder_1}}/           # {{purpose_1}}
+              ├── {{existing_folder}}/        # Existing folder with additions
+              │   ├── {{existing_file}}       # Existing file
+              │   └── {{new_file_3}}          # New addition
+              └── {{new_folder_2}}/           # {{purpose_2}}
       - id: integration-guidelines
         title: Integration Guidelines
         template: |

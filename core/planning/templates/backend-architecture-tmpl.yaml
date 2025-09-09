@@ -347,6 +347,7 @@ sections:
       5. Best practices for the chosen frameworks
       6. Clear separation of concerns
 
+      Document the structure at folder level only, except for first level files (i.e. files in the root directory).
       Adapt the structure based on project needs. For monorepos, show service separation. For serverless, show function organization. Include language-specific conventions.
     elicit: true
     examples:

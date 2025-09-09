@@ -97,12 +97,44 @@ sections:
           - ["Animation", "{{animation_lib}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
           - ["Dev Tools", "{{dev_tools}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
 
-  - id: project-structure
-    title: Project Structure
-    instruction: Define exact directory structure for AI tools based on the chosen framework. Be specific about where each type of file goes. Generate a structure that follows the framework's best practices and conventions.
-    elicit: true
+  - id: source-tree
+    title: Source Tree
     type: code
     language: plaintext
+    instruction: |
+      Create a project folder structure that reflects:
+
+      1. The chosen repository structure (monorepo/polyrepo)
+      2. The service architecture (monolith/microservices/serverless)
+      3. The selected tech stack and languages
+      4. Component organization from above
+      5. Best practices for the chosen frameworks
+      6. Clear separation of concerns
+
+      Document the structure at folder level only, except for first level files (i.e. files in the root directory).
+      Adapt the structure based on project needs. For monorepos, show service separation. For serverless, show function organization. Include language-specific conventions.
+    elicit: true
+    examples:
+      - |
+        project-root/
+        ├── public/                   # Static assets served as-is
+        ├── src/                      # Application source
+        │   ├── assets/               # Images, fonts, SVGs
+        │   ├── components/           # Reusable UI components
+        │   ├── features/             # Feature modules (domain slices)
+        │   ├── hooks/                # Reusable hooks
+        │   ├── routes/               # SPA route definitions (if used)
+        │   ├── services/             # API clients, data fetching
+        │   ├── store/                # State management (if used)
+        │   ├── styles/               # Global styles/tokens
+        │   ├── utils/                # Helpers and utilities
+        │   └── main.ts               # App entry (main.ts|tsx|js)
+        ├── tests/
+        │   ├── unit/                 # Unit tests
+        │   └── e2e/                  # End-to-end tests
+        ├── package.json
+        ├── tsconfig.json             # If using TypeScript
+        └── vite.config.ts            # Or webpack.config.js/rollup.config.js
 
   - id: component-standards
     title: Component Standards

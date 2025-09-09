@@ -501,7 +501,9 @@ sections:
 
   - id: unified-project-structure
     title: Unified Project Structure
-    instruction: Create a monorepo structure that accommodates both frontend and backend. Adapt based on chosen tools and frameworks.
+    instruction: |
+      Document the structure at folder level only, except for first level files (i.e. files in the root directory).
+      Create a monorepo structure that accommodates both frontend and backend. Adapt based on chosen tools and frameworks.
     elicit: true
     type: code
     language: plaintext
