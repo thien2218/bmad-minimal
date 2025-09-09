@@ -88,8 +88,8 @@ async function install(options) {
 			await fs.ensureDir(path.join(docsDir, subDir));
 		}
 
-		// Write technical preferences from template in src/templates
-		console.log(chalk.gray(`  Writing technical preferences...`));
+		// Write coding standards from template in src/templates
+		console.log(chalk.gray(`  Writing coding standards...`));
 		const templateTechPrefsPath = path.join(
 			__dirname,
 			"../templates/coding-standards.md"
