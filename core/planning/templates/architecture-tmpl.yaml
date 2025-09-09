@@ -18,7 +18,7 @@ sections:
     instruction: |
       This template produces a generic architecture document for applications that do not cleanly fit into the typical fullstack/backend/frontend web categories. Example targets include CLI tools, desktop apps, games, systems/infra tools, embedded, data science/ML pipelines, batch jobs, scripting utilities, etc.
 
-      If available, review provided documents before proceeding (e.g., {@docs.files.prd}, brainstorming outputs, technical preferences). Ask the user for any missing context critical to architectural decisions.
+      If available, review provided documents before proceeding (e.g., {@docs.files.prd}, brainstorming outputs, coding standards). Ask the user for any missing context critical to architectural decisions.
     elicit: true
     sections:
       - id: context

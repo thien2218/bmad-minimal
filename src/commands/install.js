@@ -94,8 +94,8 @@ async function install(options) {
 			__dirname,
 			"../templates/coding-standards.md"
 		);
-		const techPrefsPath = path.join(docsDir, "coding-standards.md");
-		await fs.copy(templateTechPrefsPath, techPrefsPath);
+		const codingStdsPath = path.join(docsDir, "coding-standards.md");
+		await fs.copy(templateTechPrefsPath, codingStdsPath);
 
 		// After all files are written, ensure baseDir is ignored by git
 		try {

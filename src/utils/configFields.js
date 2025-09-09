@@ -67,7 +67,7 @@ function getConfigFields(cwd, options) {
 		{
 			type: "confirm",
 			name: "generateTPPrompt",
-			message: "Generate technical preferences prompt?",
+			message: "Generate coding standards prompt?",
 			default: true,
 		},
 	];

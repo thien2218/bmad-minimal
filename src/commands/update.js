@@ -105,14 +105,14 @@ async function update(options) {
 		console.log(chalk.gray("  Preserving configuration..."));
 		await writeJson(configPath, configBackup);
 
-		// Update technical preferences if it exists
+		// Add coding standards if it doesn't exists
 		const docsDir = path.join(cwd, config.docs.dir);
-		const techPrefsPath = path.join(docsDir, "coding-standards.md");
+		const codingStdsPath = path.join(docsDir, "coding-standards.md");
 
-		if (await exists(techPrefsPath)) {
-			console.log(chalk.gray("  Updating technical preferences from template..."));
+		if (!(await exists(codingStdsPath))) {
+			console.log(chalk.gray("  Updating coding standards from template..."));
 			const templateTechPrefsPath = path.join(__dirname, "../templates/coding-standards.md");
-			await fs.copy(templateTechPrefsPath, techPrefsPath);
+			await fs.copy(templateTechPrefsPath, codingStdsPath);
 		}
 
 		// Ensure all doc directories still exist
@@ -128,8 +128,8 @@ async function update(options) {
 		if (await exists(planningDest)) {
 			console.log("   ✓ Planning files");
 		}
-		if (await exists(techPrefsPath)) {
-			console.log("   ✓ Technical preferences");
+		if (await exists(codingStdsPath)) {
+			console.log("   ✓ Coding standards");
 		}
 		console.log("   ✓ Configuration preserved");
 

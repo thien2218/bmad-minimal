@@ -31,7 +31,7 @@ inputs:
       pattern: "{@docs.dir}/?(*-)architecture.md"
     - name: coding_standards
       type: path
-      description: Path to technical preferences file
+      description: Path to coding standards file
       location: "{@docs.files.codingStandards}"
 
 process:
