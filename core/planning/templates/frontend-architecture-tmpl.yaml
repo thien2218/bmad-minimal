@@ -14,6 +14,7 @@ workflow:
 sections:
   - id: template-framework-selection
     title: Template and Framework Selection
+    required: true
     instruction: |
       Review provided documents including PRD, UX-UI Specification, and main Architecture Document. Focus on extracting technical implementation details needed for AI frontend tools and developer agents. Ask the user for any of these documents if you are unable to locate and were not provided.
 
@@ -58,17 +59,20 @@ sections:
     sections:
       - id: changelog
         title: Change Log
+        required: true
         type: table
         columns: [Date, Version, Description, Author]
         instruction: Track document versions and changes
 
   - id: frontend-tech-stack
     title: Frontend Tech Stack
+    required: true
     instruction: Extract from main architecture's Technology Stack Table. This section MUST remain synchronized with the main architecture document.
     elicit: true
     sections:
       - id: tech-stack-table
         title: Technology Stack Table
+        required: true
         type: table
         columns: [Category, Technology, Version, Purpose, Rationale]
         instruction: Fill in appropriate technology choices based on the selected framework and project requirements.
@@ -99,6 +103,7 @@ sections:
 
   - id: source-tree
     title: Source Tree
+    required: true
     type: code
     language: plaintext
     instruction: |
@@ -138,36 +143,43 @@ sections:
 
   - id: component-standards
     title: Component Standards
+    required: true
     instruction: Define exact patterns for component creation based on the chosen framework.
     elicit: true
     sections:
       - id: component-template
         title: Component Template
+        required: true
         instruction: Generate a minimal but complete component template following the framework's best practices. Include TypeScript types, proper imports, and basic structure.
         type: code
         language: typescript
       - id: naming-conventions
         title: Naming Conventions
+        required: true
         instruction: Provide naming conventions specific to the chosen framework for components, files, services, state management, and other architectural elements.
 
   - id: state-management
     title: State Management
+    required: true
     instruction: Define state management patterns based on the chosen framework.
     elicit: true
     sections:
       - id: store-structure
         title: Store Structure
+        required: true
         instruction: Generate the state management directory structure appropriate for the chosen framework and selected state management solution.
         type: code
         language: plaintext
       - id: state-template
         title: State Management Template
+        required: true
         instruction: Provide a basic state management template/example following the framework's recommended patterns. Include TypeScript types and common operations like setting, updating, and clearing state.
         type: code
         language: typescript
 
   - id: api-integration
     title: API Integration
+    required: false
     instruction: Define API service patterns based on the chosen framework.
     elicit: true
     sections:
@@ -184,6 +196,7 @@ sections:
 
   - id: routing
     title: Routing
+    required: false
     instruction: Define routing structure and patterns based on the chosen framework.
     elicit: true
     sections:
@@ -195,30 +208,36 @@ sections:
 
   - id: styling-guidelines
     title: Styling Guidelines
+    required: true
     instruction: Define styling approach based on the chosen framework.
     elicit: true
     sections:
       - id: styling-approach
         title: Styling Approach
+        required: true
         instruction: Describe the styling methodology appropriate for the chosen framework (CSS Modules, Styled Components, Tailwind, etc.) and provide basic patterns.
       - id: global-theme
         title: Global Theme Variables
+        required: false
         instruction: Provide a CSS custom properties (CSS variables) theme system that works across all frameworks. Include colors, spacing, typography, shadows, and dark mode support.
         type: code
         language: css
 
   - id: testing-requirements
     title: Testing Requirements
+    required: true
     instruction: Define minimal testing requirements based on the chosen framework.
     elicit: true
     sections:
       - id: component-test-template
         title: Component Test Template
+        required: true
         instruction: Provide a basic component test template using the framework's recommended testing library. Include examples of rendering tests, user interaction tests, and mocking.
         type: code
         language: typescript
       - id: testing-best-practices
         title: Testing Best Practices
+        required: true
         type: numbered-list
         items:
           - "**Unit Tests**: Test individual components in isolation"
@@ -230,11 +249,13 @@ sections:
 
   - id: environment-configuration
     title: Environment Configuration
+    required: false
     instruction: List required environment variables based on the chosen framework. Show the appropriate format and naming conventions for the framework.
     elicit: true
 
   - id: analytics-telemetry
     title: Analytics & Telemetry
+    required: false
     instruction: Define product analytics events for the frontend and engineering telemetry needed to measure UX and success. Align with PRD Success Metrics and the main Architecture Document.
     elicit: true
     sections:
@@ -251,11 +272,13 @@ sections:
 
   - id: performance-scalability
     title: Performance & Scalability
+    required: true
     instruction: Define frontend performance targets and scalability strategies (bundling, caching, edge/CDN). Provide concrete thresholds where possible.
     elicit: true
     sections:
       - id: targets-and-budgets
         title: Targets and Budgets
+        required: true
         template: |
           **Core Web Vitals Targets:** {{web_vitals_targets}}
           **Bundle Size Budget:** {{bundle_budget}}
@@ -263,6 +286,7 @@ sections:
           **API Latency Budget (FE-visible):** {{api_latency_budget}}
       - id: scalability-strategy
         title: Scalability Strategy
+        required: true
         template: |
           **Edge/CDN Strategy:** {{edge_cdn_strategy}}
           **Client Caching:** {{client_cache_strategy}}
@@ -270,6 +294,7 @@ sections:
 
   - id: observability-operations
     title: Observability & Operations
+    required: false
     instruction: Define monitoring, alerting policies, dashboards, and runbooks for frontend operations.
     elicit: true
     sections:
@@ -292,13 +317,16 @@ sections:
 
   - id: frontend-developer-standards
     title: Frontend Developer Standards
+    required: true
     sections:
       - id: critical-coding-rules
         title: Critical Coding Rules
+        required: true
         instruction: List essential rules that prevent common AI mistakes, including both universal rules and framework-specific ones.
         elicit: true
       - id: quick-reference
         title: Quick Reference
+        required: false
         instruction: |
           Create a framework-specific cheat sheet with:
           - Common commands (dev server, build, test)

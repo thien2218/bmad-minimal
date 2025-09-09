@@ -14,6 +14,7 @@ workflow:
 sections:
   - id: introduction
     title: Introduction
+    required: true
     instruction: |
       If available, review any provided relevant documents to gather all relevant context before beginning. At minimum, you should have access to {@docs.files.prd} and {@docs.files.feSpec}. Ask the user for any documents you need but cannot locate. This template creates a unified architecture that covers both backend and frontend concerns to guide AI-driven fullstack development.
     elicit: true
@@ -24,6 +25,7 @@ sections:
     sections:
       - id: starter-template
         title: Starter Template or Existing Project
+        required: false
         instruction: |
           Before proceeding with architecture design, check if the project is based on any starter templates or existing codebases:
 
@@ -49,17 +51,20 @@ sections:
           If none, state "N/A - Greenfield project"
       - id: changelog
         title: Change Log
+        required: true
         type: table
         columns: [Date, Version, Description, Author]
         instruction: Track document versions and changes
 
   - id: high-level-architecture
     title: High Level Architecture
+    required: true
     instruction: This section contains multiple subsections that establish the foundation. Present all subsections together, then elicit feedback on the complete section.
     elicit: true
     sections:
       - id: technical-summary
         title: Technical Summary
+        required: true
         instruction: |
           Provide a comprehensive overview (4-6 sentences) covering:
           - Overall architectural style and deployment approach
@@ -69,6 +74,7 @@ sections:
           - How this architecture achieves PRD goals
       - id: platform-infrastructure
         title: Platform and Infrastructure Choice
+        required: true
         instruction: |
           Based on PRD requirements and technical assumptions, make a platform recommendation:
 
@@ -89,6 +95,7 @@ sections:
           **Deployment Host and Regions:** {{regions}}
       - id: repository-structure
         title: Repository Structure
+        required: true
         instruction: |
           Define the repository approach based on PRD requirements and platform choice, explain your rationale or ask questions to the user if unsure:
 
@@ -102,6 +109,7 @@ sections:
           **Package Organization:** {{package_strategy}}
       - id: architecture-diagram
         title: High Level Architecture Diagram
+        required: true
         type: mermaid
         mermaid_type: graph
         instruction: |
@@ -117,6 +125,7 @@ sections:
           Use appropriate diagram type for clarity.
       - id: architectural-patterns
         title: Architectural Patterns
+        required: true
         instruction: |
           List patterns that will guide both frontend and backend development. Include patterns for:
           - Overall architecture (e.g., Jamstack, Serverless, Microservices)
@@ -135,6 +144,7 @@ sections:
 
   - id: tech-stack
     title: Tech Stack
+    required: true
     instruction: |
       This is the DEFINITIVE technology selection for the entire project. Work with user to finalize all choices. This table is the single source of truth - all development must use these exact versions.
 
@@ -152,6 +162,7 @@ sections:
     sections:
       - id: tech-stack-table
         title: Technology Stack Table
+        required: true
         type: table
         columns: [Category, Technology, Version, Purpose, Rationale]
         rows:
@@ -197,6 +208,7 @@ sections:
 
   - id: data-models
     title: Data Models
+    required: true
     instruction: |
       Define the core data models/entities that will be shared between frontend and backend:
 
@@ -213,6 +225,7 @@ sections:
     sections:
       - id: model
         title: "{{model_name}}"
+        required: true
         template: |
           **Purpose:** {{model_purpose}}
 
@@ -222,16 +235,19 @@ sections:
         sections:
           - id: typescript-interface
             title: TypeScript Interface
+            required: true
             type: code
             language: typescript
             template: "{{model_interface}}"
           - id: relationships
             title: Relationships
+            required: true
             type: bullet-list
             template: "- {{relationship}}"
 
   - id: api-spec
     title: API Specification
+    required: false
     instruction: |
       Based on the chosen API style from Tech Stack:
 
@@ -275,6 +291,7 @@ sections:
 
   - id: components
     title: Components
+    required: true
     instruction: |
       Based on the architectural patterns, tech stack, and data models from above:
 
@@ -293,6 +310,7 @@ sections:
       - id: component-list
         repeatable: true
         title: "{{component_name}}"
+        required: true
         template: |
           **Responsibility:** {{component_description}}
 
@@ -305,6 +323,7 @@ sections:
           **Technology Stack:** {{component_tech_details}}
       - id: component-diagrams
         title: Component Diagrams
+        required: false
         type: mermaid
         instruction: |
           Create Mermaid diagrams to visualize component relationships. Options:
@@ -315,6 +334,7 @@ sections:
 
   - id: external-apis
     title: External APIs
+    required: false
     condition: Project requires external API integrations
     instruction: |
       For each external service integration:
@@ -345,6 +365,7 @@ sections:
 
   - id: core-workflows
     title: Core Workflows
+    required: true
     type: mermaid
     mermaid_type: sequence
     instruction: |
@@ -362,6 +383,7 @@ sections:
 
   - id: database-schema
     title: Database Schema
+    required: true
     instruction: |
       Transform the conceptual data models into concrete database schemas:
 
@@ -376,75 +398,91 @@ sections:
 
   - id: frontend-architecture
     title: Frontend Architecture
+    required: true
     instruction: Define frontend-specific architecture details. After each subsection, note if user wants to refine before continuing.
     elicit: true
     sections:
       - id: component-architecture
         title: Component Architecture
+        required: true
         instruction: Define component organization and patterns based on chosen framework.
         sections:
           - id: component-organization
             title: Component Organization
+            required: true
             type: code
             language: text
             template: "{{component_structure}}"
           - id: component-template
             title: Component Template
+            required: true
             type: code
             language: typescript
             template: "{{component_template}}"
       - id: state-management
         title: State Management Architecture
+        required: true
         instruction: Detail state management approach based on chosen solution.
         sections:
           - id: state-structure
             title: State Structure
+            required: true
             type: code
             language: typescript
             template: "{{state_structure}}"
           - id: state-patterns
             title: State Management Patterns
+            required: true
             type: bullet-list
             template: "- {{pattern}}"
       - id: routing-architecture
         title: Routing Architecture
+        required: true
         instruction: Define routing structure based on framework choice.
         sections:
           - id: route-organization
             title: Route Organization
+            required: true
             type: code
             language: text
             template: "{{route_structure}}"
           - id: protected-routes
             title: Protected Route Pattern
+            required: true
             type: code
             language: typescript
             template: "{{protected_route_example}}"
       - id: frontend-services
         title: Frontend Services Layer
+        required: true
         instruction: Define how frontend communicates with backend.
         sections:
           - id: api-client-setup
             title: API Client Setup
+            required: true
             type: code
             language: typescript
             template: "{{api_client_setup}}"
           - id: service-example
             title: Service Example
+            required: true
             type: code
             language: typescript
             template: "{{service_example}}"
 
   - id: backend-architecture
     title: Backend Architecture
+    required: true
     instruction: Define backend-specific architecture details. Consider serverless vs traditional server approaches.
     elicit: true
     sections:
       - id: service-architecture
         title: Service Architecture
+        required: true
         instruction: Based on platform choice, define service organization.
         sections:
           - id: serverless-architecture
+            required: false
             condition: Serverless architecture chosen
             sections:
               - id: function-organization
@@ -458,6 +496,7 @@ sections:
                 language: typescript
                 template: "{{function_template}}"
           - id: traditional-server
+            required: false
             condition: Traditional server architecture chosen
             sections:
               - id: controller-organization
@@ -472,35 +511,42 @@ sections:
                 template: "{{controller_template}}"
       - id: database-architecture
         title: Database Architecture
+        required: true
         instruction: Define database schema and access patterns.
         sections:
           - id: schema-design
             title: Schema Design
+            required: true
             type: code
             language: sql
             template: "{{database_schema}}"
           - id: data-access-layer
             title: Data Access Layer
+            required: true
             type: code
             language: typescript
             template: "{{repository_pattern}}"
       - id: auth-architecture
         title: Authentication and Authorization
+        required: true
         instruction: Define auth implementation details.
         sections:
           - id: auth-flow
             title: Auth Flow
+            required: true
             type: mermaid
             mermaid_type: sequence
             template: "{{auth_flow_diagram}}"
           - id: auth-middleware
             title: Middleware/Guards
+            required: true
             type: code
             language: typescript
             template: "{{auth_middleware}}"
 
   - id: unified-project-structure
     title: Unified Project Structure
+    required: true
     instruction: |
       Document the structure at folder level only, except for first level files (i.e. files in the root directory).
       Create a monorepo structure that accommodates both frontend and backend. Adapt based on chosen tools and frameworks.
@@ -565,24 +611,29 @@ sections:
 
   - id: development-workflow
     title: Development Workflow
+    required: true
     instruction: Define the development setup and workflow for the fullstack application.
     elicit: true
     sections:
       - id: local-setup
         title: Local Development Setup
+        required: true
         sections:
           - id: prerequisites
             title: Prerequisites
+            required: true
             type: code
             language: bash
             template: "{{prerequisites_commands}}"
           - id: initial-setup
             title: Initial Setup
+            required: true
             type: code
             language: bash
             template: "{{setup_commands}}"
           - id: dev-commands
             title: Development Commands
+            required: true
             type: code
             language: bash
             template: |
@@ -599,9 +650,11 @@ sections:
               {{test_commands}}
       - id: environment-config
         title: Environment Configuration
+        required: true
         sections:
           - id: env-vars
             title: Required Environment Variables
+            required: true
             type: code
             language: bash
             template: |
@@ -616,11 +669,13 @@ sections:
 
   - id: deployment-architecture
     title: Deployment Architecture
+    required: true
     instruction: Define deployment strategy based on platform choice.
     elicit: true
     sections:
       - id: deployment-strategy
         title: Deployment Strategy
+        required: true
         template: |
           **Frontend Deployment:**
           - **Platform:** {{frontend_deploy_platform}}
@@ -634,11 +689,13 @@ sections:
           - **Deployment Method:** {{deployment_method}}
       - id: cicd-pipeline
         title: CI/CD Pipeline
+        required: true
         type: code
         language: yaml
         template: "{{cicd_pipeline_config}}"
       - id: environments
         title: Environments
+        required: true
         type: table
         columns: [Environment, Frontend URL, Backend URL, Purpose]
         rows:
@@ -648,11 +705,13 @@ sections:
 
   - id: security-performance
     title: Security and Performance
+    required: true
     instruction: Define security and performance considerations for the fullstack application.
     elicit: true
     sections:
       - id: security-requirements
         title: Security Requirements
+        required: true
         template: |
           **Frontend Security:**
           - CSP Headers: {{csp_policy}}
@@ -670,6 +729,7 @@ sections:
           - Password Policy: {{password_requirements}}
       - id: performance-optimization
         title: Performance Optimization
+        required: true
         template: |
           **Frontend Performance:**
           - Bundle Size Target: {{bundle_size}}
@@ -683,11 +743,13 @@ sections:
 
   - id: testing-strategy
     title: Testing Strategy
+    required: true
     instruction: Define comprehensive testing approach for fullstack application.
     elicit: true
     sections:
       - id: testing-pyramid
         title: Testing Pyramid
+        required: true
         type: code
         language: text
         template: |
@@ -698,48 +760,58 @@ sections:
           Frontend Unit  Backend Unit
       - id: test-organization
         title: Test Organization
+        required: true
         sections:
           - id: frontend-tests
             title: Frontend Tests
+            required: true
             type: code
             language: text
             template: "{{frontend_test_structure}}"
           - id: backend-tests
             title: Backend Tests
+            required: true
             type: code
             language: text
             template: "{{backend_test_structure}}"
           - id: e2e-tests
             title: E2E Tests
+            required: true
             type: code
             language: text
             template: "{{e2e_test_structure}}"
       - id: test-examples
         title: Test Examples
+        required: true
         sections:
           - id: frontend-test
             title: Frontend Component Test
+            required: true
             type: code
             language: typescript
             template: "{{frontend_test_example}}"
           - id: backend-test
             title: Backend API Test
+            required: true
             type: code
             language: typescript
             template: "{{backend_test_example}}"
           - id: e2e-test
             title: E2E Test
+            required: true
             type: code
             language: typescript
             template: "{{e2e_test_example}}"
 
   - id: coding-standards
     title: Coding Standards
+    required: true
     instruction: Define MINIMAL but CRITICAL standards for AI agents. Focus only on project-specific rules that prevent common mistakes. These will be used by dev agents.
     elicit: true
     sections:
       - id: critical-rules
         title: Critical Fullstack Rules
+        required: true
         repeatable: true
         template: "- **{{rule_name}}:** {{rule_description}}"
         examples:
@@ -750,6 +822,7 @@ sections:
           - "**State Updates:** Never mutate state directly - use proper state management patterns"
       - id: naming-conventions
         title: Naming Conventions
+        required: true
         type: table
         columns: [Element, Frontend, Backend, Example]
         rows:
@@ -760,16 +833,19 @@ sections:
 
   - id: error-handling
     title: Error Handling Strategy
+    required: true
     instruction: Define unified error handling across frontend and backend.
     elicit: true
     sections:
       - id: error-flow
         title: Error Flow
+        required: true
         type: mermaid
         mermaid_type: sequence
         template: "{{error_flow_diagram}}"
       - id: error-format
         title: Error Response Format
+        required: true
         type: code
         language: typescript
         template: |
@@ -784,22 +860,26 @@ sections:
           }
       - id: frontend-error-handling
         title: Frontend Error Handling
+        required: true
         type: code
         language: typescript
         template: "{{frontend_error_handler}}"
       - id: backend-error-handling
         title: Backend Error Handling
+        required: true
         type: code
         language: typescript
         template: "{{backend_error_handler}}"
 
   - id: monitoring
     title: Monitoring and Observability
+    required: true
     instruction: Define monitoring strategy for fullstack application.
     elicit: true
     sections:
       - id: monitoring-stack
         title: Monitoring Stack
+        required: true
         template: |
           - **Frontend Monitoring:** {{frontend_monitoring}}
           - **Backend Monitoring:** {{backend_monitoring}}
@@ -807,6 +887,7 @@ sections:
           - **Performance Monitoring:** {{perf_monitoring}}
       - id: key-metrics
         title: Key Metrics
+        required: true
         template: |
           **Frontend Metrics:**
           - Core Web Vitals
@@ -822,6 +903,7 @@ sections:
 
   - id: analytics-telemetry
     title: Analytics & Telemetry
+    required: false
     instruction: Define product analytics events and engineering telemetry across frontend and backend. Align with PRD Success Metrics.
     elicit: true
     sections:
@@ -838,11 +920,13 @@ sections:
 
   - id: performance-scalability
     title: Performance & Scalability
+    required: true
     instruction: Define end-to-end performance targets and scalability strategies for both frontend and backend.
     elicit: true
     sections:
       - id: targets-and-budgets
         title: Targets and Budgets
+        required: true
         template: |
           **Frontend (Core Web Vitals):** {{web_vitals_targets}}
           **Backend Latency (P50/P95/P99):** {{backend_latency_targets}}
@@ -851,6 +935,7 @@ sections:
           **Resource Budgets:** {{resource_budgets_detail}}
       - id: scalability-strategy
         title: Scalability Strategy
+        required: true
         template: |
           **Frontend Caching/Edge Strategy:** {{edge_cache_strategy}}
           **Backend Scaling Model:** {{scaling_model}} (e.g., horizontal, vertical, sharding)
@@ -860,22 +945,26 @@ sections:
 
   - id: observability-operations
     title: Observability & Operations
+    required: true
     instruction: Define operational readiness including monitoring/alerting policies, SLOs, runbooks, and on-call procedures.
     elicit: true
     sections:
       - id: monitoring-alerting
         title: Monitoring & Alerting
+        required: true
         template: |
           **Monitoring Stack:** {{monitoring_stack}}
           **Key Alerts:** {{alert_policies}}
           **Dashboards:** {{dashboards_links}}
       - id: service-level-objectives
         title: Service Level Objectives
+        required: true
         type: table
         columns: [Service, SLI, SLO Target, Error Budget Policy, Alerting]
         instruction: Define SLOs for critical services and how they trigger alerts.
       - id: runbooks-oncall
         title: Runbooks & On-call
+        required: true
         template: |
           **On-call Rotation:** {{oncall_rotation}}
           **Incident Response:** {{incident_process}}
@@ -883,4 +972,5 @@ sections:
 
   - id: checklist-results
     title: Checklist Results Report
+    required: false
     instruction: Before running the checklist, offer to output the full architecture document. Once user confirms, execute the architect-checklist and populate results here.

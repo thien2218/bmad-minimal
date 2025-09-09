@@ -14,38 +14,46 @@ workflow:
 sections:
   - id: goals-context
     title: Goals and Background Context
+    required: true
     instruction: |
       Ask if Project Brief document is available. If NO Project Brief exists, STRONGLY recommend creating one first using project-brief-tmpl (it provides essential foundation: problem statement, target users, success metrics, MVP scope, constraints). If user insists on PRD without brief, gather this information during Goals section. If Project Brief exists, review and use it to populate Goals (bullet list of desired outcomes) and Background Context (1-2 paragraphs on what this solves and why) so we can determine what is and is not in scope for PRD mvp. Either way this is critical to determine the requirements. Include Change Log table.
     sections:
       - id: goals
         title: Goals
+        required: true
         type: bullet-list
         instruction: Bullet list of 1 line desired outcomes the PRD will deliver if successful - user and project desires
       - id: background
         title: Background Context
+        required: true
         type: paragraphs
         instruction: 1-2 short paragraphs summarizing the background context, such as what we learned in the brief without being redundant with the goals, what and why this solves a problem, what the current landscape or need is
       - id: changelog
         title: Change Log
+        required: true
         type: table
         columns: [Date, Version, Description, Author]
         instruction: Track document versions and changes
       - id: non-goals
         title: Non-Goals
+        required: true
         type: bullet-list
         instruction: Clearly list items and areas intentionally not addressed in this PRD/MVP to avoid scope creep.
       - id: user-journeys
         title: Key User Journeys / Use Cases
+        required: true
         type: numbered-list
         elicit: true
         instruction: High-level narratives of critical flows that connect user goals to Functional Requirements; do not specify UI details.
   - id: requirements
     title: Requirements
+    required: true
     instruction: Draft the list of functional and non functional requirements under the two child sections
     elicit: true
     sections:
       - id: functional
         title: Functional
+        required: true
         type: numbered-list
         prefix: FR
         instruction: Each Requirement will be a bullet markdown and an identifier sequence starting with FR
@@ -53,6 +61,7 @@ sections:
           - "FR6: The Todo List uses AI to detect and warn against potentially duplicate todo items that are worded differently."
       - id: non-functional
         title: Non Functional
+        required: true
         type: numbered-list
         prefix: NFR
         instruction: Each Requirement will be a bullet markdown and an identifier sequence starting with NFR
@@ -61,6 +70,7 @@ sections:
 
   - id: ui-goals
     title: User Interface Design Goals
+    required: false
     condition: PRD has UX/UI requirements
     instruction: |
       Capture high-level UI/UX vision to guide Design Architect and to inform story creation. Steps:
@@ -104,6 +114,7 @@ sections:
 
   - id: technical-assumptions
     title: Technical Assumptions
+    required: true
     instruction: |
       Gather technical decisions that will guide the Architect. Steps:
 
@@ -120,18 +131,23 @@ sections:
     sections:
       - id: repository-structure
         title: "Repository Structure: {Monorepo|Polyrepo|Multi-repo}"
+        required: true
       - id: service-architecture
         title: Service Architecture
+        required: true
         instruction: "CRITICAL DECISION - Document the high-level service architecture (e.g., Monolith, Microservices, Serverless functions within a Monorepo)."
       - id: testing-requirements
         title: Testing Requirements
+        required: true
         instruction: "CRITICAL DECISION - Document the testing requirements, unit only, integration, e2e, manual, need for manual testing convenience methods)."
       - id: additional-assumptions
         title: Additional Technical Assumptions and Requests
+        required: true
         instruction: Throughout the entire process of drafting this document, if any other technical assumptions are raised or discovered appropriate for the architect, add them here as additional bulleted items
 
   - id: epic-list
     title: Epic List
+    required: true
     instruction: |
       Present a high-level list of all epics for user approval. Each epic should have a title and a short (1 sentence) goal statement. This allows the user to review the overall structure before diving into details.
 
@@ -152,14 +168,18 @@ sections:
 
   - id: checklist-results
     title: Checklist Results Report
+    required: false
     instruction: Before running the checklist and drafting the prompts, offer to output the full updated PRD. If outputting it, confirm with the user that you will be proceeding to run the checklist and produce the report. Once the user confirms, execute the pm-checklist and populate the results in this section.
 
   - id: next-steps
     title: Next Steps
+    required: true
     sections:
       - id: ux-expert-prompt
         title: UX Expert Prompt
+        required: false
         instruction: This section will contain the prompt for the UX Expert, keep it short and to the point to initiate create architecture mode using this document as input.
       - id: architect-prompt
         title: Architect Prompt
+        required: false
         instruction: This section will contain the prompt for the Architect, keep it short and to the point to initiate create architecture mode using this document as input.

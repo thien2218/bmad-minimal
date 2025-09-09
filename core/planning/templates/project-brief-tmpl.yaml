@@ -26,6 +26,7 @@ workflow:
 
 sections:
   - id: introduction
+    required: true
     instruction: |
       This template guides creation of a comprehensive Project Brief that serves as the foundational input for product development.
 
@@ -38,6 +39,7 @@ sections:
 
   - id: executive-summary
     title: Executive Summary
+    required: true
     instruction: |
       Create a concise overview that captures the essence of the project. Include:
       - Product concept in 1-2 sentences
@@ -48,6 +50,7 @@ sections:
 
   - id: problem-statement
     title: Problem Statement
+    required: true
     instruction: |
       Articulate the problem with clarity and evidence. Address:
       - Current state and pain points
@@ -58,6 +61,7 @@ sections:
 
   - id: proposed-solution
     title: Proposed Solution
+    required: true
     instruction: |
       Describe the solution approach at a high level. Include:
       - Core concept and approach
@@ -68,6 +72,7 @@ sections:
 
   - id: target-users
     title: Target Users
+    required: true
     instruction: |
       Define and characterize the intended users with specificity. For each user segment include:
       - Demographic/firmographic profile
@@ -77,47 +82,58 @@ sections:
     sections:
       - id: primary-segment
         title: "Primary User Segment: {{segment_name}}"
+        required: true
         template: "{{primary_user_description}}"
       - id: secondary-segment
         title: "Secondary User Segment: {{segment_name}}"
+        required: false
         condition: Has secondary user segment
         template: "{{secondary_user_description}}"
 
   - id: goals-metrics
     title: Goals & Success Metrics
+    required: true
     instruction: Establish clear objectives and how to measure success. Make goals SMART (Specific, Measurable, Achievable, Relevant, Time-bound)
     sections:
       - id: business-objectives
         title: Business Objectives
+        required: true
         type: bullet-list
         template: "- {{objective_with_metric}}"
       - id: user-success-metrics
         title: User Success Metrics
+        required: true
         type: bullet-list
         template: "- {{user_metric}}"
       - id: kpis
         title: Key Performance Indicators (KPIs)
+        required: true
         type: bullet-list
         template: "- {{kpi}}: {{definition_and_target}}"
 
   - id: mvp-scope
     title: MVP Scope
+    required: true
     instruction: Define the minimum viable product clearly. Be specific about what's in and what's out. Help user distinguish must-haves from nice-to-haves.
     sections:
       - id: core-features
         title: Core Features (Must Have)
+        required: true
         type: bullet-list
         template: "- **{{feature}}:** {{description_and_rationale}}"
       - id: out-of-scope
         title: Out of Scope for MVP
+        required: true
         type: bullet-list
         template: "- {{feature_or_capability}}"
       - id: mvp-success-criteria
         title: MVP Success Criteria
+        required: true
         template: "{{mvp_success_definition}}"
 
   - id: post-mvp-vision
     title: Post-MVP Vision
+    required: false
     instruction: Outline the longer-term product direction without overcommitting to specifics
     sections:
       - id: phase-2-features
@@ -132,16 +148,19 @@ sections:
 
   - id: technical-considerations
     title: Technical Considerations
+    required: true
     instruction: Document known technical constraints and preferences. Note these are initial thoughts, not final decisions.
     sections:
       - id: platform-requirements
         title: Platform Requirements
+        required: true
         template: |
           - **Target Platforms:** {{platforms}}
           - **Browser/OS Support:** {{specific_requirements}}
           - **Performance Requirements:** {{performance_specs}}
       - id: technology-preferences
         title: Technology Preferences
+        required: true
         template: |
           - **Frontend:** {{frontend_preferences}}
           - **Backend:** {{backend_preferences}}
@@ -149,6 +168,7 @@ sections:
           - **Hosting/Infrastructure:** {{infrastructure_preferences}}
       - id: architecture-considerations
         title: Architecture Considerations
+        required: true
         template: |
           - **Repository Structure:** {{repo_thoughts}}
           - **Service Architecture:** {{service_thoughts}}
@@ -157,10 +177,12 @@ sections:
 
   - id: constraints-assumptions
     title: Constraints & Assumptions
+    required: true
     instruction: Clearly state limitations and assumptions to set realistic expectations
     sections:
       - id: constraints
         title: Constraints
+        required: true
         template: |
           - **Budget:** {{budget_info}}
           - **Timeline:** {{timeline_info}}
@@ -168,28 +190,34 @@ sections:
           - **Technical:** {{technical_constraints}}
       - id: key-assumptions
         title: Key Assumptions
+        required: true
         type: bullet-list
         template: "- {{assumption}}"
 
   - id: risks-questions
     title: Risks & Open Questions
+    required: true
     instruction: Identify unknowns and potential challenges proactively
     sections:
       - id: key-risks
         title: Key Risks
+        required: true
         type: bullet-list
         template: "- **{{risk}}:** {{description_and_impact}}"
       - id: open-questions
         title: Open Questions
+        required: true
         type: bullet-list
         template: "- {{question}}"
       - id: research-areas
         title: Areas Needing Further Research
+        required: false
         type: bullet-list
         template: "- {{research_topic}}"
 
   - id: appendices
     title: Appendices
+    required: false
     sections:
       - id: research-summary
         title: A. Research Summary
@@ -210,12 +238,15 @@ sections:
 
   - id: next-steps
     title: Next Steps
+    required: true
     sections:
       - id: immediate-actions
         title: Immediate Actions
+        required: true
         type: numbered-list
         template: "{{action_item}}"
       - id: pm-handoff
         title: PM Handoff
+        required: true
         content: |
           This Project Brief provides the full context for {{project_name}}. Please start in 'PRD Generation Mode', review the brief thoroughly to work with the user to create the PRD section by section as the template indicates, asking for any necessary clarification or suggesting improvements.

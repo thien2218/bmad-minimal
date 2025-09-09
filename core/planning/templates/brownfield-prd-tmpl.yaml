@@ -14,6 +14,7 @@ workflow:
 sections:
   - id: intro-analysis
     title: Intro Project Analysis and Context
+    required: true
     instruction: |
       IMPORTANT - SCOPE ASSESSMENT REQUIRED:
 
@@ -33,10 +34,12 @@ sections:
     sections:
       - id: existing-project-overview
         title: Existing Project Overview
+        required: true
         instruction: Check if document-project analysis was already performed. If yes, reference that output instead of re-analyzing.
         sections:
           - id: analysis-source
             title: Analysis Source
+            required: true
             instruction: |
               Indicate one of the following:
               - Document-project output available at: {{path}}
@@ -44,11 +47,13 @@ sections:
               - User-provided information
           - id: current-state
             title: Current Project State
+            required: true
             instruction: |
               - If document-project output exists: Extract summary from "High Level Architecture" and "Technical Summary" sections
               - Otherwise: Brief description of what the project currently does and its primary purpose
       - id: documentation-analysis
         title: Available Documentation Analysis
+        required: true
         instruction: |
           If document-project was run:
           - Note: "Document-project analysis available - using existing technical documentation"
@@ -59,6 +64,7 @@ sections:
         sections:
           - id: available-docs
             title: Available Documentation
+            required: true
             type: checklist
             items:
               - Tech Stack Documentation [[LLM: If from document-project, check ✓]]
@@ -74,10 +80,12 @@ sections:
               - If critical documentation is missing and no document-project: "I recommend running the document-project task first..."
       - id: enhancement-scope
         title: Enhancement Scope Definition
+        required: true
         instruction: Work with user to clearly define what type of enhancement this is. This is critical for scoping and approach.
         sections:
           - id: enhancement-type
             title: Enhancement Type
+            required: true
             type: checklist
             instruction: Determine with user which applies
             items:
@@ -91,9 +99,11 @@ sections:
               - "Other: {{other_type}}"
           - id: enhancement-description
             title: Enhancement Description
+            required: true
             instruction: 2-3 sentences describing what the user wants to add or change
           - id: impact-assessment
             title: Impact Assessment
+            required: true
             type: checklist
             instruction: Assess the scope of impact on existing codebase
             items:
@@ -103,28 +113,34 @@ sections:
               - Major Impact (architectural changes required)
       - id: goals-context
         title: Goals and Background Context
+        required: true
         sections:
           - id: goals
             title: Goals
+            required: true
             type: bullet-list
             instruction: Bullet list of 1-line desired outcomes this enhancement will deliver if successful
           - id: background
             title: Background Context
+            required: true
             type: paragraphs
             instruction: 1-2 short paragraphs explaining why this enhancement is needed, what problem it solves, and how it fits with the existing project
       - id: changelog
         title: Change Log
+        required: true
         type: table
         columns: [Change, Date, Version, Description, Author]
 
   - id: requirements
     title: Requirements
+    required: true
     instruction: |
       Draft functional and non-functional requirements based on your validated understanding of the existing project. Before presenting requirements, confirm: "These requirements are based on my understanding of your existing system. Please review carefully and confirm they align with your project's reality."
     elicit: true
     sections:
       - id: functional
         title: Functional
+        required: true
         type: numbered-list
         prefix: FR
         instruction: Each Requirement will be a bullet markdown with identifier starting with FR
@@ -132,6 +148,7 @@ sections:
           - "FR1: The existing Todo List will integrate with the new AI duplicate detection service without breaking current functionality."
       - id: non-functional
         title: Non Functional
+        required: true
         type: numbered-list
         prefix: NFR
         instruction: Each Requirement will be a bullet markdown with identifier starting with NFR. Include constraints from existing system
@@ -139,6 +156,7 @@ sections:
           - "NFR1: Enhancement must maintain existing performance characteristics and not exceed current memory usage by more than 20%."
       - id: compatibility
         title: Compatibility Requirements
+        required: true
         instruction: Critical for brownfield - what must remain compatible
         type: numbered-list
         prefix: CR
@@ -155,6 +173,7 @@ sections:
 
   - id: ui-enhancement-goals
     title: User Interface Enhancement Goals
+    required: false
     condition: Enhancement includes UI changes
     instruction: For UI changes, capture how they will integrate with existing UI patterns and design systems
     sections:
@@ -170,10 +189,12 @@ sections:
 
   - id: technical-constraints
     title: Technical Constraints and Integration Requirements
+    required: true
     instruction: This section replaces separate architecture documentation. Gather detailed technical constraints from existing project analysis.
     sections:
       - id: existing-tech-stack
         title: Existing Technology Stack
+        required: true
         instruction: |
           If document-project output available:
           - Extract from "Actual Tech Stack" table in High Level Architecture section
@@ -188,6 +209,7 @@ sections:
           **External Dependencies**: {{external_dependencies}}
       - id: integration-approach
         title: Integration Approach
+        required: true
         instruction: Define how the enhancement will integrate with existing architecture
         template: |
           **Database Integration Strategy**: {{database_integration}}
@@ -196,6 +218,7 @@ sections:
           **Testing Integration Strategy**: {{testing_integration}}
       - id: code-organization
         title: Code Organization and Standards
+        required: true
         instruction: Based on existing project analysis, define how new code will fit existing patterns
         template: |
           **File Structure Approach**: {{file_structure}}
@@ -204,6 +227,7 @@ sections:
           **Documentation Standards**: {{documentation_standards}}
       - id: deployment-operations
         title: Deployment and Operations
+        required: true
         instruction: How the enhancement fits existing deployment pipeline
         template: |
           **Build Process Integration**: {{build_integration}}
@@ -212,6 +236,7 @@ sections:
           **Configuration Management**: {{config_management}}
       - id: risk-assessment
         title: Risk Assessment and Mitigation
+        required: true
         instruction: |
           If document-project output available:
           - Reference "Technical Debt and Known Issues" section
@@ -227,17 +252,20 @@ sections:
 
   - id: epic-structure
     title: Epic and Story Structure
+    required: true
     instruction: |
       For brownfield projects, favor a single comprehensive epic unless the user is clearly requesting multiple unrelated enhancements. Before presenting the epic structure, confirm: "Based on my analysis of your existing project, I believe this enhancement should be structured as [single epic/multiple epics] because [rationale based on actual project analysis]. Does this align with your understanding of the work required?"
     elicit: true
     sections:
       - id: epic-approach
         title: Epic Approach
+        required: true
         instruction: Explain the rationale for epic structure - typically single epic for brownfield unless multiple unrelated features
         template: "**Epic Structure Decision**: {{epic_decision}} with rationale"
 
   - id: epic-details
     title: "Epic 1: {{enhancement_title}}"
+    required: true
     instruction: |
       Comprehensive epic that delivers the brownfield enhancement while maintaining existing functionality
 
@@ -258,6 +286,7 @@ sections:
     sections:
       - id: story
         title: "Story 1.{{story_number}} {{story_title}}"
+        required: true
         repeatable: true
         template: |
           As a {{user_type}},
@@ -266,11 +295,13 @@ sections:
         sections:
           - id: acceptance-criteria
             title: Acceptance Criteria
+            required: true
             type: numbered-list
             instruction: Define criteria that include both new functionality and existing system integrity
             item_template: "{{criterion_number}}: {{criteria}}"
           - id: integration-verification
             title: Integration Verification
+            required: true
             instruction: Specific verification steps to ensure existing functionality remains intact
             type: numbered-list
             prefix: IV

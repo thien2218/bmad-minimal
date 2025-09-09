@@ -14,10 +14,12 @@ workflow:
 sections:
   - id: introduction
     title: Introduction
+    required: true
     instruction: |
       If available, review any provided relevant documents to gather all relevant context before beginning. If at a minimum you cannot locate {@docs.files.prd} ask the user what docs will provide the basis for the architecture.
     sections:
       - id: intro-content
+        required: true
         content: |
           This document outlines the overall project architecture for {{project_name}}, including backend systems, shared services, and non-UI specific concerns. Its primary goal is to serve as the guiding architectural blueprint for AI-driven development, ensuring consistency and adherence to chosen patterns and technologies.
 
@@ -25,6 +27,7 @@ sections:
           If the project includes a significant user interface, a separate Frontend Architecture Document will detail the frontend-specific design and MUST be used in conjunction with this document. Core technology stack choices documented herein (see "Tech Stack") are definitive for the entire project, including any frontend components.
       - id: starter-template
         title: Starter Template or Existing Project
+        required: false
         instruction: |
           Before proceeding further with architecture design, check if the project is based on a starter template or existing codebase:
 
@@ -60,18 +63,21 @@ sections:
         elicit: true
       - id: changelog
         title: Change Log
+        required: true
         type: table
         columns: [Date, Version, Description, Author]
         instruction: Track document versions and changes
 
   - id: high-level-architecture
     title: High Level Architecture
+    required: true
     instruction: |
       This section contains multiple subsections that establish the foundation of the architecture. Present all subsections together at once.
     elicit: true
     sections:
       - id: technical-summary
         title: Technical Summary
+        required: true
         instruction: |
           Provide a brief paragraph (3-5 sentences) overview of:
           - The system's overall architecture style
@@ -81,6 +87,7 @@ sections:
           - Reference back to the PRD goals and how this architecture supports them
       - id: high-level-overview
         title: High Level Overview
+        required: true
         instruction: |
           Based on the PRD's Technical Assumptions section, describe:
 
@@ -91,6 +98,7 @@ sections:
           5. Key architectural decisions and their rationale
       - id: project-diagram
         title: High Level Project Diagram
+        required: true
         type: mermaid
         mermaid_type: graph
         instruction: |
@@ -103,6 +111,7 @@ sections:
 
       - id: architectural-patterns
         title: Architectural and Design Patterns
+        required: true
         instruction: |
           List the key high-level patterns that will guide the architecture. For each pattern:
 
@@ -124,6 +133,7 @@ sections:
 
   - id: tech-stack
     title: Tech Stack
+    required: true
     instruction: |
       This is the DEFINITIVE technology selection section. Work with the user to make specific choices:
 
@@ -148,12 +158,14 @@ sections:
     sections:
       - id: cloud-infrastructure
         title: Cloud Infrastructure
+        required: true
         template: |
           - **Provider:** {{cloud_provider}}
           - **Key Services:** {{core_services_list}}
           - **Deployment Regions:** {{regions}}
       - id: technology-stack-table
         title: Technology Stack Table
+        required: true
         type: table
         columns: [Category, Technology, Version, Purpose, Rationale]
         instruction: Populate the technology stack table with all relevant technologies
@@ -164,6 +176,7 @@ sections:
 
   - id: data-models
     title: Data Models
+    required: true
     instruction: |
       Define the core data models/entities:
 
@@ -179,6 +192,7 @@ sections:
     sections:
       - id: model
         title: "{{model_name}}"
+        required: true
         template: |
           **Purpose:** {{model_purpose}}
 
@@ -192,6 +206,7 @@ sections:
 
   - id: components
     title: Components
+    required: true
     instruction: |
       Based on the architectural patterns, tech stack, and data models from above:
 
@@ -210,6 +225,7 @@ sections:
       - id: component-list
         repeatable: true
         title: "{{component_name}}"
+        required: true
         template: |
           **Responsibility:** {{component_description}}
 
@@ -222,6 +238,7 @@ sections:
           **Technology Stack:** {{component_tech_details}}
       - id: component-diagrams
         title: Component Diagrams
+        required: false
         type: mermaid
         instruction: |
           Create Mermaid diagrams to visualize component relationships. Options:
@@ -232,6 +249,7 @@ sections:
 
   - id: external-apis
     title: External APIs
+    required: false
     condition: Project requires external API integrations
     instruction: |
       For each external service integration:
@@ -262,6 +280,7 @@ sections:
 
   - id: core-workflows
     title: Core Workflows
+    required: true
     type: mermaid
     mermaid_type: sequence
     instruction: |
@@ -278,6 +297,7 @@ sections:
 
   - id: api-spec
     title: API Specification
+    required: false
     instruction: |
       Based on the chosen API style from Tech Stack:
 
@@ -321,6 +341,7 @@ sections:
 
   - id: database-schema
     title: Database Schema
+    required: false
     instruction: |
       Transform the conceptual data models into concrete database schemas:
 
@@ -335,6 +356,7 @@ sections:
 
   - id: source-tree
     title: Source Tree
+    required: true
     type: code
     language: plaintext
     instruction: |
@@ -363,6 +385,7 @@ sections:
 
   - id: infrastructure-deployment
     title: Infrastructure and Deployment
+    required: true
     instruction: |
       Define the deployment architecture and practices:
 
@@ -377,27 +400,32 @@ sections:
     sections:
       - id: infrastructure-as-code
         title: Infrastructure as Code
+        required: true
         template: |
           - **Tool:** {{iac_tool}} {{version}}
           - **Location:** `{{iac_directory}}`
           - **Approach:** {{iac_approach}}
       - id: deployment-strategy
         title: Deployment Strategy
+        required: true
         template: |
           - **Strategy:** {{deployment_strategy}}
           - **CI/CD Platform:** {{cicd_platform}}
           - **Pipeline Configuration:** `{{pipeline_config_location}}`
       - id: environments
         title: Environments
+        required: true
         repeatable: true
         template: "- **{{env_name}}:** {{env_purpose}} - {{env_details}}"
       - id: promotion-flow
         title: Environment Promotion Flow
+        required: true
         type: code
         language: text
         template: "{{promotion_flow_diagram}}"
       - id: rollback-strategy
         title: Rollback Strategy
+        required: true
         template: |
           - **Primary Method:** {{rollback_method}}
           - **Trigger Conditions:** {{rollback_triggers}}
@@ -405,6 +433,7 @@ sections:
 
   - id: error-handling-strategy
     title: Error Handling Strategy
+    required: true
     instruction: |
       Define comprehensive error handling approach:
 
@@ -419,12 +448,14 @@ sections:
     sections:
       - id: general-approach
         title: General Approach
+        required: true
         template: |
           - **Error Model:** {{error_model}}
           - **Exception Hierarchy:** {{exception_structure}}
           - **Error Propagation:** {{propagation_rules}}
       - id: logging-standards
         title: Logging Standards
+        required: true
         template: |
           - **Library:** {{logging_library}} {{version}}
           - **Format:** {{log_format}}
@@ -435,9 +466,11 @@ sections:
             - User Context: {{user_context_rules}}
       - id: error-patterns
         title: Error Handling Patterns
+        required: true
         sections:
           - id: external-api-errors
             title: External API Errors
+            required: false
             template: |
               - **Retry Policy:** {{retry_strategy}}
               - **Circuit Breaker:** {{circuit_breaker_config}}
@@ -445,12 +478,14 @@ sections:
               - **Error Translation:** {{error_mapping_rules}}
           - id: business-logic-errors
             title: Business Logic Errors
+            required: true
             template: |
               - **Custom Exceptions:** {{business_exception_types}}
               - **User-Facing Errors:** {{user_error_format}}
               - **Error Codes:** {{error_code_system}}
           - id: data-consistency
             title: Data Consistency
+            required: true
             template: |
               - **Transaction Strategy:** {{transaction_approach}}
               - **Compensation Logic:** {{compensation_patterns}}
@@ -458,6 +493,7 @@ sections:
 
   - id: analytics-telemetry
     title: Analytics & Telemetry
+    required: false
     instruction: Define backend analytics events (if applicable) and engineering telemetry. Align with PRD Success Metrics and ensure data governance.
     elicit: true
     sections:
@@ -474,11 +510,13 @@ sections:
 
   - id: performance-scalability
     title: Performance & Scalability
+    required: true
     instruction: Define targets and the scalability strategy for backend services including capacity planning and backpressure.
     elicit: true
     sections:
       - id: targets-and-budgets
         title: Targets and Budgets
+        required: true
         template: |
           **Latency (P50/P95/P99):** {{latency_targets_detail}}
           **Throughput/QPS:** {{throughput_targets}}
@@ -486,6 +524,7 @@ sections:
           **Resource Budgets:** {{resource_budgets_detail}}
       - id: scalability-strategy
         title: Scalability Strategy
+        required: true
         template: |
           **Scaling Model:** {{scaling_model}} (e.g., horizontal, vertical, sharding)
           **Autoscaling Signals:** {{autoscale_signals}}
@@ -494,22 +533,26 @@ sections:
 
   - id: observability-operations
     title: Observability & Operations
+    required: true
     instruction: Define monitoring, alerting, SLOs, incident response, and runbooks for backend operations.
     elicit: true
     sections:
       - id: monitoring-alerting
         title: Monitoring & Alerting
+        required: true
         template: |
           **Monitoring Stack:** {{monitoring_stack}}
           **Key Alerts:** {{alert_policies}}
           **Dashboards:** {{dashboards_links}}
       - id: service-level-objectives
         title: Service Level Objectives
+        required: true
         type: table
         columns: [Service, SLI, SLO Target, Error Budget Policy, Alerting]
         instruction: Define SLOs for critical backend services and how they trigger alerts.
       - id: runbooks-oncall
         title: Runbooks & On-call
+        required: true
         template: |
           **On-call Rotation:** {{oncall_rotation}}
           **Incident Response:** {{incident_process}}
@@ -517,6 +560,7 @@ sections:
 
   - id: coding-standards
     title: Coding Standards
+    required: true
     instruction: |
       These standards are MANDATORY for AI agents. Work with user to define ONLY the critical rules needed to prevent bad code. Explain that:
 
@@ -531,17 +575,20 @@ sections:
     sections:
       - id: core-standards
         title: Core Standards
+        required: true
         template: |
           - **Languages & Runtimes:** {{languages_and_versions}}
           - **Style & Linting:** {{linter_config}}
           - **Test Organization:** {{test_file_convention}}
       - id: naming-conventions
         title: Naming Conventions
+        required: false
         type: table
         columns: [Element, Convention, Example]
         instruction: Only include if deviating from language defaults
       - id: critical-rules
         title: Critical Rules
+        required: true
         instruction: |
           List ONLY rules that AI might violate or project-specific requirements. Examples:
           - "Never use console.log in production code - use logger"
@@ -553,6 +600,7 @@ sections:
         template: "- **{{rule_name}}:** {{rule_description}}"
       - id: language-specifics
         title: Language-Specific Guidelines
+        required: false
         condition: Critical language-specific rules needed
         instruction: Add ONLY if critical for preventing AI mistakes. Most teams don't need this section.
         sections:
@@ -563,6 +611,7 @@ sections:
 
   - id: test-strategy
     title: Test Strategy and Standards
+    required: true
     instruction: |
       Work with user to define comprehensive test strategy:
 
@@ -578,15 +627,18 @@ sections:
     sections:
       - id: testing-philosophy
         title: Testing Philosophy
+        required: true
         template: |
           - **Approach:** {{test_approach}}
           - **Coverage Goals:** {{coverage_targets}}
           - **Test Pyramid:** {{test_distribution}}
       - id: test-types
         title: Test Types and Organization
+        required: true
         sections:
           - id: unit-tests
             title: Unit Tests
+            required: true
             template: |
               - **Framework:** {{unit_test_framework}} {{version}}
               - **File Convention:** {{unit_test_naming}}
@@ -601,6 +653,7 @@ sections:
               - Mock all external dependencies
           - id: integration-tests
             title: Integration Tests
+            required: true
             template: |
               - **Scope:** {{integration_scope}}
               - **Location:** {{integration_test_location}}
@@ -612,6 +665,7 @@ sections:
               - "**External APIs:** WireMock for stubbing"
           - id: e2e-tests
             title: End-to-End Tests
+            required: true
             template: |
               - **Framework:** {{e2e_framework}} {{version}}
               - **Scope:** {{e2e_scope}}
@@ -619,6 +673,7 @@ sections:
               - **Test Data:** {{e2e_data_strategy}}
       - id: test-data-management
         title: Test Data Management
+        required: true
         template: |
           - **Strategy:** {{test_data_approach}}
           - **Fixtures:** {{fixture_location}}
@@ -626,6 +681,7 @@ sections:
           - **Cleanup:** {{cleanup_strategy}}
       - id: continuous-testing
         title: Continuous Testing
+        required: true
         template: |
           - **CI Integration:** {{ci_test_stages}}
           - **Performance Tests:** {{perf_test_approach}}
@@ -633,6 +689,7 @@ sections:
 
   - id: security
     title: Security
+    required: true
     instruction: |
       Define MANDATORY security requirements for AI and human developers:
 
@@ -645,6 +702,7 @@ sections:
     sections:
       - id: input-validation
         title: Input Validation
+        required: true
         template: |
           - **Validation Library:** {{validation_library}}
           - **Validation Location:** {{where_to_validate}}
@@ -654,6 +712,7 @@ sections:
             - Whitelist approach preferred over blacklist
       - id: auth-authorization
         title: Authentication & Authorization
+        required: true
         template: |
           - **Auth Method:** {{auth_implementation}}
           - **Session Management:** {{session_approach}}
@@ -662,6 +721,7 @@ sections:
             - {{auth_pattern_2}}
       - id: secrets-management
         title: Secrets Management
+        required: true
         template: |
           - **Development:** {{dev_secrets_approach}}
           - **Production:** {{prod_secrets_service}}
@@ -671,6 +731,7 @@ sections:
             - No secrets in logs or error messages
       - id: api-security
         title: API Security
+        required: true
         template: |
           - **Rate Limiting:** {{rate_limit_implementation}}
           - **CORS Policy:** {{cors_configuration}}
@@ -678,6 +739,7 @@ sections:
           - **HTTPS Enforcement:** {{https_approach}}
       - id: data-protection
         title: Data Protection
+        required: true
         template: |
           - **Encryption at Rest:** {{encryption_at_rest}}
           - **Encryption in Transit:** {{encryption_in_transit}}
@@ -685,12 +747,14 @@ sections:
           - **Logging Restrictions:** {{what_not_to_log}}
       - id: dependency-security
         title: Dependency Security
+        required: true
         template: |
           - **Scanning Tool:** {{dependency_scanner}}
           - **Update Policy:** {{update_frequency}}
           - **Approval Process:** {{new_dep_process}}
       - id: security-testing
         title: Security Testing
+        required: true
         template: |
           - **SAST Tool:** {{static_analysis}}
           - **DAST Tool:** {{dynamic_analysis}}
@@ -698,10 +762,12 @@ sections:
 
   - id: checklist-results
     title: Checklist Results Report
+    required: false
     instruction: Before running the checklist, offer to output the full architecture document. Once user confirms, execute the architect-checklist and populate results here.
 
   - id: next-steps
     title: Next Steps
+    required: true
     instruction: |
       After completing the architecture:
 
@@ -718,6 +784,7 @@ sections:
     sections:
       - id: architect-prompt
         title: Architect Prompt
+        required: false
         condition: Project has UI components
         instruction: |
           Create a brief prompt to hand off to Architect for Frontend Architecture creation. Include:

@@ -14,6 +14,7 @@ workflow:
 sections:
   - id: introduction
     title: Introduction
+    required: true
     instruction: |
       This template produces a generic architecture document for applications that do not cleanly fit into the typical fullstack/backend/frontend web categories. Example targets include CLI tools, desktop apps, games, systems/infra tools, embedded, data science/ML pipelines, batch jobs, scripting utilities, etc.
 
@@ -22,6 +23,7 @@ sections:
     sections:
       - id: context
         title: Project Context
+        required: true
         template: |
           **Purpose:** {{short_purpose}}
           **Primary Users/Operators:** {{primary_users}}
@@ -30,6 +32,7 @@ sections:
           **Constraints:** {{key_constraints}}
       - id: starter-template
         title: Starter Template or Existing Project
+        required: false
         instruction: |
           Determine if a starter, engine, or an existing codebase will be used:
           - If using a starter/tooling scaffold (e.g., game engine, CLI scaffolder, SDK templates), analyze its constraints and conventions.
@@ -38,17 +41,20 @@ sections:
         elicit: true
       - id: changelog
         title: Change Log
+        required: true
         type: table
         columns: [Date, Version, Description, Author]
         instruction: Track document versions and changes
 
   - id: high-level-architecture
     title: High Level Architecture
+    required: true
     instruction: Present the following subsections together, then elicit feedback.
     elicit: true
     sections:
       - id: technical-summary
         title: Technical Summary
+        required: true
         instruction: |
           Provide a concise overview (4–6 sentences) covering:
           - Overall architecture style (e.g., modular CLI, plugin-based, engine-driven, pipeline DAG, service or daemon, batch)
@@ -58,6 +64,7 @@ sections:
           - How the architecture supports PRD goals
       - id: platform-targets
         title: Platform Targets & Environments
+        required: true
         template: |
           **Operating Systems:** {{os_list}}
           **CPU/GPU/Accelerators:** {{hardware_targets}}
@@ -66,6 +73,7 @@ sections:
           **Sandbox/Permissions Model:** {{permissions}}
       - id: repository-structure
         title: Repository Structure
+        required: true
         instruction: |
           Define repository approach and module boundaries (monorepo/polyrepo; packages/modules/plugins). Describe how shared utilities and assets are organized for your app type.
         template: |
@@ -74,11 +82,13 @@ sections:
           **Shared Utilities/Assets:** {{shared_assets}}
       - id: architecture-diagram
         title: High Level Architecture Diagram
+        required: true
         type: mermaid
         mermaid_type: graph
         instruction: Provide a diagram suitable for the app type (e.g., module graph, data flow, subsystem interactions).
       - id: architectural-patterns
         title: Architectural and Design Patterns
+        required: true
         instruction: |
           List selected patterns with rationale (e.g., plugin architecture, event bus, ECS (entity-component-system) for games, pipeline DAG, hexagonal/ports-and-adapters, actor model, etc.).
         repeatable: true
@@ -86,11 +96,13 @@ sections:
 
   - id: tech-stack
     title: Tech Stack
+    required: true
     instruction: This is the definitive technology selection. Elicit and pin exact versions.
     elicit: true
     sections:
       - id: technology-stack-table
         title: Technology Stack Table
+        required: true
         type: table
         columns: [Category, Technology, Version, Purpose, Rationale]
         rows:
@@ -110,11 +122,13 @@ sections:
 
   - id: data-and-io
     title: Data & I/O Contracts
+    required: true
     instruction: Define data models or I/O schemas appropriate to the app type (files, streams, sockets, IPC, controllers).
     elicit: true
     sections:
       - id: data-models
         title: Data Models
+        required: true
         repeatable: true
         template: |
           **Model/Schema:** {{name}}
@@ -123,6 +137,7 @@ sections:
           **Key Fields/Contracts:** {{fields_or_contracts}}
       - id: io-interfaces
         title: Interfaces & Protocols
+        required: true
         repeatable: true
         template: |
           **Interface/Protocol:** {{name}}
@@ -132,12 +147,14 @@ sections:
 
   - id: components
     title: Components / Subsystems
+    required: true
     instruction: Identify major components/subsystems and their responsibilities and APIs.
     elicit: true
     repeatable: true
     sections:
       - id: component
         title: "{{component_name}}"
+        required: true
         template: |
           **Responsibility:** {{responsibility}}
           **Interfaces/APIs:** {{interfaces}}
@@ -147,17 +164,20 @@ sections:
 
   - id: configuration
     title: Configuration & Secrets
+    required: true
     instruction: Define configuration sources, precedence, schema, and secret handling.
     elicit: true
     sections:
       - id: config-sources
         title: Sources & Precedence
+        required: true
         template: |
           **Sources:** {{sources_list}}
           **Precedence:** {{precedence_rules}}
           **Schema/Validation:** {{validation_method}}
       - id: secrets
         title: Secrets Handling
+        required: true
         template: |
           **Secret Manager/Method:** {{secret_store}}
           **At-Rest/In-Transit Protections:** {{protections}}
@@ -165,17 +185,20 @@ sections:
 
   - id: error-logging
     title: Error Handling, Logging & Telemetry
+    required: true
     instruction: Define error taxonomy, logging formats/levels, and telemetry metrics/traces.
     elicit: true
     sections:
       - id: errors
         title: Error Strategy
+        required: true
         template: |
           **Error Types:** {{types}}
           **Propagation/Retry:** {{strategy}}
           **User/Operator Feedback:** {{feedback}}
       - id: logging
         title: Logging
+        required: true
         template: |
           **Format:** {{format}}
           **Levels:** {{levels}}
@@ -183,6 +206,7 @@ sections:
           **Correlation/Tracing:** {{correlation}}
       - id: telemetry
         title: Telemetry/Observability
+        required: true
         template: |
           **Metrics:** {{metrics}}
           **Tracing:** {{tracing}}
@@ -190,6 +214,7 @@ sections:
 
   - id: performance
     title: Performance & Resource Targets
+    required: true
     instruction: Define performance budgets and resource constraints (CPU, memory, GPU/VRAM, IO throughput/latency).
     elicit: true
     template: |
@@ -201,6 +226,7 @@ sections:
 
   - id: analytics-telemetry
     title: Analytics & Telemetry
+    required: false
     instruction: Define product analytics events and engineering telemetry needed to measure success and user experience. Keep this aligned with PRD Success Metrics.
     elicit: true
     sections:
@@ -217,11 +243,13 @@ sections:
 
   - id: performance-scalability
     title: Performance & Scalability
+    required: true
     instruction: Extend performance targets with scalability strategy, capacity planning, and backpressure. Provide concrete thresholds where possible.
     elicit: true
     sections:
       - id: targets-and-budgets
         title: Targets and Budgets
+        required: true
         template: |
           **Latency (P50/P95/P99):** {{latency_targets_detail}}
           **Throughput/QPS:** {{throughput_targets}}
@@ -229,6 +257,7 @@ sections:
           **Resource Budgets:** {{resource_budgets_detail}}
       - id: scalability-strategy
         title: Scalability Strategy
+        required: true
         template: |
           **Scaling Model:** {{scaling_model}} (e.g., horizontal, vertical, sharding)
           **Autoscaling Signals:** {{autoscale_signals}}
@@ -237,6 +266,7 @@ sections:
 
   - id: observability-operations
     title: Observability & Operations
+    required: false
     instruction: Define operational readiness including monitoring, alerting policies, SLOs, runbooks, and on-call procedures.
     elicit: true
     sections:
@@ -260,6 +290,7 @@ sections:
 
   - id: security
     title: Security & Compliance
+    required: true
     instruction: Document security posture relevant to the app (sandboxing, permissions, supply-chain security, signatures, compliance needs).
     elicit: true
     template: |
@@ -271,11 +302,13 @@ sections:
 
   - id: testing
     title: Testing Strategy
+    required: true
     instruction: Define testing layers applicable to the app type (unit/integration/e2e/simulation/replay/benchmarks/property-based testing).
     elicit: true
     sections:
       - id: layers
         title: Layers & Tools
+        required: true
         template: |
           **Unit:** {{unit_tooling}}
           **Integration/System:** {{integration_tooling}}
@@ -284,6 +317,7 @@ sections:
           **Property-Based/Fuzz:** {{pbt_fuzz}}
       - id: artifacts
         title: Test Artifacts & Data
+        required: true
         template: |
           **Fixtures/Replays:** {{fixtures}}
           **Golden Files/Snapshots:** {{goldens}}
@@ -291,23 +325,27 @@ sections:
 
   - id: deployment
     title: Packaging, Distribution & Operations
+    required: true
     instruction: Define how the app is built, packaged, distributed, and operated (if long-running).
     elicit: true
     sections:
       - id: packaging
         title: Packaging/Artifacts
+        required: true
         template: |
           **Formats:** {{artifact_formats}}
           **Targets:** {{platform_targets}}
           **Signing/Notarization:** {{signing}}
       - id: distribution
         title: Distribution/Release Channels
+        required: true
         template: |
           **Channels:** {{channels}}
           **Versioning/Release Policy:** {{versioning}}
           **Update/Auto-Update:** {{updates}}
       - id: runtime-ops
         title: Runtime & Operations (if applicable)
+        required: false
         template: |
           **Process Model/Service Management:** {{process_mgmt}}
           **Monitoring/Health Checks:** {{health_checks}}
@@ -315,6 +353,7 @@ sections:
 
   - id: risks
     title: Risks & Mitigations
+    required: true
     instruction: List top technical risks with mitigations and rollback plans.
     elicit: true
     template: |
