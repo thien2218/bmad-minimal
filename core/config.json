@@ -1,13 +1,13 @@
 {
 	"project": {
-		"name": null,
-		"projectDir": null,
-		"backendDir": null,
-		"frontendDir": null,
+		"name": "",
+		"dir": "",
+		"backendDir": "",
+		"frontendDir": "",
 		"testDirs": []
 	},
 	"baseDir": "bmad-minimal",
-	"customTechnicalDocuments": null,
+	"customTechnicalDocuments": {},
 	"docs": {
 		"dir": "docs",
 		"subdirs": {

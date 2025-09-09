@@ -9,7 +9,10 @@ const {
 	exists,
 	getCoreDir,
 } = require("../utils/fileOperations");
-const { getConfigFields } = require("../utils/configFields");
+const {
+	getConfigFields,
+	shouldGenerateCSPrompt,
+} = require("../utils/configFields");
 
 async function update(options) {
 	console.log(chalk.blue("🔄 BMad Minimal Update\n"));
@@ -42,7 +45,7 @@ async function update(options) {
 	}
 
 	// Prompt for any missing configurable fields before proceeding
-	const updatedConfig = await promptForMissingConfig({ cwd, config, configPath });
+	const configUpdated = await promptMissingConfig({ cwd, config, configPath });
 
 	// Confirm update
 	if (!options.force) {
@@ -51,7 +54,7 @@ async function update(options) {
 				"\n⚠️  This will update all BMad files to the latest version."
 			)
 		);
-		const preserveMessage = updatedConfig
+		const preserveMessage = configUpdated
 			? "   Your config.json was updated with missing fields and other fields will be preserved; all other files will be overwritten."
 			: "   Your config.json will be preserved, but all other files will be overwritten.";
 		console.log(chalk.yellow(preserveMessage));
@@ -107,13 +110,7 @@ async function update(options) {
 
 		// Add coding standards if it doesn't exists
 		const docsDir = path.join(cwd, config.docs.dir);
-		const codingStdsPath = path.join(docsDir, "coding-standards.md");
-
-		if (!(await exists(codingStdsPath))) {
-			console.log(chalk.gray("  Updating coding standards from template..."));
-			const templateTechPrefsPath = path.join(__dirname, "../templates/coding-standards.md");
-			await fs.copy(templateTechPrefsPath, codingStdsPath);
-		}
+		await shouldGenerateCSPrompt(config);
 
 		// Ensure all doc directories still exist
 		for (const subDir of Object.values(config.docs.subdirs)) {
@@ -125,13 +122,9 @@ async function update(options) {
 		// Show what was updated
 		console.log(chalk.cyan("\n📋 Updated components:"));
 		console.log("   ✓ Engineering files");
-		if (await exists(planningDest)) {
-			console.log("   ✓ Planning files");
-		}
-		if (await exists(codingStdsPath)) {
-			console.log("   ✓ Coding standards");
-		}
-		console.log("   ✓ Configuration preserved");
+		console.log("   ✓ Planning files");
+		console.log("   ✓ Coding standards");
+		console.log("   ✓ Configuration");
 
 		// Check for version differences if possible
 		const packageJsonPath = path.join(coreDir, "../package.json");
@@ -146,7 +139,7 @@ async function update(options) {
 }
 
 async function findConfig(cwd) {
-	const possibleDirs = ["bmad-minimal", ".bmad", "bmad"];
+	const possibleDirs = ["bmad-minimal"];
 
 	for (const dir of possibleDirs) {
 		const configPath = path.join(cwd, dir, "config.json");
@@ -181,7 +174,7 @@ function setValueByPath(object, accessKey, value) {
 	current[parts[parts.length - 1]] = value;
 }
 
-async function promptForMissingConfig({ cwd, config, configPath }) {
+async function promptMissingConfig({ cwd, config, configPath }) {
 	const allFields = getConfigFields(cwd);
 	const configurable = allFields.filter((f) => !!f.accessKey);
 
@@ -192,20 +185,12 @@ async function promptForMissingConfig({ cwd, config, configPath }) {
 
 	if (missing.length === 0) return false;
 
-	const prompts = missing.map((field) => {
-		return {
-			type: field.type || "input",
-			name: field.name,
-			message: field.message,
-			default: typeof field.default === "function" ? field.default() : field.default,
-		};
-	});
-
-	const answers = await inquirer.prompt(prompts);
+	const answers = await inquirer.prompt(missing);
 
 	for (const field of missing) {
 		const rawValue = answers[field.name];
-		const value = typeof field.filter === "function" ? field.filter(rawValue) : rawValue;
+		const value =
+			typeof field.filter === "function" ? field.filter(rawValue) : rawValue;
 		setValueByPath(config, field.accessKey, value);
 	}
 

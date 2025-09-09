@@ -8,7 +8,10 @@ const {
 	exists,
 	getCoreDir,
 } = require("../utils/fileOperations");
-const { getConfigFields } = require("../utils/configFields");
+const {
+	getConfigFields,
+	shouldGenerateCSPrompt,
+} = require("../utils/configFields");
 
 async function install(options) {
 	console.log(chalk.blue("🚀 BMad Minimal Installation\n"));
@@ -69,12 +72,10 @@ async function install(options) {
 		// Merge defaults with gathered configuration
 		configData.baseDir = config.baseDir;
 		configData.project.name = config.projectName;
-		configData.project.projectDir = config.projectDir;
-		configData.project.backendDir = config.backendDir;
-		configData.project.frontendDir = config.frontendDir;
-		configData.project.testDirs = Array.isArray(config.testDirs)
-			? config.testDirs
-			: [];
+		configData.project.dir = config.dir ?? "";
+		configData.project.backendDir = config.backendDir ?? "";
+		configData.project.frontendDir = config.frontendDir ?? "";
+		configData.project.testDirs = config.testDirs;
 		configData.docs.dir = config.docsDir;
 
 		console.log(chalk.gray(`  Writing configuration...`));
@@ -87,15 +88,6 @@ async function install(options) {
 		for (const subDir of Object.values(configData.docs.subdirs)) {
 			await fs.ensureDir(path.join(docsDir, subDir));
 		}
-
-		// Write coding standards from template in src/templates
-		console.log(chalk.gray(`  Writing coding standards...`));
-		const templateTechPrefsPath = path.join(
-			__dirname,
-			"../templates/coding-standards.md"
-		);
-		const codingStdsPath = path.join(docsDir, "coding-standards.md");
-		await fs.copy(templateTechPrefsPath, codingStdsPath);
 
 		// After all files are written, ensure baseDir is ignored by git
 		try {
@@ -144,43 +136,7 @@ async function install(options) {
 		console.log(`   ├── ${configData.docs.subdirs.brownfield}/`);
 		console.log(`   └── coding-standards.md`);
 
-		console.log(
-			chalk.gray(
-				'\nRun "bmad-minimal update" to update files to the latest version.'
-			)
-		);
-
-		if (config.generateTPPrompt) {
-			// Suggest a ready-to-use prompt for an LLM/agent to help fill coding-preferences.md (coding standards)
-			const csDisplayPath = `${configData.docs.dir}/coding-preferences.md`;
-			const contextLines = [`- Project name: ${config.projectName}`];
-
-			if (configData.project.projectDir) {
-				contextLines.push(
-					`- App directory: ${configData.project.projectDir}`
-				);
-			}
-			if (configData.project.backendDir) {
-				contextLines.push(
-					`- Backend directory: ${configData.project.backendDir}`
-				);
-			}
-			if (configData.project.frontendDir) {
-				contextLines.push(
-					`- Frontend directory: ${configData.project.frontendDir}`
-				);
-			}
-			contextLines.push(`- Docs directory: ${configData.docs.dir}`);
-
-			const llmPrompt = `Task: Create or update ${csDisplayPath} with the team's coding conventions using the lean template headings (naming, files & directories, imports/exports, error handling, logging, testing, security & privacy, Git/PR, and the short review checklist).\n\nInstructions:\n- Inspect this workspace to infer actual conventions from existing code and configs.\n- Use Architecture documents for technology choices; do not duplicate tech selection here. Focus on conventions and policies only.\n- Keep entries concise and actionable. If unsure, propose sensible defaults and clearly mark items needing confirmation.\n- Modify only ${csDisplayPath}. If the file does not exist, create it. Preserve the heading structure.\n\nContext:\n${contextLines.join(
-				"\n"
-			)}\n\nOutput: Provide either the markdown content of ${csDisplayPath} or a unified diff that creates/updates only that file.`;
-
-			console.log(
-				"\n" + chalk.cyan("Prompt for your LLM/agent (copy/paste):")
-			);
-			console.log(llmPrompt + "\n");
-		}
+		await shouldGenerateCSPrompt(configData);
 	} catch (error) {
 		console.error(chalk.red("❌ Installation failed:"), error.message);
 		throw error;
@@ -218,8 +174,8 @@ async function gatherConfiguration(options, cwd) {
 		answers.projectName = projectName;
 	}
 
-	// Ensure at least one of projectDir, backendDir, or frontendDir is provided
-	if (!answers.projectDir && !answers.backendDir && !answers.frontendDir) {
+	// Ensure at least one of dir, backendDir, or frontendDir is provided
+	if (!answers.dir && !answers.backendDir && !answers.frontendDir) {
 		console.error(
 			chalk.red(
 				"❌ Installation aborted: provide at least one of App, Backend, or Frontend directory."
