@@ -92,9 +92,9 @@ async function install(options) {
 		console.log(chalk.gray(`  Writing technical preferences...`));
 		const templateTechPrefsPath = path.join(
 			__dirname,
-			"../templates/technical-preferences.md"
+			"../templates/coding-standards.md"
 		);
-		const techPrefsPath = path.join(docsDir, "technical-preferences.md");
+		const techPrefsPath = path.join(docsDir, "coding-standards.md");
 		await fs.copy(templateTechPrefsPath, techPrefsPath);
 
 		// After all files are written, ensure baseDir is ignored by git
@@ -142,7 +142,7 @@ async function install(options) {
 		console.log(`   ├── ${configData.docs.subdirs.stories}/`);
 		console.log(`   ├── ${configData.docs.subdirs.qa}/`);
 		console.log(`   ├── ${configData.docs.subdirs.brownfield}/`);
-		console.log(`   └── technical-preferences.md`);
+		console.log(`   └── coding-standards.md`);
 
 		console.log(
 			chalk.gray(
@@ -151,26 +151,30 @@ async function install(options) {
 		);
 
 		if (config.generateTPPrompt) {
-			// Suggest a ready-to-use prompt for an LLM/agent to help fill technical-preferences.md
-			const tpDisplayPath = `${configData.docs.dir}/technical-preferences.md`;
+			// Suggest a ready-to-use prompt for an LLM/agent to help fill coding-preferences.md (coding standards)
+			const csDisplayPath = `${configData.docs.dir}/coding-preferences.md`;
 			const contextLines = [`- Project name: ${config.projectName}`];
-			if (configData.project.projectDir)
+
+			if (configData.project.projectDir) {
 				contextLines.push(
 					`- App directory: ${configData.project.projectDir}`
 				);
-			if (configData.project.backendDir)
+			}
+			if (configData.project.backendDir) {
 				contextLines.push(
 					`- Backend directory: ${configData.project.backendDir}`
 				);
-			if (configData.project.frontendDir)
+			}
+			if (configData.project.frontendDir) {
 				contextLines.push(
 					`- Frontend directory: ${configData.project.frontendDir}`
 				);
+			}
 			contextLines.push(`- Docs directory: ${configData.docs.dir}`);
 
-			const llmPrompt = `Task: Fill out ${tpDisplayPath} by replacing 'TBD' placeholders with concrete, project-appropriate choices.\n\nInstructions:\n- Inspect this workspace to infer languages/runtimes, package manager(s), frontend/backend libraries, testing tools, build tools, and high-level repo structure.\n- Prefer evidence from the repo (manifests, lockfiles, configs). If something is ambiguous or missing, use your domain knowledge to propose sensible defaults.\n- Modify only ${tpDisplayPath}. Do not add or reorder sections. Replace only the 'TBD' tokens (and any inline guidance comments) when you have a confident value; otherwise leave them as-is.\n\nContext:\n${contextLines.join(
+			const llmPrompt = `Task: Create or update ${csDisplayPath} with the team's coding conventions using the lean template headings (naming, files & directories, imports/exports, error handling, logging, testing, security & privacy, Git/PR, and the short review checklist).\n\nInstructions:\n- Inspect this workspace to infer actual conventions from existing code and configs.\n- Use Architecture documents for technology choices; do not duplicate tech selection here. Focus on conventions and policies only.\n- Keep entries concise and actionable. If unsure, propose sensible defaults and clearly mark items needing confirmation.\n- Modify only ${csDisplayPath}. If the file does not exist, create it. Preserve the heading structure.\n\nContext:\n${contextLines.join(
 				"\n"
-			)}\n\nOutput: Provide either the edited markdown content of ${tpDisplayPath} or a unified diff that applies changes to that file only.`;
+			)}\n\nOutput: Provide either the markdown content of ${csDisplayPath} or a unified diff that creates/updates only that file.`;
 
 			console.log(
 				"\n" + chalk.cyan("Prompt for your LLM/agent (copy/paste):")

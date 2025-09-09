@@ -120,6 +120,38 @@ sections:
           - ["CI/CD", "{{cicd}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
           - ["Observability", "{{observability}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
 
+  - id: source-tree
+    title: Source Tree
+    required: true
+    type: code
+    language: plaintext
+    instruction: |
+      Create a project folder structure that reflects:
+
+      1. The chosen repository structure (monorepo/polyrepo)
+      2. The architecture style (monolith/microservices/serverless/pipeline/plugins)
+      3. The selected tech stack and languages
+      4. Component/subsystem organization from above
+      5. Best practices for the chosen runtime/framework/engine
+      6. Clear separation of concerns
+
+      Document the structure at folder level only, except for first-level files in the root directory. Adapt the structure based on project needs. For monorepos, show module/service/package separation. For serverless, show function organization. Include language-specific conventions where helpful.
+    elicit: true
+    examples:
+      - |
+        project-root/
+        ├── packages/                 # Modules/packages/plugins (monorepo)
+        │   ├── app/                  # Primary application or UI
+        │   ├── core/                 # Core engine/logic/shared domain
+        │   ├── cli/                  # CLI or tooling (if applicable)
+        │   ├── plugins/              # Optional extension points
+        │   └── shared/               # Shared types/utils/config
+        ├── scripts/                  # Build/release/ops scripts
+        ├── docs/                     # Documentation
+        ├── .env.example              # Environment template (if applicable)
+        ├── package.json              # Root package/manifest (or pyproject.toml/go.mod)
+        └── README.md
+
   - id: data-and-io
     title: Data & I/O Contracts
     required: true

@@ -95,7 +95,7 @@
 			"requireExplicitLoad": true,
 			"loadAlwaysFiles": [
 				"{@baseDir}/config.json",
-				"{@docs.files.technicalPreferences}"
+				"{@docs.files.codingStandards}"
 			],
 			"readPersonaFile": true,
 			"onMissingFiles": "ask_user"

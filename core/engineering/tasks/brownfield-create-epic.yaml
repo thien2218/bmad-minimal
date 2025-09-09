@@ -21,7 +21,7 @@ inputs:
       description: Description of current relevant functionality
     - name: technology_stack
       type: string
-      description: Relevant existing technologies in the system, derived from {@docs.files.technicalPreferences}
+      description: Relevant existing technologies in the system, derived from {@docs.files.codingStandards}
       examples: ["React, Node.js, PostgreSQL", "Vue, Django, MySQL", "Angular, .NET, SQL Server"]
   optional:
     - name: integration_points

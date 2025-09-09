@@ -23,7 +23,7 @@
 			"feArchitecture": "frontend-architecture.md",
 			"beArchitecture": "backend-architecture.md",
 			"fsArchitecture": "fullstack-architecture.md",
-			"technicalPreferences": "technical-preferences.md"
+			"codingStandards": "coding-standards.md"
 		}
 	}
 }

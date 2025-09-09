@@ -107,11 +107,11 @@ async function update(options) {
 
 		// Update technical preferences if it exists
 		const docsDir = path.join(cwd, config.docs.dir);
-		const techPrefsPath = path.join(docsDir, "technical-preferences.md");
+		const techPrefsPath = path.join(docsDir, "coding-standards.md");
 
 		if (await exists(techPrefsPath)) {
 			console.log(chalk.gray("  Updating technical preferences from template..."));
-			const templateTechPrefsPath = path.join(__dirname, "../templates/technical-preferences.md");
+			const templateTechPrefsPath = path.join(__dirname, "../templates/coding-standards.md");
 			await fs.copy(templateTechPrefsPath, techPrefsPath);
 		}
 

@@ -544,8 +544,8 @@ sections:
             language: typescript
             template: "{{auth_middleware}}"
 
-  - id: unified-project-structure
-    title: Unified Project Structure
+  - id: source-tree
+    title: Source Tree
     required: true
     instruction: |
       Document the structure at folder level only, except for first level files (i.e. files in the root directory).
@@ -802,34 +802,6 @@ sections:
             type: code
             language: typescript
             template: "{{e2e_test_example}}"
-
-  - id: coding-standards
-    title: Coding Standards
-    required: true
-    instruction: Define MINIMAL but CRITICAL standards for AI agents. Focus only on project-specific rules that prevent common mistakes. These will be used by dev agents.
-    elicit: true
-    sections:
-      - id: critical-rules
-        title: Critical Fullstack Rules
-        required: true
-        repeatable: true
-        template: "- **{{rule_name}}:** {{rule_description}}"
-        examples:
-          - "**Type Sharing:** Always define types in packages/shared and import from there"
-          - "**API Calls:** Never make direct HTTP calls - use the service layer"
-          - "**Environment Variables:** Access only through config objects, never process.env directly"
-          - "**Error Handling:** All API routes must use the standard error handler"
-          - "**State Updates:** Never mutate state directly - use proper state management patterns"
-      - id: naming-conventions
-        title: Naming Conventions
-        required: true
-        type: table
-        columns: [Element, Frontend, Backend, Example]
-        rows:
-          - ["Components", "PascalCase", "-", "`UserProfile.tsx`"]
-          - ["Hooks", "camelCase with 'use'", "-", "`useAuth.ts`"]
-          - ["API Routes", "-", "kebab-case", "`/api/user-profile`"]
-          - ["Database Tables", "-", "snake_case", "`user_profiles`"]
 
   - id: error-handling
     title: Error Handling Strategy

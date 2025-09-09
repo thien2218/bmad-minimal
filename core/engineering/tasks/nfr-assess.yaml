@@ -29,10 +29,10 @@ inputs:
       type: path
       description: Path to architecture documents from config.json
       pattern: "{@docs.dir}/?(*-)architecture.md"
-    - name: technicalPreferences
+    - name: coding_standards
       type: path
       description: Path to technical preferences file
-      location: "{@docs.files.technicalPreferences}"
+      location: "{@docs.files.codingStandards}"
     - name: interaction_mode
       type: string
       description: Assessment interaction mode
@@ -95,7 +95,7 @@ process:
           Look for NFR requirements in:
           - Story acceptance criteria
           - {@docs.dir}/?(*-)architecture.md files  
-          - {@docs.files.technicalPreferences}
+          - {@docs.files.codingStandards}
           
           If interactive mode and thresholds missing, ask user:
           - Performance targets (response times, throughput)
@@ -214,7 +214,7 @@ process:
           - 10 for each CONCERNS attribute
           Floor at 0, ceiling at 100
           
-          Use custom weights from {@docs.files.technicalPreferences} if available.
+          Use custom weights from {@docs.files.codingStandards} if available.
 
     - id: CREATE-ASSESSMENT-REPORT
       title: Create Assessment Report

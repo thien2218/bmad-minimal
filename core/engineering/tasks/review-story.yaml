@@ -29,10 +29,10 @@ inputs:
       type: path
       description: Path to architecture documents from config.json
       pattern: "{@docs.dir}/?(*-)architecture.md"
-    - name: technicalPreferences
+    - name: coding_standards
       type: path
       description: Path to technical preferences file
-      location: "{@docs.files.technicalPreferences}"
+      location: "{@docs.files.codingStandards}"
 
 prerequisites:
   status:

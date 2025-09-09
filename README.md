@@ -29,7 +29,7 @@ During installation you will be prompted for:
 -  Base directory for BMAD files (default: `bmad-minimal`)
 -  Whether to include planning templates (default: Yes)
 -  Documentation directory (default: `docs`)
--  Whether to generate a technical-preferences authoring prompt
+-  Whether to generate a coding-standards authoring prompt
 
 At least one of: App, Backend, or Frontend directory must be provided.
 
@@ -47,7 +47,7 @@ docs/
 ├── epics/
 ├── stories/
 ├── brownfield/
-└── technical-preferences.md
+└── coding-standards.md
 ```
 
 The CLI also merges your answers into `bmad-minimal/config.json` based on the default template in `core/config.json`.
@@ -66,7 +66,7 @@ npx bmad-minimal@latest update --force
 
 -  Preserves: `bmad-minimal/config.json`
 -  Overwrites with latest: `bmad-minimal/engineering/` and, if present, `bmad-minimal/planning/`
--  Ensures `docs/` subdirectories exist and refreshes `technical-preferences.md` from the template if found
+-  Ensures `docs/` subdirectories exist and refreshes `coding-standards.md` from the template if found
 
 ## Command Reference
 

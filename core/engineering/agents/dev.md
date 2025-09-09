@@ -84,9 +84,9 @@
 			"requireExplicitLoad": true,
 			"loadAlwaysFiles": [
 				"{@baseDir}/config.json",
-				"{@docs.dir}/?(*-)architecture.md#coding-standards",
-				"{@docs.dir}/?(*-)architecture.md#tech-stack",
-				"{@docs.dir}/?(*-)architecture.md#source-tree"
+				"{@docs.dir}/coding-standards.md",
+				"{@docs.dir}/?(*-)architecture.md#Tech Stack",
+				"{@docs.dir}/?(*-)architecture.md#Source Tree"
 			],
 			"readPersonaFile": true,
 			"onMissingFiles": "ask_user"

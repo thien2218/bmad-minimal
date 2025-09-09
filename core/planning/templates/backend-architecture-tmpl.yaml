@@ -137,7 +137,7 @@ sections:
     instruction: |
       This is the DEFINITIVE technology selection section. Work with the user to make specific choices:
 
-      1. Review PRD technical assumptions and any preferences from {@docs.files.technicalPreferences} or an attached technical-preferences
+      1. Review PRD technical assumptions and any preferences from {@docs.files.codingStandards} or an attached coding-standards
       2. For each category, present 2-3 viable options with pros/cons
       3. Make a clear recommendation based on project needs
       4. Get explicit user approval for each selection
@@ -557,57 +557,6 @@ sections:
           **On-call Rotation:** {{oncall_rotation}}
           **Incident Response:** {{incident_process}}
           **Runbooks:** {{runbook_index}}
-
-  - id: coding-standards
-    title: Coding Standards
-    required: true
-    instruction: |
-      These standards are MANDATORY for AI agents. Work with user to define ONLY the critical rules needed to prevent bad code. Explain that:
-
-      1. This section directly controls AI developer behavior
-      2. Keep it minimal - assume AI knows general best practices
-      3. Focus on project-specific conventions and gotchas
-      4. Overly detailed standards bloat context and slow development
-      5. Standards will be extracted to separate file for dev agent use
-
-      For each standard, get explicit user confirmation it's necessary.
-    elicit: true
-    sections:
-      - id: core-standards
-        title: Core Standards
-        required: true
-        template: |
-          - **Languages & Runtimes:** {{languages_and_versions}}
-          - **Style & Linting:** {{linter_config}}
-          - **Test Organization:** {{test_file_convention}}
-      - id: naming-conventions
-        title: Naming Conventions
-        required: false
-        type: table
-        columns: [Element, Convention, Example]
-        instruction: Only include if deviating from language defaults
-      - id: critical-rules
-        title: Critical Rules
-        required: true
-        instruction: |
-          List ONLY rules that AI might violate or project-specific requirements. Examples:
-          - "Never use console.log in production code - use logger"
-          - "All API responses must use ApiResponse wrapper type"
-          - "Database queries must use repository pattern, never direct ORM"
-
-          Avoid obvious rules like "use SOLID principles" or "write clean code"
-        repeatable: true
-        template: "- **{{rule_name}}:** {{rule_description}}"
-      - id: language-specifics
-        title: Language-Specific Guidelines
-        required: false
-        condition: Critical language-specific rules needed
-        instruction: Add ONLY if critical for preventing AI mistakes. Most teams don't need this section.
-        sections:
-          - id: language-rules
-            title: "{{language_name}} Specifics"
-            repeatable: true
-            template: "- **{{rule_topic}}:** {{rule_detail}}"
 
   - id: test-strategy
     title: Test Strategy and Standards

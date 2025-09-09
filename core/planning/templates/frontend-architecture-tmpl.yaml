@@ -314,22 +314,3 @@ sections:
         template: |
           **Incident Response:** {{incident_process}}
           **Runbooks:** {{runbook_index}}
-
-  - id: frontend-developer-standards
-    title: Frontend Developer Standards
-    required: true
-    sections:
-      - id: critical-coding-rules
-        title: Critical Coding Rules
-        required: true
-        instruction: List essential rules that prevent common AI mistakes, including both universal rules and framework-specific ones.
-        elicit: true
-      - id: quick-reference
-        title: Quick Reference
-        required: false
-        instruction: |
-          Create a framework-specific cheat sheet with:
-          - Common commands (dev server, build, test)
-          - Key import patterns
-          - File naming conventions
-          - Project-specific patterns and utilities
