@@ -97,6 +97,40 @@ async function install(options) {
 		const techPrefsPath = path.join(docsDir, "technical-preferences.md");
 		await fs.copy(templateTechPrefsPath, techPrefsPath);
 
+		// After all files are written, ensure baseDir is ignored by git
+		try {
+			const gitignorePath = path.join(cwd, ".gitignore");
+			let gitignoreContent = "";
+			if (await exists(gitignorePath)) {
+				gitignoreContent = await fs.readFile(gitignorePath, "utf-8");
+			}
+			const entry = String(config.baseDir || "").trim();
+
+			if (entry) {
+				const lines = gitignoreContent
+					.split(/\r?\n/)
+					.map((l) => l.trim())
+					.filter((l) => l.length > 0);
+				const alreadyIgnored = lines.some(
+					(line) => line === entry || line === `${entry}/`
+				);
+				if (!alreadyIgnored) {
+					const needsNL =
+						gitignoreContent.length > 0 &&
+						!gitignoreContent.endsWith("\n");
+					await fs.appendFile(
+						gitignorePath,
+						`${needsNL ? "\n" : ""}${entry}\n`
+					);
+					console.log(chalk.gray(`  Added "${entry}" to .gitignore`));
+				}
+			}
+		} catch (e) {
+			console.log(
+				chalk.yellow(`  Warning: failed to update .gitignore: ${e.message}`)
+			);
+		}
+
 		console.log(chalk.green("\n✅ BMad Minimal installation complete!\n"));
 		console.log(chalk.cyan("📁 Structure created:"));
 		console.log(`   ${config.baseDir}/`);
@@ -133,6 +167,7 @@ async function install(options) {
 					`- Frontend directory: ${configData.project.frontendDir}`
 				);
 			contextLines.push(`- Docs directory: ${configData.docs.dir}`);
+
 			const llmPrompt = `Task: Fill out ${tpDisplayPath} by replacing 'TBD' placeholders with concrete, project-appropriate choices.\n\nInstructions:\n- Inspect this workspace to infer languages/runtimes, package manager(s), frontend/backend libraries, testing tools, build tools, and high-level repo structure.\n- Prefer evidence from the repo (manifests, lockfiles, configs). If something is ambiguous or missing, use your domain knowledge to propose sensible defaults.\n- Modify only ${tpDisplayPath}. Do not add or reorder sections. Replace only the 'TBD' tokens (and any inline guidance comments) when you have a confident value; otherwise leave them as-is.\n\nContext:\n${contextLines.join(
 				"\n"
 			)}\n\nOutput: Provide either the edited markdown content of ${tpDisplayPath} or a unified diff that applies changes to that file only.`;
