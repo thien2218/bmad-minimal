@@ -2,17 +2,28 @@ const inquirer = require("inquirer");
 const chalk = require("chalk");
 const path = require("path");
 const fs = require("fs-extra");
-const {
-	copyDirectory,
-	writeJson,
-	exists,
-	getCoreDir,
-} = require("../utils/fileOperations");
+const { writeJson, exists, getCoreDir } = require("../utils/fileOperations");
+const { ensureIgnored } = require("../lib/gitignore");
 const {
 	getConfigFields,
 	shouldGenerateCSPrompt,
 } = require("../utils/configFields");
+const {
+	copyCoreDirectories,
+	ensureDocsStructure,
+} = require("../services/docsService");
+const { loadDefaultConfig, mergeConfig } = require("../services/configService");
 
+/**
+ * Install BMad Minimal into the current workspace.
+ * - Prompts for configuration
+ * - Copies core templates
+ * - Writes config.json
+ * - Ensures docs structure and updates .gitignore
+ *
+ * @param {Object} options - CLI options parsed upstream.
+ * @returns {Promise<void>}
+ */
 async function install(options) {
 	console.log(chalk.blue("🚀 BMad Minimal Installation\n"));
 
@@ -52,70 +63,34 @@ async function install(options) {
 		const baseDir = path.join(cwd, config.baseDir);
 		await fs.ensureDir(baseDir);
 
-		// Copy engineering directory
-		const engineeringSource = path.join(coreDir, "engineering");
-		const engineeringDest = path.join(baseDir, "engineering");
-		console.log(chalk.gray(`  Copying engineering files...`));
-		await copyDirectory(engineeringSource, engineeringDest);
-
-		// Copy planning directory
-		const planningSource = path.join(coreDir, "planning");
-		const planningDest = path.join(baseDir, "planning");
-		console.log(chalk.gray(`  Copying planning files...`));
-		await copyDirectory(planningSource, planningDest);
+		// Copy core directories
+		console.log(chalk.gray(`  Copying engineering and planning files...`));
+		await copyCoreDirectories(coreDir, baseDir);
 
 		// Write config.json
 		const configPath = path.join(baseDir, "config.json");
-		const defaultConfigPath = path.join(coreDir, "config.json");
-		const configData = await fs.readJson(defaultConfigPath);
-
-		// Merge defaults with gathered configuration
-		configData.baseDir = config.baseDir;
-		configData.project.name = config.projectName;
-		configData.project.dir = config.dir ?? "";
-		configData.project.backendDir = config.backendDir ?? "";
-		configData.project.frontendDir = config.frontendDir ?? "";
-		configData.project.testDirs = config.testDirs;
-		configData.docs.dir = config.docsDir;
+		// Load defaults and merge with gathered configuration
+		const defaultConfig = await loadDefaultConfig(coreDir);
+		const configData = mergeConfig(defaultConfig, config);
 
 		console.log(chalk.gray(`  Writing configuration...`));
 		await writeJson(configPath, configData);
 
 		// Create docs directory structure (use merged defaults)
-		const docsDir = path.join(cwd, configData.docs.dir);
-		await fs.ensureDir(docsDir);
-
-		for (const subDir of Object.values(configData.docs.subdirs)) {
-			await fs.ensureDir(path.join(docsDir, subDir));
-		}
+		await ensureDocsStructure(cwd, configData);
 
 		// After all files are written, ensure baseDir is ignored by git
 		try {
-			const gitignorePath = path.join(cwd, ".gitignore");
-			let gitignoreContent = "";
-			if (await exists(gitignorePath)) {
-				gitignoreContent = await fs.readFile(gitignorePath, "utf-8");
-			}
 			const entry = String(config.baseDir || "").trim();
-
+			const modified = await ensureIgnored({ cwd, entry });
 			if (entry) {
-				const lines = gitignoreContent
-					.split(/\r?\n/)
-					.map((l) => l.trim())
-					.filter((l) => l.length > 0);
-				const alreadyIgnored = lines.some(
-					(line) => line === entry || line === `${entry}/`
+				console.log(
+					chalk.gray(
+						modified
+							? `  Added "${entry}" to .gitignore`
+							: `  .gitignore already includes "${entry}"`
+					)
 				);
-				if (!alreadyIgnored) {
-					const needsNL =
-						gitignoreContent.length > 0 &&
-						!gitignoreContent.endsWith("\n");
-					await fs.appendFile(
-						gitignorePath,
-						`${needsNL ? "\n" : ""}${entry}\n`
-					);
-					console.log(chalk.gray(`  Added "${entry}" to .gitignore`));
-				}
 			}
 		} catch (e) {
 			console.log(

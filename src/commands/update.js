@@ -9,11 +9,20 @@ const {
 	exists,
 	getCoreDir,
 } = require("../utils/fileOperations");
+const { ensureDocsStructure } = require("../services/docsService");
+const { findConfig } = require("../services/configService");
 const {
 	getConfigFields,
 	shouldGenerateCSPrompt,
 } = require("../utils/configFields");
 
+/**
+ * Update existing BMad Minimal installation to latest core templates,
+ * preserving config.json and ensuring docs structure.
+ *
+ * @param {Object} options - CLI options parsed upstream.
+ * @returns {Promise<void>}
+ */
 async function update(options) {
 	console.log(chalk.blue("🔄 BMad Minimal Update\n"));
 
@@ -113,9 +122,7 @@ async function update(options) {
 		await shouldGenerateCSPrompt(config);
 
 		// Ensure all doc directories still exist
-		for (const subDir of Object.values(config.docs.subdirs)) {
-			await fs.ensureDir(path.join(docsDir, subDir));
-		}
+		await ensureDocsStructure(cwd, config);
 
 		console.log(chalk.green("\n✅ BMad Minimal update complete!"));
 
@@ -136,19 +143,6 @@ async function update(options) {
 		console.error(chalk.red("❌ Update failed:"), error.message);
 		throw error;
 	}
-}
-
-async function findConfig(cwd) {
-	const possibleDirs = ["bmad-minimal"];
-
-	for (const dir of possibleDirs) {
-		const configPath = path.join(cwd, dir, "config.json");
-		if (await exists(configPath)) {
-			return { dir, path: configPath };
-		}
-	}
-
-	return null;
 }
 
 function getValueByPath(object, accessKey) {

@@ -11,7 +11,7 @@ const program = new Command();
 program
 	.name("bmad-minimal")
 	.description(
-		"BMad Minimal - A streamlined development workflow for AI-assisted projects"
+		"BMad Minimal - A streamlined development workflow for AI-assisted projects, designed for developers"
 	)
 	.version(packageJson.version);
 

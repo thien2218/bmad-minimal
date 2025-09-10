@@ -1,9 +1,12 @@
 # Coding Preferences
 
-Use this document to capture coding conventions only. Do not duplicate technology choices or platform constraints — those live in the Architecture documents.
+[Short 2-3 sentences brief about what this template is used for. This would most likely be used as first level memory for LLM agents]
 
-## 1) Naming Conventions
+## Naming Conventions
 
+<!-- Consistent names for variables, functions, classes, files and feature flags, etc. -->
+
+<!-- Example table:
 | Element           | Convention       | Example              |
 | ----------------- | ---------------- | -------------------- |
 | Files             | kebab-case       | user-profile.service |
@@ -11,61 +14,48 @@ Use this document to capture coding conventions only. Do not duplicate technolog
 | Functions/Methods | camelCase        | getUserProfile       |
 | Constants         | UPPER_SNAKE_CASE | MAX_RETRY_ATTEMPTS   |
 | Env vars          | UPPER_SNAKE_CASE | API_BASE_URL         |
+-->
 
-## 2) Files & Directories
+## Formatting & layout
 
--  Source roots and common module folders (e.g., `src/components`, `src/services`):
--  Public vs internal modules (what is exported from where):
--  Path aliases/barrels (e.g., `@app/*`) and when to use them:
+<!-- Indentation, max line length, blank lines, file-level ordering (automate with a formatter when possible), etc. -->
 
-## 3) Imports & Exports
+## Comments & documentation
 
--  Prefer named vs default exports (policy):
--  Import ordering (builtin → external → internal):
--  Relative vs absolute imports (policy and thresholds):
+<!-- When to write docstrings, inline comments vs self-documenting code, required README or API docs, etc. -->
 
-## 4) Error Handling
+## Imports & Exports
 
--  Approved patterns (exception vs result-type) and when:
--  Standard error shapes/codes (reference arch doc if defined):
--  Retry/timeout/circuit-breaker usage (reference arch doc if defined):
+<!-- Prefer named vs default exports (policy), import ordering (builtin → external → internal), relative vs absolute imports (policy and thresholds) -->
 
-## 5) Logging
+## Error Handling
 
--  Logger usage (avoid `console.log`):
--  Log levels and guidance (info/warn/error only where meaningful):
--  Structured fields to include (e.g., requestId, userId) and redaction rules:
+<!-- Preferred error/exception style, propagation vs handling at call sites, user-facing error messages, etc. -->
 
-## 6) Testing Conventions
+## Logging & observability
 
--  Test file naming/location (e.g., `*.spec.ts` next to source):
--  Minimum coverage target (%):
--  Mocking/stubbing guidance (what to mock and where):
+<!-- Log levels, structured logs, correlation IDs and where to add metrics/alerts, etc. -->
 
-## 7) Security & Privacy
+## Testing Conventions
 
--  Secrets: never commit; use env/config only (reference secret manager in arch doc):
--  PII: do not log/store unnecessarily; redact in logs:
--  Input validation: apply at trust boundaries (reference arch doc schemas):
+<!-- Test types (unit/integration/e2e), naming, where tests live, minimum coverage expectations for new code, etc. -->
 
-## 8) Git & PR Process
+## APIs & interfaces
 
--  Commit convention (e.g., Conventional Commits):
--  Branch naming scheme:
--  Required CI checks for merge:
--  PR checklist location (copy or link):
+<!-- Versioning, backwards-compatibility rules, contract-first vs implementation-first, public/external vs internal APIs, etc. -->
 
-## 9) Code Review Checklist (paste into PR template if helpful)
+## Git & PR Process
 
--  [ ] Code follows naming and directory conventions
--  [ ] Public API surface is minimal and documented where needed
--  [ ] Errors use approved patterns; user-facing messages are appropriate
--  [ ] Logging is structured and redacted; no secrets/PII
--  [ ] Input validation at boundaries where required
--  [ ] Tests cover happy-path and edge cases; coverage target met
--  [ ] No unnecessary dependencies or duplication
--  [ ] Changes align with architecture decisions (link to section if relevant)
+<!-- Commit convention (e.g., Conventional Commits), branch naming scheme, required CI checks for merge, etc. -->
 
--  Primary language(s):
--  Runtime(s)/VM(s) and versions:
--  Target platforms (OS/CPU/Accel):
+## CI / build / release
+
+<!-- Required CI checks, build reproducibility, artifact naming, release note policy, etc. -->
+
+# Refactoring and optimizations
+
+<!-- When to optimize and/or refactor, separation of concerns, design patterns, code smells, etc. -->
+
+## Other conventions
+
+<!-- List out some other coding conventions that you might see fit for your project. -->

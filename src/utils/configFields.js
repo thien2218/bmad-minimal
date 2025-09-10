@@ -3,7 +3,16 @@ const inquirer = require("inquirer");
 const chalk = require("chalk");
 const fs = require("fs-extra");
 const { exists } = require("./fileOperations");
+const { buildCodingStandardsPrompt } = require("../lib/promptBuilders");
 
+/**
+ * Build interactive prompts used to gather installation configuration.
+ * This returns plain question objects consumable by inquirer.
+ *
+ * @param {string} cwd - Current working directory used for defaults.
+ * @param {Object} [options]
+ * @returns {Array<Object>} Inquirer-style question definitions.
+ */
 function getConfigFields(cwd, options) {
 	return [
 		{
@@ -71,10 +80,17 @@ function getConfigFields(cwd, options) {
 	];
 }
 
+/**
+ * Optionally create coding-standards.md from a template and display
+ * a ready-to-use LLM prompt to complete it.
+ *
+ * @param {object} configData - The merged configuration data that will be written to config.json
+ * @returns {Promise<void>}
+ */
 async function shouldGenerateCSPrompt(configData) {
 	const codingStdsPath = path.join(configData.docs.dir, "coding-standards.md");
 
-	// Write coding standards from template in src/templates if file doesn't exist
+	// Write coding standards from template if file doesn't exist
 	if (!(await exists(codingStdsPath))) {
 		console.log(chalk.gray("  Writing coding standards template..."));
 		const templateTechPrefsPath = path.join(
@@ -94,26 +110,13 @@ async function shouldGenerateCSPrompt(configData) {
 
 		if (generateCSPrompt) {
 			// Ready-to-use prompt for an LLM/agent to help fill coding-preferences.md (coding standards)
-			const contextLines = [`- Project name: ${configData.project.name}`];
-
-			if (configData.project.dir) {
-				contextLines.push(`- App directory: ${configData.project.dir}`);
-			}
-			if (configData.project.backendDir) {
-				contextLines.push(
-					`- Backend directory: ${configData.project.backendDir}`
-				);
-			}
-			if (configData.project.frontendDir) {
-				contextLines.push(
-					`- Frontend directory: ${configData.project.frontendDir}`
-				);
-			}
-			contextLines.push(`- Docs directory: ${configData.docs.dir}`);
-
-			const llmPrompt = `Task: Create or update ${codingStdsPath} with the team's coding conventions using the lean template headings (naming, files & directories, imports/exports, error handling, logging, testing, security & privacy, Git/PR, and the short review checklist).\n\nInstructions:\n- Inspect this workspace to infer actual conventions from existing code and configs.\n- Use Architecture documents for technology choices; do not duplicate tech selection here. Focus on conventions and policies only.\n- Keep entries concise and actionable. If unsure, propose sensible defaults and clearly mark items needing confirmation.\n- Modify only ${codingStdsPath}. If the file does not exist, create it. Preserve the heading structure.\n\nContext:\n${contextLines.join(
-				"\n"
-			)}\n\nOutput: Provide either the markdown content of ${codingStdsPath} or a unified diff that creates/updates only that file.`;
+			const llmPrompt = buildCodingStandardsPrompt({
+				projectName: configData.project.name,
+				docsDir: configData.docs.dir,
+				projectDir: configData.project.dir,
+				backendDir: configData.project.backendDir,
+				frontendDir: configData.project.frontendDir,
+			});
 
 			console.log(
 				"\n" + chalk.cyan("Prompt for your LLM/agent (copy/paste):")

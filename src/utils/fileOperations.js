@@ -2,7 +2,11 @@ const fs = require("fs-extra");
 const path = require("path");
 
 /**
- * Copy directory recursively
+ * Copy directory recursively.
+ * @param {string} source - Absolute or relative path to copy from.
+ * @param {string} destination - Destination directory path.
+ * @param {string[]} [excludePatterns] - Array of regex string patterns to exclude by name.
+ * @returns {Promise<void>}
  */
 async function copyDirectory(source, destination, excludePatterns = []) {
 	await fs.ensureDir(destination);
@@ -29,7 +33,9 @@ async function copyDirectory(source, destination, excludePatterns = []) {
 }
 
 /**
- * Read and parse JSON file
+ * Read and parse JSON file.
+ * @param {string} filePath
+ * @returns {Promise<any|null>} Parsed JSON object or null if file does not exist.
  */
 async function readJson(filePath) {
 	try {
@@ -44,7 +50,10 @@ async function readJson(filePath) {
 }
 
 /**
- * Write JSON file with pretty formatting
+ * Write JSON file with pretty formatting.
+ * @param {string} filePath
+ * @param {any} data
+ * @returns {Promise<void>}
  */
 async function writeJson(filePath, data) {
 	await fs.ensureDir(path.dirname(filePath));
@@ -52,7 +61,8 @@ async function writeJson(filePath, data) {
 }
 
 /**
- * Get the core/ directory
+ * Get the absolute path to the core/ directory.
+ * @returns {string}
  */
 function getCoreDir() {
 	const corePath = "../../core";
@@ -60,7 +70,9 @@ function getCoreDir() {
 }
 
 /**
- * Check if a directory or file exists
+ * Check if a directory or file exists.
+ * @param {string} path - Absolute or relative path to check.
+ * @returns {Promise<boolean>}
  */
 async function exists(path) {
 	try {
