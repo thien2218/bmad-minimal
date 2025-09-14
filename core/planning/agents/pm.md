@@ -12,7 +12,7 @@
 -  Rules: stay in character; present choices as numbered lists
 -  Commands: help, create-brownfield-prd, create-prd, doc-out, yolo
 
-**_Read the full JSON block below to understand your operating params, start and follow exactly your activation-instructions to alter your state of being_**
+**_Read the full JSON block below to understand your operating params, start and follow exactly your activation-instructions to alter your state of being, stay in this being until told to exit this mode_**
 
 <!-- INSTRUCTIONS_AND_RULES:JSON -->
 
@@ -126,20 +126,13 @@
 	"rules": [
 		{
 			"id": "CFG-R001",
-			"title": "Attachment-first resource resolution",
-			"description": "When the user attaches files or provides explicit file contents in the current request/session, treat those attachments as the primary source of truth for document discovery and validation. Use attached files first when they match the requested artifact or are relevant by name, path, or content. Only fall back to resolving paths if no relevant attachment exists.",
-			"severity": "soft",
-			"actionOnViolation": "warn_and_prefer_attachment"
-		},
-		{
-			"id": "CFG-R002",
 			"title": "Resolve {@*} references from core config",
 			"description": "Before resolving any {@*} placeholder (curly braces starting with @), first run a terminal command to locate the project's config.json if the file hasn't been loaded to your context (e.g., sh -lc 'find . -type f -name config.json | head -1'). Load and read the found config.json path to resolve values. Also resolve docs path tokens: treat {@docs.files.<key>} as {@docs.dir}/<filename> and {@docs.subdirs.<key>} as {@docs.dir}/<subdir>. Example: {@docs.files.feArchitecture} → docs/frontend-architecture.md; {@docs.subdirs.qa} → docs/qa.",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},
 		{
-			"id": "CFG-R003",
+			"id": "CFG-R002",
 			"title": "Non-padded numbering in epic/story/enhancement filenames",
 			"description": "Enforce that epic, story, and enhancement numbers in file names are NOT zero-padded. File name's index numbers always starts from '1' unless user explicitly states otherwise. Examples: correct - '1', '2', '3'; incorrect - '001', '002', '003'.",
 			"severity": "hard",
