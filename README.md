@@ -129,7 +129,7 @@ To keep things both friendly for humans and clear for LLM agents, every artifact
 | **Document Type** | **Description**                                                                                   | **Format** |
 | ----------------- | ------------------------------------------------------------------------------------------------- | ---------- |
 | High-level        | PRD, architecture outlines or human-facing documents                                              | Markdown   |
-| Middle-level      | LLM-fiendly documents like epics and stories that still requires human monitoring or interference | YAML       |
+| Middle-level      | LLM-fiendly documents (epics, stories, etc.) that still requires human monitoring or interference | YAML       |
 | Low-level         | Detailed internal agent instructions and guidelines                                               | JSON       |
 
 This hierarchy keeps collaboration smooth and keeps everyone (and every agent) on the same page.

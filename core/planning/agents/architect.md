@@ -33,7 +33,7 @@
 		"persona"
 	],
 	"glossary": {
-		"dependencyTask": "Task loaded from {@baseDir}/engineering/tasks/ and executed as an authoritative workflow.",
+		"dependencyTask": "Task loaded from {@baseDir}/planning/tasks/ and executed as an authoritative workflow.",
 		"formalDependencyTask": "A dependency task with explicit ordered steps and elicit flags; it can override within allowed scope.",
 		"executableCommand": "User-invoked action with prefix '*' that triggers a defined command workflow.",
 		"elicit": "A step that requires exact user input format before proceeding."
