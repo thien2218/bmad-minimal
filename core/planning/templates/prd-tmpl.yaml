@@ -23,6 +23,11 @@ sections:
         required: true
         type: bullet-list
         instruction: Bullet list of 1 line desired outcomes the PRD will deliver if successful - user and project desires
+      - id: non-goals
+        title: Non-Goals
+        required: true
+        type: bullet-list
+        instruction: Clearly list items and areas intentionally not addressed in this PRD/MVP to avoid scope creep.
       - id: background
         title: Background Context
         required: true
@@ -34,17 +39,13 @@ sections:
         type: table
         columns: [Date, Version, Description, Author]
         instruction: Track document versions and changes
-      - id: non-goals
-        title: Non-Goals
-        required: true
-        type: bullet-list
-        instruction: Clearly list items and areas intentionally not addressed in this PRD/MVP to avoid scope creep.
       - id: user-journeys
         title: Key User Journeys / Use Cases
         required: true
         type: numbered-list
         elicit: true
         instruction: High-level narratives of critical flows that connect user goals to Functional Requirements; do not specify UI details.
+
   - id: requirements
     title: Requirements
     required: true

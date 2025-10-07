@@ -2,45 +2,111 @@
 
 This guide outlines the planning workflow essential to spec-driven development. Effective planning establishes the parameters and objectives for agent execution and will precede (almost) all implementation activity.
 
-## Definitions
-
-1. **Greenfield Projects:** Initiatives begun without existing codebases, infrastructure, or system dependencies. All technical decisions are made with minimal constraints.
-2. **Brownfield Projects:** Developments layered atop or integrated with established systems. Solutions must interact with, extend, or modify existing code, architecture, and business processes.
-
 ## Scopes and Rationale
 
 Planning is the entry point for (almost) all software development activities. Matt Maher has made an excellent [video](https://www.youtube.com/watch?v=dBWnH0YA6tg&list=LL), perfectly explains and demonstrates why comprehensive planning is necessary for predictable, reliable agent performance.
 
-That said, in the context of AI-driven development, planning typically represents the most token-intensive phase. Accordingly, distinct planning methods and optimization strategies are employed at different context scopes to ensure efficiency.
+That said, in the context of AI-driven development, planning typically represents the most token-intensive phase. And accordingly, distinct planning methods and optimization strategies are employed at different context scopes to ensure efficiency.
 
-### Greenfield Planning
+## Greenfield Flow
 
-Greenfield planning applies when building a new project from the ground up. With no prior constraints, all technical and architectural decisions are open; planning at this scope results in foundational documents like project specs, architectures, and initial epics that shape the system’s future direction.
+The Greenfield Flow is designed for new initiatives where there are no legacy constraints, offering maximum flexibility in technical and architectural decisions. This section provides a comprehensive framework for navigating the greenfield planning process, from initial concept to a fully-realized project plan.
 
-### Brownfield Planning
+The workflow is structured around the creation and refinement of several key documents. These documents serve as the primary context for the agents, providing a high-level overview and essential knowledge for all subsequent tasks.
 
-**1) For projects with PRD and architecture docs**
+<!-- ### Project Brief -->
 
-Brownfield planning is required when extending or modifying an established codebase or infrastructure. All proposals must account for existing systems, legacy constraints, and compatibility; effects includes updated design documents, architectural notes, and a clear analysis of dependencies and impacts.
+### PRD
 
-**2) For projects without PRD and architecture docs**
+The Product Requirements Document (PRD) is the authoritative source of truth for the project, defining its purpose, features, and functionality. It serves as the primary input for both the Architecture and UI/UX design phases, and provides the foundational context for the engineering agents during implementation.
 
-The process is mostly identical with existing high-level documents, but this time with specialized brownfield document structure as drop-in replacement, signaling to agents to make changes with cautions and respect legacy code
+The `pm` agent is responsible for creating the PRD, and can do so in two ways, as illustrated in the Flow Graph:
 
-### Small Incremental Changes
+1.  **Fast-Track Creation (with Project Brief):** If a Project Brief is available, the `pm` agent can be invoked with the `create-prd` command to generate the PRD directly from the brief. This is the most efficient method, as it leverages the pre-existing research and analysis.
 
-This scope covers limited improvements or bug fixes that are tightly contained within the system. Only the most relevant planning artifacts—such as brief specs or local story updates — need to be revised, and changes should avoid ripple effects that require broad architectural or document updates.
+2.  **Interactive Creation (without Project Brief):** In the absence of a Project Brief, the `pm` agent will engage in an interactive session to gather the necessary information. The agent will ask a series of questions to elicit the project's goals, user stories, functional and non-functional requirements. This process is more time-intensive, but ensures a comprehensive and well-defined PRD.
 
-### Unit Changes
+In both scenarios, the final output is a complete PRD that includes:
 
-For trivial or highly localized modifications — such as correcting a typo or resolving a one-line logic bug — we **strongly recommended** to either prompt the agent directly, utilize a free tier web-based AI chat tool, or make the correction manually. These approaches are the most efficient, as they bypass the need for high-level planning or broader documentation updates.
+*   **Functional Requirements (FRs):** The specific behaviors and capabilities of the system.
+*   **Non-Functional Requirements (NFRs):** The quality attributes of the system, such as performance, security, and usability.
+*   **Epics and Stories:** A hierarchical breakdown of the work to be done.
 
-## Flow
+### Architecture
 
-### Project Brief (optional)
+The Architecture document outlines the technical blueprint of the project, detailing the system's structure, components, and their interactions. It is a critical document that translates the functional and non-functional requirements from the PRD into a concrete technical design.
 
-### PRD and Architecture
+The `architect` agent is responsible for creating the Architecture document. As shown in the Flow Graph, the `architect` agent can be invoked after the PRD has been created. The agent will use the PRD as its primary input, and will generate an architecture that satisfies all the requirements outlined in the PRD.
+
+The Architecture document typically includes:
+
+*   **System Overview:** A high-level description of the system's components and their relationships.
+*   **Component Design:** Detailed design of each component, including its responsibilities and interfaces.
+*   **Data Model:** The structure of the data that the system will manage.
+*   **Technology Stack:** The technologies that will be used to build the system.
 
 ### UI/UX
 
+The UI/UX specification defines the user interface and experience for the project. This document is essential for projects with a user-facing component, as it translates the product requirements into a tangible design that can be implemented by the engineering team.
+
+The `ux-expert` agent is responsible for creating the UI/UX specification. As depicted in the Flow Graph, the `ux-expert` is invoked when a project requires a user interface. The agent can perform two primary functions:
+
+1.  **Create Frontend Specification:** Using the `create-frontend-spec` command, the `ux-expert` generates a comprehensive frontend specification. This document outlines the user flows, wireframes, and component designs necessary to build the user interface.
+
+2.  **Generate AI UI Prompt:** With the `generate-ui-prompt` command, the `ux-expert` can create a prompt for an AI-powered UI generation tool. This is an optional step that can accelerate the design process by providing a starting point for the visual design.
+
+The UI/UX specification serves as a critical input for the `architect` agent, ensuring that the system architecture can support the required user interface and experience.
+
 ### Flow Graph
+
+```mermaid
+graph TD
+    A["Start: Project Idea"] --> B{"Analyst Research (Optional)"}
+    B -->|Yes| C["Analyst: Brainstorming"]
+    B -->|No| G{"Project Brief Available?"}
+    C --> C2["Analyst: Research"]
+    C2 --> C3["Analyst: Project Analysis"]
+    C3 --> D["Analyst: Create Project Brief"]
+    D --> G["Project Brief Available?"]
+    G{"Project Brief Available?"} -->|Yes| E["PM: Create PRD from Brief (Fast Track)"]
+    G -->|No| E2["PM: Interactive PRD Creation (More Questions)"]
+    E --> F["PRD Created with FRs, NFRs, Epics & Stories"]
+    E2 --> F
+    F --> F2{"UX Required?"}
+    F2 -->|Yes| F3["UX Expert: Create Front End Spec"]
+    F2 -->|No| H["Architect: Create Architecture from PRD"]
+    F3 --> F4["UX Expert: Generate UI Prompt for Lovable/V0 (Optional)"]
+    F4 --> H2["Architect: Create Architecture from PRD + UX Spec"]
+    H --> I["PDM: Run Master Checklist"]
+    H2 --> I
+    I --> J{"Documents Aligned?"}
+    J -->|Yes| K["Planning Complete"]
+    J -->|No| L["PDM: Update Epics & Stories"]
+    L --> M["Update PRD/Architecture as needed"]
+    M --> I
+    K --> N["Switch to IDE (If in a Web Agent Platform)"]
+    N --> P["Ready for Engineering Cycle"]
+
+    style A fill:#f5f5f5,color:#000
+    style B fill:#e3f2fd,color:#000
+    style C fill:#e8f5e9,color:#000
+    style C2 fill:#e8f5e9,color:#000
+    style C3 fill:#e8f5e9,color:#000
+    style D fill:#e8f5e9,color:#000
+    style E fill:#fff3e0,color:#000
+    style E2 fill:#fff3e0,color:#000
+    style F fill:#fff3e0,color:#000
+    style F2 fill:#e3f2fd,color:#000
+    style F3 fill:#e1f5fe,color:#000
+    style F4 fill:#e1f5fe,color:#000
+    style G fill:#e3f2fd,color:#000
+    style H fill:#f3e5f5,color:#000
+    style H2 fill:#f3e5f5,color:#000
+    style I fill:#f9ab00,color:#fff
+    style J fill:#e3f2fd,color:#000
+    style K fill:#34a853,color:#fff
+    style L fill:#f9ab00,color:#fff
+    style M fill:#fff3e0,color:#000
+    style N fill:#1a73e8,color:#fff
+    style P fill:#34a853,color:#fff
+```

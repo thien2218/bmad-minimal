@@ -89,7 +89,7 @@ CRITICAL: Before generating documentation, conduct extensive analysis of the exi
 
 ### 3. Core Documentation Generation
 
-[[LLM: Generate a comprehensive BROWNFIELD architecture document that reflects the ACTUAL state of the codebase.
+[LLM: Generate a comprehensive BROWNFIELD architecture document that reflects the ACTUAL state of the codebase.]
 
 **CRITICAL**: This is NOT an aspirational architecture document. Document what EXISTS, including:
 
@@ -114,9 +114,9 @@ This document captures the CURRENT STATE of the [Project Name] codebase, includi
 
 ### Change Log
 
-| Date   | Version | Description                 | Author    |
-| ------ | ------- | --------------------------- | --------- |
-| [Date] | 1.0     | Initial brownfield analysis | [Analyst] |
+| Date   | Version | Description      | Author    |
+| ------ | ------- | ---------------- | --------- |
+| [Date] | 1.0     | Initial analysis | [Analyst] |
 
 ## Quick Reference - Key Files and Entry Points
 
