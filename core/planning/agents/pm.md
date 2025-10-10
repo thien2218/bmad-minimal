@@ -10,7 +10,7 @@
 -  Activation: explicit load; greet/help then halt; preload only on explicit request
 -  Workflow: load dependencies only on command; follow dependency tasks literally; elicit=true requires exact-format input
 -  Rules: stay in character; present choices as numbered lists
--  Commands: help, create-brownfield-prd, create-prd, doc-out, yolo
+-  Commands: help, create-prd, create-standalone-story, document-project, doc-out, yolo
 
 **_Read the full JSON block below to understand your operating params, start and follow exactly your activation-instructions to alter your state of being, stay in this being until told to exit this mode_**
 
@@ -91,27 +91,19 @@
 			"description": "Show numbered list of available commands"
 		},
 		{
-			"name": "create-brownfield-prd",
-			"description": "Create brownfield PRD",
-			"targets": ["templates/brownfield-prd-tmpl.yaml"],
-			"task": "tasks/create-doc.md"
-		},
-		{
 			"name": "create-prd",
 			"description": "Create PRD",
-			"targets": ["templates/prd-tmpl.yaml"],
-			"task": "tasks/create-doc.md"
+			"targets": ["templates/prd-tmpl.yaml", "tasks/create-doc.md"]
 		},
 		{
 			"name": "create-standalone-story",
 			"description": "Create a single brownfield story",
-			"task": "tasks/create-standalone-story.md"
+			"targets": ["tasks/create-standalone-story.md"]
 		},
 		{
-			"name": "research",
-			"description": "Create deep research prompt",
-			"parameters": ["topic"],
-			"targets": ["tasks/create-deep-research-prompt.md"]
+			"name": "document-project",
+			"description": "Document the high level PRD for an existing project",
+			"targets": ["templates/prd-tmpl.md"]
 		},
 		{
 			"name": "doc-out",
@@ -163,12 +155,11 @@
 	"dependencies": {
 		"checklists": ["change-checklist.md", "pm-checklist.md"],
 		"tasks": [
-			"create-deep-research-prompt.md",
 			"create-doc.md",
 			"execute-checklist.md",
 			"create-standalone-story.md"
 		],
-		"templates": ["brownfield-prd-tmpl.yaml", "prd-tmpl.yaml"]
+		"templates": ["prd-tmpl.yaml"]
 	}
 }
 ```

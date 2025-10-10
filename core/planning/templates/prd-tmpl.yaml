@@ -46,29 +46,6 @@ sections:
         elicit: true
         instruction: High-level narratives of critical flows that connect user goals to Functional Requirements; do not specify UI details.
 
-  - id: requirements
-    title: Requirements
-    required: true
-    instruction: Draft the list of functional and non functional requirements under the two child sections
-    elicit: true
-    sections:
-      - id: functional
-        title: Functional
-        required: true
-        type: numbered-list
-        prefix: FR
-        instruction: Each Requirement will be a bullet markdown and an identifier sequence starting with FR
-        examples:
-          - "FR6: The Todo List uses AI to detect and warn against potentially duplicate todo items that are worded differently."
-      - id: non-functional
-        title: Non Functional
-        required: true
-        type: numbered-list
-        prefix: NFR
-        instruction: Each Requirement will be a bullet markdown and an identifier sequence starting with NFR
-        examples:
-          - "NFR1: AWS service usage must aim to stay within free-tier limits where feasible."
-
   - id: ui-goals
     title: User Interface Design Goals
     required: false
@@ -113,38 +90,44 @@ sections:
           - "iPhone Only"
           - "ASCII Windows Desktop"
 
-  - id: technical-assumptions
-    title: Technical Assumptions
+  - id: requirements
+    title: Requirements
     required: true
-    instruction: |
-      Gather technical decisions that will guide the Architect. Steps:
-
-      1. Check if {@docs.files.codingStandards} or an attached coding-standards file exists - use it to pre-populate choices
-      2. Ask user about: languages, frameworks, starter templates, libraries, APIs, deployment targets
-      3. For unknowns, offer guidance based on project goals and MVP scope
-      4. Document ALL technical choices with rationale (why this choice fits the project)
-      5. These become constraints for the Architect - be specific and complete
+    instruction: Draft the list of functional and non functional requirements under the two child sections
     elicit: true
-    choices:
-      repository: [Monorepo, Polyrepo]
-      architecture: [Monolith, Microservices, Serverless]
-      testing: [Unit Only, Unit + Integration, Full Testing Pyramid]
     sections:
-      - id: repository-structure
-        title: "Repository Structure: {Monorepo|Polyrepo|Multi-repo}"
+      - id: functional
+        title: Functional
         required: true
-      - id: service-architecture
-        title: Service Architecture
+        type: numbered-list
+        prefix: FR
+        instruction: Each Requirement will be a bullet markdown and an identifier sequence starting with FR
+        examples:
+          - "FR6: The Todo List uses AI to detect and warn against potentially duplicate todo items that are worded differently."
+      - id: non-functional
+        title: Non Functional
         required: true
-        instruction: "CRITICAL DECISION - Document the high-level service architecture (e.g., Monolith, Microservices, Serverless functions within a Monorepo)."
-      - id: testing-requirements
-        title: Testing Requirements
-        required: true
-        instruction: "CRITICAL DECISION - Document the testing requirements, unit only, integration, e2e, manual, need for manual testing convenience methods)."
-      - id: additional-assumptions
-        title: Additional Technical Assumptions and Requests
-        required: true
-        instruction: Throughout the entire process of drafting this document, if any other technical assumptions are raised or discovered appropriate for the architect, add them here as additional bulleted items
+        type: numbered-list
+        prefix: NFR
+        instruction: Each Requirement will be a bullet markdown and an identifier sequence starting with NFR
+        examples:
+          - "NFR1: AWS service usage must aim to stay within free-tier limits where feasible."
+      - id: compatibility
+        title: Compatibility Requirements
+        required: false
+        instruction: Critical for brownfield - what must remain compatible
+        type: numbered-list
+        prefix: CR
+        template: "{{requirement}}: {{description}}"
+        items:
+            - id: cr1
+              template: "CR1: {{existing_api_compatibility}}"
+            - id: cr2
+              template: "CR2: {{database_schema_compatibility}}"
+            - id: cr3
+              template: "CR3: {{ui_ux_consistency}}"
+            - id: cr4
+              template: "CR4: {{integration_compatibility}}"
 
   - id: epic-list
     title: Epic List
@@ -174,13 +157,11 @@ sections:
 
   - id: next-steps
     title: Next Steps
-    required: true
+    required: false
     sections:
       - id: ux-expert-prompt
         title: UX Expert Prompt
-        required: false
         instruction: This section will contain the prompt for the UX Expert, keep it short and to the point to initiate create architecture mode using this document as input.
       - id: architect-prompt
         title: Architect Prompt
-        required: false
         instruction: This section will contain the prompt for the Architect, keep it short and to the point to initiate create architecture mode using this document as input.

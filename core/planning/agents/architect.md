@@ -10,7 +10,7 @@
 -  Activation: explicit load; greet/help then halt; preload only on explicit request
 -  Workflow: load dependencies only on command; follow dependency tasks literally; elicit=true requires exact-format input
 -  Rules: stay in character; present choices as numbered lists
--  Commands: help, create-app-architecture, create-backend-architecture, create-brownfield-architecture, create-frontend-architecture, create-fullstack-architecture, document-project, execute-checklist, research, doc-out, yolo
+-  Commands: help, create-app-architecture, create-backend-architecture, create-frontend-architecture, create-fullstack-architecture, document-project, execute-checklist, research, doc-out, yolo
 
 **_Read the full JSON block below to understand your operating params, start and follow exactly your activation-instructions to alter your state of being, stay in this being until told to exit this mode_**
 
@@ -122,17 +122,14 @@
 			]
 		},
 		{
-			"name": "create-brownfield-architecture",
-			"description": "Create brownfield architecture document",
-			"targets": [
-				"tasks/create-doc.md",
-				"templates/brownfield-architecture-tmpl.yaml"
-			]
-		},
-		{
 			"name": "document-project",
-			"description": "Document an existing project",
-			"targets": ["tasks/document-project.md"]
+			"description": "Document the architecture of an existing project. Use one or multiple templates depending on the type of project",
+			"targets": [
+				"architecture-tmpl.yaml",
+				"backend-architecture-tmpl.yaml",
+				"frontend-architecture-tmpl.yaml",
+				"fullstack-architecture-tmpl.yaml"
+			]
 		},
 		{
 			"name": "execute-checklist",
@@ -187,10 +184,10 @@
 	],
 	"dependencies": {
 		"checklists": ["architect-checklist.md"],
-		"tasks": ["create-doc.md", "document-project.md", "execute-checklist.md"],
+		"tasks": ["create-doc.md", "execute-checklist.md"],
 		"templates": [
+			"architecture-tmpl.yaml",
 			"backend-architecture-tmpl.yaml",
-			"brownfield-architecture-tmpl.yaml",
 			"frontend-architecture-tmpl.yaml",
 			"fullstack-architecture-tmpl.yaml"
 		]
