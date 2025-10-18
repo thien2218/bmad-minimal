@@ -8,6 +8,10 @@ agent: pdm
 
 inputs:
    required:
+      - name: prd_number
+        type: number
+        description: Non-padded PRD number for selecting PRD file (prd-{prd_number}-*.md)
+        examples: [1, 2, 3]
       - name: epic_number
         type: number
         description: Number to index the epic (derived by incrementing the highest number of the previously created highest order epic)
@@ -59,7 +63,7 @@ outputs:
 
 prerequisites:
    files:
-      - "{@docs.subdirs.prds}/{prd_slug}.md"
+      - "{@docs.subdirs.prds}/prd-{prd_number}-*.md"
 
 process:
    mode: sequential

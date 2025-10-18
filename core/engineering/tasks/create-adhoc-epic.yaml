@@ -7,6 +7,11 @@ category: planning
 agent: pdm
 
 inputs:
+   required:
+      - name: prd_number
+        type: number
+        description: Non-padded PRD number for selecting PRD file (prd-{prd_number}-*.md)
+        examples: [1, 2, 3]
    optional:
       - name: epic_enhancement_number
         type: number
@@ -22,6 +27,11 @@ outputs:
         path: "{@docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml"
         format: yaml
         description: Epic document in YAML matching core/engineering/schemas/epic.json
+      - name: Documentation Updates
+        type: file
+        path: "{@docs.dir}/"
+        format: markdown
+        description: Updated PRD and/or architecture documents if impacted
 
 prerequisites:
    files:
@@ -75,7 +85,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@docs.subdirs.prds}/prd-{prd_slug}.md"
+           target: "{@docs.subdirs.prds}/prd-{prd_number}-*.md"
            validation:
               type: string
               required: true
@@ -86,7 +96,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@docs.subdirs.prds}/prd-{prd_slug}.md"
+           target: "{@docs.subdirs.prds}/prd-{prd_number}-*.md"
            validation:
               type: string
               required: true
@@ -160,6 +170,48 @@ process:
               - story-breakdown (story-list and rationale)
               - dependencies
 
+      - id: ASSESS-DOCUMENT-IMPACT
+        title: Assess impact on PRD and architecture documents
+        description: Evaluate if this epic requires updates to existing documentation
+        action:
+           type: elicit
+           prompt: |
+              Evaluate whether this epic has any impact on the PRD and/or architecture documents:
+
+              PRD Impact:
+              - Update relevant sections (scope, requirements, constraints) if behavior or requirements change
+
+              Architecture Impact:
+              - Update affected files/sections if component responsibilities, data models, APIs, or patterns are affected
+
+              Options:
+              1. No impact on PRD or Architecture
+              2. PRD impact only
+              3. Architecture impact only
+              4. Both PRD and Architecture impact
+
+              Select the impact assessment:
+           options: ["1", "2", "3", "4"]
+           validation:
+              type: string
+              pattern: "^[1-4]$"
+              required: true
+
+      - id: UPDATE-DOCUMENTS
+        title: Update affected documentation if needed
+        description: Update PRD and/or architecture documents based on impact assessment
+        condition:
+          if: "inputs.impact_assessment != '1'"
+        action:
+          type: analysis
+          content: |
+            Based on impact assessment, update the affected documents:
+
+            - PRD: update relevant sections if behavior or requirements change
+            - Architecture: update affected files/sections if patterns are affected
+            - Record a brief note in the epic YAML summarizing documentation updates
+            - Create change-log record if PRD/Architecture are impacted (update the Change Log tables)
+
       - id: HANDOFF-1
         title: Provide Summary
         description: Summarize created epic file and next steps
@@ -187,6 +239,7 @@ completion:
       - Epic file created with Status Draft
       - Sections present per epic schema
       - Story list proposed with priorities
+      - Documentation impact is assessed and updates are made if needed
 
 metadata:
    author: Thien Huynh

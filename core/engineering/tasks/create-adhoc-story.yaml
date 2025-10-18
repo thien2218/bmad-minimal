@@ -25,6 +25,11 @@ outputs:
         path: "{@docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-*.yaml"
         format: yaml
         description: Story document in YAML matching core/engineering/schemas/story.json
+      - name: Documentation Updates
+        type: file
+        path: "{@docs.dir}/"
+        format: markdown
+        description: Updated PRD and/or architecture documents if impacted
    updates:
       - target: "{@docs.subdirs.stories}/*.yaml"
         sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
@@ -107,7 +112,7 @@ process:
            operation: read
            content: |
               Read:
-              - {@docs.subdirs.prds}/prd-{prd_slug}.md
+              - {@docs.subdirs.prds}/prd-*-{prd_slug}.md
 
       - id: EXTRACT-TECH
         title: Extract Technical Details for Story
@@ -149,22 +154,22 @@ process:
                 previous_story_insights: "{prior insights if any}"
                 data_models:
                   value: "{data models used}"
-                  source: "{@docs.subdirs.prds}/prd-{prd_slug}.md#{section}"
+                  source: "{@docs.subdirs.prds}/prd-*-{prd_slug}.md#{section}"
                 api_specifications:
                   value: "{API specs}"
-                  source: "{@docs.subdirs.prds}/prd-{prd_slug}.md#{section}"
+                  source: "{@docs.subdirs.prds}/prd-*-{prd_slug}.md#{section}"
                 component_specifications:
                   value: "{component specs}"
-                  source: "{@docs.subdirs.prds}/prd-{prd_slug}.md#{section}"
+                  source: "{@docs.subdirs.prds}/prd-*-{prd_slug}.md#{section}"
                 file_locations:
                   value: "{file paths and naming conventions}"
-                  source: "{@docs.subdirs.prds}/prd-{prd_slug}.md#{section}"
+                  source: "{@docs.subdirs.prds}/prd-*-{prd_slug}.md#{section}"
                 testing_requirements:
                   value: "{testing requirements}"
-                  source: "{@docs.subdirs.prds}/prd-{prd_slug}.md#{section}"
+                  source: "{@docs.subdirs.prds}/prd-*-{prd_slug}.md#{section}"
                 technical_constraints:
                   value: "{constraints}"
-                  source: "{@docs.subdirs.prds}/prd-{prd_slug}.md#{section}"
+                  source: "{@docs.subdirs.prds}/prd-*-{prd_slug}.md#{section}"
                 notes_missing_guidance: "If information for a category is not found, state: 'No specific guidance found in docs'"
               test_specs:
                 specs:
@@ -188,6 +193,48 @@ process:
                 completion_notes: []
                 file_list: []
               qa_results: ""
+
+      - id: ASSESS-DOCUMENT-IMPACT
+        title: Assess impact on PRD and architecture documents
+        description: Evaluate if this story requires updates to existing documentation
+        action:
+           type: elicit
+           prompt: |
+              Evaluate whether this story has any impact on the PRD and/or architecture documents:
+
+              PRD Impact:
+              - Update relevant sections (scope, requirements, constraints) if behavior or requirements change
+
+              Architecture Impact:
+              - Update affected files/sections if component responsibilities, data models, APIs, or patterns are affected
+
+              Options:
+              1. No impact on PRD or Architecture
+              2. PRD impact only
+              3. Architecture impact only
+              4. Both PRD and Architecture impact
+
+              Select the impact assessment:
+           options: ["1", "2", "3", "4"]
+           validation:
+              type: string
+              pattern: "^[1-4]$"
+              required: true
+
+      - id: UPDATE-DOCUMENTS
+        title: Update affected documentation if needed
+        description: Update PRD and/or architecture documents based on impact assessment
+        condition:
+          if: "inputs.impact_assessment != '1'"
+        action:
+          type: analysis
+          content: |
+            Based on impact assessment, update the affected documents:
+
+            - PRD: update relevant sections if behavior or requirements change
+            - Architecture: update affected files/sections if patterns are affected
+            - Record a brief note in the story YAML under dev_notes.doc_impact_summary summarizing documentation updates
+            - Create change-log record if PRD/Architecture are impacted (update the Change Log tables)
 
       - id: CHECKLIST-1
         title: Execute Story Draft Checklist
@@ -231,6 +278,7 @@ completion:
       - Story YAML created with Status Draft
       - Story content aligned with epic and PRD
       - Checklist executed
+      - Documentation impact is assessed and updates are made if needed
 
 metadata:
    author: Thien Huynh

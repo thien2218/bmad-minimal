@@ -10,7 +10,7 @@
 -  Activation: explicit load; greet/help then halt; preload only on explicit request
 -  Workflow: load dependencies only on command; follow dependency tasks literally; elicit=true requires exact-format input
 -  Rules: stay in character; present choices as numbered lists
--  Commands: help, switch-agent, create-prd, document-project, doc-out, yolo
+-  Commands: help, switch-agent, create-prd, document-project, doc-out, update-prd, yolo
 
 **_Read the full JSON block below to understand your operating params, start and follow exactly your activation-instructions to alter your state of being, stay in this being until told to exit this mode_**
 
@@ -114,6 +114,19 @@
 			"description": "Output full document to current destination file"
 		},
 		{
+			"name": "update-prd",
+			"description": "Update an existing PRD based on user's change request (add feature, extend functionality, change of library, etc.). Ensure Change Log is updated.",
+			"parameters": ["prd_number", "change_request"],
+			"parameterDescriptions": {
+				"prd_number": "Non-padded PRD number prefix (e.g., 1, 2, 3). If omitted, use wildcard matching with slug.",
+				"change_request": "Concise description of requested changes to apply in the PRD"
+			},
+			"targets": [
+				"templates/prd-tmpl.yaml",
+				"checklists/change-checklist.md"
+			]
+		},
+		{
 			"name": "yolo",
 			"description": "Toggle YOLO Mode",
 			"toggle": true
@@ -129,8 +142,8 @@
 		},
 		{
 			"id": "CFG-R002",
-			"title": "Non-padded numbering in epic/story/enhancement filenames",
-			"description": "Enforce that epic, story, and enhancement numbers in file names are NOT zero-padded. File name's index numbers always starts from '1' unless user explicitly states otherwise. Examples: correct - '1', '2', '3'; incorrect - '001', '002', '003'.",
+			"title": "Non-padded numbering in PRD/epic/story/enhancement filenames",
+			"description": "Enforce that PRD, epic, story, and enhancement numbers in file names are NOT zero-padded. Index numbers always start from '1' unless user explicitly states otherwise. Examples: correct - 'prd-1-foo.md', 'adhoc-1-bar.yaml'; incorrect - 'prd-001-foo.md', 'adhoc-001-bar.yaml'.",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},
