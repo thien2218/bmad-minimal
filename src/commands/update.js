@@ -10,7 +10,7 @@ const {
 	getCoreDir,
 } = require("../utils/fileOperations");
 const { ensureDocsStructure } = require("../services/docsService");
-const { findConfig } = require("../services/configService");
+const { findConfig, ensureDocsDefaults } = require("../services/configService");
 const {
 	getConfigFields,
 	shouldGenerateCSPrompt,
@@ -87,6 +87,8 @@ async function update(options) {
 
 	try {
 		const baseDir = path.join(cwd, configLocation.dir);
+
+		ensureDocsDefaults(config);
 
 		// Backup config.json
 		const configBackup = { ...config };

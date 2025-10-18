@@ -1,5 +1,10 @@
 const fs = require("fs-extra");
 const path = require("path");
+const {
+	getPrdDirectory,
+	normalizePrdSlug,
+	ensurePrdFilename,
+} = require("../utils/prdSlugUtils");
 
 /**
  * Copy core directories (engineering, planning) into a base directory.
@@ -33,7 +38,34 @@ async function ensureDocsStructure(cwd, configData) {
 	}
 }
 
+/**
+ * Create a PRD file name from a slug and ensure the directory exists.
+ * @param {string} prdDir
+ * @param {string} slug
+ * @returns {Promise<string>} absolute path to the PRD file
+ */
+async function resolvePrdPath(prdDir, slug) {
+	const normalizedSlug = normalizePrdSlug(slug);
+	const filename = ensurePrdFilename(normalizedSlug);
+	await fs.ensureDir(prdDir);
+	return path.join(prdDir, filename);
+}
+
+/**
+ * Detect legacy docs/prd.md file.
+ * @param {string} docsDir
+ * @returns {Promise<string|null>}
+ */
+async function detectLegacyPrd(docsDir) {
+	const legacyPath = path.join(docsDir, "prd.md");
+	const exists = await fs.pathExists(legacyPath);
+	return exists ? legacyPath : null;
+}
+
 module.exports = {
 	copyCoreDirectories,
 	ensureDocsStructure,
+	resolvePrdPath,
+	detectLegacyPrd,
+	getPrdDirectory,
 };
