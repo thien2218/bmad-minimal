@@ -1,127 +1,84 @@
 # Create Deep Research Prompt Task
 
-This task helps create comprehensive research prompts for various types of deep analysis. It can process inputs from brainstorming sessions, project briefs, market research, or specific research questions to generate targeted prompts for deeper investigation.
+This task helps create comprehensive research prompts centered on project idea exploration, user understanding, and technical feasibility. It can process inputs from brainstorming sessions, project briefs, or specific research questions to generate targeted prompts focused on product vision, user needs, and technical considerations.
 
 ## Purpose
 
 Generate well-structured research prompts that:
 
--  Define clear research objectives and scope
+-  Define clear investigation objectives and scope
 -  Specify appropriate research methodologies
 -  Outline expected deliverables and formats
--  Guide systematic investigation of complex topics
--  Ensure actionable insights are captured
+-  Guide systematic exploration of project ideas, user insights, and technical aspects
+-  Ensure actionable findings relevant to product development are captured
 
-## Research Type Selection
+## Research Focus Selection
 
-CRITICAL: First, help the user select the most appropriate research focus based on their needs and any input documents they've provided.
+CRITICAL: First, help the user select the most appropriate research focus based on their needs and any input documents they've provided. Keep the focus on project ideas, user perspectives, and technical feasibility.
 
-### 1. Research Focus Options
+### Research Focus Options
 
 Present these numbered options to the user:
 
-1. **Product Validation Research**
+1. **Project Concept Exploration**
 
-   -  Validate product hypotheses and market fit
-   -  Test assumptions about user needs and solutions
-   -  Assess technical and business feasibility
-   -  Identify risks and mitigation strategies
+   -  Clarify the core product idea and value proposition
+   -  Identify differentiating features or innovations
+   -  Define problem statements and solution framing
+   -  Surface assumptions that require validation
 
-2. **Market Opportunity Research**
+2. **User & Customer Understanding**
 
-   -  Analyze market size and growth potential
-   -  Identify market segments and dynamics
-   -  Assess market entry strategies
-   -  Evaluate timing and market readiness
+   -  Profile target users, personas, and contexts
+   -  Map goals, pains, and desired outcomes
+   -  Understand user workflows and journeys
+   -  Capture feedback needed to validate desirability
 
-3. **User & Customer Research**
+3. **Technical Feasibility Discovery**
 
-   -  Deep dive into user personas and behaviors
-   -  Understand jobs-to-be-done and pain points
-   -  Map customer journeys and touchpoints
-   -  Analyze willingness to pay and value perception
+   -  Assess technical approaches and architectural choices
+   -  Identify enabling technologies and constraints
+   -  Outline proof-of-concept or prototype requirements
+   -  Surface implementation risks and dependencies
 
-4. **Competitive Intelligence Research**
+4. **Custom Research Focus**
+   -  User-defined objectives aligned with project, user, or technical investigation
+   -  Specialized domain exploration within these boundaries
 
-   -  Detailed competitor analysis and positioning
-   -  Feature and capability comparisons
-   -  Business model and strategy analysis
-   -  Identify competitive advantages and gaps
-
-5. **Technology & Innovation Research**
-
-   -  Assess technology trends and possibilities
-   -  Evaluate technical approaches and architectures
-   -  Identify emerging technologies and disruptions
-   -  Analyze build vs. buy vs. partner options
-
-6. **Industry & Ecosystem Research**
-
-   -  Map industry value chains and dynamics
-   -  Identify key players and relationships
-   -  Analyze regulatory and compliance factors
-   -  Understand partnership opportunities
-
-7. **Strategic Options Research**
-
-   -  Evaluate different strategic directions
-   -  Assess business model alternatives
-   -  Analyze go-to-market strategies
-   -  Consider expansion and scaling paths
-
-8. **Risk & Feasibility Research**
-
-   -  Identify and assess various risk factors
-   -  Evaluate implementation challenges
-   -  Analyze resource requirements
-   -  Consider regulatory and legal implications
-
-9. **Custom Research Focus**
-   -  User-defined research objectives
-   -  Specialized domain investigation
-   -  Cross-functional research needs
-
-### 2. Input Processing
+### Input Processing
 
 **If Project Brief provided:**
 
 -  Extract key product concepts and goals
 -  Identify target users and use cases
--  Note technical constraints and preferences
--  Highlight uncertainties and assumptions
+-  Note technical constraints, preferences, and open questions
+-  Highlight uncertainties and assumptions needing deeper investigation
 
 **If Brainstorming Results provided:**
 
 -  Synthesize main ideas and themes
 -  Identify areas needing validation
--  Extract hypotheses to test
--  Note creative directions to explore
-
-**If Market Research provided:**
-
--  Build on identified opportunities
--  Deepen specific market insights
--  Validate initial findings
--  Explore adjacent possibilities
+-  Extract hypotheses to test with users or technical experiments
+-  Note creative directions that require deeper exploration
 
 **If Starting Fresh:**
 
 -  Gather essential context through questions
--  Define the problem space
--  Clarify research objectives
--  Establish success criteria
+-  Define the problem space and desired outcomes
+-  Clarify research objectives for project, user, or technical focus
+-  Establish success criteria for the investigation
 
 ## Process
 
-### 3. Research Prompt Structure
+### Research Prompt Structure
 
 CRITICAL: collaboratively develop a comprehensive research prompt with these components.
 
 #### A. Research Objectives
 
-CRITICAL: collaborate with the user to articulate clear, specific objectives for the research.
+CRITICAL: collaborate with the user to articulate clear, specific objectives tied to project concepts, user insights, or technical feasibility.
 
--  Primary research goal and purpose
+-  Primary investigation goal and purpose
 -  Key decisions the research will inform
 -  Success criteria for the research
 -  Constraints and boundaries
@@ -132,60 +89,59 @@ CRITICAL: collaborate with the user to develop specific, actionable research que
 
 **Core Questions:**
 
--  Central questions that must be answered
+-  Central questions about the product idea, user needs, or technical viability that must be answered
 -  Priority ranking of questions
 -  Dependencies between questions
 
 **Supporting Questions:**
 
+-  Follow-up questions to deepen understanding
 -  Additional context-building questions
--  Nice-to-have insights
--  Future-looking considerations
+-  Future-looking considerations related to product evolution
 
 #### C. Research Methodology
 
-**Data Collection Methods:**
+**Information Sources & Methods:**
 
--  Secondary research sources
--  Primary research approaches (if applicable)
--  Data quality requirements
--  Source credibility criteria
+-  User interviews, surveys, usability tests, or feedback loops
+-  Technical spikes, prototypes, or proof-of-concept experiments
+-  Review of internal documentation, previous projects, or domain knowledge
+-  Criteria for credible and useful inputs
 
-**Analysis Frameworks:**
+**Analysis & Synthesis Approaches:**
 
--  Specific frameworks to apply
--  Comparison criteria
--  Evaluation methodologies
--  Synthesis approaches
+-  Frameworks for evaluating user insights (e.g., JTBD, persona mapping)
+-  Technical evaluation checklists or architecture reviews
+-  Methods for synthesizing findings into actionable recommendations
 
 #### D. Output Requirements
 
 **Format Specifications:**
 
--  Executive summary requirements
--  Detailed findings structure
--  Visual/tabular presentations
--  Supporting documentation
+-  Executive summary highlighting key findings
+-  Sections dedicated to project concept clarity, user insights, and technical feasibility
+-  Visuals, diagrams, or tables if needed to communicate results
+-  Supporting documentation expectations (e.g., interview notes, prototype results)
 
 **Key Deliverables:**
 
--  Must-have sections and insights
--  Decision-support elements
--  Action-oriented recommendations
--  Risk and uncertainty documentation
+-  Must-have insights for the product team
+-  Decision-support elements for next planning steps
+-  Action-oriented recommendations and experiments
+-  Identified risks, assumptions, and follow-up questions
 
-### 4. Prompt Generation
+### Prompt Generation
 
 **Research Prompt Template:**
 
 ```markdown
 ## Research Objective
 
-[Clear statement of what this research aims to achieve]
+[Clear statement of what this research aims to achieve for the project idea, user understanding, or technical feasibility]
 
 ## Background Context
 
-[Relevant information from project brief, brainstorming, or other inputs]
+[Relevant information from project brief, brainstorming, technical notes, or other inputs]
 
 ## Research Questions
 
@@ -203,15 +159,15 @@ CRITICAL: collaborate with the user to develop specific, actionable research que
 
 ## Research Methodology
 
-### Information Sources
+### Information Sources & Methods
 
--  [Specific source types and priorities]
+-  [Specific user research, technical investigation, or document review approaches]
 
-### Analysis Frameworks
+### Analysis Approaches
 
--  [Specific frameworks to apply]
+-  [Frameworks or evaluation criteria to apply]
 
-### Data Requirements
+### Data & Evidence Requirements
 
 -  [Quality, recency, credibility needs]
 
@@ -225,13 +181,13 @@ CRITICAL: collaborate with the user to develop specific, actionable research que
 
 ### Detailed Analysis
 
-[Specific sections needed based on research type]
+[Specific sections for project concept insights, user findings, and technical evaluation]
 
 ### Supporting Materials
 
--  Data tables
--  Comparison matrices
--  Source documentation
+-  Interview notes or transcripts
+-  Prototype or experiment results
+-  Technical documentation references
 
 ## Success Criteria
 
@@ -263,20 +219,20 @@ CRITICAL: collaborate with the user to develop specific, actionable research que
    -  Add missing elements
    -  Clarify ambiguities
 
-### 6. Next Steps Guidance
+### Next Steps Guidance
 
 **Execution Options:**
 
-1. **Use with AI Research Assistant**: Provide this prompt to an AI model with research capabilities
+1. **Use with AI Research Assistant**: Provide this prompt to an AI model with project, user, or technical research capabilities
 2. **Guide Human Research**: Use as a framework for manual research efforts
 3. **Hybrid Approach**: Combine AI and human research using this structure
 
 **Integration Points:**
 
--  How findings will feed into next phases
+-  How findings will feed into planning artifacts (project brief, PRD, architecture)
 -  Which team members should review results
--  How to validate findings
--  When to revisit or expand research
+-  How to validate findings with stakeholders or technical leads
+-  When to revisit or expand research based on outcomes
 
 ## Important Notes
 

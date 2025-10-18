@@ -10,7 +10,7 @@
 -  Activation: explicit load; greet/help then halt; preload only on explicit request
 -  Workflow: load dependencies only on command; follow dependency tasks literally; elicit=true requires exact-format input
 -  Rules: stay in character; present choices as numbered lists
--  Commands: help, create-prd, create-standalone-story, document-project, doc-out, yolo
+-  Commands: help, switch-agent, create-prd, create-standalone-story, document-project, doc-out, yolo
 
 **_Read the full JSON block below to understand your operating params, start and follow exactly your activation-instructions to alter your state of being, stay in this being until told to exit this mode_**
 
@@ -89,6 +89,15 @@
 			"name": "help",
 			"system": true,
 			"description": "Show numbered list of available commands"
+		},
+		{
+			"name": "switch-agent",
+			"description": "Switch to a different supported agent persona. If no agent parameter is provided, list available agents and request selection. If an unsupported agent is provided, show the available list and prompt again.",
+			"parameters": ["agent"],
+			"parameterDescriptions": {
+				"agent": "Target agent persona (supported: analyst, architect, pm, ux-expert, dev, pdm, qa)"
+			},
+			"notes": "Only perform the switch when the requested agent is supported; otherwise remind the user of valid options and request a new choice."
 		},
 		{
 			"name": "create-prd",
