@@ -51,9 +51,8 @@ process:
       action:
         type: analysis
         content: |
-          Inspect {@docs.subdirs.brownfield} for files:
-          - prd-enh-*.md
-          - architecture-enh-*.md
+          Inspect {@docs.subdirs.epics} for files:
+          - enh-*.yaml
           Extract all enhancement numbers and compute the maximum value.
           If input epic_enhancement_number is provided, use it instead.
 
@@ -76,7 +75,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{@docs.subdirs.brownfield}/prd-enh-{epic_enhancement_number}.md"
+        target: "{@docs.subdirs.prds}/prd-{prd_slug}.md"
         validation:
           type: string
           required: true
@@ -87,7 +86,7 @@ process:
       action:
         type: file_operation
         operation: read
-        target: "{@docs.subdirs.brownfield}/architecture-enh-{epic_enhancement_number}.md"
+        target: "{@docs.subdirs.prds}/prd-{prd_slug}.md"
         validation:
           type: string
           required: true
@@ -179,8 +178,8 @@ dependencies:
     - pd-master-checklist.yaml
 
 blocking_conditions:
-  - condition: "PRD or Architecture file for detected enhancement not found"
-    message: "Missing brownfield docs (prd-enh/architecture-enh). Cannot derive epic."
+  - condition: "PRD file for detected enhancement not found"
+    message: "Missing PRD docs. Cannot derive epic."
     severity: critical
 
 completion:

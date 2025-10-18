@@ -107,8 +107,7 @@ process:
         operation: read
         content: |
           Read:
-          - {@docs.subdirs.brownfield}/prd-enh-{epic_enhancement_number}.md
-          - {@docs.subdirs.brownfield}/architecture-enh-{epic_enhancement_number}.md
+          - {@docs.subdirs.prds}/prd-{prd_slug}.md
 
     - id: EXTRACT-TECH
       title: Extract Technical Details for Story
@@ -150,22 +149,22 @@ process:
             previous_story_insights: "{prior insights if any}"
             data_models:
               value: "{data models used}"
-              source: "{@docs.subdirs.brownfield}/architecture-enh-{epic_enhancement_number}.md#{section}"
+              source: "{@docs.subdirs.prds}/prd-{prd_slug}.md#{section}"
             api_specifications:
               value: "{API specs}"
-              source: "{@docs.subdirs.brownfield}/architecture-enh-{epic_enhancement_number}.md#{section}"
+              source: "{@docs.subdirs.prds}/prd-{prd_slug}.md#{section}"
             component_specifications:
               value: "{component specs}"
-              source: "{@docs.subdirs.brownfield}/architecture-enh-{epic_enhancement_number}.md#{section}"
+              source: "{@docs.subdirs.prds}/prd-{prd_slug}.md#{section}"
             file_locations:
               value: "{file paths and naming conventions}"
-              source: "{@docs.subdirs.brownfield}/architecture-enh-{epic_enhancement_number}.md#{section}"
+              source: "{@docs.subdirs.prds}/prd-{prd_slug}.md#{section}"
             testing_requirements:
               value: "{testing requirements}"
-              source: "{@docs.subdirs.brownfield}/architecture-enh-{epic_enhancement_number}.md#{section}"
+              source: "{@docs.subdirs.prds}/prd-{prd_slug}.md#{section}"
             technical_constraints:
               value: "{constraints}"
-              source: "{@docs.subdirs.brownfield}/architecture-enh-{epic_enhancement_number}.md#{section}"
+              source: "{@docs.subdirs.prds}/prd-{prd_slug}.md#{section}"
             notes_missing_guidance: "If information for a category is not found, state: 'No specific guidance found in docs'"
           test_specs:
             specs:
@@ -230,7 +229,7 @@ blocking_conditions:
 completion:
   criteria:
     - Story YAML created with Status Draft
-    - Story content aligned with epic and brownfield PRD/Architecture
+    - Story content aligned with epic and PRD
     - Checklist executed
 
 metadata:
@@ -238,7 +237,6 @@ metadata:
   created: 2025-09-05
   lastModified: 2025-09-05
   tags:
-    - brownfield
     - story
     - planning
   complexity: moderate

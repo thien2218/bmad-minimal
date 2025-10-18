@@ -13,8 +13,7 @@
 		"subdirs": {
 			"qa": "qa",
 			"epics": "epics",
-			"stories": "stories",
-			"brownfield": "brownfield"
+			"stories": "stories"
 		},
 		"files": {
 			"prd": "prd.md",

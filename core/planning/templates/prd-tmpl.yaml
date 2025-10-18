@@ -115,7 +115,7 @@ sections:
       - id: compatibility
         title: Compatibility Requirements
         required: false
-        instruction: Critical for brownfield - what must remain compatible
+        instruction: CRITICAL - what must remain compatible
         type: numbered-list
         prefix: CR
         template: "{{requirement}}: {{description}}"

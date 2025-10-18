@@ -106,7 +106,7 @@
 		},
 		{
 			"name": "create-standalone-story",
-			"description": "Create a single brownfield story",
+			"description": "Create a single story",
 			"targets": ["tasks/create-standalone-story.md"]
 		},
 		{

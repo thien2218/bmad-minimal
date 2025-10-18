@@ -108,7 +108,6 @@ async function install(options) {
 		console.log(`   ├── ${configData.docs.subdirs.epics}/`);
 		console.log(`   ├── ${configData.docs.subdirs.stories}/`);
 		console.log(`   ├── ${configData.docs.subdirs.qa}/`);
-		console.log(`   ├── ${configData.docs.subdirs.brownfield}/`);
 		console.log(`   ├── ${configData.docs.subdirs.prds}/`);
 		console.log(`   └── coding-standards.md`);
 

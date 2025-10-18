@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Create a single user story for very small brownfield standalone enhancements that can be completed in one focused development session. This task is for minimal additions or bug fixes that require existing system integration awareness.
+Create a single user story for very small standalone enhancements that can be completed in one focused development session. This task is for minimal additions or bug fixes that require existing system integration awareness.
 
 ## When to Use This Task
 
@@ -20,7 +20,7 @@ Create a single user story for very small brownfield standalone enhancements tha
 -  Some design work is needed
 -  Multiple integration points are involved
 
-**Use the full brownfield PRD/Architecture process when:**
+**Use the full PRD/Architecture process when:**
 
 -  The enhancement requires multiple coordinated stories
 -  Architectural planning is needed
@@ -276,7 +276,7 @@ Evaluate whether this story has any impact on the PRD and/or architecture docume
 -  PRD: update relevant sections (e.g., scope, requirements, constraints) if behavior or requirements change
 -  Architecture: update affected files/sections (e.g., `{@docs.files.feArchitecture}`, `{@docs.files.beArchitecture}`, `{@docs.files.fsArchitecture}`) if component responsibilities, data models, APIs, or patterns are affected
 -  Record a brief note in the story YAML under `dev-notes` summarizing any documentation updates (or state "No updates needed")
--  If PRD or Architecture are impacted, also create a brownfield record file under `{@docs.subdirs.brownfield}` using the schema below to permanently record delta changes introduced by this standalone story.
+-  If PRD or Architecture are impacted, also create a record file under `{@docs.dir}` using the schema below to permanently record delta changes introduced by this standalone story.
 
 Checklist:
 
@@ -291,7 +291,7 @@ Checklist:
 
 #### Brownfield Record Schema (JSON)
 
-Create a brownfield record JSON file if PRD/Architecture are impacted. Save to `{@docs.subdirs.brownfield}` with a descriptive, kebab-case filename:
+Create a record JSON file if PRD/Architecture are impacted. Save to `{@docs.dir}` with a descriptive, kebab-case filename:
 
 ```json
 {
@@ -301,8 +301,8 @@ Create a brownfield record JSON file if PRD/Architecture are impacted. Save to `
 		"version": "1.0",
 		"output": {
 			"format": "json",
-			"filename": "{@docs.subdirs.brownfield}/{{brownfield_change_number}}-{{change_title_short}}.json",
-			"title": "Brownfield: {{change_title_short}} for standln-{{story_enhancement_number}} story"
+			"filename": "{@docs.dir}/{{change_number}}-{{change_title_short}}.json",
+			"title": "Change: {{change_title_short}} for standln-{{story_enhancement_number}} story"
 		}
 	},
 	"workflow": {
@@ -463,7 +463,7 @@ The story creation is successful when:
 
 ## Important Notes
 
--  This task is for VERY SMALL brownfield changes only
+-  This task is for VERY SMALL changes only
 -  If complexity grows during analysis, escalate to create-epic
 -  Always prioritize existing system integrity
 -  When in doubt about integration complexity, use create-epic instead
