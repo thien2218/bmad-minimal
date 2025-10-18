@@ -7,202 +7,200 @@ category: quality
 agent: qa
 
 inputs:
-  required:
-    - name: outline
-      type: string
-      description: Plain‑English outline of the intended test cases (e.g., describe/it statements or bullet points) describing expectations without implementation code.
-      examples:
-        - |
-          describe("SessionService.verifyToken", () => {
-            it("should call the 'verify' helper function from hono/jwt");
-            it("should return the verified token");
-            it("should return null if token is not verified");
-          });
-  optional:
-    - name: story_id
-      type: story_id
-      description: Story identifier in format {epic}.{story} or standln-{story_number} or enh-{epic_number}.{story_number}
-      pattern: "^\\d+\\.\\d+$"
-      examples: ["1.3", "2.5"]
-    - name: story_path
-      type: path
-      description: Optional path to the story file from docs.subdirs.stories in config.json, used for AC traceability if provided
-      pattern: "{@docs.subdirs.stories}/{story_id}-*.yaml"
+   required:
+      - name: outline
+        type: string
+        description: Plain‑English outline of the intended test cases (e.g., describe/it statements or bullet points) describing expectations without implementation code.
+        examples:
+           - |
+              describe("SessionService.verifyToken", () => {
+                it("should call the 'verify' helper function from hono/jwt");
+                it("should return the verified token");
+                it("should return null if token is not verified");
+              });
+   optional:
+      - name: story_id
+        type: story_id
+        description: Story identifier in format {epic}.{story} or standln-{story_number} or adhoc-{epic_number}.{story_number}
+        pattern: "^\\d+\\.\\d+$"
+        examples: ["1.3", "2.5"]
+      - name: story_path
+        type: path
+        description: Optional path to the story file from docs.subdirs.stories in config.json, used for AC traceability if provided
+        pattern: "{@docs.subdirs.stories}/{story_id}-*.yaml"
 
 prerequisites:
-  files:
-    - "{@baseDir}/config.json"
+   files:
+      - "{@baseDir}/config.json"
 
 process:
-  mode: sequential
-  steps:
-    - id: LOAD-CONFIG
-      title: Load Configuration
-      description: Load core configuration for docs and path resolution.
-      action:
-        type: file_operation
-        operation: read
-        target: "{@baseDir}/config.json"
-      on_failure: halt
+   mode: sequential
+   steps:
+      - id: LOAD-CONFIG
+        title: Load Configuration
+        description: Load core configuration for docs and path resolution.
+        action:
+           type: file_operation
+           operation: read
+           target: "{@baseDir}/config.json"
+        on_failure: halt
 
-    - id: NORMALIZE-OUTLINE
-      title: Normalize Outline
-      description: Normalize the provided outline into a structured list of scenarios (e.g., describe/it pairs or bullet items) suitable for analysis.
-      action:
-        type: analysis
-        content: |
-          Normalize the outline by:
-          - Extracting scenario titles and intents from describe/it statements or bullets
-          - Removing code‑specific syntax; keep human‑readable expectations
-          - Producing a numbered list of scenarios for downstream analysis
+      - id: NORMALIZE-OUTLINE
+        title: Normalize Outline
+        description: Normalize the provided outline into a structured list of scenarios (e.g., describe/it pairs or bullet items) suitable for analysis.
+        action:
+           type: analysis
+           content: |
+              Normalize the outline by:
+              - Extracting scenario titles and intents from describe/it statements or bullets
+              - Removing code‑specific syntax; keep human‑readable expectations
+              - Producing a numbered list of scenarios for downstream analysis
 
-    - id: LOAD-STORY
-      title: Load Story (Optional)
-      description: If story_path is provided, load the story file for AC traceability. If not provided or not found, continue without traceability.
-      action:
-        type: file_operation
-        operation: read
-        target: "{story_path}"
-      on_failure: continue
+      - id: LOAD-STORY
+        title: Load Story (Optional)
+        description: If story_path is provided, load the story file for AC traceability. If not provided or not found, continue without traceability.
+        action:
+           type: file_operation
+           operation: read
+           target: "{story_path}"
+        on_failure: continue
 
-    - id: TRACEABILITY
-      title: Traceability to Acceptance Criteria (If Story Provided)
-      description: Map each scenario from the outline to Acceptance Criteria; if no story provided, skip this step.
-      action:
-        type: analysis
-        content: |
-          For each scenario in the normalized outline:
-          - If a story is loaded, identify the AC number(s) or requirement it validates
-          - Mark "untraceable" if no AC/requirement can be linked
-          - Summarize a coverage table: scenario_id -> [ACs]
-        
-    - id: WRITE-SPECS
-      title: Update Test Specs in Story (Optional)
-      description: If story_path is provided and loaded, write/update the story's Test Specs section with the normalized outline before reporting.
-      action:
-        type: file_operation
-        operation: update
-        target: "{story_path}"
-        content: |
-          Update the "Test Specs" section as follows:
-          - Under "Specifications", write a numbered list from the normalized outline. Each item should be a short, clear, test-intent sentence. Include AC references if available from traceability.
-          - Under "Artifacts", append any test file paths if provided by the user; otherwise leave unchanged.
-          - Do not modify any other story sections.
-      on_failure: halt
+      - id: TRACEABILITY
+        title: Traceability to Acceptance Criteria (If Story Provided)
+        description: Map each scenario from the outline to Acceptance Criteria; if no story provided, skip this step.
+        action:
+           type: analysis
+           content: |
+              For each scenario in the normalized outline:
+              - If a story is loaded, identify the AC number(s) or requirement it validates
+              - Mark "untraceable" if no AC/requirement can be linked
+              - Summarize a coverage table: scenario_id -> [ACs]
 
-    - id: COVERAGE
-      title: Coverage Assessment
-      description: Check breadth of coverage across functional dimensions.
-      action:
-        type: analysis
-        content: |
-          Assess whether the outline includes:
-          - Positive paths and happy flows
-          - Negative/error cases and validation failures
-          - Edge/boundary values
-          - State transitions and lifecycle
-          - Multi‑step flows and integration seams
-          - Concurrency/async considerations (where relevant)
-          Output gaps grouped by dimension.
+      - id: WRITE-SPECS
+        title: Update Test Specs in Story (Optional)
+        description: If story_path is provided and loaded, write/update the story's Test Specs section with the normalized outline before reporting.
+        action:
+           type: file_operation
+           operation: update
+           target: "{story_path}"
+           content: |
+              Update the "Test Specs" section as follows:
+              - Under "Specifications", write a numbered list from the normalized outline. Each item should be a short, clear, test-intent sentence. Include AC references if available from traceability.
+              - Under "Artifacts", append any test file paths if provided by the user; otherwise leave unchanged.
+              - Do not modify any other story sections.
+        on_failure: halt
 
-    - id: NFR-RELEVANCE
-      title: Non‑Functional Considerations
-      description: Evaluate whether relevant non‑functional aspects are addressed where applicable.
-      action:
-        type: analysis
-        content: |
-          Check for NFR‑focused outline items where appropriate:
-          - Performance (code‑level critical paths)
-          - Security/authz/authn, input validation
-          - Accessibility (a11y), i18n/l10n (for UI)
-          - Observability/logging, data integrity
-          Note missing or mis‑scoped NFRs; NFR depth should be risk‑based.
+      - id: COVERAGE
+        title: Coverage Assessment
+        description: Check breadth of coverage across functional dimensions.
+        action:
+           type: analysis
+           content: |
+              Assess whether the outline includes:
+              - Positive paths and happy flows
+              - Negative/error cases and validation failures
+              - Edge/boundary values
+              - State transitions and lifecycle
+              - Multi‑step flows and integration seams
+              - Concurrency/async considerations (where relevant)
+              Output gaps grouped by dimension.
 
-    - id: QUALITY
-      title: Outline Quality and Testability
-      description: Assess clarity and executability of the outline.
-      action:
-        type: analysis
-        content: |
-          Validate outline quality:
-          - Clear Given‑When‑Then intent (or equivalent) per scenario, unambiguous
-          - Single intent per scenario where practical
-          - Deterministic setup/teardown assumptions
-          - Test data needs are identified or referenced
-          - Mocks/stubs/fixtures needs specified where needed
-          - Avoid overlapping/over‑broad items
+      - id: NFR-RELEVANCE
+        title: Non‑Functional Considerations
+        description: Evaluate whether relevant non‑functional aspects are addressed where applicable.
+        action:
+           type: analysis
+           content: |
+              Check for NFR‑focused outline items where appropriate:
+              - Performance (code‑level critical paths)
+              - Security/authz/authn, input validation
+              - Accessibility (a11y), i18n/l10n (for UI)
+              - Observability/logging, data integrity
+              Note missing or mis‑scoped NFRs; NFR depth should be risk‑based.
 
-    - id: DEDUP-CONFLICTS
-      title: Redundancies and Contradictions
-      description: Identify duplicate, overlapping, or conflicting outline items and propose consolidation.
-      action:
-        type: analysis
-        content: |
-          - List redundant scenarios and propose de‑duplication
-          - Flag contradictions and suggest a single reliable source
+      - id: QUALITY
+        title: Outline Quality and Testability
+        description: Assess clarity and executability of the outline.
+        action:
+           type: analysis
+           content: |
+              Validate outline quality:
+              - Clear Given‑When‑Then intent (or equivalent) per scenario, unambiguous
+              - Single intent per scenario where practical
+              - Deterministic setup/teardown assumptions
+              - Test data needs are identified or referenced
+              - Mocks/stubs/fixtures needs specified where needed
+              - Avoid overlapping/over‑broad items
 
-    - id: PRIORITIZE-GAPS
-      title: Prioritize Gaps by Risk
-      description: Classify gaps using P0/P1/P2 and propose focused additions.
-      action:
-        type: analysis
-        content: |
-          - Classify gaps: P0 (security/revenue‑critical), P1 (core flows), P2 (secondary)
-          - For each P0 gap, provide 1–2 example outline items to add (concise)
+      - id: DEDUP-CONFLICTS
+        title: Redundancies and Contradictions
+        description: Identify duplicate, overlapping, or conflicting outline items and propose consolidation.
+        action:
+           type: analysis
+           content: |
+              - List redundant scenarios and propose de‑duplication
+              - Flag contradictions and suggest a single reliable source
 
-    - id: REPORT
-      title: Produce Actionable Report (Direct Output)
-      description: Output a concise, structured report to the console only (no files).
-      action:
-        type: analysis
-        content: |
-          Output (numbered list sections):
-          1) What's good
-          2) Gaps (by dimension and risk)
-          3) Ambiguities
-          4) Redundancies/Conflicts
-          5) Actionable next steps (ordered by risk)
+      - id: PRIORITIZE-GAPS
+        title: Prioritize Gaps by Risk
+        description: Classify gaps using P0/P1/P2 and propose focused additions.
+        action:
+           type: analysis
+           content: |
+              - Classify gaps: P0 (security/revenue‑critical), P1 (core flows), P2 (secondary)
+              - For each P0 gap, provide 1–2 example outline items to add (concise)
+
+      - id: REPORT
+        title: Produce Actionable Report (Direct Output)
+        description: Output a concise, structured report to the console only (no files).
+        action:
+           type: analysis
+           content: |
+              Output (numbered list sections):
+              1) What's good
+              2) Gaps (by dimension and risk)
+              3) Ambiguities
+              4) Redundancies/Conflicts
+              5) Actionable next steps (ordered by risk)
 
 blocking_conditions:
-  - condition: "Outline not provided"
-    message: "Provide outline text with it‑statements or bullet points"
-    severity: error
+   - condition: "Outline not provided"
+     message: "Provide outline text with it‑statements or bullet points"
+     severity: error
 
 completion:
-  criteria:
-    - Outline normalized for analysis
-    - (If story provided) Traceability mapping created
-    - Coverage gaps identified
-    - NFR considerations evaluated (as applicable)
-    - Outline quality and redundancy analysis completed
-    - Actionable report produced (direct output)
+   criteria:
+      - Outline normalized for analysis
+      - (If story provided) Traceability mapping created
+      - Coverage gaps identified
+      - NFR considerations evaluated (as applicable)
+      - Outline quality and redundancy analysis completed
+      - Actionable report produced (direct output)
 
 outputs:
-  updates:
-    - target: "{story_path}"
-      sections:
-        - "Test Specs"
-      restrictions: "QA agent may edit only the 'Test Specs' field; do not modify other sections"
+   updates:
+      - target: "{story_path}"
+        sections:
+           - "Test Specs"
+        restrictions: "QA agent may edit only the 'Test Specs' field; do not modify other sections"
 
 dependencies:
-  schemas:
-    - story.json
-  data:
-    - test-levels-framework.yaml
-    - test-priorities-matrix.yaml
+   schemas:
+      - story.json
+   data:
+      - test-levels-framework.yaml
+      - test-priorities-matrix.yaml
 
 metadata:
-  author: Thien Huynh
-  created: "2025-09-07"
-  lastModified: "2025-09-07"
-  tags:
-    - qa
-    - specs
-    - outline
-    - review
-    - coverage
-    - quality
-  complexity: low
-  estimated_duration: "5m-20m"
-
-
+   author: Thien Huynh
+   created: "2025-09-07"
+   lastModified: "2025-09-07"
+   tags:
+      - qa
+      - specs
+      - outline
+      - review
+      - coverage
+      - quality
+   complexity: low
+   estimated_duration: "5m-20m"

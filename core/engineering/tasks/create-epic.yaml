@@ -14,7 +14,7 @@ inputs:
         examples: [1, 3, 4]
       - name: enhancement_name
         type: string
-        description: Name of the brownfield enhancement
+        description: Name of the enhancement
         examples:
            [
               "Add Export Feature",
@@ -227,13 +227,13 @@ dependencies:
 
 blocking_conditions:
    - condition: "Enhancement requires more than 3 stories"
-     message: Scope too large for this task - use full brownfield PRD process
+     message: Scope too large for this task - use full PRD process
      severity: error
    - condition: "Significant architectural changes required"
-     message: Architectural planning needed - use full brownfield process
+     message: Architectural planning needed - use full process
      severity: error
    - condition: "High risk to existing system"
-     message: Risk assessment needed - use full brownfield process
+     message: Risk assessment needed - use full process
      severity: error
 
 completion:

@@ -1,0 +1,630 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://bmad.ai/schemas/agent.schema.json",
+	"title": "Agent Schema",
+	"description": "Schema for agent configuration JSON files used by BMAD agents",
+	"type": "object",
+	"required": [
+		"meta",
+		"precedence",
+		"glossary",
+		"activation",
+		"workflow",
+		"persona",
+		"commandPrefix",
+		"commands",
+		"rules",
+		"dependencies"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"$schema": {
+			"type": "string",
+			"description": "Reference to this schema file (for validation)",
+			"const": "../../.internal/agent.schema.json"
+		},
+		"meta": {
+			"type": "object",
+			"description": "Metadata about the agent configuration",
+			"required": ["version", "lastUpdated", "owner"],
+			"additionalProperties": false,
+			"properties": {
+				"version": {
+					"type": "string",
+					"description": "Semantic version of the agent configuration",
+					"pattern": "^\\d+\\.\\d+\\.\\d+$",
+					"examples": ["1.1.0", "2.0.0"]
+				},
+				"lastUpdated": {
+					"type": "string",
+					"description": "Date of last update",
+					"format": "date",
+					"examples": ["2025-08-18", "2025-10-10"]
+				},
+				"owner": {
+					"type": "string",
+					"description": "Owner/maintainer of the agent",
+					"examples": ["thienhuynh"]
+				}
+			}
+		},
+		"precedence": {
+			"type": "array",
+			"description": "Order of precedence for rules and policies",
+			"items": {
+				"type": "string",
+				"enum": [
+					"policy",
+					"rules.hard",
+					"commands",
+					"activation",
+					"workflow",
+					"rules.soft",
+					"persona"
+				]
+			},
+			"minItems": 7,
+			"maxItems": 7
+		},
+		"glossary": {
+			"type": "object",
+			"description": "Definitions of key terms used by the agent",
+			"additionalProperties": true,
+			"properties": {
+				"dependencyTask": {
+					"type": "string",
+					"description": "Definition of dependency task"
+				},
+				"formalDependencyTask": {
+					"type": "string",
+					"description": "Definition of formal dependency task"
+				},
+				"executableCommand": {
+					"type": "string",
+					"description": "Definition of executable command"
+				},
+				"elicit": {
+					"type": "string",
+					"description": "Definition of elicitation step"
+				},
+				"confidence": {
+					"type": "string",
+					"description": "Definition of confidence score"
+				}
+			}
+		},
+		"policy": {
+			"type": "object",
+			"description": "Policy configuration for agents with override capabilities",
+			"additionalProperties": false,
+			"properties": {
+				"canOverrideBaseBehavior": {
+					"type": "string",
+					"enum": ["scoped", "none", "full"],
+					"default": "none"
+				},
+				"overrideScope": {
+					"type": "object",
+					"properties": {
+						"allowed": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"disallowed": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"safetyGuard": {
+					"type": "string",
+					"description": "Safety guard policy description"
+				},
+				"onOverrideAttempt": {
+					"type": "object",
+					"properties": {
+						"action": {
+							"type": "string",
+							"enum": ["reject_and_notify", "log_and_continue", "abort"]
+						},
+						"notifyUserFormat": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		},
+		"activation": {
+			"type": "object",
+			"description": "Activation configuration for the agent",
+			"required": ["preconditions", "initialActions"],
+			"additionalProperties": false,
+			"properties": {
+				"preconditions": {
+					"type": "object",
+					"required": [
+						"requireExplicitLoad",
+						"loadAlwaysFiles",
+						"readPersonaFile",
+						"onMissingFiles"
+					],
+					"additionalProperties": false,
+					"properties": {
+						"requireExplicitLoad": {
+							"type": "boolean",
+							"description": "Whether explicit loading is required"
+						},
+						"loadAlwaysFiles": {
+							"type": "array",
+							"description": "Files that should always be loaded",
+							"items": {
+								"type": "string"
+							}
+						},
+						"readPersonaFile": {
+							"type": "boolean",
+							"description": "Whether to read persona file"
+						},
+						"onMissingFiles": {
+							"type": "string",
+							"enum": ["ask_user", "abort", "continue"],
+							"description": "What to do when files are missing"
+						}
+					}
+				},
+				"initialActions": {
+					"type": "object",
+					"required": [
+						"greetOnActivate",
+						"autoRunHelp",
+						"postActivationHalt"
+					],
+					"additionalProperties": false,
+					"properties": {
+						"greetOnActivate": {
+							"type": "boolean",
+							"description": "Whether to greet on activation"
+						},
+						"autoRunHelp": {
+							"type": "boolean",
+							"description": "Whether to auto-run help"
+						},
+						"postActivationHalt": {
+							"type": "boolean",
+							"description": "Whether to halt after activation"
+						},
+						"haltBehaviorNote": {
+							"type": "string",
+							"description": "Additional notes about halt behavior"
+						},
+						"agentCustomizationPrecedence": {
+							"type": "boolean",
+							"description": "Whether agent customization takes precedence"
+						}
+					}
+				},
+				"preloadPolicy": {
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"loadOn": {
+							"type": "array",
+							"items": {
+								"type": "string",
+								"enum": ["explicit_request", "activation", "always"]
+							}
+						}
+					}
+				},
+				"workflowRules": {
+					"type": "array",
+					"description": "Workflow rules to follow",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"workflow": {
+			"type": "object",
+			"description": "Workflow configuration",
+			"required": ["resolvePaths"],
+			"additionalProperties": false,
+			"properties": {
+				"resolvePaths": {
+					"type": "object",
+					"required": [
+						"purpose",
+						"basePath",
+						"folderTypes",
+						"pattern",
+						"loadPolicy",
+						"onUnresolvablePath"
+					],
+					"additionalProperties": false,
+					"properties": {
+						"purpose": {
+							"type": "string",
+							"description": "Purpose of path resolution"
+						},
+						"basePath": {
+							"type": "string",
+							"description": "Base path for resolution"
+						},
+						"folderTypes": {
+							"type": "array",
+							"description": "Types of folders to resolve",
+							"items": {
+								"type": "string"
+							}
+						},
+						"pattern": {
+							"type": "string",
+							"description": "Pattern for path resolution"
+						},
+						"loadPolicy": {
+							"type": "string",
+							"description": "Policy for loading files"
+						},
+						"onUnresolvablePath": {
+							"type": "string",
+							"enum": ["ask_user", "abort", "skip"],
+							"description": "What to do when path cannot be resolved"
+						},
+						"examples": {
+							"type": "array",
+							"description": "Examples of path resolution",
+							"items": {
+								"type": "object",
+								"properties": {
+									"userPhrase": {
+										"type": "string"
+									},
+									"action": {
+										"type": "string"
+									},
+									"targets": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"requestMapping": {
+					"type": "object",
+					"description": "Request mapping configuration",
+					"additionalProperties": false,
+					"properties": {
+						"purpose": {
+							"type": "string"
+						},
+						"strategy": {
+							"type": "string",
+							"enum": ["flexible-match", "exact-match", "pattern-match"]
+						},
+						"askForClarificationIfNoClearMatch": {
+							"type": "boolean"
+						},
+						"clarifyAfterAttempts": {
+							"type": "integer",
+							"minimum": 1,
+							"maximum": 5
+						},
+						"examples": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"input": {
+										"type": "string"
+									},
+									"resolvedPath": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"elicitDefaults": {
+					"type": "object",
+					"description": "Default elicitation settings",
+					"additionalProperties": false,
+					"properties": {
+						"elicitRequired": {
+							"type": "boolean"
+						},
+						"responseFormat": {
+							"type": "string",
+							"enum": ["choice", "plain", "json", "structured"]
+						},
+						"allowedResponseFormats": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"timeoutSeconds": {
+							"type": "integer",
+							"minimum": 30,
+							"maximum": 3600
+						},
+						"maxRetries": {
+							"type": "integer",
+							"minimum": 0,
+							"maximum": 10
+						},
+						"onTimeout": {
+							"type": "string",
+							"enum": ["remindUser", "abort", "continue"]
+						}
+					}
+				},
+				"onMissingDependency": {
+					"type": "string",
+					"enum": ["ask_user", "abort", "skip"],
+					"description": "What to do when dependency is missing"
+				}
+			}
+		},
+		"persona": {
+			"type": "object",
+			"description": "Persona configuration for the agent",
+			"required": ["agent", "role", "style", "identitySummary"],
+			"additionalProperties": false,
+			"properties": {
+				"agent": {
+					"type": "object",
+					"required": ["name", "id", "title", "icon", "whenToUse"],
+					"additionalProperties": false,
+					"properties": {
+						"name": {
+							"type": "string",
+							"description": "Human-readable name of the agent"
+						},
+						"id": {
+							"type": "string",
+							"description": "Unique identifier for the agent",
+							"pattern": "^[a-z0-9-]+$"
+						},
+						"title": {
+							"type": "string",
+							"description": "Professional title of the agent"
+						},
+						"icon": {
+							"type": "string",
+							"description": "Emoji or icon representing the agent"
+						},
+						"whenToUse": {
+							"type": "string",
+							"description": "When to use this agent"
+						},
+						"customization": {
+							"type": ["string", "null"],
+							"description": "Customization details"
+						}
+					}
+				},
+				"role": {
+					"type": "string",
+					"description": "Role of the agent"
+				},
+				"style": {
+					"type": "object",
+					"required": ["tone"],
+					"additionalProperties": false,
+					"properties": {
+						"tone": {
+							"type": "string",
+							"description": "Tone of communication"
+						},
+						"verbosity": {
+							"type": "string",
+							"enum": ["low", "medium", "high"],
+							"description": "Level of verbosity"
+						},
+						"focus": {
+							"type": "string",
+							"description": "Primary focus area"
+						}
+					}
+				},
+				"identitySummary": {
+					"type": "string",
+					"description": "Brief summary of agent identity"
+				},
+				"corePrinciples": {
+					"type": "array",
+					"description": "Core principles the agent follows",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"commandPrefix": {
+			"type": "string",
+			"description": "Prefix for commands",
+			"examples": ["*"]
+		},
+		"commands": {
+			"type": "array",
+			"description": "Available commands for the agent",
+			"minItems": 1,
+			"items": {
+				"type": "object",
+				"required": ["name", "description"],
+				"additionalProperties": false,
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "Name of the command"
+					},
+					"system": {
+						"type": "boolean",
+						"description": "Whether this is a system command",
+						"default": false
+					},
+					"description": {
+						"type": "string",
+						"description": "Description of what the command does"
+					},
+					"parameters": {
+						"type": "array",
+						"description": "Parameters the command accepts",
+						"items": {
+							"type": "string"
+						}
+					},
+					"parameterDescriptions": {
+						"type": "object",
+						"description": "Descriptions for parameters",
+						"additionalProperties": {
+							"type": "string"
+						}
+					},
+					"preconditions": {
+						"type": "object",
+						"description": "Preconditions for command execution",
+						"additionalProperties": true
+					},
+					"targets": {
+						"type": "array",
+						"description": "Target files or tasks for the command",
+						"items": {
+							"type": "string"
+						}
+					},
+					"notes": {
+						"type": "string",
+						"description": "Additional notes about the command"
+					},
+					"toggle": {
+						"type": "boolean",
+						"description": "Whether this is a toggle command",
+						"default": false
+					}
+				}
+			}
+		},
+		"rules": {
+			"type": "array",
+			"description": "Rules the agent must follow",
+			"minItems": 1,
+			"items": {
+				"type": "object",
+				"required": [
+					"id",
+					"title",
+					"description",
+					"severity",
+					"actionOnViolation"
+				],
+				"additionalProperties": false,
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "Unique identifier for the rule",
+						"pattern": "^[A-Z0-9-]+$"
+					},
+					"title": {
+						"type": "string",
+						"description": "Title of the rule"
+					},
+					"description": {
+						"type": "string",
+						"description": "Detailed description of the rule"
+					},
+					"severity": {
+						"type": "string",
+						"enum": ["hard", "soft"],
+						"description": "Severity level of the rule"
+					},
+					"actionOnViolation": {
+						"type": "string",
+						"enum": [
+							"abort_and_report",
+							"correct_behavior_and_notify_user",
+							"warn_and_reformat",
+							"reject_override_and_notify",
+							"abort_and_request_correct_format",
+							"revert_changes_and_notify",
+							"reject_and_notify",
+							"abort_and_notify_user"
+						],
+						"description": "Action to take when rule is violated"
+					},
+					"scopeException": {
+						"type": "string",
+						"description": "Exception to the rule scope"
+					},
+					"enforcement": {
+						"type": "object",
+						"description": "Enforcement details",
+						"properties": {
+							"requireFormat": {
+								"type": "boolean"
+							},
+							"allowedFormats": {
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"dependencies": {
+			"type": "object",
+			"description": "Dependencies of the agent",
+			"additionalProperties": false,
+			"properties": {
+				"tasks": {
+					"type": "array",
+					"description": "Task dependencies",
+					"items": {
+						"type": "string"
+					}
+				},
+				"checklists": {
+					"type": "array",
+					"description": "Checklist dependencies",
+					"items": {
+						"type": "string"
+					}
+				},
+				"templates": {
+					"type": "array",
+					"description": "Template dependencies",
+					"items": {
+						"type": "string"
+					}
+				},
+				"schemas": {
+					"type": "array",
+					"description": "Schema dependencies",
+					"items": {
+						"type": "string"
+					}
+				},
+				"data": {
+					"type": "array",
+					"description": "Data dependencies",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}

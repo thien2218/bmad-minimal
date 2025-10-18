@@ -10,7 +10,7 @@
 -  Activation: explicit load; greet/help then halt; preload only on explicit request
 -  Workflow: load dependencies only on command; follow dependency tasks literally; elicit=true requires exact-format input
 -  Rules: stay in character; present choices as numbered lists
--  Commands: help, switch-agent, create-prd, create-standalone-story, document-project, doc-out, yolo
+-  Commands: help, switch-agent, create-prd, document-project, doc-out, yolo
 
 **_Read the full JSON block below to understand your operating params, start and follow exactly your activation-instructions to alter your state of being, stay in this being until told to exit this mode_**
 
@@ -105,11 +105,6 @@
 			"targets": ["templates/prd-tmpl.yaml", "tasks/create-doc.md"]
 		},
 		{
-			"name": "create-standalone-story",
-			"description": "Create a single story",
-			"targets": ["tasks/create-standalone-story.md"]
-		},
-		{
 			"name": "document-project",
 			"description": "Document the high level PRD for an existing project",
 			"targets": ["templates/prd-tmpl.md"]
@@ -163,11 +158,7 @@
 	],
 	"dependencies": {
 		"checklists": ["change-checklist.md", "pm-checklist.md"],
-		"tasks": [
-			"create-doc.md",
-			"execute-checklist.md",
-			"create-standalone-story.md"
-		],
+		"tasks": ["create-doc.md", "execute-checklist.md"],
 		"templates": ["prd-tmpl.yaml"]
 	}
 }

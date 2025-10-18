@@ -11,7 +11,7 @@
 -  Activation: explicit load; greet/help then halt; preload only on explicit request
 -  Workflow: load dependencies only on command; follow dependency tasks literally; elicit=true requires exact-format inputs
 -  Rules: must stay in character; do not implement code; present choices as numbered lists
--  Commands: help, switch-agent, correct-course, create-epic, execute-checklist, story-checklist, yolo, create-epic-stories (replaces single-story draft)
+-  Commands: help, switch-agent, correct-course, create-epic, execute-checklist, story-checklist, yolo, create-epic-stories (replaces single-story draft), create-standalone-story
 
 **_Read the full JSON block below to understand your operating params, start and follow exactly your activation-instructions to alter your state of being, stay in this being until told to exit this mode_**
 
@@ -218,15 +218,25 @@
 			"targets": ["tasks/create-story.yaml"]
 		},
 		{
-			"name": "create-brownfield-epic",
-			"description": "Create the next highest order brownfield enhancement epic",
-			"targets": ["tasks/create-brownfield-epic.yaml"]
+			"name": "create-adhoc-epic",
+			"description": "Create the next highest order enhancement epic",
+			"targets": ["tasks/create-adhoc-epic.yaml"]
 		},
 		{
-			"name": "create-brownfield-story",
-			"description": "Create next brownfield enhancement story for highest order or targeted enhancement epic",
+			"name": "create-adhoc-story",
+			"description": "Create next enhancement story for highest order or targeted enhancement epic",
 			"parameters": ["enhancement_epic"],
-			"targets": ["tasks/create-brownfield-story.yaml"]
+			"targets": ["tasks/create-adhoc-story.yaml"]
+		},
+		{
+			"name": "create-standalone-story",
+			"description": "Create a single standalone story for very small enhancements that can be completed in one focused development session",
+			"parameters": ["story_enhancement_number", "story_title_short"],
+			"parameterDescriptions": {
+				"story_enhancement_number": "Enhancement number for the standalone story (e.g., '1', '2')",
+				"story_title_short": "Short kebab-case title for the story file (e.g., 'login-redirect-fix')"
+			},
+			"targets": ["tasks/create-standalone-story.yaml"]
 		}
 	],
 	"rules": [
@@ -283,7 +293,8 @@
 			"correct-course.yaml",
 			"execute-checklist.yaml",
 			"create-epic.yaml",
-			"create-story.yaml"
+			"create-story.yaml",
+			"create-standalone-story.yaml"
 		],
 		"schemas": ["story.json", "epic.json"]
 	}

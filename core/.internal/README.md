@@ -8,6 +8,7 @@ These JSON schemas are for internal validation and tooling purposes only. **Agen
 
 These schemas define the structure for YAML/JSON versions of BMAD core artifacts:
 
+-  **agent.schema.json** - Structure for agent configuration definitions
 -  **checklist.schema.json** - Structure for checklist definitions
 -  **task.schema.json** - Structure for task definitions
 -  **data.schema.json** - Structure for data files
@@ -17,11 +18,14 @@ These schemas define the structure for YAML/JSON versions of BMAD core artifacts
 ### For Validation (Development/CI)
 
 ```bash
+# Example: Validate an agent configuration file
+ajv validate -s core/.internal/agent.schema.json -d core/planning/agents/analyst.json
+
 # Example: Validate a task YAML file
-ajv validate -s core/schemas/task.schema.json -d core/tasks/develop-story.yaml
+ajv validate -s core/.internal/task.schema.json -d core/tasks/develop-story.yaml
 
 # Example: Validate all checklists
-ajv validate -s core/schemas/checklist.schema.json -d "core/checklists/*.yaml"
+ajv validate -s core/.internal/checklist.schema.json -d "core/checklists/*.yaml"
 ```
 
 ### Schema References in Files
@@ -38,6 +42,38 @@ version: 1.0.0
 ## Schema Versions
 
 All schemas use JSON Schema Draft-07 specification.
+
+## Agent Schema Features
+
+### Agent Configuration Structure
+
+The agent schema defines the complete structure for agent configuration JSON files, including:
+
+-  **Meta Information**: Version, owner, and last updated metadata
+-  **Precedence Rules**: Order of precedence for policies, rules, and behaviors
+-  **Glossary**: Definitions of key terms used by agents
+-  **Policy Configuration**: Override capabilities and safety guards
+-  **Activation Settings**: How agents are activated and initialized
+-  **Workflow Configuration**: Path resolution, request mapping, and dependency handling
+-  **Persona Definition**: Agent identity, role, style, and communication preferences
+-  **Commands**: Available commands with parameters and targets
+-  **Rules**: Behavioral rules with severity levels and violation actions
+-  **Dependencies**: Tasks, checklists, templates, schemas, and data files
+
+### Agent Types Supported
+
+The schema supports all current agent types:
+
+-  **Planning Agents**: analyst, architect, pm, ux-expert
+-  **Engineering Agents**: dev, pdm, qa
+
+### Key Validation Features
+
+-  **Required Fields**: All essential agent configuration elements
+-  **Enum Constraints**: Validated choices for severity, types, and actions
+-  **Pattern Matching**: Proper formatting for IDs and identifiers
+-  **Conditional Properties**: Optional fields based on agent capabilities
+-  **Dependency Validation**: Proper structure for all dependency types
 
 ## Important Notes
 
@@ -57,13 +93,24 @@ The migration from Markdown to YAML/JSON will be gradual:
 
 ## File Structure Mapping
 
-| Markdown Location     | Future YAML/JSON Location | Schema                |
-| --------------------- | ------------------------- | --------------------- |
-| core/tasks/\*.md      | core/tasks/\*.yaml        | task.schema.json      |
-| core/checklists/\*.md | core/checklists/\*.yaml   | checklist.schema.json |
-| core/data/\*.md       | core/data/\*.yaml         | data.schema.json      |
+| Markdown Location             | Future YAML/JSON Location       | Schema                |
+| ----------------------------- | ------------------------------- | --------------------- |
+| core/planning/agents/\*.md    | core/planning/agents/\*.json    | agent.schema.json     |
+| core/engineering/agents/\*.md | core/engineering/agents/\*.json | agent.schema.json     |
+| core/tasks/\*.md              | core/tasks/\*.yaml              | task.schema.json      |
+| core/checklists/\*.md         | core/checklists/\*.yaml         | checklist.schema.json |
+| core/data/\*.md               | core/data/\*.yaml               | data.schema.json      |
 
 ## Schema Features
+
+### Agent Schema
+
+-  Complete agent configuration structure
+-  Persona and behavior definitions
+-  Command and workflow specifications
+-  Policy and rule validation
+-  Dependency management
+-  Activation and lifecycle management
 
 ### Task Schema
 
