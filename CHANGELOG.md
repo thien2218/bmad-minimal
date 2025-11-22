@@ -3,7 +3,30 @@
 All notable changes to this project will be documented in this file.
 This format follows Keep a Changelog and the project adheres to Semantic Versioning.
 
-## [Unreleased]
+## [1.2.0] - 2025-11-22
+
+### Added
+
+-  add new analyst agent
+-  add new task for analyst agent
+-  add number index for prds
+-  add new commands for pm and architect agents to update docs
+-  add new switch-agent command to all agents
+
+### Changed
+
+-  Bump version to 1.2.0
+-  remove pm agent and enable analyst agent to do more
+-  rename brownfield tasks and move standalone story task to pdm agent
+-  remove brownfield subdirectory
+-  remove old workflows and update the commands to use prds folder
+-  remove unnecessary tasks and templates for brownfield flow
+-  remove unused code
+
+### Fixed
+
+-  fix output format of stories and epics
+-  remove old legacy check code
 
 ## [1.1.0] - 2025-10-08
 
