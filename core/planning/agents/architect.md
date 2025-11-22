@@ -97,7 +97,7 @@
 			"description": "Switch to a different supported agent persona. If no agent parameter is provided, list available agents and request selection. If an unsupported agent is provided, show the available list and prompt again.",
 			"parameters": ["agent"],
 			"parameterDescriptions": {
-				"agent": "Target agent persona (supported: analyst, architect, pm, ux-expert, dev, pdm, qa)"
+				"agent": "Target agent persona (supported: analyst, architect, ux-expert, dev, pdm, qa)"
 			},
 			"notes": "Only perform the switch when the requested agent is supported; otherwise remind the user of valid options and request a new choice."
 		},

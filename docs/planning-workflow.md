@@ -1,10 +1,10 @@
 # Planning Workflow
 
-This guide outlines the planning workflow essential to spec-driven development. Effective planning establishes the parameters and objectives for agent execution and will precede (almost) all implementation activity.
+This guide outlines the planning workflow essential to spec-driven development. Effective planning establishes parameters and objectives for agent execution and will precede (almost) all implementation activity.
 
 ## Scopes and Rationale
 
-Planning is the entry point for (almost) all software development activities. Matt Maher has made an excellent [video](https://www.youtube.com/watch?v=dBWnH0YA6tg&list=LL), perfectly explains and demonstrates why comprehensive planning is necessary for predictable, reliable agent performance.
+Planning is the entry point for (almost) all software development activities. Matt Maher has made an excellent [video](https://www.youtube.com/watch?v=dBWnH0YA6tg&list=LL), perfectly explaining and demonstrating why comprehensive planning is necessary for predictable, reliable agent performance.
 
 That said, in the context of AI-driven development, planning typically represents the most token-intensive phase. And accordingly, distinct planning methods and optimization strategies are employed at different context scopes to ensure efficiency.
 
@@ -12,38 +12,38 @@ That said, in the context of AI-driven development, planning typically represent
 
 The Greenfield Flow is designed for new initiatives where there are no legacy constraints, offering maximum flexibility in technical and architectural decisions. This section provides a comprehensive framework for navigating the greenfield planning process, from initial concept to a fully-realized project plan.
 
-The workflow is structured around the creation and refinement of several key documents. These documents serve as the primary context for the agents, providing a high-level overview and essential knowledge for all subsequent tasks.
+The workflow is structured around the creation and refinement of several key documents. These documents serve as the primary context for agents, providing a high-level overview and essential knowledge for all subsequent tasks.
 
 <!-- ### Project Brief -->
 
 ### PRD
 
-The Product Requirements Document (PRD) is the authoritative source of truth for the project, defining its purpose, features, and functionality. It serves as the primary input for both the Architecture and UI/UX design phases, and provides the foundational context for the engineering agents during implementation.
+The Product Requirements Document (PRD) is the authoritative source of truth for the project, defining its purpose, features, and functionality. It serves as the primary input for both Architecture and UI/UX design phases, and provides the foundational context for engineering agents during implementation.
 
-The `pm` agent is responsible for creating the PRD, and can do so in two ways, as illustrated in the Flow Graph:
+The `analyst` agent is responsible for creating PRD, and can do so in two ways, as illustrated in the Flow Graph:
 
-1.  **Fast-Track Creation (with Project Brief):** If a Project Brief is available, the `pm` agent can be invoked with the `create-prd` command to generate the PRD directly from the brief. This is the most efficient method, as it leverages the pre-existing research and analysis.
+1. **Fast-Track Creation (with Project Brief):** If a Project Brief is available, the `analyst` agent can be invoked with the `create-prd` command to generate the PRD directly from the brief. This is the most efficient method, as it leverages pre-existing research and analysis.
 
-2.  **Interactive Creation (without Project Brief):** In the absence of a Project Brief, the `pm` agent will engage in an interactive session to gather the necessary information. The agent will ask a series of questions to elicit the project's goals, user stories, functional and non-functional requirements. This process is more time-intensive, but ensures a comprehensive and well-defined PRD.
+2. **Interactive Creation (without Project Brief):** In the absence of a Project Brief, the `analyst` agent will engage in an interactive session to gather the necessary information. The agent will ask a series of questions to elicit the project's goals, user stories, functional and non-functional requirements. This process is more time-intensive, but ensures a comprehensive and well-defined PRD.
 
 In both scenarios, the final output is a complete PRD that includes:
 
-*   **Functional Requirements (FRs):** The specific behaviors and capabilities of the system.
-*   **Non-Functional Requirements (NFRs):** The quality attributes of the system, such as performance, security, and usability.
-*   **Epics and Stories:** A hierarchical breakdown of the work to be done.
+-  **Functional Requirements (FRs):** The specific behaviors and capabilities of the system.
+-  **Non-Functional Requirements (NFRs):** The quality attributes of the system, such as performance, security, and usability.
+-  **Epics and Stories:** A hierarchical breakdown of the work to be done.
 
 ### Architecture
 
 The Architecture document outlines the technical blueprint of the project, detailing the system's structure, components, and their interactions. It is a critical document that translates the functional and non-functional requirements from the PRD into a concrete technical design.
 
-The `architect` agent is responsible for creating the Architecture document. As shown in the Flow Graph, the `architect` agent can be invoked after the PRD has been created. The agent will use the PRD as its primary input, and will generate an architecture that satisfies all the requirements outlined in the PRD.
+The `architect` agent is responsible for creating the Architecture document. As shown in the Flow Graph, the `architect` agent can be invoked after the PRD has been created. The agent will use the PRD as its primary input and will generate an architecture that satisfies all the requirements outlined in the PRD.
 
 The Architecture document typically includes:
 
-*   **System Overview:** A high-level description of the system's components and their relationships.
-*   **Component Design:** Detailed design of each component, including its responsibilities and interfaces.
-*   **Data Model:** The structure of the data that the system will manage.
-*   **Technology Stack:** The technologies that will be used to build the system.
+-  **System Overview:** A high-level description of the system's components and their relationships.
+-  **Component Design:** Detailed design of each component, including its responsibilities and interfaces.
+-  **Data Model:** The structure of the data that the system will manage.
+-  **Technology Stack:** The technologies that will be used to build the system.
 
 ### UI/UX
 
@@ -51,9 +51,8 @@ The UI/UX specification defines the user interface and experience for the projec
 
 The `ux-expert` agent is responsible for creating the UI/UX specification. As depicted in the Flow Graph, the `ux-expert` is invoked when a project requires a user interface. The agent can perform two primary functions:
 
-1.  **Create Frontend Specification:** Using the `create-frontend-spec` command, the `ux-expert` generates a comprehensive frontend specification. This document outlines the user flows, wireframes, and component designs necessary to build the user interface.
-
-2.  **Generate AI UI Prompt:** With the `generate-ui-prompt` command, the `ux-expert` can create a prompt for an AI-powered UI generation tool. This is an optional step that can accelerate the design process by providing a starting point for the visual design.
+1. **Create Frontend Specification:** Using the `create-frontend-spec` command, the `ux-expert` generates a comprehensive frontend specification. This document outlines user flows, wireframes, and component designs necessary to build the user interface.
+2. **Generate AI UI Prompt:** With the `generate-ui-prompt` command, the `ux-expert` can create a prompt for an AI-powered UI generation tool. This is an optional step that can accelerate the design process by providing a starting point for visual design.
 
 The UI/UX specification serves as a critical input for the `architect` agent, ensuring that the system architecture can support the required user interface and experience.
 
@@ -68,8 +67,8 @@ graph TD
     C2 --> C3["Analyst: Project Analysis"]
     C3 --> D["Analyst: Create Project Brief"]
     D --> G["Project Brief Available?"]
-    G{"Project Brief Available?"} -->|Yes| E["PM: Create PRD from Brief (Fast Track)"]
-    G -->|No| E2["PM: Interactive PRD Creation (More Questions)"]
+    G{"Project Brief Available?"} -->|Yes| E["Analyst: Create PRD from Brief (Fast Track)"]
+    G -->|No| E2["Analyst: Interactive PRD Creation (More Questions)"]
     E --> F["PRD Created with FRs, NFRs, Epics & Stories"]
     E2 --> F
     F --> F2{"UX Required?"}

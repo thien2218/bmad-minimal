@@ -36,13 +36,7 @@
 		"dependencyTask": "Task loaded from {@baseDir}/planning/tasks/ and executed as an authoritative workflow.",
 		"formalDependencyTask": "A dependency task with explicit ordered steps and elicit flags; it can override within allowed scope.",
 		"executableCommand": "User-invoked action with prefix '*' that triggers a defined command workflow.",
-		"elicit": "A step that requires exact user input format before proceeding.",
-		"planningScopeLevels": {
-			"1": "Major changes that may require rewriting a decent chunk of high level docs (multi-experts level planning)",
-			"2": "Significant changes which create moderate to large gaps in high level docs (epic level planning)",
-			"3": "Moderate changes which may or may not create small gaps in high level docs (story level planning)",
-			"4": "Minimal changes which doesn’t affect the system (agent level planning)"
-		}
+		"elicit": "A step that requires exact user input format before proceeding."
 	},
 	"activation": {
 		"preconditions": {
@@ -102,9 +96,37 @@
 			"description": "Switch to a different supported agent persona. If no agent parameter is provided, list available agents and request selection. If an unsupported agent is provided, show the available list and prompt again.",
 			"parameters": ["agent"],
 			"parameterDescriptions": {
-				"agent": "Target agent persona (supported: analyst, architect, pm, ux-expert, dev, pdm, qa)"
+				"agent": "Target agent persona (supported: analyst, architect, ux-expert, dev, pdm, qa)"
 			},
 			"notes": "Only perform the switch when the requested agent is supported; otherwise remind the user of valid options and request a new choice."
+		},
+		{
+			"name": "analyze-planning-scope",
+			"description": "Analyze a proposed change or implementation and recommend an appropriate planning scope level",
+			"targets": ["tasks/analyze-planning-scope.md"]
+		},
+		{
+			"name": "create-prd",
+			"description": "Create PRD",
+			"targets": ["templates/prd-tmpl.yaml", "tasks/create-doc.md"]
+		},
+		{
+			"name": "update-prd",
+			"description": "Update an existing PRD based on user's change request (add feature, extend functionality, change of library, etc.). Ensure Change Log is updated.",
+			"parameters": ["prd_number", "change_request"],
+			"parameterDescriptions": {
+				"prd_number": "Non-padded PRD number prefix (e.g., 1, 2, 3). If omitted, use wildcard matching with slug.",
+				"change_request": "Concise description of requested changes to apply in the PRD"
+			},
+			"targets": [
+				"templates/prd-tmpl.yaml",
+				"checklists/change-checklist.md"
+			]
+		},
+		{
+			"name": "document-project",
+			"description": "Document the high level PRD for an existing project",
+			"targets": ["templates/prd-tmpl.yaml"]
 		},
 		{
 			"name": "brainstorm-requirements",
@@ -169,12 +191,18 @@
 	"dependencies": {
 		"tasks": [
 			"create-doc.md",
+			"execute-checklist.md",
 			"facilitate-brainstorming-session.md",
 			"create-deep-research-prompt.md",
 			"advanced-elicitation.md",
 			"tasks/create-deep-research-prompt.md"
 		],
-		"templates": ["project-brief-tmpl.yaml", "brainstorming-output-tmpl.yaml"]
+		"templates": [
+			"prd-tmpl.yaml",
+			"project-brief-tmpl.yaml",
+			"brainstorming-output-tmpl.yaml"
+		],
+		"checklists": ["change-checklist.md", "pm-checklist.md"]
 	}
 }
 ```

@@ -19,7 +19,7 @@ This format follows Keep a Changelog and the project adheres to Semantic Version
 
 -  make coding standards file more flexible with clear guidance for its content
 -  refactor cli tooling and update coding-standards template
--  update commands for pm and architect agents
+-  update commands for architect agents
 -  make story id more consistent
 -  rename all story and epic creation tasks for consistency
 
@@ -141,7 +141,7 @@ This format follows Keep a Changelog and the project adheres to Semantic Version
 -  use normal file anem to avoid hidden constraint
 -  make config fields discrepancy detectable for update command
 -  enforce file naming convention and make test dirs configurable
--  enforce planning agents and add new command for pm agent
+-  enforce planning agents and consolidate PRD workflows under analyst agent
 -  update package to public namespace
 -  refactor config defaults and update readme
 -  new workflows to fit more generic use cases
