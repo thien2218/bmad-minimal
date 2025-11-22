@@ -33,19 +33,7 @@ async function ensureDocsStructure(cwd, configData) {
 	}
 }
 
-/**
- * Detect legacy docs/prd.md file.
- * @param {string} docsDir
- * @returns {Promise<string|null>}
- */
-async function detectLegacyPrd(docsDir) {
-	const legacyPath = path.join(docsDir, "prd.md");
-	const exists = await fs.pathExists(legacyPath);
-	return exists ? legacyPath : null;
-}
-
 module.exports = {
 	copyCoreDirectories,
 	ensureDocsStructure,
-	detectLegacyPrd,
 };

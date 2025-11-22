@@ -7,7 +7,6 @@ const DEFAULT_DOCS_CONFIG = {
 		qa: "qa",
 		epics: "epics",
 		stories: "stories",
-		prds: "prds",
 	},
 };
 
