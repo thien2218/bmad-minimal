@@ -206,7 +206,7 @@
 	"rules": [
 		{
 			"id": "CFG-R001",
-			"title": "Before resolving any {@*} placeholder (curly braces starting with @), first run a terminal command to locate the project's config.json if the file hasn't been loaded to your context (e.g., sh -lc 'find . -type f -name config.json | head -1'). Load and read the found config.json path to resolve values. Treat {@docs.subdirs.<key>} as {@docs.dir}/<subdir>. For PRDs, always build paths as {@docs.dir}/{@docs.subdirs.prds}/prd-{prd_number}-{prd_slug}.md. If only prd_slug is provided, use wildcard match {@docs.dir}/{@docs.subdirs.prds}/prd-*-{prd_slug}.md and prompt to disambiguate when multiple matches exist. Example: {@docs.subdirs.prds}/prd-3-payments-foundation.md.",
+			"title": "Before resolving any {@*} placeholder (curly braces starting with @), first run a terminal command to locate the project's config.json if the file hasn't been loaded to your context (e.g., sh -lc 'find . -type f -name config.json | head -1'). Load and read the found config.json path to resolve values. Treat {@docs.subdirs.<key>} as {@docs.dir}/<subdir>. For PRD, always build path as {@docs.dir}/{@docs.files.prd}. Example: {@docs.dir}/prd.md.",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},

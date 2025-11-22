@@ -4,8 +4,8 @@
 		"name": "Epic Document",
 		"version": "2.0",
 		"output": {
-			"format": "json",
-			"filename": "{@docs.subdirs.epics}/{{epic_number}}.{{epic_title_short}}.json",
+			"format": "yaml",
+			"filename": "{@docs.subdirs.epics}/{{epic_number}}.{{epic_title_short}}.yaml",
 			"title": "Epic {{epic_number}}: {{epic_title}}"
 		}
 	},
