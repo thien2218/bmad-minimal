@@ -20,17 +20,21 @@ The workflow is structured around the creation and refinement of several key doc
 
 The Product Requirements Document (PRD) is the authoritative source of truth for the project, defining its purpose, features, and functionality. It serves as the primary input for both Architecture and UI/UX design phases, and provides the foundational context for engineering agents during implementation.
 
-The `analyst` agent is responsible for creating PRD, and can do so in two ways, as illustrated in the Flow Graph:
+The `analyst` agent is responsible for creating the PRD and can do so in three ways, as illustrated in the Flow Graph.
 
 1. **Fast-Track Creation (with Project Brief):** If a Project Brief is available, the `analyst` agent can be invoked with the `create-prd` command to generate the PRD directly from the brief. This is the most efficient method, as it leverages pre-existing research and analysis.
 
-2. **Interactive Creation (without Project Brief):** In the absence of a Project Brief, the `analyst` agent will engage in an interactive session to gather the necessary information. The agent will ask a series of questions to elicit the project's goals, user stories, functional and non-functional requirements. This process is more time-intensive, but ensures a comprehensive and well-defined PRD.
+2. **Document Existing Project:** For existing codebases, use the `document-project` command to analyze project artifacts (README, package.json, code, docs) and create a comprehensive PRD from the current state.
 
-In both scenarios, the final output is a complete PRD that includes:
+3. **Interactive Creation (without Project Brief):** In the absence of a Project Brief or existing project, the `analyst` agent will engage in an interactive session to gather the necessary information. The agent will ask a series of questions to elicit the project's goals, user stories, functional and non-functional requirements. This process is more time-intensive, but ensures a comprehensive and well-defined PRD.
+
+In all scenarios, the final output is a complete PRD that includes:
 
 -  **Functional Requirements (FRs):** The specific behaviors and capabilities of the system.
 -  **Non-Functional Requirements (NFRs):** The quality attributes of the system, such as performance, security, and usability.
 -  **Epics and Stories:** A hierarchical breakdown of the work to be done.
+
+**Migration Note:** If you have multiple PRD files (prd-1-_.md, prd-2-_.md, etc.), consolidate them into a single `docs/prd.md` file. Merge requirements, epics, and stories chronologically, preserving the most recent versions and creating a unified Change Log.
 
 ### Architecture
 

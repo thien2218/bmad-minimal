@@ -182,10 +182,6 @@
 		{
 			"name": "create-epic",
 			"description": "Create the next highest order epic for project",
-			"parameters": ["prd_number"],
-			"parameterDescriptions": {
-				"prd_number": "Non-padded PRD number prefix (e.g., 1, 2, 3) to select the PRD file prd-{prd_number}-*.md"
-			},
 			"targets": ["tasks/create-epic.yaml"]
 		},
 		{
@@ -224,10 +220,6 @@
 		{
 			"name": "create-adhoc-epic",
 			"description": "Create the next highest order enhancement epic",
-			"parameters": ["prd_number"],
-			"parameterDescriptions": {
-				"prd_number": "Non-padded PRD number prefix (e.g., 1, 2, 3) to select the PRD file prd-{prd_number}-*.md"
-			},
 			"targets": ["tasks/create-adhoc-epic.yaml"]
 		},
 		{

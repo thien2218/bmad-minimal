@@ -7,11 +7,6 @@ category: planning
 agent: pdm
 
 inputs:
-   required:
-      - name: prd_number
-        type: number
-        description: Non-padded PRD number for selecting PRD file (prd-{prd_number}-*.md)
-        examples: [1, 2, 3]
    optional:
       - name: epic_enhancement_number
         type: number
@@ -85,7 +80,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@docs.subdirs.prds}/prd-{prd_number}-*.md"
+           target: "{@docs.files.prd}"
            validation:
               type: string
               required: true
@@ -96,7 +91,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@docs.subdirs.prds}/prd-{prd_number}-*.md"
+           target: "{@docs.files.architecture}"
            validation:
               type: string
               required: true

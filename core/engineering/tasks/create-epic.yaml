@@ -63,7 +63,7 @@ outputs:
 
 prerequisites:
    files:
-      - "{@docs.subdirs.prds}/prd-{prd_number}-*.md"
+      - "{@docs.files.prd}"
 
 process:
    mode: sequential

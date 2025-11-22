@@ -112,7 +112,7 @@ process:
            operation: read
            content: |
               Read:
-              - {@docs.subdirs.prds}/prd-*-{prd_slug}.md
+              - {@docs.files.prd}
 
       - id: EXTRACT-TECH
         title: Extract Technical Details for Story
@@ -154,22 +154,22 @@ process:
                 previous_story_insights: "{prior insights if any}"
                 data_models:
                   value: "{data models used}"
-                  source: "{@docs.subdirs.prds}/prd-*-{prd_slug}.md#{section}"
+                  source: "{@docs.files.prd}#{section}"
                 api_specifications:
                   value: "{API specs}"
-                  source: "{@docs.subdirs.prds}/prd-*-{prd_slug}.md#{section}"
+                  source: "{@docs.files.prd}#{section}"
                 component_specifications:
                   value: "{component specs}"
-                  source: "{@docs.subdirs.prds}/prd-*-{prd_slug}.md#{section}"
+                  source: "{@docs.files.prd}#{section}"
                 file_locations:
                   value: "{file paths and naming conventions}"
-                  source: "{@docs.subdirs.prds}/prd-*-{prd_slug}.md#{section}"
+                  source: "{@docs.files.prd}#{section}"
                 testing_requirements:
                   value: "{testing requirements}"
-                  source: "{@docs.subdirs.prds}/prd-*-{prd_slug}.md#{section}"
+                  source: "{@docs.files.prd}#{section}"
                 technical_constraints:
                   value: "{constraints}"
-                  source: "{@docs.subdirs.prds}/prd-*-{prd_slug}.md#{section}"
+                  source: "{@docs.files.prd}#{section}"
                 notes_missing_guidance: "If information for a category is not found, state: 'No specific guidance found in docs'"
               test_specs:
                 specs:
