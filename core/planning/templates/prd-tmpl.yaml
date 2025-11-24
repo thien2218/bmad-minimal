@@ -153,7 +153,7 @@ sections:
   - id: checklist-results
     title: Checklist Results Report
     required: false
-    instruction: Before running the checklist and drafting the prompts, offer to output the full updated PRD. If outputting it, confirm with the user that you will be proceeding to run the checklist and produce the report. Once the user confirms, execute the pm-checklist and populate the results in this section.
+    instruction: Before running the checklist and drafting the prompts, offer to output the full updated PRD. If outputting it, confirm with the user that you will be proceeding to run the checklist and produce the report. Once the user confirms, execute the analyst-checklist and populate the results in this section.
 
   - id: next-steps
     title: Next Steps

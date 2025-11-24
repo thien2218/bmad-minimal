@@ -127,7 +127,7 @@
 			"name": "document-project",
 			"description": "Analyze existing project artifacts and create comprehensive PRD using template-driven process",
 			"targets": [
-				"tasks/document-project.md",
+				"tasks/document-existing-project.md",
 				"templates/prd-tmpl.yaml",
 				"tasks/create-doc.md",
 				"data/elicitation-methods.md"
@@ -201,14 +201,14 @@
 			"create-deep-research-prompt.md",
 			"advanced-elicitation.md",
 			"tasks/create-deep-research-prompt.md",
-			"document-project.md"
+			"document-existing-project.md"
 		],
 		"templates": [
 			"prd-tmpl.yaml",
 			"project-brief-tmpl.yaml",
 			"brainstorming-output-tmpl.yaml"
 		],
-		"checklists": ["change-checklist.md", "pm-checklist.md"]
+		"checklists": ["change-checklist.md", "analyst-checklist.md"]
 	}
 }
 ```

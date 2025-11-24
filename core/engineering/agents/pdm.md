@@ -180,11 +180,6 @@
 			"targets": ["tasks/correct-course.yaml"]
 		},
 		{
-			"name": "create-epic",
-			"description": "Create the next highest order epic for project",
-			"targets": ["tasks/create-epic.yaml"]
-		},
-		{
 			"name": "execute-checklist",
 			"description": "Run execute-checklist using the PDM master checklist",
 			"targets": [
@@ -193,27 +188,29 @@
 			]
 		},
 		{
-			"name": "story-checklist",
-			"description": "Execute task execute-checklist.yaml with checklist story-draft-checklist.yaml",
-			"targets": [
-				"tasks/execute-checklist.yaml",
-				"checklists/story-draft-checklist.yaml"
-			]
-		},
-		{
 			"name": "yolo",
 			"description": "Toggle YOLO Mode (when ON will skip doc section confirmations)",
 			"toggle": true
 		},
 		{
-			"name": "create-epic-stories",
-			"description": "Create all stories for the highest ordered epic or the epic specified by user in a single batched operation (multiple iterations of create-story).",
-			"parameters": ["epic"],
-			"targets": ["tasks/create-story.yaml"]
+			"name": "create-epic",
+			"description": "Create the next highest order epic for project",
+			"targets": ["tasks/create-epic.yaml"]
+		},
+		{
+			"name": "create-epics",
+			"description": "Create epics from PRD epic list",
+			"targets": ["tasks/create-epic.yaml"]
 		},
 		{
 			"name": "create-story",
 			"description": "Create the next story for the highest ordered epic or the one specified by user.",
+			"parameters": ["epic"],
+			"targets": ["tasks/create-story.yaml"]
+		},
+		{
+			"name": "create-stories",
+			"description": "Create all stories for the highest ordered epic or the epic specified by user.",
 			"parameters": ["epic"],
 			"targets": ["tasks/create-story.yaml"]
 		},

@@ -1,8 +1,8 @@
-# Product Manager (PM) Requirements Checklist
+# Analyst Requirements Checklist
 
-This checklist serves as a comprehensive framework to ensure the Product Requirements Document (PRD) and Epic definitions are complete, well-structured, and appropriately scoped for MVP development. The PM should systematically work through each item during the product definition process.
+This checklist serves as a comprehensive framework to ensure the Product Requirements Document (PRD) and Epic definitions are complete, well-structured, and appropriately scoped for MVP development. The analyst should systematically work through each item during the product definition process.
 
-[[LLM: INITIALIZATION INSTRUCTIONS - PM CHECKLIST
+[[LLM: INITIALIZATION INSTRUCTIONS - ANALYST CHECKLIST
 
 Before proceeding with this checklist, ensure you have access to:
 
@@ -299,7 +299,7 @@ Ask the user if they want to work through the checklist:
 
 ## PRD & EPIC VALIDATION SUMMARY
 
-[[LLM: FINAL PM CHECKLIST REPORT GENERATION
+[[LLM: FINAL ANALYST CHECKLIST REPORT GENERATION
 
 Create a comprehensive validation report that includes:
 

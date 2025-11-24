@@ -14,7 +14,7 @@ inputs:
       examples:
         - architect-checklist
         - story-dod-checklist
-        - pm-checklist
+        - analyst-checklist
     - name: execution_mode
       type: string
       description: How to execute the checklist

@@ -1,4 +1,4 @@
-# Document Project Task
+# Document Existing Project Task
 
 This task defines a systematic workflow to analyze existing project artifacts and create a comprehensive PRD using the established template-driven process.
 
