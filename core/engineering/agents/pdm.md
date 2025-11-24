@@ -184,7 +184,7 @@
 			"description": "Run execute-checklist using the PDM master checklist",
 			"targets": [
 				"tasks/execute-checklist.yaml",
-				"checklists/pd-master-checklist.yaml"
+				"checklists/pd-master-checklist.md"
 			]
 		},
 		{

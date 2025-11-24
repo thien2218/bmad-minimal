@@ -242,7 +242,7 @@ process:
         action:
            type: subtask
            subtask: execute-checklist
-           target: "{@baseDir}/engineering/checklists/story-draft-checklist.yaml"
+           target: "{@baseDir}/engineering/checklists/story-draft-checklist.md"
 
       - id: HANDOFF-1
         title: Provide Summary and Next Steps

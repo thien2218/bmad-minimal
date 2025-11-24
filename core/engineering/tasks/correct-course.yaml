@@ -36,7 +36,7 @@ outputs:
 
 prerequisites:
   files:
-    - checklists/change-checklist.yaml
+    - checklists/change-checklist.md
     - "{@docs.files.prd}"
     - "{@docs.subdirs.epics}/**"
     - "{@docs.files.feArchitecture}"
@@ -84,7 +84,7 @@ process:
       description: Work through Section 1 of change-checklist - Change Context
       action:
         type: analysis
-        target: checklists/change-checklist.yaml#section-1
+        target: checklists/change-checklist.md#section-1
         prompt: Analyze change context including trigger, timing, and initial assessment
       elicit: true
 
@@ -93,7 +93,7 @@ process:
       description: Work through Section 2 of change-checklist - Epic/Story Impact
       action:
         type: analysis
-        target: checklists/change-checklist.yaml#section-2
+        target: checklists/change-checklist.md#section-2
         prompt: Assess impact on current epics, stories, and sprint work
       elicit: true
 
@@ -102,7 +102,7 @@ process:
       description: Work through Section 3 of change-checklist - Artifact Conflicts
       action:
         type: analysis
-        target: checklists/change-checklist.yaml#section-3
+        target: checklists/change-checklist.md#section-3
         prompt: Identify and resolve conflicts in project artifacts
       elicit: true
 
