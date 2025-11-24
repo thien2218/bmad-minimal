@@ -192,23 +192,6 @@
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		}
-	],
-	"dependencies": {
-		"tasks": [
-			"create-doc.md",
-			"execute-checklist.md",
-			"facilitate-brainstorming-session.md",
-			"create-deep-research-prompt.md",
-			"advanced-elicitation.md",
-			"tasks/create-deep-research-prompt.md",
-			"document-existing-project.md"
-		],
-		"templates": [
-			"prd-tmpl.yaml",
-			"project-brief-tmpl.yaml",
-			"brainstorming-output-tmpl.yaml"
-		],
-		"checklists": ["change-checklist.md", "analyst-checklist.md"]
-	}
+	]
 }
 ```

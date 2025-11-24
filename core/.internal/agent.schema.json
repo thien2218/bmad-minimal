@@ -13,8 +13,7 @@
 		"persona",
 		"commandPrefix",
 		"commands",
-		"rules",
-		"dependencies"
+		"rules"
 	],
 	"additionalProperties": false,
 	"properties": {
@@ -580,48 +579,6 @@
 								}
 							}
 						}
-					}
-				}
-			}
-		},
-		"dependencies": {
-			"type": "object",
-			"description": "Dependencies of the agent",
-			"additionalProperties": false,
-			"properties": {
-				"tasks": {
-					"type": "array",
-					"description": "Task dependencies",
-					"items": {
-						"type": "string"
-					}
-				},
-				"checklists": {
-					"type": "array",
-					"description": "Checklist dependencies",
-					"items": {
-						"type": "string"
-					}
-				},
-				"templates": {
-					"type": "array",
-					"description": "Template dependencies",
-					"items": {
-						"type": "string"
-					}
-				},
-				"schemas": {
-					"type": "array",
-					"description": "Schema dependencies",
-					"items": {
-						"type": "string"
-					}
-				},
-				"data": {
-					"type": "array",
-					"description": "Data dependencies",
-					"items": {
-						"type": "string"
 					}
 				}
 			}

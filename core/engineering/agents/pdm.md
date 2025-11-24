@@ -279,21 +279,6 @@
 			"severity": "hard",
 			"actionOnViolation": "abort_and_notify_user"
 		}
-	],
-	"dependencies": {
-		"checklists": [
-			"change-checklist.yaml",
-			"pd-master-checklist.yaml",
-			"story-draft-checklist.yaml"
-		],
-		"tasks": [
-			"correct-course.yaml",
-			"execute-checklist.yaml",
-			"create-epic.yaml",
-			"create-story.yaml",
-			"create-standalone-story.yaml"
-		],
-		"schemas": ["story.json", "epic.json"]
-	}
+	]
 }
 ```

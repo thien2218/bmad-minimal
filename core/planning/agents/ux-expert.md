@@ -148,14 +148,6 @@
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		}
-	],
-	"dependencies": {
-		"tasks": [
-			"create-doc.md",
-			"execute-checklist.md",
-			"generate-ai-frontend-prompt.md"
-		],
-		"templates": ["frontend-spec-tmpl.yaml"]
-	}
+	]
 }
 ```

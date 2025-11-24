@@ -206,16 +206,6 @@
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		}
-	],
-	"dependencies": {
-		"checklists": ["architect-checklist.md"],
-		"tasks": ["create-doc.md", "execute-checklist.md"],
-		"templates": [
-			"architecture-tmpl.yaml",
-			"backend-architecture-tmpl.yaml",
-			"frontend-architecture-tmpl.yaml",
-			"fullstack-architecture-tmpl.yaml"
-		]
-	}
+	]
 }
 ```

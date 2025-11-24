@@ -264,18 +264,6 @@
 			"severity": "hard",
 			"actionOnViolation": "revert_changes_and_notify"
 		}
-	],
-	"dependencies": {
-		"tasks": [
-			"execute-checklist.yaml",
-			"validate-next-story.yaml",
-			"develop-story.yaml",
-			"develop-story-test-first.yaml",
-			"apply-qa-fixes.yaml",
-			"update-docs.yaml"
-		],
-		"checklists": ["story-dod-checklist.yaml"],
-		"schemas": ["story.json"]
-	}
+	]
 }
 ```

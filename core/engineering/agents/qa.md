@@ -254,18 +254,6 @@
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		}
-	],
-	"dependencies": {
-		"data": ["test-levels-framework.yaml", "test-priorities-matrix.yaml"],
-		"tasks": [
-			"review-story.yaml",
-			"risk-profile.yaml",
-			"test-design.yaml",
-			"spec-outline-review.yaml",
-			"nfr-assess.yaml",
-			"trace-requirements.yaml"
-		],
-		"schemas": ["story.json", "qa-gate.json"]
-	}
+	]
 }
 ```
