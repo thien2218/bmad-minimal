@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 This format follows Keep a Changelog and the project adheres to Semantic Versioning.
 
+## [1.2.5] - 2025-11-26
+
+### Changed
+
+-  Bump version to 1.2.5
+-  compress agent json config and improve cli app ux
+-  optimize agent json config
+-  make checklists markdown instead of yaml and remove checklist schema
+-  rename tasks, remove reference to pm agent and remove unused pdm commands
+
+### Removed
+
+-  remove more redundant tokens
+-  remove redundant dependency declarations
+
 ## [1.2.0] - 2025-11-22
 
 ### Added
@@ -233,7 +248,9 @@ This format follows Keep a Changelog and the project adheres to Semantic Version
 -  final touches
 -  apply formatting
 
-[Unreleased]: https://github.com/thien2218/bmad-minimal/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/thien2218/bmad-minimal/compare/v1.2.5...HEAD
+[1.2.5]: https://github.com/thien2218/bmad-minimal/compare/v1.2.0...v1.2.5
+[1.2.0]: https://github.com/thien2218/bmad-minimal/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/thien2218/bmad-minimal/compare/v1.0.11...v1.1.0
 [1.0.11]: https://github.com/thien2218/bmad-minimal/compare/v1.0.10...v1.0.11
 [1.0.10]: https://github.com/thien2218/bmad-minimal/compare/v1.0.9...v1.0.10
