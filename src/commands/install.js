@@ -13,6 +13,7 @@ const {
 	ensureDocsStructure,
 } = require("../services/docsService");
 const { loadDefaultConfig, mergeConfig } = require("../services/configService");
+const { compressAgentConfigsInDir } = require("../services/agentConfigCompressor");
 
 /**
  * Install BMad Minimal into the current workspace.
@@ -66,6 +67,10 @@ async function install(options) {
 		// Copy core directories
 		console.log(chalk.gray(`  Copying engineering and planning files...`));
 		await copyCoreDirectories(coreDir, baseDir);
+
+		// Compress agent JSON configurations
+		console.log(chalk.gray(`  Compressing agent configurations...`));
+		await compressAgentConfigsInDir(baseDir);
 
 		// Write config.json
 		const configPath = path.join(baseDir, "config.json");

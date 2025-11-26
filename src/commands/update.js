@@ -11,6 +11,7 @@ const {
 } = require("../utils/fileOperations");
 const { ensureDocsStructure } = require("../services/docsService");
 const { findConfig, ensureDocsDefaults } = require("../services/configService");
+const { compressAgentConfigsInDir } = require("../services/agentConfigCompressor");
 const {
 	getConfigFields,
 	shouldGenerateCSPrompt,
@@ -114,6 +115,10 @@ async function update(options) {
 			await fs.remove(planningDest);
 			await copyDirectory(planningSource, planningDest);
 		}
+
+		// Compress agent JSON configurations
+		console.log(chalk.gray("  Compressing agent configurations..."));
+		await compressAgentConfigsInDir(baseDir);
 
 		// Restore config.json
 		console.log(chalk.gray("  Preserving configuration..."));

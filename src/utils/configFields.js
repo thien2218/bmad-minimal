@@ -26,30 +26,33 @@ function getConfigFields(cwd, options) {
 		},
 		{
 			type: "confirm",
-			name: "isSingular",
+			name: "isMonolithic",
 			message:
-				"Is this a singular app (fullstack app or an app with no clear backend/frontend separation)?",
+				"Is this a monolithic app (everything happens in one place with no backend/frontend separation)?",
 		},
 		{
 			type: "input",
 			name: "dir",
 			accessKey: "project.dir",
-			message: "App directory (relative to current directory):",
-			when: (answers) => answers.isSingular,
-		},
-		{
-			type: "input",
-			name: "backendDir",
-			accessKey: "project.backendDir",
-			message: "Backend directory (relative to current directory):",
-			when: (answers) => !answers.isSingular,
+			message: "Monolithic app directory (relative to current directory):",
+			default: () => "./",
+			when: (answers) => answers.isMonolithic,
 		},
 		{
 			type: "input",
 			name: "frontendDir",
 			accessKey: "project.frontendDir",
 			message: "Frontend directory (relative to current directory):",
-			when: (answers) => !answers.isSingular,
+			default: () => "./frontend/",
+			when: (answers) => !answers.isMonolithic,
+		},
+		{
+			type: "input",
+			name: "backendDir",
+			accessKey: "project.backendDir",
+			message: "Backend directory (relative to current directory):",
+			default: () => "./backend/",
+			when: (answers) => !answers.isMonolithic,
 		},
 		{
 			type: "input",
@@ -57,11 +60,16 @@ function getConfigFields(cwd, options) {
 			accessKey: "project.testDirs",
 			message:
 				"Test directories (comma-separated, relative to current directory):",
-			filter: (input) =>
-				input
+			default: "None",
+			filter: (input) => {
+				if (input.toLowerCase() === "none") {
+					return [];
+				}
+				return input
 					.split(",")
 					.map((d) => d.trim())
-					.filter((d) => d.length > 0),
+					.filter((d) => d.length > 0);
+			},
 		},
 		{
 			type: "input",
