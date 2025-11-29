@@ -139,3 +139,13 @@ This hierarchy keeps collaboration smooth and keeps everyone (and every agent) o
 ## Acknowledgements
 
 Special thanks to the BMAD-METHOD team for pioneering the Breakthrough Method for Agile AI-Driven Development. Your vision and ongoing contributions to open, collaborative development have served as a foundation for this project. We appreciate your commitment to empowering modern teams with innovative, agentic workflows and are grateful for the inspiration provided by the OG [project](https://github.com/bmad-code-org/BMAD-METHOD/tree/main).
+
+## License
+
+This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
+
+## FAQ & Support
+
+If you have any questions or need support, please open an issue on the [GitHub repository](https://github.com/thien2218/bmad-minimal/issues).
+
+Or contact me via [Gmail](bmad.thienhuynh@gmail.com).

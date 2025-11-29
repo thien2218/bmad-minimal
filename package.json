@@ -44,7 +44,7 @@
 		"agents"
 	],
 	"author": "Thien Huynh",
-	"license": "ISC",
+	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/thien2218/bmad-minimal/issues"
 	},
