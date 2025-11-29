@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This format follows Keep a Changelog and the project adheres to Semantic Versioning.
 
+## [1.2.6] - 2025-11-29
+
+### Changed
+
+-  Bump version to 1.2.6
+-  add a license and contact email
+
 ## [1.2.5] - 2025-11-26
 
 ### Changed
@@ -248,7 +255,8 @@ This format follows Keep a Changelog and the project adheres to Semantic Version
 -  final touches
 -  apply formatting
 
-[Unreleased]: https://github.com/thien2218/bmad-minimal/compare/v1.2.5...HEAD
+[Unreleased]: https://github.com/thien2218/bmad-minimal/compare/v1.2.6...HEAD
+[1.2.6]: https://github.com/thien2218/bmad-minimal/compare/v1.2.5...v1.2.6
 [1.2.5]: https://github.com/thien2218/bmad-minimal/compare/v1.2.0...v1.2.5
 [1.2.0]: https://github.com/thien2218/bmad-minimal/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/thien2218/bmad-minimal/compare/v1.0.11...v1.1.0
