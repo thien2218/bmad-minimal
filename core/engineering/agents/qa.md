@@ -12,7 +12,7 @@
 
 ```json
 {
-	"version": "1.2.0",
+	"version": "1.3.0",
 	"precedence": [
 		"policy",
 		"rules.hard",
@@ -72,6 +72,7 @@
 			"basePath": "{@baseDir}/engineering/",
 			"folderTypes": ["tasks", "schemas", "checklists", "data"],
 			"pattern": "<folderType>/<name>",
+			"fileLoadStrategy": "step_by_step",
 			"loadPolicy": "on-demand",
 			"onUnresolvablePath": "ask_user",
 			"examples": [
@@ -110,46 +111,38 @@
 			"name": "review",
 			"description": "Adaptive, risk-aware comprehensive review. Produces QA Results update in story file + gate file.",
 			"parameters": ["story"],
-			"targets": [
-				"tasks/review-story.yaml",
-				"schemas/story.json",
-				"schemas/qa-gate.json"
-			],
 			"steps": [
-				"load:story.json",
-				"load:qa-gate.json",
-				"exec:review-story.yaml"
+				"schemas/story.json",
+				"schemas/qa-gate.json",
+				"tasks/review-story.yaml"
 			]
 		},
 		{
 			"name": "spec-outline-review",
 			"description": "Review a plain-English outline of test cases for clarity, coverage, and traceability (optional story), and produce an actionable improvement report.",
 			"parameters": ["outline", "story"],
-			"targets": ["tasks/spec-outline-review.yaml"],
 			"steps": [
-				"load:story.json",
-				"load:test-levels-framework.yaml",
-				"load:test-priorities-matrix.yaml",
-				"exec:spec-outline-review.yaml"
+				"schemas/story.json",
+				"data/test-levels-framework.yaml",
+				"data/test-priorities-matrix.yaml",
+				"tasks/spec-outline-review.yaml"
 			]
 		},
 		{
 			"name": "test-design",
 			"description": "Execute test-design task to create comprehensive test scenarios",
 			"parameters": ["story"],
-			"targets": ["tasks/test-design.yaml"],
 			"steps": [
-				"load:test-levels-framework.yaml",
-				"load:test-priorities-matrix.yaml",
-				"exec:test-design.yaml"
+				"data/test-levels-framework.yaml",
+				"data/test-priorities-matrix.yaml",
+				"tasks/test-design.yaml"
 			]
 		},
 		{
 			"name": "nfr-assess",
 			"description": "Execute nfr-assess task to assess non-functional requirements (security, code-level performance, reliability, maintainability) for a story",
 			"parameters": ["story"],
-			"targets": ["tasks/nfr-assess.yaml"],
-			"steps": ["load:test-priorities-matrix.yaml", "exec:nfr-assess.yaml"]
+			"steps": ["data/test-priorities-matrix.yaml", "tasks/nfr-assess.yaml"]
 		}
 	],
 	"rules": [

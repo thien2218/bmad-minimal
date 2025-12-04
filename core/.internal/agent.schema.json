@@ -154,6 +154,7 @@
 						"basePath",
 						"folderTypes",
 						"pattern",
+						"fileLoadStrategy",
 						"loadPolicy",
 						"onUnresolvablePath"
 					],
@@ -171,6 +172,9 @@
 							}
 						},
 						"pattern": {
+							"type": "string"
+						},
+						"fileLoadStrategy": {
 							"type": "string"
 						},
 						"loadPolicy": {

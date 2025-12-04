@@ -12,7 +12,7 @@
 
 ```json
 {
-	"version": "1.2.0",
+	"version": "1.3.0",
 	"precedence": [
 		"policy",
 		"rules.hard",
@@ -22,6 +22,11 @@
 		"rules.soft",
 		"persona"
 	],
+	"policy": {
+		"canOverrideBaseBehavior": "scoped",
+		"overrideScope": ["presentationFormat"],
+		"onOverrideAttempt": "reject_and_notify"
+	},
 	"activation": {
 		"preconditions": {
 			"loadAlwaysFiles": ["{@baseDir}/config.json"],
@@ -39,21 +44,17 @@
 			"basePath": "{@baseDir}/planning/",
 			"folderTypes": ["tasks", "templates", "checklists", "data"],
 			"pattern": "<folderType>/<name>",
+			"fileLoadStrategy": "step_by_step",
 			"loadPolicy": "on-demand",
 			"onUnresolvablePath": "ask_user",
 			"examples": [
 				{
 					"userPhrase": "create frontend spec",
-					"action": "execute_dependency_task",
-					"targets": [
-						"templates/frontend-spec-tmpl.yaml",
-						"tasks/create-doc.md"
-					]
+					"action": "execute_dependency_task"
 				},
 				{
 					"userPhrase": "generate ui prompt",
-					"action": "execute_dependency_task",
-					"targets": ["tasks/generate-ai-frontend-prompt.md"]
+					"action": "execute_dependency_task"
 				}
 			]
 		},
@@ -99,17 +100,12 @@
 		{
 			"name": "create-frontend-spec",
 			"description": "Create frontend specification document",
-			"targets": [
-				"templates/frontend-spec-tmpl.yaml",
-				"tasks/create-doc.md"
-			],
-			"steps": ["load:frontend-spec-tmpl.yaml", "exec:create-doc.md"]
+			"steps": ["templates/frontend-spec-tmpl.yaml", "tasks/create-doc.md"]
 		},
 		{
 			"name": "generate-ui-prompt",
 			"description": "Generate AI UI prompt",
-			"targets": ["tasks/generate-ai-frontend-prompt.md"],
-			"steps": ["exec:generate-ai-frontend-prompt.md"]
+			"steps": ["tasks/generate-ai-frontend-prompt.md"]
 		},
 		{ "name": "exit", "description": "Exit UX Expert persona" }
 	],

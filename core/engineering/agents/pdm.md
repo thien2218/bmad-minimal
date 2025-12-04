@@ -12,7 +12,7 @@
 
 ```json
 {
-	"version": "1.2.0",
+	"version": "1.3.0",
 	"precedence": [
 		"policy",
 		"rules.hard",
@@ -75,18 +75,17 @@
 			"basePath": "{@baseDir}",
 			"folderTypes": ["tasks", "schemas", "checklists"],
 			"pattern": "<folderType>/<name>",
+			"fileLoadStrategy": "step_by_step",
 			"loadPolicy": "Only load files when user requests specific command execution",
 			"onUnresolvablePath": "ask_user",
 			"examples": [
 				{
 					"userPhrase": "draft story",
-					"action": "execute_dependency_task",
-					"targets": ["tasks/create-story.yaml"]
+					"action": "execute_dependency_task"
 				},
 				{
 					"userPhrase": "create epic",
-					"action": "execute_dependency_task",
-					"targets": ["tasks/create-epic.yaml"]
+					"action": "execute_dependency_task"
 				}
 			]
 		},
@@ -112,14 +111,15 @@
 		{
 			"name": "correct-course",
 			"description": "Execute task correct-course.yaml",
-			"targets": ["tasks/correct-course.yaml"],
-			"steps": ["load:change-checklist.md", "exec:correct-course.yaml"]
+			"steps": [
+				"checklists/change-checklist.md",
+				"tasks/correct-course.yaml"
+			]
 		},
 		{
 			"name": "execute-checklist",
 			"description": "Validate using the PDM master checklist",
-			"targets": ["checklists/pd-master-checklist.md"],
-			"steps": ["check:pd-master-checklist.md"]
+			"steps": ["checklists/pd-master-checklist.md"]
 		},
 		{
 			"name": "yolo",
@@ -128,69 +128,62 @@
 		{
 			"name": "create-epic",
 			"description": "Create the next highest order epic for project",
-			"targets": ["tasks/create-epic.yaml"],
 			"steps": [
-				"load:epic.json",
-				"check:pd-master-checklist.md",
-				"exec:create-epic.yaml"
+				"schemas/epic.json",
+				"checklists/pd-master-checklist.md",
+				"tasks/create-epic.yaml"
 			]
 		},
 		{
 			"name": "create-epics",
 			"description": "Create epics from PRD epic list",
-			"targets": ["tasks/create-epic.yaml"],
-			"steps": ["exec:create-epic.yaml"]
+			"steps": ["tasks/create-epic.yaml"]
 		},
 		{
 			"name": "create-story",
 			"description": "Create the next story for the highest ordered epic or the one specified by user.",
 			"parameters": ["epic"],
-			"targets": ["tasks/create-story.yaml"],
-			"steps": ["exec:create-story.yaml"]
+			"steps": ["tasks/create-story.yaml"]
 		},
 		{
 			"name": "create-stories",
 			"description": "Create all stories for the highest ordered epic or the epic specified by user.",
 			"parameters": ["epic"],
-			"targets": ["tasks/create-story.yaml"],
 			"steps": [
-				"load:story.json",
-				"check:story-draft-checklist.md",
-				"exec:validate-next-story.yaml",
-				"exec:create-story.yaml"
+				"schemas/story.json",
+				"checklists/story-draft-checklist.md",
+				"tasks/validate-next-story.yaml",
+				"tasks/create-story.yaml"
 			]
 		},
 		{
 			"name": "create-adhoc-epic",
 			"description": "Create the next highest order enhancement epic",
-			"targets": ["tasks/create-adhoc-epic.yaml"],
 			"steps": [
-				"load:epic.json",
-				"check:pd-master-checklist.md",
-				"exec:create-adhoc-epic.yaml"
+				"schemas/epic.json",
+				"checklists/pd-master-checklist.md",
+				"tasks/create-adhoc-epic.yaml"
 			]
 		},
 		{
 			"name": "create-adhoc-story",
 			"description": "Create next enhancement story for highest order or targeted enhancement epic",
 			"parameters": ["enhancement_epic"],
-			"targets": ["tasks/create-adhoc-story.yaml"],
 			"steps": [
-				"load:story.json",
-				"check:story-draft-checklist.md",
-				"exec:validate-next-story.yaml",
-				"exec:create-adhoc-story.yaml"
+				"schemas/story.json",
+				"checklists/story-draft-checklist.md",
+				"tasks/validate-next-story.yaml",
+				"tasks/create-adhoc-story.yaml"
 			]
 		},
 		{
 			"name": "create-standalone-story",
 			"description": "Create a single standalone story for very small enhancements that can be completed in one focused development session",
-			"parameters": ["story_enhancement_number", "story_title_short"],
-			"targets": ["tasks/create-standalone-story.yaml"],
+			"parameters": ["story_enhancement_number", "description"],
 			"steps": [
-				"load:story.json",
-				"check:story-draft-checklist.md",
-				"exec:create-standalone-story.yaml"
+				"schemas/story.json",
+				"checklists/story-draft-checklist.md",
+				"tasks/create-standalone-story.yaml"
 			]
 		}
 	],

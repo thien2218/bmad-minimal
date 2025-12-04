@@ -12,7 +12,7 @@
 
 ```json
 {
-	"version": "1.2.0",
+	"version": "1.3.0",
 	"precedence": [
 		"policy",
 		"rules.hard",
@@ -72,6 +72,7 @@
 			"basePath": "{@baseDir}/engineering/",
 			"folderTypes": ["tasks", "schemas", "checklists"],
 			"pattern": "<folderType>/<name>",
+			"fileLoadStrategy": "step_by_step",
 			"loadPolicy": "on-demand",
 			"onUnresolvablePath": "ask_user",
 			"examples": [
@@ -115,37 +116,36 @@
 			"description": "Execute develop-story (implementation-first flow; write tests at the end during validation) on the highest ordered WIP story or story specified by user",
 			"parameters": ["story"],
 			"preconditions": { "storyStatusMustBe": "WIP" },
-			"targets": ["tasks/develop-story.yaml", "schemas/story.json"],
-			"steps": ["check:story-dod-checklist", "exec:develop-story.yaml"]
+			"steps": [
+				"checklists/story-dod-checklist.md",
+				"tasks/develop-story.yaml"
+			]
 		},
 		{
 			"name": "develop-story-test-first",
 			"description": "Execute develop-story with a test-first flow (TDD approach): after confirming WIP status, implement test cases from story's Test Specs section first, then implement the feature until tests pass.",
 			"parameters": ["story"],
 			"preconditions": { "storyStatusMustBe": "WIP" },
-			"targets": ["tasks/develop-story-test-first.yaml"],
 			"steps": [
-				"check:story-dod-checklist",
-				"exec:develop-story-test-first.yaml"
+				"checklists/story-dod-checklist.md",
+				"tasks/develop-story-test-first.yaml"
 			]
 		},
 		{
 			"name": "apply-qa-fixes",
 			"description": "Apply code/test fixes based on QA outputs (gate + assessments) for a specified story.",
 			"parameters": ["story"],
-			"targets": ["tasks/apply-qa-fixes.yaml"],
 			"steps": [
-				"load:test-priorities-matrix.yaml",
-				"load:test-levels-framework.yaml",
-				"exec:apply-qa-fixes.yaml"
+				"data/test-priorities-matrix.yaml",
+				"data/test-levels-framework.yaml",
+				"tasks/apply-qa-fixes.yaml"
 			]
 		},
 		{
 			"name": "update-docs",
 			"description": "Update or create documentation (API docs via Swagger/OpenAPI for backend, component docs via Storybook for frontend). Prefers in-place documentation over generated artifacts. Supports custom documentation methods.",
 			"optionalParameters": ["type", "method"],
-			"targets": ["tasks/update-docs.yaml"],
-			"steps": ["exec:update-docs.yaml"]
+			"steps": ["tasks/update-docs.yaml"]
 		}
 	],
 	"rules": [

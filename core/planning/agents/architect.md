@@ -12,7 +12,7 @@
 
 ```json
 {
-	"version": "1.2.0",
+	"version": "1.3.0",
 	"precedence": [
 		"policy",
 		"rules.hard",
@@ -22,6 +22,11 @@
 		"rules.soft",
 		"persona"
 	],
+	"policy": {
+		"canOverrideBaseBehavior": "scoped",
+		"overrideScope": ["presentationFormat"],
+		"onOverrideAttempt": "reject_and_notify"
+	},
 	"activation": {
 		"preconditions": {
 			"loadAlwaysFiles": ["{@baseDir}/config.json"],
@@ -39,24 +44,17 @@
 			"basePath": "{@baseDir}/planning/",
 			"folderTypes": ["tasks", "templates", "checklists", "data"],
 			"pattern": "<folderType>/<name>",
+			"fileLoadStrategy": "step_by_step",
 			"loadPolicy": "on-demand",
 			"onUnresolvablePath": "ask_user",
 			"examples": [
 				{
-					"userInput": "create backend architecture",
-					"action": "execute_dependency_task",
-					"targets": [
-						"tasks/create-doc.md",
-						"templates/backend-architecture-tmpl.yaml"
-					]
+					"userPhrase": "create backend architecture",
+					"action": "execute_dependency_task"
 				},
 				{
-					"userInput": "update architecture",
-					"action": "execute_dependency_task",
-					"targets": [
-						"templates/architecture-tmpl.yaml",
-						"checklists/change-checklist.md"
-					]
+					"userPhrase": "update architecture",
+					"action": "execute_dependency_task"
 				}
 			]
 		},
@@ -102,79 +100,58 @@
 		{
 			"name": "create-app-architecture",
 			"description": "Create app architecture document",
-			"targets": ["tasks/create-doc.md", "templates/architecture-tmpl.yaml"],
-			"steps": ["load:architecture-tmpl.yaml", "exec:create-doc.md"]
+			"steps": ["templates/architecture-tmpl.yaml", "tasks/create-doc.md"]
 		},
 		{
 			"name": "create-fullstack-architecture",
 			"description": "Create fullstack architecture document",
-			"targets": [
-				"tasks/create-doc.md",
-				"templates/fullstack-architecture-tmpl.yaml"
-			],
 			"steps": [
-				"load:fullstack-architecture-tmpl.yaml",
-				"exec:create-doc.md"
+				"templates/fullstack-architecture-tmpl.yaml",
+				"tasks/create-doc.md"
 			]
 		},
 		{
 			"name": "create-backend-architecture",
 			"description": "Create backend architecture document",
-			"targets": [
-				"tasks/create-doc.md",
-				"templates/backend-architecture-tmpl.yaml"
-			],
-			"steps": ["load:backend-architecture-tmpl.yaml", "exec:create-doc.md"]
+			"steps": [
+				"templates/backend-architecture-tmpl.yaml",
+				"tasks/create-doc.md"
+			]
 		},
 		{
 			"name": "create-frontend-architecture",
 			"description": "Create frontend architecture document",
-			"targets": [
-				"tasks/create-doc.md",
-				"templates/frontend-architecture-tmpl.yaml"
-			],
-			"steps": ["load:frontend-architecture-tmpl.yaml", "exec:create-doc.md"]
+			"steps": [
+				"templates/frontend-architecture-tmpl.yaml",
+				"tasks/create-doc.md"
+			]
 		},
 		{
 			"name": "document-project",
 			"description": "Document the architecture of an existing project. Use one or multiple templates depending on the type of project",
-			"targets": [
-				"architecture-tmpl.yaml",
-				"backend-architecture-tmpl.yaml",
-				"frontend-architecture-tmpl.yaml",
-				"fullstack-architecture-tmpl.yaml"
-			],
 			"steps": [
-				"load:architecture-tmpl.yaml",
-				"load:backend-architecture-tmpl.yaml",
-				"load:frontend-architecture-tmpl.yaml",
-				"load:fullstack-architecture-tmpl.yaml"
+				"templates/architecture-tmpl.yaml",
+				"templates/backend-architecture-tmpl.yaml",
+				"templates/frontend-architecture-tmpl.yaml",
+				"templates/fullstack-architecture-tmpl.yaml"
 			]
 		},
 		{
 			"name": "execute-checklist",
 			"description": "Run checklist",
 			"parameters": ["checklist"],
-			"targets": ["checklists/architect-checklist.md"],
-			"steps": ["load:architect-checklist.md"]
+			"steps": ["checklists/architect-checklist.md"]
 		},
 		{
 			"name": "update-architecture",
 			"description": "Update an existing architecture document based on user's change request (add feature, extend functionality, change of library, etc.). Ensure the Change Log section is updated.",
 			"parameters": ["doc_type", "change_request"],
-			"targets": [
+			"steps": [
 				"templates/architecture-tmpl.yaml",
 				"templates/backend-architecture-tmpl.yaml",
 				"templates/frontend-architecture-tmpl.yaml",
 				"templates/fullstack-architecture-tmpl.yaml",
 				"checklists/change-checklist.md"
-			],
-			"steps": [
-				"load:architecture-tmpl.yaml",
-				"load:backend-architecture-tmpl.yaml",
-				"load:frontend-architecture-tmpl.yaml",
-				"load:fullstack-architecture-tmpl.yaml",
-				"load:change-checklist.md"
 			]
 		},
 		{

@@ -12,7 +12,7 @@
 
 ```json
 {
-	"version": "1.2.0",
+	"version": "1.3.0",
 	"precedence": [
 		"policy",
 		"rules.hard",
@@ -22,6 +22,11 @@
 		"rules.soft",
 		"persona"
 	],
+	"policy": {
+		"canOverrideBaseBehavior": "scoped",
+		"overrideScope": ["presentationFormat"],
+		"onOverrideAttempt": "reject_and_notify"
+	},
 	"activation": {
 		"preconditions": {
 			"loadAlwaysFiles": ["{@baseDir}/config.json"],
@@ -39,18 +44,17 @@
 			"basePath": "{@baseDir}/planning/",
 			"folderTypes": ["tasks", "templates", "checklists", "data"],
 			"pattern": "<folderType>/<name>",
+			"fileLoadStrategy": "step_by_step",
 			"loadPolicy": "on-demand",
 			"onUnresolvablePath": "ask_user",
 			"examples": [
 				{
 					"userPhrase": "analyze planning scope",
-					"action": "execute_dependency_task",
-					"targets": ["tasks/analyze-planning-scope.md"]
+					"action": "execute_dependency_task"
 				},
 				{
 					"userPhrase": "create deep research prompt",
-					"action": "execute_dependency_task",
-					"targets": ["tasks/create-deep-research-prompt.md"]
+					"action": "execute_dependency_task"
 				}
 			]
 		},
@@ -95,67 +99,46 @@
 		{
 			"name": "analyze-planning-scope",
 			"description": "Analyze a proposed change or implementation and recommend an appropriate planning scope level",
-			"targets": ["tasks/analyze-planning-scope.md"],
-			"steps": ["exec:analyze-planning-scope.md"]
+			"steps": ["tasks/analyze-planning-scope.md"]
 		},
 		{
 			"name": "create-prd",
 			"description": "Create PRD",
-			"targets": ["templates/prd-tmpl.yaml", "tasks/create-doc.md"],
-			"steps": ["load:prd-tmpl.yaml", "exec:create-doc.md"]
+			"steps": ["templates/prd-tmpl.yaml", "tasks/create-doc.md"]
 		},
 		{
 			"name": "update-prd",
 			"description": "Update an existing PRD based on user's change request (add feature, extend functionality, change of library, etc.). Ensure Change Log is updated.",
 			"parameters": ["change_request"],
-			"targets": [
-				"templates/prd-tmpl.yaml",
-				"checklists/change-checklist.md"
-			],
-			"steps": ["load:prd-tmpl.yaml", "load:change-checklist.md"]
+			"steps": ["templates/prd-tmpl.yaml", "checklists/change-checklist.md"]
 		},
 		{
 			"name": "document-project",
 			"description": "Analyze existing project artifacts and create comprehensive PRD using template-driven process",
-			"targets": [
-				"tasks/document-existing-project.md",
-				"templates/prd-tmpl.yaml",
-				"tasks/create-doc.md",
-				"data/elicitation-methods.md"
-			],
 			"steps": [
-				"load:prd-tmpl.yaml",
-				"load:elicitation-methods.md",
-				"exec:document-existing-project.md",
-				"exec:create-doc.md"
+				"templates/prd-tmpl.yaml",
+				"data/elicitation-methods.md",
+				"tasks/document-existing-project.md",
+				"tasks/create-doc.md"
 			]
 		},
 		{
 			"name": "brainstorm-requirements",
 			"description": "Facilitate an interactive brainstorming session and capture output using the brainstorming template",
-			"targets": [
+			"steps": [
 				"templates/brainstorming-output-tmpl.yaml",
 				"tasks/facilitate-brainstorming-session.md"
-			],
-			"steps": [
-				"load:brainstorming-output-tmpl.yaml",
-				"exec:facilitate-brainstorming-session.md"
 			]
 		},
 		{
 			"name": "create-deep-research-prompt",
 			"description": "Create a deep research prompt focused on project idea exploration, user understanding, or technical feasibility discovery",
-			"targets": ["tasks/create-deep-research-prompt.md"],
-			"steps": ["exec:create-deep-research-prompt.md"]
+			"steps": ["tasks/create-deep-research-prompt.md"]
 		},
 		{
 			"name": "create-project-brief",
 			"description": "Create project brief using the template-driven document creation task",
-			"targets": [
-				"templates/project-brief-tmpl.yaml",
-				"tasks/create-doc.md"
-			],
-			"steps": ["load:project-brief-tmpl.yaml", "exec:create-doc.md"]
+			"steps": ["templates/project-brief-tmpl.yaml", "tasks/create-doc.md"]
 		},
 		{
 			"name": "doc-out",

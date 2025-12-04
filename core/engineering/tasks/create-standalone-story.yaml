@@ -12,10 +12,9 @@ inputs:
       type: "string"
       description: "Enhancement number for the standalone story (e.g., '1', '2')"
       examples: ["1", "2", "3"]
-    - name: "story_title_short"
+    - name: "description"
       type: "string"
-      description: "Short kebab-case title for the story file"
-      examples: ["login-redirect-fix", "button-color-update", "api-validation-fix"]
+      description: "Brief description of the enhancement"
 
 process:
   mode: "sequential"
