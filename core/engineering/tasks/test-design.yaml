@@ -162,16 +162,6 @@ process:
                   p2: C
                 coverage_gaps: []
 
-      - id: PRINT-REFERENCE
-        title: Print Trace References
-        description: Output references for trace-requirements task
-        action:
-           type: analysis
-           prompt: |
-              Print:
-              Test design matrix: {@docs.subdirs.qa}/assessments/{story_id}-test-design-{YYYYMMDD}.md
-              P0 tests identified: {count}
-
 outputs:
    artifacts:
       - name: test_design_document
@@ -184,11 +174,6 @@ outputs:
         path: "test_design_block.yaml"
         format: yaml
         description: Test design block for gate file
-
-dependencies:
-   data:
-      - test-levels-framework.yaml
-      - test-priorities-matrix.yaml
 
 completion:
    criteria:

@@ -209,18 +209,11 @@ process:
           - All Tasks and Subtasks are marked [x] and have tests
           - Validations and full regression pass
           - File List is complete
-          - execute-checklist has been run with story-dod-checklist
+          - Validation has been run with story-dod-checklist
           - Story Status is updated:
             * "Blocked" if any blocking condition is met
             * "Review" otherwise
           - HALT
-
-dependencies:
-  tasks:
-    - execute-checklist.yaml
-    - validate-next-story.yaml
-  checklists:
-    - story-dod-checklist.yaml
 
 blocking_conditions:
   - condition: Unapproved dependencies needed

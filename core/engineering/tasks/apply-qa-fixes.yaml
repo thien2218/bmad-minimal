@@ -174,11 +174,6 @@ process:
         type: validation
         prompt: Dev does not modify gate YAML. If fixes address issues, request QA to re-run review-story to update the gate
 
-dependencies:
-  data:
-    - test-priorities-matrix.yaml
-    - test-levels-framework.yaml
-
 blocking_conditions:
   - condition: "Missing {@baseDir}/config.json"
     message: Core configuration file not found

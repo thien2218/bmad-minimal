@@ -1,7 +1,7 @@
 {
 	"project": {
-		"name": "",
-		"dir": "",
+		"name": "bmad-minimal",
+		"dir": "./",
 		"backendDir": "",
 		"frontendDir": "",
 		"testDirs": []

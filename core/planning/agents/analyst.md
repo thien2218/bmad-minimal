@@ -95,21 +95,24 @@
 		{
 			"name": "analyze-planning-scope",
 			"description": "Analyze a proposed change or implementation and recommend an appropriate planning scope level",
-			"targets": ["tasks/analyze-planning-scope.md"]
+			"targets": ["tasks/analyze-planning-scope.md"],
+			"steps": ["exec:analyze-planning-scope.md"]
 		},
 		{
 			"name": "create-prd",
 			"description": "Create PRD",
-			"targets": ["templates/prd-tmpl.yaml", "tasks/create-doc.md"]
+			"targets": ["templates/prd-tmpl.yaml", "tasks/create-doc.md"],
+			"steps": ["load:prd-tmpl.yaml", "exec:create-doc.md"]
 		},
 		{
 			"name": "update-prd",
 			"description": "Update an existing PRD based on user's change request (add feature, extend functionality, change of library, etc.). Ensure Change Log is updated.",
-			"parameters": ["prd_number", "change_request"],
+			"parameters": ["change_request"],
 			"targets": [
 				"templates/prd-tmpl.yaml",
 				"checklists/change-checklist.md"
-			]
+			],
+			"steps": ["load:prd-tmpl.yaml", "load:change-checklist.md"]
 		},
 		{
 			"name": "document-project",
@@ -119,6 +122,12 @@
 				"templates/prd-tmpl.yaml",
 				"tasks/create-doc.md",
 				"data/elicitation-methods.md"
+			],
+			"steps": [
+				"load:prd-tmpl.yaml",
+				"load:elicitation-methods.md",
+				"exec:document-existing-project.md",
+				"exec:create-doc.md"
 			]
 		},
 		{
@@ -127,17 +136,26 @@
 			"targets": [
 				"templates/brainstorming-output-tmpl.yaml",
 				"tasks/facilitate-brainstorming-session.md"
+			],
+			"steps": [
+				"load:brainstorming-output-tmpl.yaml",
+				"exec:facilitate-brainstorming-session.md"
 			]
 		},
 		{
 			"name": "create-deep-research-prompt",
 			"description": "Create a deep research prompt focused on project idea exploration, user understanding, or technical feasibility discovery",
-			"targets": ["tasks/create-deep-research-prompt.md"]
+			"targets": ["tasks/create-deep-research-prompt.md"],
+			"steps": ["exec:create-deep-research-prompt.md"]
 		},
 		{
 			"name": "create-project-brief",
 			"description": "Create project brief using the template-driven document creation task",
-			"targets": ["templates/project-brief-tmpl.yaml", "tasks/create-doc.md"]
+			"targets": [
+				"templates/project-brief-tmpl.yaml",
+				"tasks/create-doc.md"
+			],
+			"steps": ["load:project-brief-tmpl.yaml", "exec:create-doc.md"]
 		},
 		{
 			"name": "doc-out",

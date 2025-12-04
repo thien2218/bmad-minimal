@@ -102,7 +102,8 @@
 		{
 			"name": "create-app-architecture",
 			"description": "Create app architecture document",
-			"targets": ["tasks/create-doc.md", "templates/architecture-tmpl.yaml"]
+			"targets": ["tasks/create-doc.md", "templates/architecture-tmpl.yaml"],
+			"steps": ["load:architecture-tmpl.yaml", "exec:create-doc.md"]
 		},
 		{
 			"name": "create-fullstack-architecture",
@@ -110,6 +111,10 @@
 			"targets": [
 				"tasks/create-doc.md",
 				"templates/fullstack-architecture-tmpl.yaml"
+			],
+			"steps": [
+				"load:fullstack-architecture-tmpl.yaml",
+				"exec:create-doc.md"
 			]
 		},
 		{
@@ -118,7 +123,8 @@
 			"targets": [
 				"tasks/create-doc.md",
 				"templates/backend-architecture-tmpl.yaml"
-			]
+			],
+			"steps": ["load:backend-architecture-tmpl.yaml", "exec:create-doc.md"]
 		},
 		{
 			"name": "create-frontend-architecture",
@@ -126,7 +132,8 @@
 			"targets": [
 				"tasks/create-doc.md",
 				"templates/frontend-architecture-tmpl.yaml"
-			]
+			],
+			"steps": ["load:frontend-architecture-tmpl.yaml", "exec:create-doc.md"]
 		},
 		{
 			"name": "document-project",
@@ -136,16 +143,20 @@
 				"backend-architecture-tmpl.yaml",
 				"frontend-architecture-tmpl.yaml",
 				"fullstack-architecture-tmpl.yaml"
+			],
+			"steps": [
+				"load:architecture-tmpl.yaml",
+				"load:backend-architecture-tmpl.yaml",
+				"load:frontend-architecture-tmpl.yaml",
+				"load:fullstack-architecture-tmpl.yaml"
 			]
 		},
 		{
 			"name": "execute-checklist",
 			"description": "Run checklist",
 			"parameters": ["checklist"],
-			"targets": [
-				"tasks/execute-checklist.md",
-				"checklists/architect-checklist.md"
-			]
+			"targets": ["checklists/architect-checklist.md"],
+			"steps": ["load:architect-checklist.md"]
 		},
 		{
 			"name": "update-architecture",
@@ -157,6 +168,13 @@
 				"templates/frontend-architecture-tmpl.yaml",
 				"templates/fullstack-architecture-tmpl.yaml",
 				"checklists/change-checklist.md"
+			],
+			"steps": [
+				"load:architecture-tmpl.yaml",
+				"load:backend-architecture-tmpl.yaml",
+				"load:frontend-architecture-tmpl.yaml",
+				"load:fullstack-architecture-tmpl.yaml",
+				"load:change-checklist.md"
 			]
 		},
 		{

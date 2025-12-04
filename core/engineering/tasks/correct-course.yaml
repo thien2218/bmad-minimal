@@ -199,10 +199,6 @@ process:
         prompt: Determine if changes can be implemented directly or require fundamental replan
       on_failure: halt
 
-dependencies:
-  checklists:
-    - change-checklist.yaml
-
 blocking_conditions:
   - condition: Missing critical project artifacts
     message: Cannot proceed without access to PRD, Epics, and Architecture documents

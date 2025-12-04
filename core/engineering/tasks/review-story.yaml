@@ -216,10 +216,6 @@ outputs:
            - "QA Results"
         restrictions: "Only append to QA Results section, never modify other sections"
 
-dependencies:
-   schemas:
-      - qa-gate.json
-
 blocking_conditions:
    - condition: "Story file is incomplete or missing critical sections"
      message: "Story file must be complete before review"

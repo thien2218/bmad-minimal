@@ -112,15 +112,14 @@
 		{
 			"name": "correct-course",
 			"description": "Execute task correct-course.yaml",
-			"targets": ["tasks/correct-course.yaml"]
+			"targets": ["tasks/correct-course.yaml"],
+			"steps": ["load:change-checklist.md", "exec:correct-course.yaml"]
 		},
 		{
 			"name": "execute-checklist",
-			"description": "Run execute-checklist using the PDM master checklist",
-			"targets": [
-				"tasks/execute-checklist.yaml",
-				"checklists/pd-master-checklist.md"
-			]
+			"description": "Validate using the PDM master checklist",
+			"targets": ["checklists/pd-master-checklist.md"],
+			"steps": ["check:pd-master-checklist.md"]
 		},
 		{
 			"name": "yolo",
@@ -129,41 +128,70 @@
 		{
 			"name": "create-epic",
 			"description": "Create the next highest order epic for project",
-			"targets": ["tasks/create-epic.yaml"]
+			"targets": ["tasks/create-epic.yaml"],
+			"steps": [
+				"load:epic.json",
+				"check:pd-master-checklist.md",
+				"exec:create-epic.yaml"
+			]
 		},
 		{
 			"name": "create-epics",
 			"description": "Create epics from PRD epic list",
-			"targets": ["tasks/create-epic.yaml"]
+			"targets": ["tasks/create-epic.yaml"],
+			"steps": ["exec:create-epic.yaml"]
 		},
 		{
 			"name": "create-story",
 			"description": "Create the next story for the highest ordered epic or the one specified by user.",
 			"parameters": ["epic"],
-			"targets": ["tasks/create-story.yaml"]
+			"targets": ["tasks/create-story.yaml"],
+			"steps": ["exec:create-story.yaml"]
 		},
 		{
 			"name": "create-stories",
 			"description": "Create all stories for the highest ordered epic or the epic specified by user.",
 			"parameters": ["epic"],
-			"targets": ["tasks/create-story.yaml"]
+			"targets": ["tasks/create-story.yaml"],
+			"steps": [
+				"load:story.json",
+				"check:story-draft-checklist.md",
+				"exec:validate-next-story.yaml",
+				"exec:create-story.yaml"
+			]
 		},
 		{
 			"name": "create-adhoc-epic",
 			"description": "Create the next highest order enhancement epic",
-			"targets": ["tasks/create-adhoc-epic.yaml"]
+			"targets": ["tasks/create-adhoc-epic.yaml"],
+			"steps": [
+				"load:epic.json",
+				"check:pd-master-checklist.md",
+				"exec:create-adhoc-epic.yaml"
+			]
 		},
 		{
 			"name": "create-adhoc-story",
 			"description": "Create next enhancement story for highest order or targeted enhancement epic",
 			"parameters": ["enhancement_epic"],
-			"targets": ["tasks/create-adhoc-story.yaml"]
+			"targets": ["tasks/create-adhoc-story.yaml"],
+			"steps": [
+				"load:story.json",
+				"check:story-draft-checklist.md",
+				"exec:validate-next-story.yaml",
+				"exec:create-adhoc-story.yaml"
+			]
 		},
 		{
 			"name": "create-standalone-story",
 			"description": "Create a single standalone story for very small enhancements that can be completed in one focused development session",
 			"parameters": ["story_enhancement_number", "story_title_short"],
-			"targets": ["tasks/create-standalone-story.yaml"]
+			"targets": ["tasks/create-standalone-story.yaml"],
+			"steps": [
+				"load:story.json",
+				"check:story-draft-checklist.md",
+				"exec:create-standalone-story.yaml"
+			]
 		}
 	],
 	"rules": [

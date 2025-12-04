@@ -184,13 +184,6 @@ outputs:
            - "Test Specs"
         restrictions: "QA agent may edit only the 'Test Specs' field; do not modify other sections"
 
-dependencies:
-   schemas:
-      - story.json
-   data:
-      - test-levels-framework.yaml
-      - test-priorities-matrix.yaml
-
 metadata:
    author: Thien Huynh
    created: "2025-09-07"

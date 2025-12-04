@@ -241,7 +241,6 @@ process:
         description: Run story draft checklist for quality assurance
         action:
            type: subtask
-           subtask: execute-checklist
            target: "{@baseDir}/engineering/checklists/story-draft-checklist.md"
 
       - id: HANDOFF-1
@@ -259,14 +258,6 @@ process:
               Next steps:
               - Review draft story and approve
               - Proceed to implementation when ready
-
-dependencies:
-   schemas:
-      - story.json
-   tasks:
-      - execute-checklist.yaml
-   checklists:
-      - story-draft-checklist.yaml
 
 blocking_conditions:
    - condition: "No enhancement epic found in {@docs.subdirs.epics}"

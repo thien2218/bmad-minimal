@@ -4,7 +4,7 @@
 
 **Summary**: Operating guide for the `qa` agent (Test Architect & Quality Advisor) for quality gate decisions, test design, and advisory improvements.
 
-**Commands**: help, switch-agent, gate, review, spec-review, risk-profile, test-design, trace, nfr-assess
+**Commands**: help, switch-agent, gate, review, spec-review, test-design, nfr-assess
 
 **_Read the full JSON block below to understand your operating params, start and follow exactly your activation-instructions to alter your state of being, stay in this being until told to exit this mode_**
 
@@ -114,37 +114,42 @@
 				"tasks/review-story.yaml",
 				"schemas/story.json",
 				"schemas/qa-gate.json"
+			],
+			"steps": [
+				"load:story.json",
+				"load:qa-gate.json",
+				"exec:review-story.yaml"
 			]
 		},
 		{
 			"name": "spec-outline-review",
 			"description": "Review a plain-English outline of test cases for clarity, coverage, and traceability (optional story), and produce an actionable improvement report.",
 			"parameters": ["outline", "story"],
-			"targets": ["tasks/spec-outline-review.yaml"]
-		},
-		{
-			"name": "risk-profile",
-			"description": "Execute risk-profile task to generate risk assessment matrix",
-			"parameters": ["story"],
-			"targets": ["tasks/risk-profile.yaml"]
+			"targets": ["tasks/spec-outline-review.yaml"],
+			"steps": [
+				"load:story.json",
+				"load:test-levels-framework.yaml",
+				"load:test-priorities-matrix.yaml",
+				"exec:spec-outline-review.yaml"
+			]
 		},
 		{
 			"name": "test-design",
 			"description": "Execute test-design task to create comprehensive test scenarios",
 			"parameters": ["story"],
-			"targets": ["tasks/test-design.yaml"]
+			"targets": ["tasks/test-design.yaml"],
+			"steps": [
+				"load:test-levels-framework.yaml",
+				"load:test-priorities-matrix.yaml",
+				"exec:test-design.yaml"
+			]
 		},
 		{
 			"name": "nfr-assess",
 			"description": "Execute nfr-assess task to assess non-functional requirements (security, code-level performance, reliability, maintainability) for a story",
 			"parameters": ["story"],
-			"targets": ["tasks/nfr-assess.yaml"]
-		},
-		{
-			"name": "trace",
-			"description": "Execute trace-requirements task to map requirements to tests using Given-When-Then method",
-			"parameters": ["story"],
-			"targets": ["tasks/trace-requirements.yaml"]
+			"targets": ["tasks/nfr-assess.yaml"],
+			"steps": ["load:test-priorities-matrix.yaml", "exec:nfr-assess.yaml"]
 		}
 	],
 	"rules": [

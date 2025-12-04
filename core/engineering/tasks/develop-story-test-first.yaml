@@ -156,12 +156,6 @@ process:
           - Append to Debug Log, Completion Notes, Change Log with concise entries
           - Do not edit non-Dev sections
 
-dependencies:
-  tasks:
-    - execute-checklist.yaml
-  checklists:
-    - story-dod-checklist.yaml
-
 blocking_conditions:
   - condition: No Test Specs found in story
     message: Provide Test Specs in the story or run QA *spec-review

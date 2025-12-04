@@ -299,10 +299,6 @@ completion:
       - Gate YAML block generated
       - Integration information provided
 
-dependencies:
-   data:
-      - test-priorities-matrix.yaml
-
 metadata:
    author: Thien Huynh
    created: "2024-01-01"

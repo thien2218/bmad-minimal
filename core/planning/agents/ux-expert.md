@@ -99,12 +99,17 @@
 		{
 			"name": "create-frontend-spec",
 			"description": "Create frontend specification document",
-			"targets": ["templates/frontend-spec-tmpl.yaml", "tasks/create-doc.md"]
+			"targets": [
+				"templates/frontend-spec-tmpl.yaml",
+				"tasks/create-doc.md"
+			],
+			"steps": ["load:frontend-spec-tmpl.yaml", "exec:create-doc.md"]
 		},
 		{
 			"name": "generate-ui-prompt",
 			"description": "Generate AI UI prompt",
-			"targets": ["tasks/generate-ai-frontend-prompt.md"]
+			"targets": ["tasks/generate-ai-frontend-prompt.md"],
+			"steps": ["exec:generate-ai-frontend-prompt.md"]
 		},
 		{ "name": "exit", "description": "Exit UX Expert persona" }
 	],

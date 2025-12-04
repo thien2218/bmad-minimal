@@ -1,2 +1,6 @@
 .DS_Store
 node_modules/
+docs/epics
+docs/stories
+docs/prd.md
+docs/architecture.md

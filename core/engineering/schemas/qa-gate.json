@@ -31,7 +31,7 @@
 			"value": []
 		},
 		"risk_summary": {
-			"comment": "Risk summary (from risk-profile task if run)",
+			"comment": "Risk summary",
 			"totals": {
 				"critical": 0,
 				"high": 0,

@@ -391,40 +391,6 @@
 				}
 			}
 		},
-		"dependencies": {
-			"type": "object",
-			"description": "Task dependencies",
-			"properties": {
-				"tasks": {
-					"type": "array",
-					"description": "Other tasks this depends on",
-					"items": {
-						"type": "string"
-					}
-				},
-				"checklists": {
-					"type": "array",
-					"description": "Checklists this task uses",
-					"items": {
-						"type": "string"
-					}
-				},
-				"templates": {
-					"type": "array",
-					"description": "Templates this task uses",
-					"items": {
-						"type": "string"
-					}
-				},
-				"data": {
-					"type": "array",
-					"description": "Data files this task references",
-					"items": {
-						"type": "string"
-					}
-				}
-			}
-		},
 		"blocking_conditions": {
 			"type": "array",
 			"description": "Conditions that cause task to halt",

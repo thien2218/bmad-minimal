@@ -218,12 +218,6 @@ process:
               Stories proposed: {story_count}
               Next: Review story list and priorities, then proceed to story creation.
 
-dependencies:
-   schemas:
-      - epic.json
-   checklists:
-      - pd-master-checklist.yaml
-
 blocking_conditions:
    - condition: "PRD file for detected enhancement not found"
      message: "Missing PRD docs. Cannot derive epic."

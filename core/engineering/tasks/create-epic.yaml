@@ -8,10 +8,6 @@ agent: pdm
 
 inputs:
    required:
-      - name: prd_number
-        type: number
-        description: Non-padded PRD number for selecting PRD file (prd-{prd_number}-*.md)
-        examples: [1, 2, 3]
       - name: epic_number
         type: number
         description: Number to index the epic (derived by incrementing the highest number of the previously created highest order epic)
@@ -222,12 +218,6 @@ process:
               - Scope boundaries matching PRD definition
               - Definition of done
               - All stories follow PRD requirements
-
-dependencies:
-   checklists:
-      - pd-master-checklist.yaml
-   schemas:
-      - epic.json
 
 blocking_conditions:
    - condition: "Enhancement requires more than 3 stories"
