@@ -115,20 +115,18 @@
 			"name": "develop-story",
 			"description": "Execute develop-story (implementation-first flow; write tests at the end during validation) on the highest ordered WIP story or story specified by user",
 			"parameters": ["story"],
-			"preconditions": { "storyStatusMustBe": "WIP" },
 			"steps": [
-				"checklists/story-dod-checklist.md",
-				"tasks/develop-story.yaml"
+				"tasks/develop-story.yaml",
+				"checklists/story-dod-checklist.md"
 			]
 		},
 		{
 			"name": "develop-story-test-first",
 			"description": "Execute develop-story with a test-first flow (TDD approach): after confirming WIP status, implement test cases from story's Test Specs section first, then implement the feature until tests pass.",
 			"parameters": ["story"],
-			"preconditions": { "storyStatusMustBe": "WIP" },
 			"steps": [
-				"checklists/story-dod-checklist.md",
-				"tasks/develop-story-test-first.yaml"
+				"tasks/develop-story-test-first.yaml",
+				"checklists/story-dod-checklist.md"
 			]
 		},
 		{

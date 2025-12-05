@@ -68,7 +68,7 @@
 			"title": "Tasks / Subtasks",
 			"type": "bullet-list",
 			"instruction": "Break down the story into specific tasks and subtasks needed for implementation.\nReference applicable acceptance criteria numbers where relevant.\nAssign a Difficulty for each task and subtask (integer 1–10) capturing both complexity and uncertainty.",
-			"template": "- [ ] <task description> (AC: # if applicable) [Diff: 1-10]\n  - [ ] <subtask description, if needed> [Diff: 1-10]\n- [ ] <task description> (AC: # if applicable) [Diff: 1-10]\n  - [ ] <subtask description, if needed> [Diff: 1-10]\n- [ ] <task description> (AC: # if applicable) [Diff: 1-10]\n  - [ ] <subtask description, if needed> [Diff: 1-10]",
+			"template": "- [ ] {{task_description}} (AC: # if applicable) [Diff: 1-10]\n  - [ ] {{optional_subtask_description}} [Diff: 1-10]\n- [ ] {{task_description}} (AC: # if applicable) [Diff: 1-10]\n  - [ ] {{optional_subtask_description}} [Diff: 1-10]\n- [ ] {{task_description}} (AC: # if applicable) [Diff: 1-10]\n  - [ ] {{optional_subtask_description}} [Diff: 1-10]",
 			"elicit": true,
 			"owner": "product-development-master",
 			"editors": [
