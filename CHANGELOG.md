@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 This format follows Keep a Changelog and the project adheres to Semantic Versioning.
 
+## [1.3.0] - 2025-12-05
+
+### Changed
+
+-  Bump version to 1.3.0
+-  optimize dependency loading for agent workflows
+-  revert file loading resolution behavior to a simpler, more predictable model
+
+### Fixed
+
+-  fix dev agent artifact load order and story schema to ensure correct file resolution
+
 ## [1.2.6] - 2025-11-29
 
 ### Changed
@@ -255,7 +267,8 @@ This format follows Keep a Changelog and the project adheres to Semantic Version
 -  final touches
 -  apply formatting
 
-[Unreleased]: https://github.com/thien2218/bmad-minimal/compare/v1.2.6...HEAD
+[Unreleased]: https://github.com/thien2218/bmad-minimal/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/thien2218/bmad-minimal/compare/v1.2.6...v1.3.0
 [1.2.6]: https://github.com/thien2218/bmad-minimal/compare/v1.2.5...v1.2.6
 [1.2.5]: https://github.com/thien2218/bmad-minimal/compare/v1.2.0...v1.2.5
 [1.2.0]: https://github.com/thien2218/bmad-minimal/compare/v1.1.0...v1.2.0
