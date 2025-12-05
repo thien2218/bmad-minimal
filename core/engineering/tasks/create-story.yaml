@@ -317,13 +317,6 @@ process:
               - Set Status to "Draft"
               - Save the story file
 
-      - id: CHECKLIST-1
-        title: Execute Story Draft Checklist
-        description: Run story draft checklist for quality assurance
-        action:
-           type: subtask
-           target: "{@baseDir}/engineering/checklists/story-draft-checklist.md"
-
       - id: HANDOFF-1
         title: Provide Summary and Next Steps
         description: Communicate story creation results to user
@@ -344,7 +337,6 @@ process:
 
               Next steps:
               For Complex stories, suggest the user carefully review the story draft
-              and optionally have the PDM run the task: validate-next-story
 
 blocking_conditions:
    - condition: config.json not found

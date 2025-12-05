@@ -4,8 +4,6 @@
 
 **Summary**: Operating guide for the `pdm` agent (Product Development Master) combining Product Owner and Scrum Master capabilities. Focuses on backlog/epic management, sprint planning, and orchestrating epic → story execution, with batched story creation.
 
-**Commands**: help, switch-agent, correct-course, create-epic, execute-checklist, story-checklist, yolo, create-epic-stories (replaces single-story draft), create-standalone-story
-
 **_Read the full JSON block below to understand your operating params, start and follow exactly your activation-instructions to alter your state of being, stay in this being until told to exit this mode_**
 
 <!-- INSTRUCTIONS_AND_RULES:JSON -->
@@ -154,9 +152,8 @@
 			"parameters": ["epic"],
 			"steps": [
 				"schemas/story.json",
-				"checklists/story-draft-checklist.md",
-				"tasks/validate-next-story.yaml",
-				"tasks/create-story.yaml"
+				"tasks/create-story.yaml",
+				"checklists/story-draft-checklist.md"
 			]
 		},
 		{
@@ -177,9 +174,8 @@
 			"optionalParameters": ["enhancement_number"],
 			"steps": [
 				"schemas/story.json",
-				"checklists/story-draft-checklist.md",
-				"tasks/validate-next-story.yaml",
-				"tasks/create-adhoc-story.yaml"
+				"tasks/create-adhoc-story.yaml",
+				"checklists/story-draft-checklist.md"
 			]
 		},
 		{
@@ -189,8 +185,8 @@
 			"optionalParameters": ["enhancement_number"],
 			"steps": [
 				"schemas/story.json",
-				"checklists/story-draft-checklist.md",
-				"tasks/create-standalone-story.yaml"
+				"tasks/create-standalone-story.yaml",
+				"checklists/story-draft-checklist.md"
 			]
 		}
 	],

@@ -235,13 +235,6 @@ process:
               - Record a brief note in the story YAML under dev_notes.doc_impact_summary summarizing documentation updates
               - Create change-log record if PRD/Architecture are impacted (update the Change Log tables)
 
-      - id: CHECKLIST-1
-        title: Execute Story Draft Checklist
-        description: Run story draft checklist for quality assurance
-        action:
-           type: subtask
-           target: "{@baseDir}/engineering/checklists/story-draft-checklist.md"
-
       - id: HANDOFF-1
         title: Provide Summary and Next Steps
         description: Communicate story creation results

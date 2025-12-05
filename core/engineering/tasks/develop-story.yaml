@@ -149,7 +149,6 @@ process:
            command: "{test_command}"
            content: |
               - Run test suite
-              - Execute dependency task: validate-next-story
               - Execute checklist: story-dod-checklist
         retry:
            max_attempts: 3
