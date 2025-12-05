@@ -126,13 +126,6 @@ async function bundleAgentWithDependencies() {
 async function updateCheatSheetWithAgent() {
 	const cheatSheetPath = getPath("docs/cheat-sheet.md");
 
-	let existing = "";
-	try {
-		existing = await fs.readFile(cheatSheetPath, "utf-8");
-	} catch (e) {
-		if (e.code !== "ENOENT") throw e;
-	}
-
 	const sections = [];
 
 	for (const agentDir of AGENTS_DIRS) {
@@ -187,16 +180,43 @@ async function updateCheatSheetWithAgent() {
 				for (const cmd of commands) {
 					if (!cmd || typeof cmd.name !== "string") continue;
 					const name = cmd.name.trim();
-					if (!name) continue;
+							if (!name) continue;
+
+					const params = Array.isArray(cmd.parameters)
+						? cmd.parameters
+						: [];
+					const optionalParams = Array.isArray(cmd.optionalParameters)
+						? cmd.optionalParameters
+						: [];
+
 					const desc =
 						typeof cmd.description === "string" && cmd.description.trim()
 							? cmd.description.trim()
 							: "";
+
+					// Top-level bullet: name + description on one line
 					if (desc) {
 						sectionLines.push(`- \`${name}\`: ${desc}`);
 					} else {
 						sectionLines.push(`- \`${name}\``);
 					}
+
+					// Nested bullets for parameters
+					if (params.length > 0) {
+						sectionLines.push(`  - required: ${params.join(", ")}`);
+					}
+
+					if (optionalParams.length > 0) {
+						sectionLines.push(
+							`  - optional: ${optionalParams.join(", ")}`
+						);
+					}
+
+					sectionLines.push("");
+				}
+				// Remove trailing blank line for neatness
+				if (sectionLines[sectionLines.length - 1] === "") {
+					sectionLines.pop();
 				}
 			}
 
@@ -211,26 +231,17 @@ async function updateCheatSheetWithAgent() {
 		return;
 	}
 
-	const trimmedExisting = existing.trim();
-	const newSections = sections.join("\n\n") + "\n";
-
-	let finalContent;
-	if (trimmedExisting) {
-		finalContent = trimmedExisting + "\n\n" + newSections;
-	} else {
-		finalContent = newSections;
-	}
+	const content = sections.join("\n\n---\n\n") + "\n";
 
 	await fs.ensureDir(path.dirname(cheatSheetPath));
-	await fs.writeFile(cheatSheetPath, finalContent, "utf-8");
+	await fs.writeFile(cheatSheetPath, content, "utf-8");
 }
 
 /**
-	* Run full build pipeline:
-	* - compress agent configs
-	* - bundle agents with dependencies
-	* - update cheat sheet
-	*/
+ * Run full build pipeline:
+ * - bundle agents with dependencies
+ * - update cheat sheet
+ */
 async function main() {
 	try {
 		console.log(chalk.blue("Running build pipeline...\n"));
