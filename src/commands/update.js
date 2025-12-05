@@ -9,7 +9,10 @@ const {
 	exists,
 	getPath,
 } = require("../utils/fileOperations");
-const { ensureDocsStructure } = require("../utils/docs");
+const {
+	ensureDocsStructure,
+	copyCheatSheetToWorkspace,
+} = require("../utils/docs");
 const {
 	findConfig,
 	ensureDocsDefaults,
@@ -126,9 +129,22 @@ async function update(options) {
 		await writeJson(configPath, configBackup);
 
 		// Add coding standards if it doesn't exists
-		const docsDir = path.join(cwd, config.docs.dir);
 		await shouldGenerateCSPrompt(config);
 
+		// Write cheat sheet
+		try {
+			await copyCheatSheetToWorkspace(cwd, config);
+			console.log(
+				chalk.gray(
+					`  Copied cheat sheet to ${config.docs.dir}/cheat-sheet.md`
+				)
+			);
+		} catch (e) {
+			console.log(
+				chalk.yellow(`  Warning: failed to copy cheat sheet: ${e.message}`)
+			);
+		}
+	
 		// Ensure all doc directories still exist
 		await ensureDocsStructure(cwd, config);
 

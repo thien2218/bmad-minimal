@@ -1,5 +1,6 @@
 const fs = require("fs-extra");
 const path = require("path");
+const { getPath } = require("./fileOperations");
 
 /**
  * Copy core directories (engineering, planning) into a base directory.
@@ -33,7 +34,34 @@ async function ensureDocsStructure(cwd, configData) {
 	}
 }
 
+/**
+ * Copy the package cheat sheet (docs/cheat-sheet.md in this package)
+ * into the workspace docs directory next to coding-standards.md.
+ *
+ * @param {string} cwd - Current working directory (workspace root)
+ * @param {object} configData - Config object with docs.dir
+ * @returns {Promise<void>}
+ */
+async function copyCheatSheetToWorkspace(cwd, configData) {
+	const packageCheatSheetPath = getPath("docs/cheat-sheet.md");
+	const workspaceCheatSheetPath = path.join(
+		cwd,
+		configData.docs.dir,
+		"cheat-sheet.md"
+	);
+
+	if (!(await fs.pathExists(packageCheatSheetPath))) {
+		return;
+	}
+
+	await fs.ensureDir(path.dirname(workspaceCheatSheetPath));
+	await fs.copy(packageCheatSheetPath, workspaceCheatSheetPath, {
+		overwrite: true,
+	});
+}
+
 module.exports = {
 	copyCoreDirectories,
 	ensureDocsStructure,
+	copyCheatSheetToWorkspace,
 };

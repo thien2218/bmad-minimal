@@ -10,7 +10,11 @@ const {
 	loadDefaultConfig,
 	mergeConfig,
 } = require("../utils/config");
-const { copyCoreDirectories, ensureDocsStructure } = require("../utils/docs");
+const {
+	copyCoreDirectories,
+	ensureDocsStructure,
+	copyCheatSheetToWorkspace,
+} = require("../utils/docs");
 const { compressAgentConfigs } = require("../utils/compress");
 
 /**
@@ -82,6 +86,20 @@ async function install(options) {
 		// Create docs directory structure (use merged defaults)
 		await ensureDocsStructure(cwd, configData);
 
+		// Write cheat sheet
+		try {
+			await copyCheatSheetToWorkspace(cwd, configData);
+			console.log(
+				chalk.gray(
+					`  Copied cheat sheet to ${configData.docs.dir}/cheat-sheet.md`
+				)
+			);
+		} catch (e) {
+			console.log(
+				chalk.yellow(`  Warning: failed to copy cheat sheet: ${e.message}`)
+			);
+		}
+
 		// After all files are written, ensure baseDir is ignored by git
 		try {
 			const entry = String(config.baseDir || "").trim();
@@ -101,6 +119,8 @@ async function install(options) {
 			);
 		}
 
+		await shouldGenerateCSPrompt(configData);
+
 		console.log(chalk.green("\n✅ BMad Minimal installation complete!\n"));
 		console.log(chalk.cyan("📁 Structure created:"));
 		console.log(`   ${config.baseDir}/`);
@@ -113,8 +133,6 @@ async function install(options) {
 		console.log(`   ├── ${configData.docs.subdirs.qa}/`);
 		console.log(`   ├── ${configData.docs.subdirs.prds}/`);
 		console.log(`   └── coding-standards.md`);
-
-		await shouldGenerateCSPrompt(configData);
 	} catch (error) {
 		console.error(chalk.red("❌ Installation failed:"), error.message);
 		throw error;
