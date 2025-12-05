@@ -3,17 +3,18 @@ const chalk = require("chalk");
 const path = require("path");
 const fs = require("fs-extra");
 const { writeJson, exists, getCoreDir } = require("../utils/fileOperations");
-const { ensureIgnored } = require("../lib/gitignore");
+const { ensureIgnored } = require("../utils/gitignore");
 const {
 	getConfigFields,
 	shouldGenerateCSPrompt,
-} = require("../utils/configFields");
+	loadDefaultConfig,
+	mergeConfig,
+} = require("../utils/config");
 const {
 	copyCoreDirectories,
 	ensureDocsStructure,
-} = require("../services/docsService");
-const { loadDefaultConfig, mergeConfig } = require("../services/configService");
-const { compressAgentConfigsInDir } = require("../services/agentConfigCompressor");
+	copyCompressedAgents,
+} = require("../utils/docs");
 
 /**
  * Install BMad Minimal into the current workspace.
@@ -68,9 +69,9 @@ async function install(options) {
 		console.log(chalk.gray(`  Copying engineering and planning files...`));
 		await copyCoreDirectories(coreDir, baseDir);
 
-		// Compress agent JSON configurations
-		console.log(chalk.gray(`  Compressing agent configurations...`));
-		await compressAgentConfigsInDir(baseDir);
+		// Copy pre-compressed agent files
+		console.log(chalk.gray(`  Copying pre-compressed agent configurations...`));
+		await copyCompressedAgents(baseDir);
 
 		// Write config.json
 		const configPath = path.join(baseDir, "config.json");

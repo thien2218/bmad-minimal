@@ -9,13 +9,13 @@ const {
 	exists,
 	getCoreDir,
 } = require("../utils/fileOperations");
-const { ensureDocsStructure } = require("../services/docsService");
-const { findConfig, ensureDocsDefaults } = require("../services/configService");
-const { compressAgentConfigsInDir } = require("../services/agentConfigCompressor");
+const { ensureDocsStructure, copyCompressedAgents } = require("../utils/docs");
 const {
+	findConfig,
+	ensureDocsDefaults,
 	getConfigFields,
 	shouldGenerateCSPrompt,
-} = require("../utils/configFields");
+} = require("../utils/config");
 
 /**
  * Update existing BMad Minimal installation to latest core templates,
@@ -116,9 +116,9 @@ async function update(options) {
 			await copyDirectory(planningSource, planningDest);
 		}
 
-		// Compress agent JSON configurations
-		console.log(chalk.gray("  Compressing agent configurations..."));
-		await compressAgentConfigsInDir(baseDir);
+		// Copy pre-compressed agent files
+		console.log(chalk.gray("  Copying pre-compressed agent configurations..."));
+		await copyCompressedAgents(baseDir);
 
 		// Restore config.json
 		console.log(chalk.gray("  Preserving configuration..."));
