@@ -111,6 +111,7 @@
 			"name": "review",
 			"description": "Adaptive, risk-aware comprehensive review. Produces QA Results update in story file + gate file.",
 			"parameters": ["story"],
+			"optionalParameters": ["architecture_refs", "coding_standards"],
 			"steps": [
 				"schemas/story.json",
 				"schemas/qa-gate.json",
@@ -142,6 +143,11 @@
 			"name": "nfr-assess",
 			"description": "Execute nfr-assess task to assess non-functional requirements (security, code-level performance, reliability, maintainability) for a story",
 			"parameters": ["story"],
+			"optionalParameters": [
+				"architecture_refs",
+				"coding_standards",
+				"interaction_mode"
+			],
 			"steps": ["data/test-priorities-matrix.yaml", "tasks/nfr-assess.yaml"]
 		}
 	],

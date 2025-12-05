@@ -7,16 +7,15 @@ category: planning
 agent: pdm
 
 inputs:
-   optional:
-      - name: epic_enhancement_number
+   required:
+      - name: enhancement_epic
         type: number
-        description: Override detected highest enhancement epic number (default auto-detected from {@docs.subdirs.epics}).
+        description: Specify the enhancement epic number to create a story for.
+        examples: [1, 2, 3]
+   optional:
       - name: story_enhancement_number
         type: number
         description: Override next story number within the selected enhancement epic (default auto-increment from existing stories).
-      - name: story_slug
-        type: string
-        description: Optional short kebab-case slug used in the story filename wildcard.
 
 outputs:
    artifacts:
@@ -225,16 +224,16 @@ process:
         title: Update affected documentation if needed
         description: Update PRD and/or architecture documents based on impact assessment
         condition:
-          if: "inputs.impact_assessment != '1'"
+           if: "inputs.impact_assessment != '1'"
         action:
-          type: analysis
-          content: |
-            Based on impact assessment, update the affected documents:
+           type: analysis
+           content: |
+              Based on impact assessment, update the affected documents:
 
-            - PRD: update relevant sections if behavior or requirements change
-            - Architecture: update affected files/sections if patterns are affected
-            - Record a brief note in the story YAML under dev_notes.doc_impact_summary summarizing documentation updates
-            - Create change-log record if PRD/Architecture are impacted (update the Change Log tables)
+              - PRD: update relevant sections if behavior or requirements change
+              - Architecture: update affected files/sections if patterns are affected
+              - Record a brief note in the story YAML under dev_notes.doc_impact_summary summarizing documentation updates
+              - Create change-log record if PRD/Architecture are impacted (update the Change Log tables)
 
       - id: CHECKLIST-1
         title: Execute Story Draft Checklist
@@ -270,13 +269,3 @@ completion:
       - Story content aligned with epic and PRD
       - Checklist executed
       - Documentation impact is assessed and updates are made if needed
-
-metadata:
-   author: Thien Huynh
-   created: 2025-09-05
-   lastModified: 2025-09-05
-   tags:
-      - story
-      - planning
-   complexity: moderate
-   estimated_duration: 30m-45m

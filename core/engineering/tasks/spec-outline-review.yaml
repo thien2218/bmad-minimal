@@ -183,17 +183,3 @@ outputs:
         sections:
            - "Test Specs"
         restrictions: "QA agent may edit only the 'Test Specs' field; do not modify other sections"
-
-metadata:
-   author: Thien Huynh
-   created: "2025-09-07"
-   lastModified: "2025-09-07"
-   tags:
-      - qa
-      - specs
-      - outline
-      - review
-      - coverage
-      - quality
-   complexity: low
-   estimated_duration: "5m-20m"

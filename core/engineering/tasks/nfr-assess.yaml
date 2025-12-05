@@ -18,13 +18,6 @@ inputs:
         description: Path to story file from docs.subdirs.stories in config.json
         pattern: "{@docs.subdirs.stories}/{story_id}-*.yaml"
    optional:
-      - name: story_title
-        type: string
-        description: Story title (derive from story file H1 if missing)
-      - name: story_slug
-        type: string
-        description: Story slug (derive from title if missing - lowercase, hyphenated)
-        pattern: "^[a-z0-9-]+$"
       - name: architecture_refs
         type: path
         description: Path to architecture documents from config.json
@@ -298,18 +291,3 @@ completion:
       - Assessment report created
       - Gate YAML block generated
       - Integration information provided
-
-metadata:
-   author: Thien Huynh
-   created: "2024-01-01"
-   lastModified: "2024-01-01"
-   tags:
-      - nfr
-      - quality
-      - assessment
-      - security
-      - performance
-      - reliability
-      - maintainability
-   complexity: moderate
-   estimated_duration: "20m-45m"

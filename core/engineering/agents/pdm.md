@@ -111,6 +111,8 @@
 		{
 			"name": "correct-course",
 			"description": "Execute task correct-course.yaml",
+			"parameters": ["change_trigger", "initial_impact"],
+			"optionalParameters": ["interaction_mode"],
 			"steps": [
 				"checklists/change-checklist.md",
 				"tasks/correct-course.yaml"
@@ -128,6 +130,7 @@
 		{
 			"name": "create-epic",
 			"description": "Create the next highest order epic for project",
+			"parameters": ["epic_number", "enhancement_name"],
 			"steps": [
 				"schemas/epic.json",
 				"checklists/pd-master-checklist.md",
@@ -159,6 +162,8 @@
 		{
 			"name": "create-adhoc-epic",
 			"description": "Create the next highest order enhancement epic",
+			"parameters": ["epic_description"],
+			"optionalParameters": ["epic_enhancement_number"],
 			"steps": [
 				"schemas/epic.json",
 				"checklists/pd-master-checklist.md",
@@ -169,6 +174,7 @@
 			"name": "create-adhoc-story",
 			"description": "Create next enhancement story for highest order or targeted enhancement epic",
 			"parameters": ["enhancement_epic"],
+			"optionalParameters": ["enhancement_number"],
 			"steps": [
 				"schemas/story.json",
 				"checklists/story-draft-checklist.md",
@@ -179,7 +185,8 @@
 		{
 			"name": "create-standalone-story",
 			"description": "Create a single standalone story for very small enhancements that can be completed in one focused development session",
-			"parameters": ["story_enhancement_number", "description"],
+			"parameters": ["description"],
+			"optionalParameters": ["enhancement_number"],
 			"steps": [
 				"schemas/story.json",
 				"checklists/story-draft-checklist.md",

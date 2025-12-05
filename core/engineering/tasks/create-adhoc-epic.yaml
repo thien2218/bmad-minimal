@@ -7,13 +7,14 @@ category: planning
 agent: pdm
 
 inputs:
+   required:
+      - name: epic_description
+        type: string
+        description: Short description of the adhoc epic. Used to derive the epic enhancement_name.
    optional:
       - name: epic_enhancement_number
         type: number
         description: Override the detected highest enhancement number (default is auto-detected).
-      - name: enhancement_name
-        type: string
-        description: Optional short kebab-case slug used in the epic filename wildcard.
 
 outputs:
    artifacts:
@@ -196,16 +197,16 @@ process:
         title: Update affected documentation if needed
         description: Update PRD and/or architecture documents based on impact assessment
         condition:
-          if: "inputs.impact_assessment != '1'"
+           if: "inputs.impact_assessment != '1'"
         action:
-          type: analysis
-          content: |
-            Based on impact assessment, update the affected documents:
+           type: analysis
+           content: |
+              Based on impact assessment, update the affected documents:
 
-            - PRD: update relevant sections if behavior or requirements change
-            - Architecture: update affected files/sections if patterns are affected
-            - Record a brief note in the epic YAML summarizing documentation updates
-            - Create change-log record if PRD/Architecture are impacted (update the Change Log tables)
+              - PRD: update relevant sections if behavior or requirements change
+              - Architecture: update affected files/sections if patterns are affected
+              - Record a brief note in the epic YAML summarizing documentation updates
+              - Create change-log record if PRD/Architecture are impacted (update the Change Log tables)
 
       - id: HANDOFF-1
         title: Provide Summary
@@ -229,13 +230,3 @@ completion:
       - Sections present per epic schema
       - Story list proposed with priorities
       - Documentation impact is assessed and updates are made if needed
-
-metadata:
-   author: Thien Huynh
-   created: 2025-09-05
-   lastModified: 2025-09-05
-   tags:
-      - epic
-      - planning
-   complexity: moderate
-   estimated_duration: 30m-45m

@@ -442,38 +442,6 @@
 					}
 				}
 			}
-		},
-		"metadata": {
-			"type": "object",
-			"description": "Additional metadata",
-			"properties": {
-				"author": {
-					"type": "string"
-				},
-				"created": {
-					"type": "string",
-					"format": "date"
-				},
-				"lastModified": {
-					"type": "string",
-					"format": "date"
-				},
-				"tags": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				},
-				"complexity": {
-					"type": "string",
-					"enum": ["simple", "moderate", "complex"],
-					"default": "moderate"
-				},
-				"estimated_duration": {
-					"type": "string",
-					"description": "Estimated duration (e.g., '30m', '2h')"
-				}
-			}
 		}
 	}
 }

@@ -7,301 +7,295 @@ category: "planning"
 agent: "pdm"
 
 inputs:
-  optional:
-    - name: "story_enhancement_number"
-      type: "string"
-      description: "Enhancement number for the standalone story (e.g., '1', '2')"
-      examples: ["1", "2", "3"]
-    - name: "description"
-      type: "string"
-      description: "Brief description of the enhancement"
+   required:
+      - name: "description"
+        type: "string"
+        description: "Brief description of the enhancement"
+   optional:
+      - name: "story_enhancement_number"
+        type: "string"
+        description: "Enhancement number for the standalone story, Override next story number within the selected enhancement epic (default auto-increment from existing stories)."
+        examples: ["1", "2", "3"]
 
 process:
-  mode: "sequential"
-  steps:
-    - id: "ASSESS-SCOPE"
-      title: "Assess if standalone story is appropriate"
-      description: "Verify this enhancement meets criteria for standalone story vs epic vs full PRD process"
-      action:
-        type: "elicit"
-        prompt: |
-          Before creating a standalone story, confirm this enhancement meets ALL criteria:
-          
-          **Use standalone story when:**
-          - Enhancement can be completed in a single story
-          - No new architecture or significant design is required
-          - Change follows existing patterns exactly
-          - Integration is straightforward with minimal risk
-          - Change is isolated with clear boundaries
-          
-          **Use create-epic when:**
-          - Enhancement requires 2-3 coordinated stories
-          - Some design work is needed
-          - Multiple integration points are involved
-          
-          **Use full PRD/Architecture process when:**
-          - Enhancement requires multiple coordinated stories
-          - Architectural planning is needed
-          - Significant integration work is required
-          
-          Does this enhancement meet standalone story criteria? (1=Yes, 2=No, escalate to epic, 3=No, escalate to PRD)
-        options: ["1", "2", "3"]
-        validation:
-          type: "string"
-          pattern: "^[1-3]$"
-          required: true
+   mode: "sequential"
+   steps:
+      - id: "ASSESS-SCOPE"
+        title: "Assess if standalone story is appropriate"
+        description: "Verify this enhancement meets criteria for standalone story vs epic vs full PRD process"
+        action:
+           type: "elicit"
+           prompt: |
+              Before creating a standalone story, confirm this enhancement meets ALL criteria:
 
-    - id: "GATHER-CONTEXT"
-      title: "Gather minimal project context"
-      description: "Collect essential context about existing system and change scope"
-      action:
-        type: "analysis"
-        content: |
-          Gather minimal but essential context about the existing project:
-          
-          **Current System Context:**
-          - Relevant existing functionality identified
-          - Technology stack for this area noted
-          - Integration point(s) clearly understood
-          - Existing patterns for similar work identified
-          
-          **Change Scope:**
-          - Specific change clearly defined
-          - Impact boundaries identified
-          - Success criteria established
+              **Use standalone story when:**
+              - Enhancement can be completed in a single story
+              - No new architecture or significant design is required
+              - Change follows existing patterns exactly
+              - Integration is straightforward with minimal risk
+              - Change is isolated with clear boundaries
 
-    - id: "CREATE-STORY-FILE"
-      title: "Create standalone story YAML file"
-      description: "Create the story file using the standard story template"
-      action:
-        type: "file_operation"
-        operation: "create"
-        target: "{@docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.yaml"
-        content: |
-          template:
-            id: story-template-v2
-            name: Story Document
-            version: "2.0"
-            output:
-              format: json
-              filename: "{@docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.json"
-              title: "Story {story_enhancement_number}: {story_title_short}"
-          workflow:
-            mode: interactive
-            elicitation: advanced-elicitation
-          sections:
-            - id: status
-              title: Status
-              type: choice
-              choices: ["Draft", "Spec Review", "WIP", "Blocked", "Review", "Done"]
-              instruction: "Select the current status of the story"
-              owner: product-development-master
-              editors: [product-development-master, product-master, developer, qa-agent]
-            - id: priority
-              title: Priority
-              type: choice
-              choices: ["1", "2", "3", "4", "5"]
-              instruction: "Story priority (1 = highest). Used by PDM for sequencing."
-              owner: product-development-master
-              editors: [product-development-master, product-master]
-            - id: story
-              title: Story
-              type: template-text
-              template: "**As a** {role},\n**I want** {action},\n**so that** {benefit}"
-              instruction: "Define the user story using the standard format with role, action, and benefit"
-              elicit: true
-              owner: product-development-master
-              editors: [product-development-master, product-master]
-            - id: acceptance-criteria
-              title: Acceptance Criteria
-              type: numbered-list
-              instruction: "Define clear acceptance criteria that can be tested"
-              elicit: true
-              owner: product-development-master
-              editors: [product-development-master, product-master]
-            - id: tasks-and-subtasks
-              title: Tasks / Subtasks
-              type: bullet-list
-              instruction: "Break down the story into specific tasks and subtasks needed for implementation. Reference applicable acceptance criteria numbers where relevant. Assign a Difficulty for each task and subtask (integer 1-10) capturing both complexity and uncertainty."
-              template: "- [ ] Task 1 (AC: # if applicable) [Diff: 1-10]\n  - [ ] Subtask 1.1... [Diff: 1-10]\n- [ ] Task 2 (AC: # if applicable) [Diff: 1-10]\n  - [ ] Subtask 2.1... [Diff: 1-10]"
-              elicit: true
-              owner: product-development-master
-              editors: [product-development-master, product-master, developer]
-            - id: dev-notes
-              title: Dev Notes
-              instruction: "Leave this section empty at first on initialization as it will be populated later on. Populate relevant information from actual artifacts from docs folder, relevant to this story. Do not invent information. Include enough information so the dev agent should NEVER need to read architecture documents."
-              elicit: true
-              owner: product-development-master
-              editors: [product-development-master, product-master]
-            - id: testing-standards
-              title: Testing
-              instruction: "List Relevant Testing Standards from Architecture the Developer needs to conform to: test file location, test standards, testing frameworks and patterns, specific testing requirements."
-              elicit: true
-              owner: product-development-master
-              editors: [product-development-master, product-master]
-            - id: test-specs
-              title: Test Specs
-              instruction: "Maintain both test specifications and a list of relevant test files for this story."
-              owner: qa-agent
-              editors: [qa-agent, developer]
+              **Use create-epic when:**
+              - Enhancement requires 2-3 coordinated stories
+              - Some design work is needed
+              - Multiple integration points are involved
+
+              **Use full PRD/Architecture process when:**
+              - Enhancement requires multiple coordinated stories
+              - Architectural planning is needed
+              - Significant integration work is required
+
+              Does this enhancement meet standalone story criteria? (1=Yes, 2=No, escalate to epic, 3=No, escalate to PRD)
+           options: ["1", "2", "3"]
+           validation:
+              type: "string"
+              pattern: "^[1-3]$"
+              required: true
+
+      - id: "GATHER-CONTEXT"
+        title: "Gather minimal project context"
+        description: "Collect essential context about existing system and change scope"
+        action:
+           type: "analysis"
+           content: |
+              Gather minimal but essential context about the existing project:
+
+              **Current System Context:**
+              - Relevant existing functionality identified
+              - Technology stack for this area noted
+              - Integration point(s) clearly understood
+              - Existing patterns for similar work identified
+
+              **Change Scope:**
+              - Specific change clearly defined
+              - Impact boundaries identified
+              - Success criteria established
+
+      - id: "CREATE-STORY-FILE"
+        title: "Create standalone story YAML file"
+        description: "Create the story file using the standard story template"
+        action:
+           type: "file_operation"
+           operation: "create"
+           target: "{@docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.yaml"
+           content: |
+              template:
+                id: story-template-v2
+                name: Story Document
+                version: "2.0"
+                output:
+                  format: json
+                  filename: "{@docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.json"
+                  title: "Story {story_enhancement_number}: {story_title_short}"
+              workflow:
+                mode: interactive
+                elicitation: advanced-elicitation
               sections:
-                - id: specs
-                  title: Specifications
+                - id: status
+                  title: Status
+                  type: choice
+                  choices: ["Draft", "Spec Review", "WIP", "Blocked", "Review", "Done"]
+                  instruction: "Select the current status of the story"
+                  owner: product-development-master
+                  editors: [product-development-master, product-master, developer, qa-agent]
+                - id: priority
+                  title: Priority
+                  type: choice
+                  choices: ["1", "2", "3", "4", "5"]
+                  instruction: "Story priority (1 = highest). Used by PDM for sequencing."
+                  owner: product-development-master
+                  editors: [product-development-master, product-master]
+                - id: story
+                  title: Story
+                  type: template-text
+                  template: "**As a** {role},\n**I want** {action},\n**so that** {benefit}"
+                  instruction: "Define the user story using the standard format with role, action, and benefit"
+                  elicit: true
+                  owner: product-development-master
+                  editors: [product-development-master, product-master]
+                - id: acceptance-criteria
+                  title: Acceptance Criteria
                   type: numbered-list
-                  instruction: "List concise Given-When-Then specs. Include AC references."
-                  template: "{spec_number}: [AC {ac_numbers}] {short_description} — Given {given}, When {when}, Then {then}"
+                  instruction: "Define clear acceptance criteria that can be tested"
                   elicit: true
-                - id: artifacts
-                  title: Artifacts
+                  owner: product-development-master
+                  editors: [product-development-master, product-master]
+                - id: tasks-and-subtasks
+                  title: Tasks / Subtasks
                   type: bullet-list
-                  instruction: "List existing or planned test files relevant to this story (paths with brief purpose)."
-                  template: "- {path} — {purpose}"
-                  elicit: false
-            - id: risk-mitigation
-              title: Risk Mitigation
-              instruction: "Document risks and mitigation strategies for this story implementation."
-              owner: product-development-master
-              editors: [product-development-master, product-master]
-              sections:
-                - id: primary-risk
-                  title: Primary Risk
-                  type: paragraph
-                  instruction: "Describe the main risk this story poses to the existing system and users."
+                  instruction: "Break down the story into specific tasks and subtasks needed for implementation. Reference applicable acceptance criteria numbers where relevant. Assign a Difficulty for each task and subtask (integer 1-10) capturing both complexity and uncertainty."
+                  template: "- [ ] Task 1 (AC: # if applicable) [Diff: 1-10]\n  - [ ] Subtask 1.1... [Diff: 1-10]\n- [ ] Task 2 (AC: # if applicable) [Diff: 1-10]\n  - [ ] Subtask 2.1... [Diff: 1-10]"
                   elicit: true
-                - id: mitigation-strategies
-                  title: Mitigation Strategies
-                  type: bullet-list
-                  instruction: "List concrete mitigation actions to reduce likelihood/impact of the risk."
-                  template: "- {mitigation_action}"
+                  owner: product-development-master
+                  editors: [product-development-master, product-master, developer]
+                - id: dev-notes
+                  title: Dev Notes
+                  instruction: "Leave this section empty at first on initialization as it will be populated later on. Populate relevant information from actual artifacts from docs folder, relevant to this story. Do not invent information. Include enough information so the dev agent should NEVER need to read architecture documents."
                   elicit: true
-                - id: rollback-plan
-                  title: Rollback Plan
-                  type: paragraph
-                  instruction: "Outline how to quickly revert changes if needed, including preconditions and steps."
+                  owner: product-development-master
+                  editors: [product-development-master, product-master]
+                - id: testing-standards
+                  title: Testing
+                  instruction: "List Relevant Testing Standards from Architecture the Developer needs to conform to: test file location, test standards, testing frameworks and patterns, specific testing requirements."
                   elicit: true
-            - id: change-log
-              title: Change Log
-              type: table
-              columns: ["Date", "Version", "Description", "Author"]
-              instruction: "Track changes made to this story document"
-              owner: product-development-master
-              editors: [product-development-master, product-master, developer, qa-agent]
-            - id: developer-record
-              title: Dev Agent Record
-              instruction: "This section is populated by the development agent during implementation"
-              owner: developer
-              editors: [developer]
-              sections:
-                - id: agent-model
-                  title: Agent Model Used
-                  template: "{agent_model_name_version}"
-                  instruction: "Record the specific AI agent model and version used for development"
+                  owner: product-development-master
+                  editors: [product-development-master, product-master]
+                - id: test-specs
+                  title: Test Specs
+                  instruction: "Maintain both test specifications and a list of relevant test files for this story."
+                  owner: qa-agent
+                  editors: [qa-agent, developer]
+                  sections:
+                    - id: specs
+                      title: Specifications
+                      type: numbered-list
+                      instruction: "List concise Given-When-Then specs. Include AC references."
+                      template: "{spec_number}: [AC {ac_numbers}] {short_description} — Given {given}, When {when}, Then {then}"
+                      elicit: true
+                    - id: artifacts
+                      title: Artifacts
+                      type: bullet-list
+                      instruction: "List existing or planned test files relevant to this story (paths with brief purpose)."
+                      template: "- {path} — {purpose}"
+                      elicit: false
+                - id: risk-mitigation
+                  title: Risk Mitigation
+                  instruction: "Document risks and mitigation strategies for this story implementation."
+                  owner: product-development-master
+                  editors: [product-development-master, product-master]
+                  sections:
+                    - id: primary-risk
+                      title: Primary Risk
+                      type: paragraph
+                      instruction: "Describe the main risk this story poses to the existing system and users."
+                      elicit: true
+                    - id: mitigation-strategies
+                      title: Mitigation Strategies
+                      type: bullet-list
+                      instruction: "List concrete mitigation actions to reduce likelihood/impact of the risk."
+                      template: "- {mitigation_action}"
+                      elicit: true
+                    - id: rollback-plan
+                      title: Rollback Plan
+                      type: paragraph
+                      instruction: "Outline how to quickly revert changes if needed, including preconditions and steps."
+                      elicit: true
+                - id: change-log
+                  title: Change Log
+                  type: table
+                  columns: ["Date", "Version", "Description", "Author"]
+                  instruction: "Track changes made to this story document"
+                  owner: product-development-master
+                  editors: [product-development-master, product-master, developer, qa-agent]
+                - id: developer-record
+                  title: Dev Agent Record
+                  instruction: "This section is populated by the development agent during implementation"
                   owner: developer
                   editors: [developer]
-                - id: debug-log-references
-                  title: Debug Log References
-                  instruction: "Reference any debug logs or traces generated during development"
-                  owner: developer
-                  editors: [developer]
-                - id: completion-notes
-                  title: Completion Notes List
-                  instruction: "Notes about the completion of tasks and any issues encountered"
-                  owner: developer
-                  editors: [developer]
-                - id: file-list
-                  title: File List
-                  instruction: "List all files created, modified, or affected during story implementation"
-                  owner: developer
-                  editors: [developer]
-            - id: qa-results
-              title: QA Results
-              instruction: "Results from QA Agent QA review of the completed story implementation"
-              owner: qa-agent
-              editors: [qa-agent]
+                  sections:
+                    - id: agent-model
+                      title: Agent Model Used
+                      template: "{agent_model_name_version}"
+                      instruction: "Record the specific AI agent model and version used for development"
+                      owner: developer
+                      editors: [developer]
+                    - id: debug-log-references
+                      title: Debug Log References
+                      instruction: "Reference any debug logs or traces generated during development"
+                      owner: developer
+                      editors: [developer]
+                    - id: completion-notes
+                      title: Completion Notes List
+                      instruction: "Notes about the completion of tasks and any issues encountered"
+                      owner: developer
+                      editors: [developer]
+                    - id: file-list
+                      title: File List
+                      instruction: "List all files created, modified, or affected during story implementation"
+                      owner: developer
+                      editors: [developer]
+                - id: qa-results
+                  title: QA Results
+                  instruction: "Results from QA Agent QA review of the completed story implementation"
+                  owner: qa-agent
+                  editors: [qa-agent]
 
-    - id: "ASSESS-DOCUMENT-IMPACT"
-      title: "Assess impact on PRD and architecture documents"
-      description: "Evaluate if this story requires updates to existing documentation"
-      action:
-        type: "elicit"
-        prompt: |
-          Evaluate whether this story has any impact on the PRD and/or architecture documents:
-          
-          **PRD Impact:**
-          - Update relevant sections (scope, requirements, constraints) if behavior or requirements change
-          
-          **Architecture Impact:**
-          - Update affected files/sections if component responsibilities, data models, APIs, or patterns are affected
-          
-          **Options:**
-          1. No impact on PRD or Architecture
-          2. PRD impact only
-          3. Architecture impact only
-          4. Both PRD and Architecture impact
-          
-          Select the impact assessment:
-        options: ["1", "2", "3", "4"]
-        validation:
-          type: "string"
-          pattern: "^[1-4]$"
-          required: true
+      - id: "ASSESS-DOCUMENT-IMPACT"
+        title: "Assess impact on PRD and architecture documents"
+        description: "Evaluate if this story requires updates to existing documentation"
+        action:
+           type: "elicit"
+           prompt: |
+              Evaluate whether this story has any impact on the PRD and/or architecture documents:
 
-    - id: "UPDATE-DOCUMENTS"
-      title: "Update affected documentation if needed"
-      description: "Update PRD and/or architecture documents based on impact assessment"
-      condition:
-        if: "inputs.impact_assessment != '1'"
-      action:
-        type: "analysis"
-        content: |
-          Based on impact assessment, update the affected documents:
-          
-          - PRD: update relevant sections if behavior or requirements change
-          - Architecture: update affected files/sections if patterns are affected
-          - Record a brief note in the story YAML under dev-notes summarizing documentation updates
-          - Create change-log record if PRD/Architecture are impacted
+              **PRD Impact:**
+              - Update relevant sections (scope, requirements, constraints) if behavior or requirements change
 
-    - id: "VALIDATE-COMPLETION"
-      title: "Validate story creation completion"
-      description: "Confirm all success criteria are met"
-      action:
-        type: "validation"
-        validation:
-          type: "checklist"
-          required: true
-          items:
-            - "Enhancement is clearly defined and appropriately scoped for single session"
-            - "Integration approach is straightforward and low-risk"
-            - "Existing system patterns are identified and will be followed"
-            - "Rollback plan is simple and feasible"
-            - "Acceptance criteria include existing functionality verification"
-            - "Story file is created at {@docs.subdirs.stories}/standln-{story_enhancement_number}-*.yaml"
-            - "PRD and/or architecture docs are updated where impacted or explicitly confirmed as not requiring updates"
+              **Architecture Impact:**
+              - Update affected files/sections if component responsibilities, data models, APIs, or patterns are affected
+
+              **Options:**
+              1. No impact on PRD or Architecture
+              2. PRD impact only
+              3. Architecture impact only
+              4. Both PRD and Architecture impact
+
+              Select the impact assessment:
+           options: ["1", "2", "3", "4"]
+           validation:
+              type: "string"
+              pattern: "^[1-4]$"
+              required: true
+
+      - id: "UPDATE-DOCUMENTS"
+        title: "Update affected documentation if needed"
+        description: "Update PRD and/or architecture documents based on impact assessment"
+        condition:
+           if: "inputs.impact_assessment != '1'"
+        action:
+           type: "analysis"
+           content: |
+              Based on impact assessment, update the affected documents:
+
+              - PRD: update relevant sections if behavior or requirements change
+              - Architecture: update affected files/sections if patterns are affected
+              - Record a brief note in the story YAML under dev-notes summarizing documentation updates
+              - Create change-log record if PRD/Architecture are impacted
+
+      - id: "VALIDATE-COMPLETION"
+        title: "Validate story creation completion"
+        description: "Confirm all success criteria are met"
+        action:
+           type: "validation"
+           validation:
+              type: "checklist"
+              required: true
+              items:
+                 - "Enhancement is clearly defined and appropriately scoped for single session"
+                 - "Integration approach is straightforward and low-risk"
+                 - "Existing system patterns are identified and will be followed"
+                 - "Rollback plan is simple and feasible"
+                 - "Acceptance criteria include existing functionality verification"
+                 - "Story file is created at {@docs.subdirs.stories}/standln-{story_enhancement_number}-*.yaml"
+                 - "PRD and/or architecture docs are updated where impacted or explicitly confirmed as not requiring updates"
 
 outputs:
-  artifacts:
-    - name: "standalone-story"
-      type: "file"
-      path: "{@docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.yaml"
-      format: "yaml"
-      description: "Standalone story YAML file"
-    - name: "documentation-updates"
-      type: "file"
-      path: "{@docs.dir}/"
-      format: "markdown"
-      description: "Updated PRD and/or architecture documents if impacted"
+   artifacts:
+      - name: "standalone-story"
+        type: "file"
+        path: "{@docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.yaml"
+        format: "yaml"
+        description: "Standalone story YAML file"
+      - name: "documentation-updates"
+        type: "file"
+        path: "{@docs.dir}/"
+        format: "markdown"
+        description: "Updated PRD and/or architecture documents if impacted"
 
 completion:
-  criteria:
-    - "Story enhancement meets standalone story criteria"
-    - "Story file is created with proper YAML structure"
-    - "All required sections are populated with elicited content"
-    - "Documentation impact is assessed and updates are made if needed"
-    - "Success criteria validation is complete"
-
-metadata:
-  author: "Thien Huynh"
-  created: "2025-10-18"
-  tags: ["standalone", "story", "planning", "pdm"]
-  complexity: "moderate"
-  estimated_duration: "45m"
+   criteria:
+      - "Story enhancement meets standalone story criteria"
+      - "Story file is created with proper YAML structure"
+      - "All required sections are populated with elicited content"
+      - "Documentation impact is assessed and updates are made if needed"
+      - "Success criteria validation is complete"

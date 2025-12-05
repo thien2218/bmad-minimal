@@ -270,17 +270,5 @@ methods:
 usage:
    agents: ["all"]
    phases: ["planning", "engineering"]
-   tasks:
-      ["advanced-elicitation", "create-doc", "create-story", "create-epic"]
+   tasks: ["advanced-elicitation", "create-doc", "create-story", "create-epic"]
    load_when: "on_demand"
-
-metadata:
-   author: "Thien Huynh"
-   created: "2025-01-23"
-   lastModified: "2025-01-23"
-   tags:
-      - "elicitation"
-      - "analysis"
-      - "reflection"
-      - "quality"
-      - "process"

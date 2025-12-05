@@ -17,17 +17,10 @@ inputs:
         type: path
         description: Path to story file from docs.subdirs.stories
         pattern: "{@docs.subdirs.stories}/{story_id}-*.yaml"
-      - name: story_title
-        type: string
-        description: Story title (derive from story file H1 if missing)
-      - name: story_slug
-        type: string
-        description: Story slug (derive from title if missing - lowercase, hyphenated)
-        pattern: "^[a-z0-9-]+$"
 
 prerequisites:
    files:
-      - "{story_path}"
+      - "{story_path}/{story_id}-*.yaml"
 
 process:
    mode: sequential
@@ -185,16 +178,3 @@ completion:
       - Scenarios are atomic and independent
    validations:
       - command: "test -f {@docs.subdirs.qa}/assessments/{story_id}-test-design-{YYYYMMDD}.md"
-        expected_output: "file exists"
-
-metadata:
-   author: Thien Huynh
-   created: "2024-01-01"
-   lastModified: "2024-01-01"
-   tags:
-      - testing
-      - design
-      - quality
-      - scenarios
-   complexity: moderate
-   estimated_duration: "30m-1h"

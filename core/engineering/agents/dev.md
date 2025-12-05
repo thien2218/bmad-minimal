@@ -115,6 +115,11 @@
 			"name": "develop-story",
 			"description": "Execute develop-story (implementation-first flow; write tests at the end during validation) on the highest ordered WIP story or story specified by user",
 			"parameters": ["story"],
+			"optionalParameters": [
+				"test_command",
+				"build_command",
+				"lint_command"
+			],
 			"steps": [
 				"tasks/develop-story.yaml",
 				"checklists/story-dod-checklist.md"
@@ -124,6 +129,11 @@
 			"name": "develop-story-test-first",
 			"description": "Execute develop-story with a test-first flow (TDD approach): after confirming WIP status, implement test cases from story's Test Specs section first, then implement the feature until tests pass.",
 			"parameters": ["story"],
+			"optionalParameters": [
+				"test_command",
+				"build_command",
+				"lint_command"
+			],
 			"steps": [
 				"tasks/develop-story-test-first.yaml",
 				"checklists/story-dod-checklist.md"
@@ -133,6 +143,7 @@
 			"name": "apply-qa-fixes",
 			"description": "Apply code/test fixes based on QA outputs (gate + assessments) for a specified story.",
 			"parameters": ["story"],
+			"optionalParameters": ["test_command", "lint_command"],
 			"steps": [
 				"data/test-priorities-matrix.yaml",
 				"data/test-levels-framework.yaml",

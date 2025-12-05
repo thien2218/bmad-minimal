@@ -21,33 +21,6 @@ inputs:
               "Update Dashboard Analytics",
               "Enhance Search Functionality",
            ]
-      - name: existing_system_context
-        type: string
-        description: Description of current relevant functionality
-      - name: technology_stack
-        type: string
-        description: Relevant existing technologies in the system, derived from {@docs.files.codingStandards}
-        examples:
-           [
-              "React, Node.js, PostgreSQL",
-              "Vue, Django, MySQL",
-              "Angular, .NET, SQL Server",
-           ]
-   optional:
-      - name: integration_points
-        type: array
-        description: Where new work connects to existing system
-        examples:
-           [["API Gateway", "User Service"], ["Database Layer", "Cache Layer"]]
-      - name: success_criteria
-        type: array
-        description: Measurable outcomes for the enhancement
-      - name: primary_risk
-        type: string
-        description: Main risk to existing system
-      - name: rollback_plan
-        type: string
-        description: How to undo changes if needed
 
 outputs:
    artifacts:
@@ -232,21 +205,9 @@ blocking_conditions:
 
 completion:
    criteria:
-       - Epic scope aligns with PRD epic definition
-       - Stories support PRD goals and requirements
-       - Dependencies and constraints are understood
-       - Stories are logically sequenced for implementation
-       - Acceptance criteria are clearly defined
-       - Epic delivers value per PRD objectives
-
-metadata:
-   author: Thien Huynh
-   created: 2024-01-01
-   lastModified: 2024-01-01
-   tags:
-      - epic
-      - planning
-      - prd
-      - initiative
-   complexity: moderate
-   estimated_duration: 30m-1h
+      - Epic scope aligns with PRD epic definition
+      - Stories support PRD goals and requirements
+      - Dependencies and constraints are understood
+      - Stories are logically sequenced for implementation
+      - Acceptance criteria are clearly defined
+      - Epic delivers value per PRD objectives

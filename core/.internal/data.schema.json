@@ -409,41 +409,6 @@
 					}
 				}
 			}
-		},
-		"metadata": {
-			"type": "object",
-			"description": "Additional metadata",
-			"properties": {
-				"author": {
-					"type": "string"
-				},
-				"created": {
-					"type": "string",
-					"format": "date"
-				},
-				"lastModified": {
-					"type": "string",
-					"format": "date"
-				},
-				"source": {
-					"type": "string",
-					"description": "Source of this data (e.g., URL, document reference)"
-				},
-				"tags": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				},
-				"deprecated": {
-					"type": "boolean",
-					"default": false
-				},
-				"superseded_by": {
-					"type": "string",
-					"description": "ID of data that supersedes this"
-				}
-			}
 		}
 	}
 }
