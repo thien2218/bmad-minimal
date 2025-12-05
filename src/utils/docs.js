@@ -33,41 +33,7 @@ async function ensureDocsStructure(cwd, configData) {
 	}
 }
 
-/**
- * Copy pre-compressed agent JSON files from
- *   compressed/engineering -> <baseDir>/engineering/agents
- *   compressed/planning    -> <baseDir>/planning/agents
- *
- * @param {string} baseDir - Absolute path to the target base directory in the workspace
- * @returns {Promise<void>}
- */
-async function copyCompressedAgents(baseDir) {
-	const categories = ["engineering", "planning"];
-
-	for (const category of categories) {
-		const compressedDir = path.join(__dirname, "../../compressed", category);
-		const agentsDir = path.join(baseDir, category, "agents");
-
-		if (!(await fs.pathExists(compressedDir))) {
-			continue;
-		}
-
-		await fs.ensureDir(agentsDir);
-
-		const entries = await fs.readdir(compressedDir);
-		for (const name of entries) {
-			const sourcePath = path.join(compressedDir, name);
-			const destPath = path.join(agentsDir, name);
-			const stat = await fs.stat(sourcePath);
-			if (stat.isFile()) {
-				await fs.copy(sourcePath, destPath, { overwrite: true });
-			}
-		}
-	}
-}
-
 module.exports = {
 	copyCoreDirectories,
 	ensureDocsStructure,
-	copyCompressedAgents,
 };

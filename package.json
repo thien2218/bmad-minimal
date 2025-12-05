@@ -17,6 +17,7 @@
 		"start": "node bin/cli.js",
 		"dev": "node bin/cli.js",
 		"lint": "echo \"No linter configured\"",
+		"build": "node src/scripts/build.js",
 		"prepack": "npm run prepare",
 		"postpack": "echo \"Package created successfully\""
 	},

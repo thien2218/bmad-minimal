@@ -61,11 +61,12 @@ async function writeJson(filePath, data) {
 }
 
 /**
- * Get the absolute path to the core/ directory.
+ * Get the absolute path to a directory relative to root directory.
+ * @param {string} name - Name of the directory relative to root directory
  * @returns {string}
  */
-function getCoreDir() {
-	const corePath = "../../core";
+function getPath(name) {
+	const corePath = `../../${name}`;
 	return path.join(__dirname, corePath);
 }
 
@@ -88,5 +89,5 @@ module.exports = {
 	readJson,
 	writeJson,
 	exists,
-	getCoreDir,
+	getPath,
 };
