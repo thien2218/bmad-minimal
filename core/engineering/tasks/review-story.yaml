@@ -27,10 +27,33 @@ prerequisites:
       - entity: story
         field: status
         value: Review
+        operator: includes
 
 process:
    mode: sequential
    steps:
+      - id: LOAD-CONFIG
+        title: Load Configuration and Story
+        description: Load core configuration and resolve story file path
+        action:
+           type: file_operation
+           operation: read
+           target: "{@baseDir}/config.json"
+           content: |
+              Extract config.docs.subdirs.qa and docs.subdirs.stories settings.
+              Resolve story_path if not provided.
+        on_failure: continue
+
+      - id: CHECK-REVIEW
+        title: Check Story Status
+        description: Verify story status includes the word "Review"
+        action:
+           type: validation
+           content: |
+              If status does not include the word "Review":
+              HALT and inform user why execution cannot proceed
+        on_failure: halt
+
       - id: RISK-ASSESSMENT
         title: Risk Assessment (Determines Review Depth)
         description: Auto-escalate to deep review based on risk factors

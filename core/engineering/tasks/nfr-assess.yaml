@@ -32,7 +32,7 @@ prerequisites:
       - entity: story
         field: status
         value: "Review"
-        operator: in
+        operator: includes
 
 process:
    mode: sequential
@@ -48,6 +48,16 @@ process:
               Extract config.docs.subdirs.qa and docs.subdirs.stories settings.
               Resolve story_path if not provided.
         on_failure: continue
+
+      - id: CHECK-REVIEW
+        title: Check Story Status
+        description: Verify story status includes the word "Review"
+        action:
+           type: validation
+           content: |
+              If status does not include the word "Review":
+              HALT and inform user why execution cannot proceed
+        on_failure: halt
 
       - id: ELICIT-SCOPE
         title: Elicit NFR Scope
