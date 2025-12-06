@@ -10,11 +10,9 @@ inputs:
    required:
       - name: epic_description
         type: string
-        description: Short description of the adhoc epic. Used to derive the epic enhancement_name.
    optional:
       - name: epic_enhancement_number
         type: number
-        description: Override the detected highest enhancement number (default is auto-detected).
 
 outputs:
    artifacts:
@@ -22,19 +20,10 @@ outputs:
         type: file
         path: "{@docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml"
         format: yaml
-        description: Epic document in YAML matching core/engineering/schemas/epic.json
       - name: Documentation Updates
         type: file
         path: "{@docs.dir}/"
         format: markdown
-        description: Updated PRD and/or architecture documents if impacted
-
-prerequisites:
-   files:
-      - "{@baseDir}/config.json"
-   commands:
-      - command: "test -f config.json"
-        expected_exit_code: 0
 
 process:
    mode: sequential

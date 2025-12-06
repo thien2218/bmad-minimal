@@ -10,12 +10,10 @@ inputs:
    required:
       - name: epic
         type: number
-        description: Specific epic number to create story for
         examples: [1, 2, 3]
    optional:
       - name: story
         type: number
-        description: Override next story number within the selected enhancement epic (default auto-increment from existing stories).
         examples: [1, 2, 3]
 
 outputs:
@@ -24,22 +22,10 @@ outputs:
         type: file
         path: "{@docs.subdirs.stories}/{epic}.{story}-*.yaml"
         format: yaml
-        description: Complete story ready for development with full technical context
    updates:
       - target: "{@docs.subdirs.stories}/*.yaml"
         sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
         restrictions: Only create new story, do not modify existing stories
-
-prerequisites:
-   files:
-      - "{@baseDir}/config.json"
-      - "{@docs.files.prd}"
-      - "{@docs.files.feArchitecture}"
-      - "{@docs.files.beArchitecture}"
-      - "{@docs.files.fsArchitecture}"
-   commands:
-      - command: "test -f config.json"
-        expected_exit_code: 0
 
 process:
    mode: sequential

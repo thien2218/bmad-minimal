@@ -10,12 +10,10 @@ inputs:
    required:
       - name: enhancement_epic
         type: number
-        description: Specify the enhancement epic number to create a story for.
         examples: [1, 2, 3]
    optional:
       - name: story_enhancement_number
         type: number
-        description: Override next story number within the selected enhancement epic (default auto-increment from existing stories).
 
 outputs:
    artifacts:
@@ -23,23 +21,14 @@ outputs:
         type: file
         path: "{@docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-*.yaml"
         format: yaml
-        description: Story document in YAML matching core/engineering/schemas/story.json
       - name: Documentation Updates
         type: file
         path: "{@docs.dir}/"
         format: markdown
-        description: Updated PRD and/or architecture documents if impacted
    updates:
       - target: "{@docs.subdirs.stories}/*.yaml"
         sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
         restrictions: Only create new story, do not modify existing stories
-
-prerequisites:
-   files:
-      - "{@baseDir}/config.json"
-   commands:
-      - command: "test -f config.json"
-        expected_exit_code: 0
 
 process:
    mode: sequential

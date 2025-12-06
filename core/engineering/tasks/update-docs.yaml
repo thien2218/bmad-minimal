@@ -10,12 +10,10 @@ inputs:
    optional:
       - name: "type"
         type: "string"
-        description: "Type of documentation to update: api, components, or both"
         default: "both"
         examples: ["api", "components", "both"]
       - name: "method"
         type: "string"
-        description: "Custom documentation method (e.g., markdown, docusaurus, gitbook, sphinx)"
         examples: ["markdown", "docusaurus", "gitbook"]
 
 process:

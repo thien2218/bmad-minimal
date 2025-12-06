@@ -82,9 +82,6 @@
 									"command"
 								]
 							},
-							"description": {
-								"type": "string"
-							},
 							"pattern": {
 								"type": "string",
 								"description": "Regex pattern for path matching and validation"
@@ -210,13 +207,6 @@
 								"default": "equals"
 							}
 						}
-					}
-				},
-				"files": {
-					"type": "array",
-					"description": "Files that must exist",
-					"items": {
-						"type": "string"
 					}
 				},
 				"commands": {

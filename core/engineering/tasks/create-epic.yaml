@@ -10,11 +10,9 @@ inputs:
    required:
       - name: epic_number
         type: number
-        description: Number to index the epic (derived by incrementing the highest number of the previously created highest order epic)
         examples: [1, 3, 4]
       - name: enhancement_name
         type: string
-        description: Name of the enhancement
         examples:
            [
               "Add Export Feature",
@@ -28,11 +26,6 @@ outputs:
         type: file
         path: "{@docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
         format: yaml
-        description: Brownfield epic document with all required sections in YAML
-
-prerequisites:
-   files:
-      - "{@docs.files.prd}"
 
 process:
    mode: sequential

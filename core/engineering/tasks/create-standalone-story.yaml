@@ -10,11 +10,9 @@ inputs:
    required:
       - name: "description"
         type: "string"
-        description: "Brief description of the enhancement"
    optional:
       - name: "story_enhancement_number"
         type: "string"
-        description: "Enhancement number for the standalone story, Override next story number within the selected enhancement epic (default auto-increment from existing stories)."
         examples: ["1", "2", "3"]
 
 process:

@@ -10,7 +10,6 @@ inputs:
    required:
       - name: change_trigger
         type: string
-        description: Description of the change that triggered this task
         examples:
            [
               "Bug discovered",
@@ -19,11 +18,9 @@ inputs:
            ]
       - name: initial_impact
         type: string
-        description: User's initial explanation of the issue and its perceived impact
    optional:
       - name: interaction_mode
         type: string
-        description: Preferred interaction mode - Incremental (default) or YOLO
         default: "incremental"
         examples: ["incremental", "yolo"]
 
@@ -38,15 +35,6 @@ outputs:
       - target: "{@docs.dir}/?(*-)architecture.md"
         sections: ["Components", "Diagrams", "Technology Stack"]
         restrictions: Only as specified in approved change proposal
-
-prerequisites:
-   files:
-      - checklists/change-checklist.md
-      - "{@docs.files.prd}"
-      - "{@docs.subdirs.epics}/**"
-      - "{@docs.files.feArchitecture}"
-      - "{@docs.files.beArchitecture}"
-      - "{@docs.files.fsArchitecture}"
 
 process:
    mode: sequential
