@@ -144,7 +144,12 @@
 		"workflow": {
 			"type": "object",
 			"additionalProperties": false,
-			"required": ["resolvePaths", "elicitDefaults", "onMissingDependency"],
+			"required": [
+				"resolvePaths",
+				"references",
+				"elicitDefaults",
+				"onMissingDependency"
+			],
 			"properties": {
 				"resolvePaths": {
 					"type": "object",
@@ -231,6 +236,134 @@
 				},
 				"onMissingDependency": {
 					"type": "string"
+				},
+				"references": {
+					"type": "object",
+					"additionalProperties": false,
+					"required": [
+						"fileResolution",
+						"inputResolution",
+						"knowledgeResolution",
+						"templatePopulation"
+					],
+					"properties": {
+						"fileResolution": {
+							"type": "object",
+							"additionalProperties": false,
+							"required": ["pattern", "description", "examples"],
+							"properties": {
+								"pattern": {
+									"type": "string"
+								},
+								"description": {
+									"type": "string"
+								},
+								"examples": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"additionalProperties": false,
+										"required": ["input", "resolvedFrom"],
+										"properties": {
+											"input": {
+												"type": "string"
+											},
+											"resolvedFrom": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						"inputResolution": {
+							"type": "object",
+							"additionalProperties": false,
+							"required": ["pattern", "description", "examples"],
+							"properties": {
+								"pattern": {
+									"type": "string"
+								},
+								"description": {
+									"type": "string"
+								},
+								"examples": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"additionalProperties": false,
+										"required": ["input", "resolvedFrom"],
+										"properties": {
+											"input": {
+												"type": "string"
+											},
+											"resolvedFrom": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						"knowledgeResolution": {
+							"type": "object",
+							"additionalProperties": false,
+							"required": ["pattern", "description", "examples"],
+							"properties": {
+								"pattern": {
+									"type": "string"
+								},
+								"description": {
+									"type": "string"
+								},
+								"examples": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"additionalProperties": false,
+										"required": ["input", "resolvedFrom"],
+										"properties": {
+											"input": {
+												"type": "string"
+											},
+											"resolvedFrom": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						},
+						"templatePopulation": {
+							"type": "object",
+							"additionalProperties": false,
+							"required": ["pattern", "description", "examples"],
+							"properties": {
+								"pattern": {
+									"type": "string"
+								},
+								"description": {
+									"type": "string"
+								},
+								"examples": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"additionalProperties": false,
+										"required": ["input", "resolvedFrom"],
+										"properties": {
+											"input": {
+												"type": "string"
+											},
+											"resolvedFrom": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		},

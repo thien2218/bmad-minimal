@@ -10,7 +10,7 @@
 
 ```json
 {
-	"version": "1.3.0",
+	"version": "1.4.0",
 	"precedence": [
 		"policy",
 		"rules.hard",
@@ -86,6 +86,68 @@
 					"action": "execute_dependency_task"
 				}
 			]
+		},
+		"references": {
+			"fileResolution": {
+				"pattern": "^@\\{[a-zA-Z0-9_-.]+\\}$",
+				"description": "Resolve reference to a property in config.json",
+				"examples": [
+					{
+						"input": "@{baseDir}",
+						"resolvedFrom": "config.json.baseDir"
+					},
+					{
+						"input": "@{docs.files.codingStandards}",
+						"resolvedFrom": "config.json.docs.files.codingStandards"
+					},
+					{
+						"input": "@{docs.subdirs.engineering}",
+						"resolvedFrom": "config.json.docs.subdirs.engineering"
+					}
+				]
+			},
+			"inputResolution": {
+				"pattern": "^\\$\\{[a-zA-Z0-9_-.]+\\}$",
+				"description": "Resolve reference to an input parameter or value for the current task being executed",
+				"examples": [
+					{
+						"input": "${story}",
+						"resolvedFrom": "currentCommand.parameters.story"
+					},
+					{
+						"input": "${test_command}",
+						"resolvedFrom": "currentCommand.optionalParameters.test_command"
+					}
+				]
+			},
+			"knowledgeResolution": {
+				"pattern": "^!\\{[a-zA-Z0-9_-.]+\\}$",
+				"description": "Resolve reference to knowledge loaded from the agent's context",
+				"examples": [
+					{
+						"input": "!{coding_standards}",
+						"resolvedFrom": "context.codingStandards"
+					},
+					{
+						"input": "!{tech_stack}",
+						"resolvedFrom": "context.architecture.tech_stack"
+					}
+				]
+			},
+			"templatePopulation": {
+				"pattern": "^\\{\\{[a-zA-Z0-9_-.]+\\}\\}$",
+				"description": "Resolve reference from any source when populating values into a template",
+				"examples": [
+					{
+						"input": "{{story_id}}",
+						"resolvedFrom": "anySource.story_id"
+					},
+					{
+						"input": "{{qa_results.summary}}",
+						"resolvedFrom": "anySource.qa_results.summary"
+					}
+				]
+			}
 		},
 		"elicitDefaults": {
 			"elicitRequired": true,
@@ -204,29 +266,19 @@
 		},
 		{
 			"id": "CFG-R001",
-			"title": "Resolve @{*} references from core config",
-			"enforcements": [
-				"Locate config.json via terminal command or user input and load it",
-				"Expand @{docs.files.X} => @{docs.dir}/<file>, @{docs.subdirs.X} => @{docs.dir}/<subdir>"
-			],
-			"severity": "hard",
-			"actionOnViolation": "abort_and_report"
-		},
-		{
-			"id": "CFG-R002",
 			"title": "Non-padded numbering in epic/story/enhancement filenames",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},
 		{
-			"id": "CFG-R003",
+			"id": "CFG-R002",
 			"title": "Present choices as numbered lists",
 			"severity": "soft",
 			"actionOnViolation": "warn_and_reformat"
 		},
 		{
-			"id": "CFG-R004",
-			"title": "Execute dependency tasks literally",
+			"id": "CFG-R003",
+			"title": "Load and execute dependency files in commands' `steps` property literally",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},

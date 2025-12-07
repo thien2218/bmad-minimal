@@ -189,8 +189,7 @@
 				"required": ["entity", "field", "value"],
 				"properties": {
 					"entity": {
-						"type": "string",
-						"enum": ["story", "epic", "project"]
+						"type": "string"
 					},
 					"field": {
 						"type": "string"
