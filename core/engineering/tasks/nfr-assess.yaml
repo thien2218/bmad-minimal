@@ -14,14 +14,14 @@ inputs:
         examples: ["1.3", "2.5"]
       - name: story_path
         type: path
-        pattern: "{@docs.subdirs.stories}/{story_id}-*.yaml"
+        pattern: "@{docs.subdirs.stories}/{story_id}-*.yaml"
    optional:
       - name: architecture_refs
         type: path
-        pattern: "{@docs.dir}/?(*-)architecture.md"
+        pattern: "@{docs.dir}/?(*-)architecture.md"
       - name: coding_standards
         type: path
-        location: "{@docs.files.codingStandards}"
+        location: "@{docs.files.codingStandards}"
       - name: interaction_mode
         type: string
         default: "non-interactive"
@@ -43,7 +43,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@baseDir}/config.json"
+           target: "@{baseDir}/config.json"
            content: |
               Extract config.docs.subdirs.qa and docs.subdirs.stories settings.
               Resolve story_path if not provided.
@@ -100,8 +100,8 @@ process:
            content: |
               Look for NFR requirements in:
               - Story acceptance criteria
-              - {@docs.dir}/?(*-)architecture.md files  
-              - {@docs.files.codingStandards}
+              - @{docs.dir}/?(*-)architecture.md files  
+              - @{docs.files.codingStandards}
 
               If interactive mode and thresholds missing, ask user:
               - Performance targets (response times, throughput)
@@ -220,7 +220,7 @@ process:
               - 10 for each CONCERNS attribute
               Floor at 0, ceiling at 100
 
-              Use custom weights from {@docs.files.codingStandards} if available.
+              Use custom weights from @{docs.files.codingStandards} if available.
 
       - id: CREATE-ASSESSMENT-REPORT
         title: Create Assessment Report
@@ -228,7 +228,7 @@ process:
         action:
            type: file_operation
            operation: create
-           target: "{@docs.subdirs.qa}/assessments/{story_id}-nfr-{YYYYMMDD}.md"
+           target: "@{docs.subdirs.qa}/assessments/{story_id}-nfr-{YYYYMMDD}.md"
            content: |
               # NFR Assessment: {story_id}
 
@@ -262,14 +262,14 @@ process:
            content: |
               Output integration information:
 
-              1. NFR assessment: {@docs.subdirs.qa}/assessments/{story_id}-nfr-{YYYYMMDD}.md
-              2. Gate NFR block ready → paste into {@docs.subdirs.qa}/gates/{story_id}-*.yaml under nfr_validation
+              1. NFR assessment: @{docs.subdirs.qa}/assessments/{story_id}-nfr-{YYYYMMDD}.md
+              2. Gate NFR block ready → paste into @{docs.subdirs.qa}/gates/{story_id}-*.yaml under nfr_validation
 
 outputs:
    artifacts:
       - name: nfr_assessment_report
         type: report
-        path: "{@docs.subdirs.qa}/assessments/{story_id}-nfr-{YYYYMMDD}.md"
+        path: "@{docs.subdirs.qa}/assessments/{story_id}-nfr-{YYYYMMDD}.md"
         format: markdown
         description: Brief NFR assessment report with findings and recommendations
       - name: gate_yaml_block

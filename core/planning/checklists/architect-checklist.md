@@ -6,10 +6,10 @@ This checklist serves as a comprehensive framework for the Architect to validate
 
 Before proceeding with this checklist, ensure you have access to:
 
-1. {@docs.files.beArchitecture} - If this is a backend/system related project
-2. {@docs.files.fsArchitecture} - If this is a fullstack project with both frontend and backend involved
-3. {@docs.files.feArchitecture} - If this is a UI project
-4. {@docs.files.prd} - Product Requirements Document for requirements alignment
+1. @{docs.files.beArchitecture} - If this is a backend/system related project
+2. @{docs.files.fsArchitecture} - If this is a fullstack project with both frontend and backend involved
+3. @{docs.files.feArchitecture} - If this is a UI project
+4. @{docs.files.prd} - Product Requirements Document for requirements alignment
 5. Any system diagrams referenced in the architecture
 6. API documentation if available
 7. Technology stack details and version specifications

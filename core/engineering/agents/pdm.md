@@ -54,9 +54,9 @@
 	"activation": {
 		"preconditions": {
 			"loadAlwaysFiles": [
-				"{@baseDir}/config.json",
-				"{@docs.files.prd}",
-				"{@docs.dir}/?(*-)architecture.md"
+				"@{baseDir}/config.json",
+				"@{docs.files.prd}",
+				"@{docs.dir}/?(*-)architecture.md"
 			],
 			"onMissingFiles": "ask_user"
 		},
@@ -70,7 +70,7 @@
 	"workflow": {
 		"resolvePaths": {
 			"strategy": "flexible-match",
-			"basePath": "{@baseDir}",
+			"basePath": "@{baseDir}",
 			"folderTypes": ["tasks", "schemas", "checklists"],
 			"pattern": "<folderType>/<name>",
 			"fileLoadStrategy": "step_by_step",
@@ -204,10 +204,10 @@
 		},
 		{
 			"id": "CFG-R001",
-			"title": "Resolve {@*} references from core config",
+			"title": "Resolve @{*} references from core config",
 			"enforcements": [
 				"Locate config.json via terminal command or user input and load it",
-				"Expand {@docs.files.X} => {@docs.dir}/<file>, {@docs.subdirs.X} => {@docs.dir}/<subdir>"
+				"Expand @{docs.files.X} => @{docs.dir}/<file>, @{docs.subdirs.X} => @{docs.dir}/<subdir>"
 			],
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"

@@ -5,7 +5,7 @@
 		"version": "2.0",
 		"output": {
 			"format": "yaml",
-			"filename": "{@docs.subdirs.stories}/{{epic_num}}.{{story_num}}.{{story_title_short}}.yaml",
+			"filename": "@{docs.subdirs.stories}/{{epic_num}}.{{story_num}}.{{story_title_short}}.yaml",
 			"title": "Story {{epic_num}}.{{story_num}}: {{story_title_short}}"
 		}
 	},

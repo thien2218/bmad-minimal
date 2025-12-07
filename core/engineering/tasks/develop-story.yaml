@@ -14,7 +14,7 @@ inputs:
         examples: ["1.3", "2.1", "3.5"]
       - name: story_path
         type: path
-        pattern: "{@docs.subdirs.stories}/{{story}}-*.yaml"
+        pattern: "@{docs.subdirs.stories}/{{story}}-*.yaml"
    optional:
       - name: test_command
         type: command
@@ -68,7 +68,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@baseDir}/config.json"
+           target: "@{baseDir}/config.json"
            content: |
               Extract key configurations:
               - docs.subdirs.stories

@@ -17,7 +17,7 @@ Violation Indicator: If you produce a complete document without user interaction
 
 If a YAML template is not provided by the user:
 
-1. List available templates from `{@baseDir}/planning/templates`.
+1. List available templates from `@{baseDir}/planning/templates`.
 2. Ask the user to choose one or provide a different template.
 3. Do not proceed until a template is selected.
 

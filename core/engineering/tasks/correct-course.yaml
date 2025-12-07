@@ -26,13 +26,13 @@ inputs:
 
 outputs:
    updates:
-      - target: "{@docs.subdirs.epics}/*.yaml"
+      - target: "@{docs.subdirs.epics}/*.yaml"
         sections: ["User Stories", "Acceptance Criteria", "Priority"]
         restrictions: Only as specified in approved change proposal
-      - target: "{@docs.files.prd}"
+      - target: "@{docs.files.prd}"
         sections: ["Requirements", "Scope", "Technical Constraints"]
         restrictions: Only as specified in approved change proposal
-      - target: "{@docs.dir}/?(*-)architecture.md"
+      - target: "@{docs.dir}/?(*-)architecture.md"
         sections: ["Components", "Diagrams", "Technology Stack"]
         restrictions: Only as specified in approved change proposal
 

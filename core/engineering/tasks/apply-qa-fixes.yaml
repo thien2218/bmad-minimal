@@ -14,10 +14,10 @@ inputs:
         examples: ["1.3", "2.5"]
       - name: qa_path
         type: path
-        default: "{@docs.subdirs.qa}"
+        default: "@{docs.subdirs.qa}"
       - name: story_path
         type: path
-        default: "{@docs.subdirs.stories}"
+        default: "@{docs.subdirs.stories}"
    optional:
       - name: test_command
         type: command
@@ -52,7 +52,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@baseDir}/config.json"
+           target: "@{baseDir}/config.json"
         on_failure: halt
 
       - id: LOCATE-STORY
@@ -161,7 +161,7 @@ process:
            prompt: Dev does not modify gate YAML. If fixes address issues, request QA to re-run review-story to update the gate
 
 blocking_conditions:
-   - condition: "Missing {@baseDir}/config.json"
+   - condition: "Missing @{baseDir}/config.json"
      message: Core configuration file not found
      severity: critical
    - condition: "Story file not found for story"

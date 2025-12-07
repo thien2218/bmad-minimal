@@ -19,14 +19,14 @@ outputs:
    artifacts:
       - name: Story File
         type: file
-        path: "{@docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-*.yaml"
+        path: "@{docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-*.yaml"
         format: yaml
       - name: Documentation Updates
         type: file
-        path: "{@docs.dir}/"
+        path: "@{docs.dir}/"
         format: markdown
    updates:
-      - target: "{@docs.subdirs.stories}/*.yaml"
+      - target: "@{docs.subdirs.stories}/*.yaml"
         sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
         restrictions: Only create new story, do not modify existing stories
 
@@ -39,7 +39,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@baseDir}/config.json"
+           target: "@{baseDir}/config.json"
            validation:
               type: string
               required: true
@@ -47,11 +47,11 @@ process:
 
       - id: IDENTIFY-1
         title: Locate Highest Enhancement Epic
-        description: Determine highest enhancement epic from {@docs.subdirs.epics}
+        description: Determine highest enhancement epic from @{docs.subdirs.epics}
         action:
            type: analysis
            content: |
-              Scan {@docs.subdirs.epics} for epic files: adhoc-*.yaml
+              Scan @{docs.subdirs.epics} for epic files: adhoc-*.yaml
               Extract enhancement numbers and select the maximum value.
               If input epic_enhancement_number provided, use it instead.
 
@@ -61,7 +61,7 @@ process:
         action:
            type: analysis
            content: |
-              Scan {@docs.subdirs.stories} for files: adhoc-{epic_enhancement_number}.*-*.yaml
+              Scan @{docs.subdirs.stories} for files: adhoc-{epic_enhancement_number}.*-*.yaml
               Extract existing story numbers and compute next (start at 1 if none exist).
               If input story_enhancement_number provided, use it instead.
 
@@ -85,7 +85,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml"
+           target: "@{docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml"
            content: |
               Extract from epic:
               - Initial story title/goal candidates (story-breakdown.story-list)
@@ -100,7 +100,7 @@ process:
            operation: read
            content: |
               Read:
-              - {@docs.files.prd}
+              - @{docs.files.prd}
 
       - id: EXTRACT-TECH
         title: Extract Technical Details for Story
@@ -123,7 +123,7 @@ process:
         action:
            type: file_operation
            operation: create
-           target: "{@docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-{story_slug}.yaml"
+           target: "@{docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-{story_slug}.yaml"
            content: |
               story:
                 id: "adhoc-{epic_enhancement_number}.{story_enhancement_number}"
@@ -142,22 +142,22 @@ process:
                 previous_story_insights: "{prior insights if any}"
                 data_models:
                   value: "{data models used}"
-                  source: "{@docs.files.prd}#{section}"
+                  source: "@{docs.files.prd}#{section}"
                 api_specifications:
                   value: "{API specs}"
-                  source: "{@docs.files.prd}#{section}"
+                  source: "@{docs.files.prd}#{section}"
                 component_specifications:
                   value: "{component specs}"
-                  source: "{@docs.files.prd}#{section}"
+                  source: "@{docs.files.prd}#{section}"
                 file_locations:
                   value: "{file paths and naming conventions}"
-                  source: "{@docs.files.prd}#{section}"
+                  source: "@{docs.files.prd}#{section}"
                 testing_requirements:
                   value: "{testing requirements}"
-                  source: "{@docs.files.prd}#{section}"
+                  source: "@{docs.files.prd}#{section}"
                 technical_constraints:
                   value: "{constraints}"
-                  source: "{@docs.files.prd}#{section}"
+                  source: "@{docs.files.prd}#{section}"
                 notes_missing_guidance: "If information for a category is not found, state: 'No specific guidance found in docs'"
               test_specs:
                 specs:
@@ -230,7 +230,7 @@ process:
         action:
            type: elicit
            prompt: |
-              Story created: {@docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-*.yaml
+              Story created: @{docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-*.yaml
               Status: Draft
 
               Checklist Results:
@@ -241,7 +241,7 @@ process:
               - Proceed to implementation when ready
 
 blocking_conditions:
-   - condition: "No enhancement epic found in {@docs.subdirs.epics}"
+   - condition: "No enhancement epic found in @{docs.subdirs.epics}"
      message: "Cannot create a story without an enhancement epic."
      severity: critical
 

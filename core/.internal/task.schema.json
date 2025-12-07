@@ -182,47 +182,30 @@
 			}
 		},
 		"prerequisites": {
-			"type": "object",
+			"type": "array",
 			"description": "Conditions that must be met before task execution",
-			"properties": {
-				"status": {
-					"type": "array",
-					"description": "Required status values",
-					"items": {
-						"type": "object",
-						"properties": {
-							"entity": {
-								"type": "string",
-								"enum": ["story", "epic", "project"]
-							},
-							"field": {
-								"type": "string"
-							},
-							"value": {
-								"type": "string"
-							},
-							"operator": {
-								"type": "string",
-								"enum": ["equals", "not_equals", "in", "not_in"],
-								"default": "equals"
-							}
-						}
-					}
-				},
-				"commands": {
-					"type": "array",
-					"description": "Commands that must succeed",
-					"items": {
-						"type": "object",
-						"properties": {
-							"command": {
-								"type": "string"
-							},
-							"expected_exit_code": {
-								"type": "number",
-								"default": 0
-							}
-						}
+			"items": {
+				"type": "object",
+				"required": ["entity", "field", "value"],
+				"properties": {
+					"entity": {
+						"type": "string",
+						"enum": ["story", "epic", "project"]
+					},
+					"field": {
+						"type": "string"
+					},
+					"value": {
+						"type": "string"
+					},
+					"operator": {
+						"type": "string",
+						"enum": ["equals", "not_equals", "in", "not_in"],
+						"default": "equals"
+					},
+					"on_violate": {
+						"type": "string",
+						"enum": ["halt_and_report", "continue_with_warning"]
 					}
 				}
 			}
@@ -377,26 +360,6 @@
 								"default": false
 							}
 						}
-					}
-				}
-			}
-		},
-		"blocking_conditions": {
-			"type": "array",
-			"description": "Conditions that cause task to halt",
-			"items": {
-				"type": "object",
-				"properties": {
-					"condition": {
-						"type": "string"
-					},
-					"message": {
-						"type": "string"
-					},
-					"severity": {
-						"type": "string",
-						"enum": ["error", "critical"],
-						"default": "error"
 					}
 				}
 			}

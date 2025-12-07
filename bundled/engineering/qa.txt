@@ -55,8 +55,8 @@
 	"activation": {
 		"preconditions": {
 			"loadAlwaysFiles": [
-				"{@baseDir}/config.json",
-				"{@docs.files.codingStandards}"
+				"@{baseDir}/config.json",
+				"@{docs.files.codingStandards}"
 			],
 			"onMissingFiles": "ask_user"
 		},
@@ -69,7 +69,7 @@
 	"workflow": {
 		"resolvePaths": {
 			"strategy": "flexible-match",
-			"basePath": "{@baseDir}/engineering/",
+			"basePath": "@{baseDir}/engineering/",
 			"folderTypes": ["tasks", "schemas", "checklists", "data"],
 			"pattern": "<folderType>/<name>",
 			"fileLoadStrategy": "step_by_step",
@@ -165,10 +165,10 @@
 		},
 		{
 			"id": "CFG-R001",
-			"title": "Resolve {@*} references from core config",
+			"title": "Resolve @{*} references from core config",
 			"enforcements": [
 				"Locate config.json via terminal command or user input and load it",
-				"Expand {@docs.files.X} => {@docs.dir}/<file>, {@docs.subdirs.X} => {@docs.dir}/<subdir>"
+				"Expand @{docs.files.X} => @{docs.dir}/<file>, @{docs.subdirs.X} => @{docs.dir}/<subdir>"
 			],
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
@@ -212,7 +212,7 @@
 		"version": "2.0",
 		"output": {
 			"format": "yaml",
-			"filename": "{@docs.subdirs.stories}/{{epic_num}}.{{story_num}}.{{story_title_short}}.yaml",
+			"filename": "@{docs.subdirs.stories}/{{epic_num}}.{{story_num}}.{{story_title_short}}.yaml",
 			"title": "Story {{epic_num}}.{{story_num}}: {{story_title_short}}"
 		}
 	},
@@ -429,7 +429,7 @@
 		"version": "1.0",
 		"output": {
 			"format": "json",
-			"filename": "{@docs.subdirs.qa}/gates/{{epic_num}}.{{story_num}}-{{story_slug}}.json",
+			"filename": "@{docs.subdirs.qa}/gates/{{epic_num}}.{{story_num}}-{{story_slug}}.json",
 			"title": "Quality Gate: {{epic_num}}.{{story_num}}"
 		}
 	},
@@ -604,13 +604,13 @@ inputs:
         examples: ["1.3", "2.5"]
       - name: story_path
         type: path
-        pattern: "{@docs.subdirs.stories}/{epic}.{story}-*.yaml"
+        pattern: "@{docs.subdirs.stories}/{epic}.{story}-*.yaml"
       - name: architecture_refs
         type: path
-        pattern: "{@docs.dir}/?(*-)architecture.md"
+        pattern: "@{docs.dir}/?(*-)architecture.md"
       - name: coding_standards
         type: path
-        location: "{@docs.files.codingStandards}"
+        location: "@{docs.files.codingStandards}"
 
 prerequisites:
    status:
@@ -628,7 +628,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@baseDir}/config.json"
+           target: "@{baseDir}/config.json"
            content: |
               Extract config.docs.subdirs.qa and docs.subdirs.stories settings.
               Resolve story_path if not provided.
@@ -793,17 +793,17 @@ process:
         action:
            type: file_operation
            operation: create
-           target: "{@docs.subdirs.qa}/gates/{story_id}-*.yaml"
+           target: "@{docs.subdirs.qa}/gates/{story_id}-*.yaml"
            content: |
               Load qa-gate.json and use it as the contract to generate the gate artifact based on the assessment done above.
-              Serialize as YAML and write to {@docs.subdirs.qa}/gates/{story_id}-{story_slug}.yaml.
+              Serialize as YAML and write to @{docs.subdirs.qa}/gates/{story_id}-{story_slug}.yaml.
               Do not modify the story file.
 
 outputs:
    artifacts:
       - name: quality_gate
         type: file
-        path: "{@docs.subdirs.qa}/gates/{story_id}-*.yaml"
+        path: "@{docs.subdirs.qa}/gates/{story_id}-*.yaml"
         format: yaml
         description: Quality gate assessment file with pass/fail decision
    updates:
@@ -837,7 +837,7 @@ completion:
       - All findings documented
       - Actionable recommendations provided
    validations:
-      - command: "test -f {@docs.subdirs.qa}/gates/{epic}.{story}-*.yaml"
+      - command: "test -f @{docs.subdirs.qa}/gates/{epic}.{story}-*.yaml"
         expected_output: "file exists"
 
 
@@ -1168,7 +1168,7 @@ inputs:
         examples: ["1.3", "2.5"]
       - name: story_path
         type: path
-        pattern: "{@docs.subdirs.stories}/{story_id}-*.yaml"
+        pattern: "@{docs.subdirs.stories}/{story_id}-*.yaml"
 
 process:
    mode: sequential
@@ -1179,7 +1179,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@baseDir}/config.json"
+           target: "@{baseDir}/config.json"
         on_failure: halt
 
       - id: NORMALIZE-OUTLINE
@@ -1341,7 +1341,7 @@ inputs:
         examples: ["1.3", "2.5"]
       - name: story_path
         type: path
-        pattern: "{@docs.subdirs.stories}/{story_id}-*.yaml"
+        pattern: "@{docs.subdirs.stories}/{story_id}-*.yaml"
 
 process:
    mode: sequential
@@ -1417,7 +1417,7 @@ process:
         action:
            type: file_operation
            operation: create
-           target: "{@docs.subdirs.qa}/assessments/{story_id}-test-design-{YYYYMMDD}.md"
+           target: "@{docs.subdirs.qa}/assessments/{story_id}-test-design-{YYYYMMDD}.md"
            content: |
               # Test Design: Story {story_id}
 
@@ -1480,7 +1480,7 @@ outputs:
    artifacts:
       - name: test_design_document
         type: report
-        path: "{@docs.subdirs.qa}/assessments/{story_id}-test-design-{YYYYMMDD}.md"
+        path: "@{docs.subdirs.qa}/assessments/{story_id}-test-design-{YYYYMMDD}.md"
         format: markdown
         description: Comprehensive test design document with scenarios
       - name: gate_test_block
@@ -1498,7 +1498,7 @@ completion:
       - Test IDs follow naming convention
       - Scenarios are atomic and independent
    validations:
-      - command: "test -f {@docs.subdirs.qa}/assessments/{story_id}-test-design-{YYYYMMDD}.md"
+      - command: "test -f @{docs.subdirs.qa}/assessments/{story_id}-test-design-{YYYYMMDD}.md"
 
 
 
@@ -1520,14 +1520,14 @@ inputs:
         examples: ["1.3", "2.5"]
       - name: story_path
         type: path
-        pattern: "{@docs.subdirs.stories}/{story_id}-*.yaml"
+        pattern: "@{docs.subdirs.stories}/{story_id}-*.yaml"
    optional:
       - name: architecture_refs
         type: path
-        pattern: "{@docs.dir}/?(*-)architecture.md"
+        pattern: "@{docs.dir}/?(*-)architecture.md"
       - name: coding_standards
         type: path
-        location: "{@docs.files.codingStandards}"
+        location: "@{docs.files.codingStandards}"
       - name: interaction_mode
         type: string
         default: "non-interactive"
@@ -1549,7 +1549,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@baseDir}/config.json"
+           target: "@{baseDir}/config.json"
            content: |
               Extract config.docs.subdirs.qa and docs.subdirs.stories settings.
               Resolve story_path if not provided.
@@ -1606,8 +1606,8 @@ process:
            content: |
               Look for NFR requirements in:
               - Story acceptance criteria
-              - {@docs.dir}/?(*-)architecture.md files  
-              - {@docs.files.codingStandards}
+              - @{docs.dir}/?(*-)architecture.md files  
+              - @{docs.files.codingStandards}
 
               If interactive mode and thresholds missing, ask user:
               - Performance targets (response times, throughput)
@@ -1726,7 +1726,7 @@ process:
               - 10 for each CONCERNS attribute
               Floor at 0, ceiling at 100
 
-              Use custom weights from {@docs.files.codingStandards} if available.
+              Use custom weights from @{docs.files.codingStandards} if available.
 
       - id: CREATE-ASSESSMENT-REPORT
         title: Create Assessment Report
@@ -1734,7 +1734,7 @@ process:
         action:
            type: file_operation
            operation: create
-           target: "{@docs.subdirs.qa}/assessments/{story_id}-nfr-{YYYYMMDD}.md"
+           target: "@{docs.subdirs.qa}/assessments/{story_id}-nfr-{YYYYMMDD}.md"
            content: |
               # NFR Assessment: {story_id}
 
@@ -1768,14 +1768,14 @@ process:
            content: |
               Output integration information:
 
-              1. NFR assessment: {@docs.subdirs.qa}/assessments/{story_id}-nfr-{YYYYMMDD}.md
-              2. Gate NFR block ready → paste into {@docs.subdirs.qa}/gates/{story_id}-*.yaml under nfr_validation
+              1. NFR assessment: @{docs.subdirs.qa}/assessments/{story_id}-nfr-{YYYYMMDD}.md
+              2. Gate NFR block ready → paste into @{docs.subdirs.qa}/gates/{story_id}-*.yaml under nfr_validation
 
 outputs:
    artifacts:
       - name: nfr_assessment_report
         type: report
-        path: "{@docs.subdirs.qa}/assessments/{story_id}-nfr-{YYYYMMDD}.md"
+        path: "@{docs.subdirs.qa}/assessments/{story_id}-nfr-{YYYYMMDD}.md"
         format: markdown
         description: Brief NFR assessment report with findings and recommendations
       - name: gate_yaml_block

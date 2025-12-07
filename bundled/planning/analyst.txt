@@ -29,7 +29,7 @@
 	},
 	"activation": {
 		"preconditions": {
-			"loadAlwaysFiles": ["{@baseDir}/config.json"],
+			"loadAlwaysFiles": ["@{baseDir}/config.json"],
 			"onMissingFiles": "ask_user"
 		},
 		"initialActions": [
@@ -41,7 +41,7 @@
 	"workflow": {
 		"resolvePaths": {
 			"strategy": "flexible-match",
-			"basePath": "{@baseDir}/planning/",
+			"basePath": "@{baseDir}/planning/",
 			"folderTypes": ["tasks", "templates", "checklists", "data"],
 			"pattern": "<folderType>/<name>",
 			"fileLoadStrategy": "step_by_step",
@@ -159,10 +159,10 @@
 		},
 		{
 			"id": "CFG-R001",
-			"title": "Resolve {@*} references from core config",
+			"title": "Resolve @{*} references from core config",
 			"enforcements": [
 				"Locate config.json via terminal command or user input and load it",
-				"Expand {@docs.files.X} => {@docs.dir}/<file>, {@docs.subdirs.X} => {@docs.dir}/<subdir>"
+				"Expand @{docs.files.X} => @{docs.dir}/<file>, @{docs.subdirs.X} => @{docs.dir}/<subdir>"
 			],
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
@@ -373,7 +373,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{@docs.files.prd}"
+    filename: "@{docs.files.prd}"
     title: "{{project_name}} Product Requirements Document (PRD)"
 
 workflow:
@@ -558,7 +558,7 @@ Violation Indicator: If you produce a complete document without user interaction
 
 If a YAML template is not provided by the user:
 
-1. List available templates from `{@baseDir}/planning/templates`.
+1. List available templates from `@{baseDir}/planning/templates`.
 2. Ask the user to choose one or provide a different template.
 3. Do not proceed until a template is selected.
 
@@ -788,7 +788,7 @@ Be honest about trade-offs. There's rarely a perfect solution.]]
    -  [ ] Assess feasibility, effort, and risks of this path.
 -  [ ] **Option 2: Potential Rollback:**
    -  [ ] Would reverting completed stories significantly simplify addressing the issue?
-   -  [ ] Identify specific {@docs.subdirs.stories}/commits to consider for rollback.
+   -  [ ] Identify specific @{docs.subdirs.stories}/commits to consider for rollback.
    -  [ ] Assess the effort required for rollback.
    -  [ ] Assess the impact of rollback (lost work, data implications).
    -  [ ] Compare the net benefit/cost vs. Direct Adjustment.
@@ -819,7 +819,7 @@ This proposal guides all subsequent work.]]
 -  [ ] **Artifact Adjustment Needs:** List of documents to change.
 -  [ ] **Recommended Path Forward:** Chosen solution with rationale.
 -  [ ] **PRD MVP Impact:** Changes to scope/goals (if any).
--  [ ] **High-Level Action Plan:** Next steps for {@docs.subdirs.stories}/updates.
+-  [ ] **High-Level Action Plan:** Next steps for @{docs.subdirs.stories}/updates.
 -  [ ] **Agent Handoff Plan:** Identify roles needed (PM, Arch, Design Arch, PDM).
 
 ## 6. Final Review & Handoff
@@ -1185,7 +1185,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{@docs.dir}/brainstorming-session-results.md"
+    filename: "@{docs.dir}/brainstorming-session-results.md"
     title: "Brainstorming Session Results"
 
 workflow:
@@ -1758,7 +1758,7 @@ template:
   version: 2.0
   output:
     format: markdown
-    filename: "{@docs.dir}/brief.md"
+    filename: "@{docs.dir}/brief.md"
     title: "Project Brief: {{project_name}}"
 
 workflow:

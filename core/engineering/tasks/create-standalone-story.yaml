@@ -75,7 +75,7 @@ process:
         action:
            type: "file_operation"
            operation: "create"
-           target: "{@docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.yaml"
+           target: "@{docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.yaml"
            content: |
               template:
                 id: story-template-v2
@@ -83,7 +83,7 @@ process:
                 version: "2.0"
                 output:
                   format: json
-                  filename: "{@docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.json"
+                  filename: "@{docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.json"
                   title: "Story {story_enhancement_number}: {story_title_short}"
               workflow:
                 mode: interactive
@@ -274,19 +274,19 @@ process:
                  - "Existing system patterns are identified and will be followed"
                  - "Rollback plan is simple and feasible"
                  - "Acceptance criteria include existing functionality verification"
-                 - "Story file is created at {@docs.subdirs.stories}/standln-{story_enhancement_number}-*.yaml"
+                 - "Story file is created at @{docs.subdirs.stories}/standln-{story_enhancement_number}-*.yaml"
                  - "PRD and/or architecture docs are updated where impacted or explicitly confirmed as not requiring updates"
 
 outputs:
    artifacts:
       - name: "standalone-story"
         type: "file"
-        path: "{@docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.yaml"
+        path: "@{docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.yaml"
         format: "yaml"
         description: "Standalone story YAML file"
       - name: "documentation-updates"
         type: "file"
-        path: "{@docs.dir}/"
+        path: "@{docs.dir}/"
         format: "markdown"
         description: "Updated PRD and/or architecture documents if impacted"
 

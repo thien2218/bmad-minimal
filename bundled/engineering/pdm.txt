@@ -56,9 +56,9 @@
 	"activation": {
 		"preconditions": {
 			"loadAlwaysFiles": [
-				"{@baseDir}/config.json",
-				"{@docs.files.prd}",
-				"{@docs.dir}/?(*-)architecture.md"
+				"@{baseDir}/config.json",
+				"@{docs.files.prd}",
+				"@{docs.dir}/?(*-)architecture.md"
 			],
 			"onMissingFiles": "ask_user"
 		},
@@ -72,7 +72,7 @@
 	"workflow": {
 		"resolvePaths": {
 			"strategy": "flexible-match",
-			"basePath": "{@baseDir}",
+			"basePath": "@{baseDir}",
 			"folderTypes": ["tasks", "schemas", "checklists"],
 			"pattern": "<folderType>/<name>",
 			"fileLoadStrategy": "step_by_step",
@@ -206,10 +206,10 @@
 		},
 		{
 			"id": "CFG-R001",
-			"title": "Resolve {@*} references from core config",
+			"title": "Resolve @{*} references from core config",
 			"enforcements": [
 				"Locate config.json via terminal command or user input and load it",
-				"Expand {@docs.files.X} => {@docs.dir}/<file>, {@docs.subdirs.X} => {@docs.dir}/<subdir>"
+				"Expand @{docs.files.X} => @{docs.dir}/<file>, @{docs.subdirs.X} => @{docs.dir}/<subdir>"
 			],
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
@@ -366,7 +366,7 @@ Be honest about trade-offs. There's rarely a perfect solution.]]
    -  [ ] Assess feasibility, effort, and risks of this path.
 -  [ ] **Option 2: Potential Rollback:**
    -  [ ] Would reverting completed stories significantly simplify addressing the issue?
-   -  [ ] Identify specific {@docs.subdirs.stories}/commits to consider for rollback.
+   -  [ ] Identify specific @{docs.subdirs.stories}/commits to consider for rollback.
    -  [ ] Assess the effort required for rollback.
    -  [ ] Assess the impact of rollback (lost work, data implications).
    -  [ ] Compare the net benefit/cost vs. Direct Adjustment.
@@ -397,7 +397,7 @@ This proposal guides all subsequent work.]]
 -  [ ] **Artifact Adjustment Needs:** List of documents to change.
 -  [ ] **Recommended Path Forward:** Chosen solution with rationale.
 -  [ ] **PRD MVP Impact:** Changes to scope/goals (if any).
--  [ ] **High-Level Action Plan:** Next steps for {@docs.subdirs.stories}/updates.
+-  [ ] **High-Level Action Plan:** Next steps for @{docs.subdirs.stories}/updates.
 -  [ ] **Agent Handoff Plan:** Identify roles needed (PM, Arch, Design Arch, PDM).
 
 ## 6. Final Review & Handoff
@@ -461,13 +461,13 @@ inputs:
 
 outputs:
    updates:
-      - target: "{@docs.subdirs.epics}/*.yaml"
+      - target: "@{docs.subdirs.epics}/*.yaml"
         sections: ["User Stories", "Acceptance Criteria", "Priority"]
         restrictions: Only as specified in approved change proposal
-      - target: "{@docs.files.prd}"
+      - target: "@{docs.files.prd}"
         sections: ["Requirements", "Scope", "Technical Constraints"]
         restrictions: Only as specified in approved change proposal
-      - target: "{@docs.dir}/?(*-)architecture.md"
+      - target: "@{docs.dir}/?(*-)architecture.md"
         sections: ["Components", "Diagrams", "Technology Stack"]
         restrictions: Only as specified in approved change proposal
 
@@ -1099,7 +1099,7 @@ After presenting the report, ask if the user wants:
 		"version": "2.0",
 		"output": {
 			"format": "yaml",
-			"filename": "{@docs.subdirs.epics}/{{epic_number}}.{{epic_title_short}}.yaml",
+			"filename": "@{docs.subdirs.epics}/{{epic_number}}.{{epic_title_short}}.yaml",
 			"title": "Epic {{epic_number}}: {{epic_title}}"
 		}
 	},
@@ -1279,7 +1279,7 @@ outputs:
    artifacts:
       - name: epic_document
         type: file
-        path: "{@docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
+        path: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
         format: yaml
 
 process:
@@ -1321,7 +1321,7 @@ process:
         action:
            type: file_operation
            operation: create
-           target: "{@docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
+           target: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
            content: |
               status: Draft
               epic-overview:
@@ -1347,7 +1347,7 @@ process:
         action:
            type: file_operation
            operation: update
-           target: "{@docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
+           target: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
            content: |
               epic-overview:
                 description: |
@@ -1381,7 +1381,7 @@ process:
         action:
            type: file_operation
            operation: update
-           target: "{@docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
+           target: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
            content: |
               story-breakdown:
                 story-list:
@@ -1398,7 +1398,7 @@ process:
         action:
            type: file_operation
            operation: update
-           target: "{@docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
+           target: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
            content: |
               scope-boundaries:
                 in-scope:
@@ -1417,7 +1417,7 @@ process:
         action:
            type: file_operation
            operation: update
-           target: "{@docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
+           target: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
            content: |
               epic-overview:
                 definition_of_done:
@@ -1486,10 +1486,10 @@ outputs:
    artifacts:
       - name: Story File
         type: file
-        path: "{@docs.subdirs.stories}/{epic}.{story}-*.yaml"
+        path: "@{docs.subdirs.stories}/{epic}.{story}-*.yaml"
         format: yaml
    updates:
-      - target: "{@docs.subdirs.stories}/*.yaml"
+      - target: "@{docs.subdirs.stories}/*.yaml"
         sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
         restrictions: Only create new story, do not modify existing stories
 
@@ -1502,7 +1502,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@baseDir}/config.json"
+           target: "@{baseDir}/config.json"
            validation:
               type: string
               required: true
@@ -1585,7 +1585,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@docs.subdirs.epics}/{epic}-*.yaml"
+           target: "@{docs.subdirs.epics}/{epic}-*.yaml"
            content: |
               Extract:
               - Story title and description
@@ -1598,7 +1598,7 @@ process:
         description: If previous story exists, extract lessons learned
         action:
            type: analysis
-           target: "{@docs.subdirs.stories}/{previousEpicNum}.{previousStoryNum}-*.yaml"
+           target: "@{docs.subdirs.stories}/{previousEpicNum}.{previousStoryNum}-*.yaml"
            content: |
               Review Dev Agent Record sections for:
               - Completion Notes and Debug Log References
@@ -1615,7 +1615,7 @@ process:
         action:
            type: decision
            content: |
-              Read {@docs.dir}/?(*-)architecture.md
+              Read @{docs.dir}/?(*-)architecture.md
               Follow structured reading order
 
       - id: ARCH-2
@@ -1634,12 +1634,12 @@ process:
               For Backend/API Stories, additionally:
               - data-models
               - database-schema
-              - {@docs.files.beArchitecture} file
+              - @{docs.files.beArchitecture} file
               - rest-api-spec
               - external-apis
 
               For Frontend/UI Stories, additionally:
-              - {@docs.files.feArchitecture} file
+              - @{docs.files.feArchitecture} file
               - components
               - core-workflows
               - data-models
@@ -1671,7 +1671,7 @@ process:
         description: Cross-reference with Project Structure Guide
         action:
            type: validation
-           target: "{@docs.dir}/?(*-)architecture.md#unified-project-structure"
+           target: "@{docs.dir}/?(*-)architecture.md#unified-project-structure"
            content: |
               - Cross-reference story requirements with Project Structure Guide
               - Ensure file paths, component locations, module names align
@@ -1683,7 +1683,7 @@ process:
         action:
            type: file_operation
            operation: create
-           target: "{@docs.subdirs.stories}/{epic}.{story}-*.yaml"
+           target: "@{docs.subdirs.stories}/{epic}.{story}-*.yaml"
            content: |
               story:
                 id: "{epic}.{story}"
@@ -1697,22 +1697,22 @@ process:
                 previous_story_insights: "{previous_insights}"
                 data_models:
                   value: "{data_models}"
-                  source: "{@docs.dir}/<scope>-architecture.md#{section}"
+                  source: "@{docs.dir}/<scope>-architecture.md#{section}"
                 api_specifications:
                   value: "{api_specs}"
-                  source: "{@docs.dir}/<scope>-architecture.md#{section}"
+                  source: "@{docs.dir}/<scope>-architecture.md#{section}"
                 component_specifications:
                   value: "{component_specs}"
-                  source: "{@docs.dir}/<scope>-architecture.md#{section}"
+                  source: "@{docs.dir}/<scope>-architecture.md#{section}"
                 file_locations:
                   value: "{file_locations}"
-                  source: "{@docs.dir}/<scope>-architecture.md#{section}"
+                  source: "@{docs.dir}/<scope>-architecture.md#{section}"
                 testing_requirements:
                   value: "{testing_requirements}"
-                  source: "{@docs.dir}/<scope>-architecture.md#{section}"
+                  source: "@{docs.dir}/<scope>-architecture.md#{section}"
                 technical_constraints:
                   value: "{technical_constraints}"
-                  source: "{@docs.dir}/<scope>-architecture.md#{section}"
+                  source: "@{docs.dir}/<scope>-architecture.md#{section}"
                 notes_missing_guidance: "If information for a category is not found in architecture docs, explicitly state: 'No specific guidance found in architecture docs'"
               tasks_subtasks: "{generated_tasks}"
               risk_mitigation:
@@ -1775,7 +1775,7 @@ process:
         action:
            type: elicit
            prompt: |
-              Story created: {@docs.subdirs.stories}/{epic}.{story}-*.yaml
+              Story created: @{docs.subdirs.stories}/{epic}.{story}-*.yaml
               Status: Draft
 
               Key technical components included from architecture docs:
@@ -1821,7 +1821,7 @@ completion:
 		"version": "2.0",
 		"output": {
 			"format": "yaml",
-			"filename": "{@docs.subdirs.stories}/{{epic_num}}.{{story_num}}.{{story_title_short}}.yaml",
+			"filename": "@{docs.subdirs.stories}/{{epic_num}}.{{story_num}}.{{story_title_short}}.yaml",
 			"title": "Story {{epic_num}}.{{story_num}}: {{story_title_short}}"
 		}
 	},
@@ -2196,7 +2196,7 @@ $schema: ../../.internal/task.schema.json
 id: create-adhoc-epic
 title: Create Enhancement Epic from Brownfield Docs
 version: 1.0.0
-purpose: Create a single epic for the highest-order enhancement using PRD and Architecture docs in {@docs.subdirs.epics} as authoritative references. Output YAML strictly follows the epic schema.
+purpose: Create a single epic for the highest-order enhancement using PRD and Architecture docs in @{docs.subdirs.epics} as authoritative references. Output YAML strictly follows the epic schema.
 category: planning
 agent: pdm
 
@@ -2212,11 +2212,11 @@ outputs:
    artifacts:
       - name: Epic File
         type: file
-        path: "{@docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml"
+        path: "@{docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml"
         format: yaml
       - name: Documentation Updates
         type: file
-        path: "{@docs.dir}/"
+        path: "@{docs.dir}/"
         format: markdown
 
 process:
@@ -2228,7 +2228,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@baseDir}/config.json"
+           target: "@{baseDir}/config.json"
            validation:
               type: string
               required: true
@@ -2240,7 +2240,7 @@ process:
         action:
            type: analysis
            content: |
-              Inspect {@docs.subdirs.epics} for files:
+              Inspect @{docs.subdirs.epics} for files:
               - adhoc-*.yaml
               Extract all enhancement numbers and compute the maximum value.
               If input epic_enhancement_number is provided, use it instead.
@@ -2251,7 +2251,7 @@ process:
         action:
            type: validation
            prompt: |
-              Check if epic file exists: {@docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml
+              Check if epic file exists: @{docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml
               If it exists, choose:
               1) Skip (do not create)
               2) Overwrite (replace content)
@@ -2264,7 +2264,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@docs.files.prd}"
+           target: "@{docs.files.prd}"
            validation:
               type: string
               required: true
@@ -2275,7 +2275,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@docs.files.architecture}"
+           target: "@{docs.files.architecture}"
            validation:
               type: string
               required: true
@@ -2301,7 +2301,7 @@ process:
         action:
            type: file_operation
            operation: create
-           target: "{@docs.subdirs.epics}/adhoc-{epic_enhancement_number}-{enhancement_name}.yaml"
+           target: "@{docs.subdirs.epics}/adhoc-{epic_enhancement_number}-{enhancement_name}.yaml"
            content: |
               status: Draft
               epic-overview:
@@ -2397,7 +2397,7 @@ process:
         action:
            type: elicit
            prompt: |
-              Epic created: {@docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml
+              Epic created: @{docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml
               Status: Draft
               Stories proposed: {story_count}
               Next: Review story list and priorities, then proceed to story creation.
@@ -2439,14 +2439,14 @@ outputs:
    artifacts:
       - name: Story File
         type: file
-        path: "{@docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-*.yaml"
+        path: "@{docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-*.yaml"
         format: yaml
       - name: Documentation Updates
         type: file
-        path: "{@docs.dir}/"
+        path: "@{docs.dir}/"
         format: markdown
    updates:
-      - target: "{@docs.subdirs.stories}/*.yaml"
+      - target: "@{docs.subdirs.stories}/*.yaml"
         sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
         restrictions: Only create new story, do not modify existing stories
 
@@ -2459,7 +2459,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@baseDir}/config.json"
+           target: "@{baseDir}/config.json"
            validation:
               type: string
               required: true
@@ -2467,11 +2467,11 @@ process:
 
       - id: IDENTIFY-1
         title: Locate Highest Enhancement Epic
-        description: Determine highest enhancement epic from {@docs.subdirs.epics}
+        description: Determine highest enhancement epic from @{docs.subdirs.epics}
         action:
            type: analysis
            content: |
-              Scan {@docs.subdirs.epics} for epic files: adhoc-*.yaml
+              Scan @{docs.subdirs.epics} for epic files: adhoc-*.yaml
               Extract enhancement numbers and select the maximum value.
               If input epic_enhancement_number provided, use it instead.
 
@@ -2481,7 +2481,7 @@ process:
         action:
            type: analysis
            content: |
-              Scan {@docs.subdirs.stories} for files: adhoc-{epic_enhancement_number}.*-*.yaml
+              Scan @{docs.subdirs.stories} for files: adhoc-{epic_enhancement_number}.*-*.yaml
               Extract existing story numbers and compute next (start at 1 if none exist).
               If input story_enhancement_number provided, use it instead.
 
@@ -2505,7 +2505,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml"
+           target: "@{docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml"
            content: |
               Extract from epic:
               - Initial story title/goal candidates (story-breakdown.story-list)
@@ -2520,7 +2520,7 @@ process:
            operation: read
            content: |
               Read:
-              - {@docs.files.prd}
+              - @{docs.files.prd}
 
       - id: EXTRACT-TECH
         title: Extract Technical Details for Story
@@ -2543,7 +2543,7 @@ process:
         action:
            type: file_operation
            operation: create
-           target: "{@docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-{story_slug}.yaml"
+           target: "@{docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-{story_slug}.yaml"
            content: |
               story:
                 id: "adhoc-{epic_enhancement_number}.{story_enhancement_number}"
@@ -2562,22 +2562,22 @@ process:
                 previous_story_insights: "{prior insights if any}"
                 data_models:
                   value: "{data models used}"
-                  source: "{@docs.files.prd}#{section}"
+                  source: "@{docs.files.prd}#{section}"
                 api_specifications:
                   value: "{API specs}"
-                  source: "{@docs.files.prd}#{section}"
+                  source: "@{docs.files.prd}#{section}"
                 component_specifications:
                   value: "{component specs}"
-                  source: "{@docs.files.prd}#{section}"
+                  source: "@{docs.files.prd}#{section}"
                 file_locations:
                   value: "{file paths and naming conventions}"
-                  source: "{@docs.files.prd}#{section}"
+                  source: "@{docs.files.prd}#{section}"
                 testing_requirements:
                   value: "{testing requirements}"
-                  source: "{@docs.files.prd}#{section}"
+                  source: "@{docs.files.prd}#{section}"
                 technical_constraints:
                   value: "{constraints}"
-                  source: "{@docs.files.prd}#{section}"
+                  source: "@{docs.files.prd}#{section}"
                 notes_missing_guidance: "If information for a category is not found, state: 'No specific guidance found in docs'"
               test_specs:
                 specs:
@@ -2650,7 +2650,7 @@ process:
         action:
            type: elicit
            prompt: |
-              Story created: {@docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-*.yaml
+              Story created: @{docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-*.yaml
               Status: Draft
 
               Checklist Results:
@@ -2661,7 +2661,7 @@ process:
               - Proceed to implementation when ready
 
 blocking_conditions:
-   - condition: "No enhancement epic found in {@docs.subdirs.epics}"
+   - condition: "No enhancement epic found in @{docs.subdirs.epics}"
      message: "Cannot create a story without an enhancement epic."
      severity: critical
 
@@ -2753,7 +2753,7 @@ process:
         action:
            type: "file_operation"
            operation: "create"
-           target: "{@docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.yaml"
+           target: "@{docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.yaml"
            content: |
               template:
                 id: story-template-v2
@@ -2761,7 +2761,7 @@ process:
                 version: "2.0"
                 output:
                   format: json
-                  filename: "{@docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.json"
+                  filename: "@{docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.json"
                   title: "Story {story_enhancement_number}: {story_title_short}"
               workflow:
                 mode: interactive
@@ -2952,19 +2952,19 @@ process:
                  - "Existing system patterns are identified and will be followed"
                  - "Rollback plan is simple and feasible"
                  - "Acceptance criteria include existing functionality verification"
-                 - "Story file is created at {@docs.subdirs.stories}/standln-{story_enhancement_number}-*.yaml"
+                 - "Story file is created at @{docs.subdirs.stories}/standln-{story_enhancement_number}-*.yaml"
                  - "PRD and/or architecture docs are updated where impacted or explicitly confirmed as not requiring updates"
 
 outputs:
    artifacts:
       - name: "standalone-story"
         type: "file"
-        path: "{@docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.yaml"
+        path: "@{docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.yaml"
         format: "yaml"
         description: "Standalone story YAML file"
       - name: "documentation-updates"
         type: "file"
-        path: "{@docs.dir}/"
+        path: "@{docs.dir}/"
         format: "markdown"
         description: "Updated PRD and/or architecture documents if impacted"
 

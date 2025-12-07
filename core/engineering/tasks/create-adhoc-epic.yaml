@@ -2,7 +2,7 @@ $schema: ../../.internal/task.schema.json
 id: create-adhoc-epic
 title: Create Enhancement Epic from Brownfield Docs
 version: 1.0.0
-purpose: Create a single epic for the highest-order enhancement using PRD and Architecture docs in {@docs.subdirs.epics} as authoritative references. Output YAML strictly follows the epic schema.
+purpose: Create a single epic for the highest-order enhancement using PRD and Architecture docs in @{docs.subdirs.epics} as authoritative references. Output YAML strictly follows the epic schema.
 category: planning
 agent: pdm
 
@@ -18,11 +18,11 @@ outputs:
    artifacts:
       - name: Epic File
         type: file
-        path: "{@docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml"
+        path: "@{docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml"
         format: yaml
       - name: Documentation Updates
         type: file
-        path: "{@docs.dir}/"
+        path: "@{docs.dir}/"
         format: markdown
 
 process:
@@ -34,7 +34,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@baseDir}/config.json"
+           target: "@{baseDir}/config.json"
            validation:
               type: string
               required: true
@@ -46,7 +46,7 @@ process:
         action:
            type: analysis
            content: |
-              Inspect {@docs.subdirs.epics} for files:
+              Inspect @{docs.subdirs.epics} for files:
               - adhoc-*.yaml
               Extract all enhancement numbers and compute the maximum value.
               If input epic_enhancement_number is provided, use it instead.
@@ -57,7 +57,7 @@ process:
         action:
            type: validation
            prompt: |
-              Check if epic file exists: {@docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml
+              Check if epic file exists: @{docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml
               If it exists, choose:
               1) Skip (do not create)
               2) Overwrite (replace content)
@@ -70,7 +70,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@docs.files.prd}"
+           target: "@{docs.files.prd}"
            validation:
               type: string
               required: true
@@ -81,7 +81,7 @@ process:
         action:
            type: file_operation
            operation: read
-           target: "{@docs.files.architecture}"
+           target: "@{docs.files.architecture}"
            validation:
               type: string
               required: true
@@ -107,7 +107,7 @@ process:
         action:
            type: file_operation
            operation: create
-           target: "{@docs.subdirs.epics}/adhoc-{epic_enhancement_number}-{enhancement_name}.yaml"
+           target: "@{docs.subdirs.epics}/adhoc-{epic_enhancement_number}-{enhancement_name}.yaml"
            content: |
               status: Draft
               epic-overview:
@@ -203,7 +203,7 @@ process:
         action:
            type: elicit
            prompt: |
-              Epic created: {@docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml
+              Epic created: @{docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml
               Status: Draft
               Stories proposed: {story_count}
               Next: Review story list and priorities, then proceed to story creation.
