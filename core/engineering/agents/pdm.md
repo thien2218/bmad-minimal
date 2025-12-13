@@ -108,7 +108,7 @@
 			},
 			"inputResolution": {
 				"pattern": "^\\$\\{[a-zA-Z0-9_-.]+\\}$",
-				"description": "Resolve reference to an input parameter or value for the current task being executed",
+				"description": "Resolve reference to a command's input parameter or value for the current task being executed",
 				"examples": [
 					{
 						"input": "${story}",

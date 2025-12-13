@@ -14,7 +14,7 @@
 		},
 		"id": {
 			"type": "string",
-			"description": "Unique identifier for the task",
+			"description": "Unique identifier for the task. Can be inferred from filename",
 			"pattern": "^[a-z0-9-]+$",
 			"examples": ["develop-story", "review-story", "create-doc"]
 		},
@@ -53,58 +53,53 @@
 			"enum": ["dev", "qa", "pdm", "any"],
 			"default": "any"
 		},
-		"inputs": {
-			"type": "object",
-			"description": "Input parameters for the task",
-			"properties": {
-				"required": {
-					"type": "array",
-					"description": "Required input parameters",
-					"items": {
-						"type": "object",
-						"required": ["name", "type", "description"],
-						"properties": {
-							"name": {
-								"type": "string",
-								"pattern": "^[a-z_][a-z0-9_]*$"
-							},
-							"type": {
-								"type": "string",
-								"enum": [
-									"string",
-									"number",
-									"boolean",
-									"array",
-									"object",
-									"path",
-									"epic_id",
-									"story_id",
-									"command"
-								]
-							},
-							"pattern": {
-								"type": "string",
-								"description": "Regex pattern for path matching and validation"
-							},
-							"location": {
-								"type": "string",
-								"description": "Exact location of a file or folder where needed docs and resources can be found"
-							},
-							"default": {
-								"description": "Default value if not provided"
-							},
-							"examples": {
-								"type": "array",
-								"items": {}
-							}
-						}
-					}
-				},
-				"optional": {
-					"type": "array",
-					"description": "Optional input parameters",
-					"items": {
-						"$ref": "#/properties/inputs/properties/required/items"
+		"derived": {
+			"type": "array",
+			"description": "Inputs derived from other source(s)",
+			"items": {
+				"type": "object",
+				"required": ["name", "type", "source"],
+				"properties": {
+					"name": {
+						"type": "string",
+						"pattern": "^[a-z_][a-z0-9_]*$"
+					},
+					"description": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string",
+						"enum": [
+							"string",
+							"number",
+							"boolean",
+							"array",
+							"object",
+							"path",
+							"epic_id",
+							"story_id",
+							"command"
+						]
+					},
+					"pattern": {
+						"type": "string",
+						"description": "Regex pattern for path matching and validation"
+					},
+					"source": {
+						"type": "string",
+						"description": "Source of the input parameter",
+						"enum": ["context", "file", "parameters"]
+					},
+					"location": {
+						"type": "string",
+						"description": "Exact location of a file or folder where needed docs and resources can be found to supply to this input if source is file"
+					},
+					"default": {
+						"description": "Default value if not provided"
+					},
+					"required": {
+						"type": "boolean",
+						"description": "Whether this input is required for the task to execute"
 					}
 				}
 			}
@@ -186,21 +181,30 @@
 			"description": "Conditions that must be met before task execution",
 			"items": {
 				"type": "object",
-				"required": ["entity", "field", "value"],
+				"required": ["field", "value", "operator", "on_violate"],
 				"properties": {
-					"entity": {
-						"type": "string"
-					},
 					"field": {
-						"type": "string"
+						"type": "string",
+						"description": "The field to evaluate. Can be a reference to a variable or a property of the task"
 					},
 					"value": {
-						"type": "string"
+						"type": "string",
+						"description": "The value to compare against"
 					},
 					"operator": {
 						"type": "string",
-						"enum": ["equals", "not_equals", "in", "not_in"],
-						"default": "equals"
+						"enum": [
+							"=",
+							"!=",
+							"<",
+							">",
+							"<=",
+							">=",
+							"contains",
+							"in",
+							"not_in"
+						],
+						"default": "="
 					},
 					"on_violate": {
 						"type": "string",
@@ -209,156 +213,138 @@
 				}
 			}
 		},
-		"process": {
-			"type": "object",
-			"description": "The execution process",
-			"required": ["steps"],
-			"properties": {
-				"mode": {
-					"type": "string",
-					"description": "Execution mode",
-					"enum": ["sequential", "parallel", "conditional"],
-					"default": "sequential"
-				},
-				"steps": {
-					"type": "array",
-					"description": "Process steps to execute",
-					"minItems": 1,
-					"items": {
-						"type": "object",
-						"required": ["id", "title", "action"],
-						"properties": {
-							"id": {
-								"type": "string",
-								"pattern": "^[A-Z0-9-]+$"
-							},
-							"title": {
-								"type": "string"
-							},
-							"description": {
-								"type": "string"
-							},
-							"action": {
-								"type": "object",
-								"description": "Action to perform",
-								"properties": {
-									"type": {
-										"type": "string",
-										"enum": [
-											"command",
-											"file_operation",
-											"validation",
-											"decision",
-											"subtask",
-											"elicit",
-											"analysis"
-										]
-									},
-									"command": {
-										"type": "string",
-										"description": "Command to execute (if type is command)"
-									},
-									"operation": {
-										"type": "string",
-										"description": "File operation (if type is file_operation)",
-										"enum": [
-											"create",
-											"update",
-											"delete",
-											"copy",
-											"move",
-											"read"
-										]
-									},
-									"target": {
-										"type": "string",
-										"description": "Target file or resource"
-									},
-									"content": {
-										"type": "string",
-										"description": "Content to write or template to use"
-									},
-									"subtask": {
-										"type": "string",
-										"description": "Reference to another task to execute"
-									},
-									"prompt": {
-										"type": "string",
-										"description": "Prompt for user elicitation"
-									},
-									"options": {
-										"type": "array",
-										"description": "Options for user selection",
-										"items": {
-											"type": "string"
-										}
-									},
-									"validation": {
-										"type": "object",
-										"description": "Validation rules",
-										"properties": {
-											"type": {
-												"type": "string"
-											},
-											"pattern": {
-												"type": "string"
-											},
-											"required": {
-												"type": "boolean"
-											}
-										}
-									}
+		"steps": {
+			"type": "array",
+			"description": "Process steps to execute",
+			"minItems": 1,
+			"items": {
+				"type": "object",
+				"required": ["id", "title", "description", "action"],
+				"properties": {
+					"id": {
+						"type": "string",
+						"pattern": "^[A-Z]+$"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"conditions": {
+						"type": "array",
+						"description": "Conditions for moving between steps execution",
+						"items": {
+							"type": "object",
+							"properties": {
+								"move_to_step": {
+									"type": "string",
+									"description": "Step to execute if condition is met"
+								},
+								"when": {
+									"type": "string",
+									"description": "Condition to evaluate"
 								}
-							},
-							"condition": {
-								"type": "object",
-								"description": "Condition for step execution",
-								"properties": {
-									"if": {
-										"type": "string",
-										"description": "Condition expression"
-									},
-									"then": {
-										"type": "string",
-										"description": "Step to execute if true"
-									},
-									"else": {
-										"type": "string",
-										"description": "Step to execute if false"
-									}
-								}
-							},
-							"retry": {
-								"type": "object",
-								"description": "Retry configuration",
-								"properties": {
-									"max_attempts": {
-										"type": "number",
-										"minimum": 1,
-										"maximum": 10
-									},
-									"delay_seconds": {
-										"type": "number",
-										"minimum": 0
-									}
-								}
-							},
-							"on_failure": {
-								"type": "string",
-								"description": "Action on failure",
-								"enum": ["halt", "continue", "skip", "rollback"]
-							},
-							"on_success": {
-								"type": "string",
-								"description": "Action on success",
-								"enum": ["halt", "continue", "skip", "rollback"]
-							},
-							"elicit": {
-								"type": "boolean",
-								"description": "Whether this step requires user interaction",
-								"default": false
 							}
 						}
+					},
+					"action": {
+						"type": "object",
+						"description": "Action to perform",
+						"properties": {
+							"type": {
+								"type": "string",
+								"enum": [
+									"command",
+									"file_operation",
+									"validation",
+									"decision",
+									"subtask",
+									"elicit",
+									"analysis"
+								]
+							},
+							"command": {
+								"type": "string",
+								"description": "Command to execute (if type is command)"
+							},
+							"operation": {
+								"type": "string",
+								"description": "File operation (if type is file_operation)",
+								"enum": [
+									"create",
+									"update",
+									"delete",
+									"copy",
+									"move",
+									"read"
+								]
+							},
+							"target": {
+								"type": "string",
+								"description": "Target file or resource"
+							},
+							"template": {
+								"type": "string",
+								"description": "Template to use to fill out content of some file/report"
+							},
+							"prompt_user": {
+								"type": "string",
+								"description": "Prompt for user elicitation"
+							},
+							"options": {
+								"type": "array",
+								"description": "Options for user selection",
+								"items": {
+									"type": "string"
+								}
+							},
+							"validation": {
+								"type": "object",
+								"description": "Validation rules",
+								"properties": {
+									"type": {
+										"type": "string"
+									},
+									"pattern": {
+										"type": "string"
+									},
+									"required": {
+										"type": "boolean"
+									}
+								}
+							}
+						}
+					},
+					"retry": {
+						"type": "object",
+						"description": "Retry configuration",
+						"properties": {
+							"max_attempts": {
+								"type": "number",
+								"minimum": 1,
+								"maximum": 10
+							},
+							"delay_seconds": {
+								"type": "number",
+								"minimum": 0
+							}
+						}
+					},
+					"on_failure": {
+						"type": "string",
+						"description": "Action on failure",
+						"enum": ["halt", "continue", "skip", "rollback"]
+					},
+					"on_success": {
+						"type": "string",
+						"description": "Action on success",
+						"enum": ["halt", "continue", "skip", "rollback"]
+					},
+					"elicit": {
+						"type": "boolean",
+						"description": "Whether this step requires user interaction",
+						"default": false
 					}
 				}
 			}

@@ -16,7 +16,7 @@ If you find this project helpful, consider giving it a ⭐ to support us!
 ### Core Guides & Worflows
 
 0. [Quick Start](README.md#quick-start) -> Your essential guide to installing and running the project on your local machine.
-1. [Cheat Sheet](docs/cheat-sheet.md) ->
+1. [Cheat Sheet](docs/cheat-sheet.md) -> Rapid reference covering core commands, agent roles, workflow triggers, and configuration shortcuts so you can orient yourself in seconds without using `*help` commands.
 2. [Planning Workflow](docs/planning-workflow.md) -> The interactive spec-driven planning flow to produce high level documents and stories with planning agents.
 3. [IDE Development Workflow](docs/ide-development-workflow.md) -> The detailed how-to for your day-to-day project development flow in your favorite IDE with engineering agents.
 
