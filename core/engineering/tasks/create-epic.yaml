@@ -1,206 +1,163 @@
 $schema: ../../.internal/task.schema.json
 id: create-epic
 title: Create Epic Task
-version: 1.0.0
-purpose: Create a single epic for an initiative listed in a PRD
+version: 2.0.0
+purpose: Create a single epic for an initiative listed in the PRD, aligned with architecture constraints and ready for downstream story creation
 category: planning
 agent: pdm
 
-inputs:
-   required:
-      - name: epic_number
-        type: number
-        examples: [1, 3, 4]
-      - name: enhancement_name
-        type: string
-        examples:
-           [
-              "Add Export Feature",
-              "Update Dashboard Analytics",
-              "Enhance Search Functionality",
-           ]
+derived:
+  - name: epic_number
+    type: number
+    source: parameters
+    description: "Epic number requested via ${epic_number}."
+    required: true
+  - name: enhancement_name
+    type: string
+    source: parameters
+    description: "Enhancement name provided via ${enhancement_name}."
+    required: true
+  - name: epic_file_target
+    type: path
+    source: context
+    pattern: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
+    description: "Path for the epic YAML to create/update."
+    required: true
 
 outputs:
-   artifacts:
-      - name: epic_document
-        type: file
-        path: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
-        format: yaml
+  artifacts:
+    - name: Epic Document
+      type: file
+      path: "!{epic_file_target}"
+      format: yaml
 
-process:
-   mode: sequential
-   steps:
-      - id: ANALYZE-PROJECT
-        title: Project Analysis
-        description: Gather essential information about the existing project
-        action:
-           type: analysis
-           prompt: |
-              Before creating the epic, analyze:
-              - PRD epic list and goals
-              - Initiative scope and requirements
-              - Architecture constraints and dependencies
-              - Success criteria and acceptance thresholds
+prerequisites:
+  - field: "@{docs.subdirs.epics}"
+    value: "writable"
+    operator: "="
+    on_violate: "halt_and_report"
 
-      - id: VALIDATE-SCOPE
-        title: Validate Enhancement Scope
-        description: Ensure the enhancement is appropriate for this task
-        action:
-           type: validation
-           validation:
-              type: string
-              required: true
-           prompt: |
-              Validate that:
-              - Epic is listed in the PRD epic list
-              - Epic scope aligns with PRD goals
-              - Epic can be completed in reasonable number of stories
-              - Dependencies and constraints are understood
+steps:
+  - id: ANALYZE-PROJECT
+    title: Project Analysis
+    description: Gather essential information about the existing project before drafting the epic
+    action:
+      type: analysis
+      template: |
+        Analyze:
+        - PRD epic list and goals (from @{docs.files.prd})
+        - Initiative scope and requirements
+        - Architecture constraints/dependencies (from @{docs.dir}/?(*-)architecture.md)
+        - Success criteria and acceptance thresholds
 
-              If any of these are false, recommend reviewing the PRD first
-        on_failure: halt
+  - id: VALIDATE-SCOPE
+    title: Validate Enhancement Scope
+    description: Ensure the enhancement is appropriate for a single epic
+    action:
+      type: validation
+      template: |
+        Confirm:
+        - Enhancement appears in the PRD epic list
+        - Scope aligns with PRD goals
+        - Work can be completed within a reasonable number of stories
+        - Dependencies and constraints are understood
 
-      - id: CREATE-EPIC-HEADER
-        title: Create Epic File with Schema Structure
-        description: Initialize epic YAML file following the epic schema structure
-        action:
-           type: file_operation
-           operation: create
-           target: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
-           content: |
-              status: Draft
-              epic-overview:
-                goal: "{1-2 sentences describing what the epic will accomplish and why it adds value}"
-                description: ""
-                definition_of_done: []
-              scope-boundaries:
-                in-scope: []
-                out-of-scope: []
-              requirements-mapping:
-                functional-requirements: []
-                non-functional-requirements: []
-              story-breakdown:
-                story-list: []
-                story-sequencing-rationale: ""
-              dependencies:
-                dependencies: []
-                story-dependencies: []
+        Halt and request PRD review if any check fails.
+    on_failure: halt
 
-      - id: ADD-EPIC-DESCRIPTION
-        title: Add Epic Description
-        description: Update epic-overview section with detailed description
-        action:
-           type: file_operation
-           operation: update
-           target: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
-           content: |
-              epic-overview:
-                description: |
-                  Initiative: {enhancement_name}
-                  
-                  PRD Context:
-                  {prd_context}
-                  
-                  Implementation approach: {clear description}
-                  Success criteria: {measurable outcomes}
+  - id: CREATE-EPIC-FILE
+    title: Create Epic File with Schema Structure
+    description: Initialize the epic YAML using the canonical epic schema
+    action:
+      type: file_operation
+      operation: create
+      target: "!{epic_file_target}"
+      schema: "core/engineering/schemas/epic.json"
 
-      - id: DEFINE-STORIES
-        title: Define Stories
-        description: List 1-3 focused stories that complete the epic
-        action:
-           type: elicit
-           prompt: |
-              Define focused stories with priorities (1-5, 1=highest):
-              - Follow the story breakdown from the PRD
-              - Sequence by dependencies first
-              - Then by priority to deliver highest value
-              - Each story should be completable in one sprint
-           validation:
-              type: array
-              required: true
-        elicit: true
+  - id: ADD-EPIC-DESCRIPTION
+    title: Add Epic Description
+    description: Populate the epic-overview section with PRD/architecture context
+    action:
+      type: file_operation
+      operation: update
+      target: "!{epic_file_target}"
 
-      - id: ADD-STORIES
-        title: Add Stories to Epic
-        description: Update story-breakdown section with story list and sequencing
-        action:
-           type: file_operation
-           operation: update
-           target: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
-           content: |
-              story-breakdown:
-                story-list:
-                  - "1: **{Story 1 title}** - {Story 1 brief description} [Priority: {1-5}]"
-                  - "2: **{Story 2 title}** - {Story 2 brief description} [Priority: {1-5}]"
-                  - "3: **{Story 3 title}** - {Story 3 brief description} [Priority: {1-5}]"
-                story-sequencing-rationale: |
-                  Stories are sequenced by dependencies first, then by priority to deliver highest value.
-                  Each story builds upon previous stories and is sized for AI agent execution (2-4 hours).
+  - id: DEFINE-STORIES
+    title: Define Stories
+    description: Capture 1–3 focused stories that complete the epic
+    action:
+      type: elicit
+      prompt_user: |
+        Define focused stories with priorities (1-5, 1 = highest):
+        - Follow the PRD story breakdown
+        - Sequence by dependencies first, then priority
+        - Ensure each story can complete within one sprint
+      validation:
+        type: array
+        required: true
+    elicit: true
 
-      - id: ADD-SCOPE-BOUNDARIES
-        title: Add Scope and Boundaries
-        description: Update scope-boundaries section with in-scope and out-of-scope items
-        action:
-           type: file_operation
-           operation: update
-           target: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
-           content: |
-              scope-boundaries:
-                in-scope:
-                  - "Initiative: {enhancement_name}"
-                  - "Requirements from PRD epic definition"
-                  - "Architecture constraints and dependencies"
-                  - "Stories defined in epic breakdown"
-                out-of-scope:
-                  - "Other PRD epics and initiatives"
-                  - "Requirements not in current PRD"
-                  - "Cross-cutting concerns handled elsewhere"
+  - id: ADD-STORIES
+    title: Add Stories to Epic
+    description: Update story-breakdown with the elicited stories and sequencing rationale
+    action:
+      type: file_operation
+      operation: update
+      target: "!{epic_file_target}"
+      template: |
+        story-breakdown:
+          story-list:
+            {{story_list_entries}}
+          story-sequencing-rationale: |
+            {{story_sequencing_rationale}}
 
-      - id: ADD-DOD
-        title: Add Definition of Done
-        description: Update epic-overview definition_of_done per schema
-        action:
-           type: file_operation
-           operation: update
-           target: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
-           content: |
-              epic-overview:
-                definition_of_done:
-                  - "1: All stories completed with acceptance criteria met"
-                  - "2: Epic goals from PRD achieved"
-                  - "3: Integration points working correctly"
-                  - "4: Documentation updated appropriately"
-                  - "5: Quality gates passed"
+  - id: ADD-SCOPE-BOUNDARIES
+    title: Add Scope and Boundaries
+    description: Document in-scope/out-of-scope elements for the epic
+    action:
+      type: file_operation
+      operation: update
+      target: "!{epic_file_target}"
+      template: |
+        scope-boundaries:
+          in-scope:
+            {{in_scope_items}}
+          out-of-scope:
+            {{out_scope_items}}
 
-      - id: VALIDATE-EPIC
-        title: Validate Epic Completeness
-        description: Ensure all required elements are present
-        action:
-           type: validation
-           prompt: |
-              Validate that the epic includes:
-              - Clear goal and description aligned with PRD
-              - Stories that support PRD epic objectives
-              - Scope boundaries matching PRD definition
-              - Definition of done
-              - All stories follow PRD requirements
+  - id: ADD-DOD
+    title: Add Definition of Done
+    description: Capture the epic's Definition of Done within epic-overview
+    action:
+      type: file_operation
+      operation: update
+      target: "!{epic_file_target}"
+      template: |
+        epic-overview:
+          definition_of_done:
+            - "1: All stories completed with acceptance criteria met"
+            - "2: Epic goals from PRD achieved"
+            - "3: Integration points working correctly"
+            - "4: Documentation updated appropriately"
+            - "5: Quality gates passed"
 
-blocking_conditions:
-   - condition: "Enhancement requires more than 3 stories"
-     message: Scope too large for this task - use full PRD process
-     severity: error
-   - condition: "Significant architectural changes required"
-     message: Architectural planning needed - use full process
-     severity: error
-   - condition: "High risk to existing system"
-     message: Risk assessment needed - use full process
-     severity: error
+  - id: VALIDATE-EPIC
+    title: Validate Epic Completeness
+    description: Ensure the epic includes every required section
+    action:
+      type: validation
+      template: |
+        Confirm the epic includes:
+        - Clear goal/description aligned with PRD
+        - Stories supporting PRD objectives
+        - Scope boundaries matching PRD definition
+        - Definition of Done covering success criteria
+        - Dependencies understood and documented
 
 completion:
-   criteria:
-      - Epic scope aligns with PRD epic definition
-      - Stories support PRD goals and requirements
-      - Dependencies and constraints are understood
-      - Stories are logically sequenced for implementation
-      - Acceptance criteria are clearly defined
-      - Epic delivers value per PRD objectives
+  criteria:
+    - Epic scope aligns with PRD epic definition
+    - Stories support PRD goals and requirements
+    - Dependencies and constraints are understood
+    - Stories are sequenced logically for implementation
+    - Acceptance criteria are clearly defined

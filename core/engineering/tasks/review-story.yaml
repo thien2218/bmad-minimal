@@ -1,251 +1,289 @@
 $schema: ../../.internal/task.schema.json
 id: review-story
 title: Review Story
-version: 1.0.0
+version: 2.0.0
 purpose: Perform a comprehensive test architecture review with quality gate decision. This adaptive, risk-aware review creates both a story update and a detailed gate file.
 category: quality
 agent: qa
 
-inputs:
-   optional:
-      - name: story_id
-        type: story_id
-        pattern: "^\\d+\\.\\d+$"
-        examples: ["1.3", "2.5"]
-      - name: story_path
-        type: path
-        pattern: "@{docs.subdirs.stories}/{epic}.{story}-*.yaml"
-      - name: architecture_refs
-        type: path
-        pattern: "@{docs.dir}/?(*-)architecture.md"
-      - name: coding_standards
-        type: path
-        location: "@{docs.files.codingStandards}"
+derived:
+  - name: story_path
+    type: path
+    source: parameters
+    pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
+    description: "Story file path resolved from provided story identifier"
+    required: true
+  - name: story_status
+    type: string
+    source: file
+    pattern: "Draft|Spec Review|WIP|Blocked|Review|Done"
+    description: "Status value read from the story file"
+    required: true
+  - name: story_file_ready
+    type: boolean
+    source: context
+    description: "True when the story file contains all required baseline sections"
+    required: true
+  - name: file_list_complete
+    type: boolean
+    source: context
+    description: "True when the File List section is fully populated"
+    required: true
+  - name: tests_ready
+    type: boolean
+    source: context
+    description: "True when required tests exist for the story scope"
+    required: true
+  - name: requirement_alignment
+    type: boolean
+    source: context
+    description: "True when code changes align with documented requirements"
+    required: true
+  - name: architecture_blockers_clear
+    type: boolean
+    source: context
+    description: "True when no critical architectural issues remain unresolved"
+    required: true
 
 prerequisites:
-   status:
-      - entity: story
-        field: status
-        value: Review
-        operator: includes
+  - field: "!{story_path}"
+    value: "found"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "!{story_status}"
+    value: "Review"
+    operator: "contains"
+    on_violate: "halt_and_report"
+  - field: "!{story_file_ready}"
+    value: "true"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "!{file_list_complete}"
+    value: "true"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "!{tests_ready}"
+    value: "true"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "!{requirement_alignment}"
+    value: "true"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "!{architecture_blockers_clear}"
+    value: "true"
+    operator: "="
+    on_violate: "halt_and_report"
 
-process:
-   mode: sequential
-   steps:
-      - id: LOAD-CONFIG
-        title: Load Configuration and Story
-        description: Load core configuration and resolve story file path
-        action:
-           type: file_operation
-           operation: read
-           target: "@{baseDir}/config.json"
-           content: |
-              Extract config.docs.subdirs.qa and docs.subdirs.stories settings.
-              Resolve story_path if not provided.
-        on_failure: continue
+steps:
+  - id: LOAD-CONFIG
+    title: Load Configuration and Story
+    description: Load core configuration and resolve story file path
+    action:
+      type: file_operation
+      operation: read
+      target: "@{baseDir}/config.json"
+      template: |
+        Extract docs.subdirs.qa and docs.subdirs.stories settings.
+        Resolve !{story_path} if not provided.
+    on_failure: continue
 
-      - id: CHECK-REVIEW
-        title: Check Story Status
-        description: Verify story status includes the word "Review"
-        action:
-           type: validation
-           content: |
-              If status does not include the word "Review":
-              HALT and inform user why execution cannot proceed
-        on_failure: halt
+  - id: CHECK-REVIEW
+    title: Check Story Status
+    description: Verify story status includes the word "Review"
+    action:
+      type: validation
+      target: "!{story_status}"
+      template: |
+        If status does not include "Review", halt execution and notify the user to transition the story first.
+    on_failure: halt
 
-      - id: RISK-ASSESSMENT
-        title: Risk Assessment (Determines Review Depth)
-        description: Auto-escalate to deep review based on risk factors
-        action:
-           type: analysis
-           prompt: |
-              Evaluate if deep review is needed when:
-              - Auth/payment/security files touched
-              - No tests added to story
-              - Diff > 500 lines
-              - Previous gate was FAIL/CONCERNS
-              - Story has > 5 acceptance criteria
+  - id: RISK-ASSESSMENT
+    title: Risk Assessment (Determines Review Depth)
+    description: Auto-escalate to deep review based on risk factors
+    action:
+      type: analysis
+      target: "console_output"
+      template: |
+        Evaluate if deep review is needed when:
+        - Auth/payment/security files touched
+        - No tests added to story
+        - Diff > 500 lines
+        - Previous gate was FAIL or CONCERNS
+        - Story has more than 5 acceptance criteria
+        Capture escalation rationale in notes.
 
-      - id: REQ-TRACE
-        title: Requirements Traceability
-        description: Map each acceptance criteria to its validating tests
-        action:
-           type: analysis
-           prompt: |
-              - Map each acceptance criteria to tests
-              - Document mapping with Given-When-Then (not test code)
-              - Identify coverage gaps
-              - Verify all requirements have corresponding test cases
+  - id: REQ-TRACE
+    title: Requirements Traceability
+    description: Map each acceptance criteria to its validating tests
+    action:
+      type: analysis
+      target: "traceability_notes"
+      template: |
+        - Map each acceptance criteria to tests using Given-When-Then narratives.
+        - Identify coverage gaps and suspected missing tests.
+        - Verify all requirements have corresponding validation evidence.
 
-      - id: CODE-QUALITY
-        title: Code Quality Review (Advisory Only)
-        description: Review code quality without making changes
-        action:
-           type: analysis
-           prompt: |
-              Review (advisory only):
-              - Architecture and design patterns
-              - Refactoring opportunities (recommend, do not implement)
-              - Code duplication or inefficiencies
-              - Performance optimizations
-              - Security vulnerabilities
-              - Best practices adherence
+  - id: CODE-QUALITY
+    title: Code Quality Review (Advisory Only)
+    description: Review code quality without making changes
+    action:
+      type: analysis
+      target: "code_quality_notes"
+      template: |
+        Review (advisory only):
+        - Architecture and design patterns
+        - Refactoring opportunities (recommend, do not implement)
+        - Code duplication or inefficiencies
+        - Performance optimizations
+        - Security vulnerabilities
+        - Best practices adherence
 
-      - id: TEST-ARCH
-        title: Test Architecture Assessment
-        description: Evaluate test coverage and design
-        action:
-           type: analysis
-           prompt: |
-              Assess:
-              - Test coverage adequacy at appropriate levels
-              - Test level appropriateness (unit vs integration vs e2e)
-              - Test design quality and maintainability
-              - Test data management strategy
-              - Mock/stub usage appropriateness
-              - Edge case and error scenario coverage
-              - Test execution time and reliability
+  - id: TEST-ARCH
+    title: Test Architecture Assessment
+    description: Evaluate test coverage and design
+    action:
+      type: analysis
+      target: "test_arch_notes"
+      template: |
+        Assess:
+        - Coverage adequacy by level (unit/integration/e2e)
+        - Test design quality and maintainability
+        - Test data strategy and fixtures
+        - Mock/stub usage
+        - Edge case and error scenario coverage
+        - Test execution reliability and runtimes
 
-      - id: NFR-CHECK
-        title: Non-Functional Requirements Check
-        description: Evaluate NFR compliance
-        action:
-           type: analysis
-           prompt: |
-              Check NFRs:
-              - Security: Authentication, authorization, data protection
-              - Performance: Code-level analysis (potential bottlenecks, query optimization opportunities, algorithmic efficiency, resource usage patterns) - excludes benchmark metrics
-              - Reliability: Error handling, recovery mechanisms
-              - Maintainability: Code clarity, documentation
+  - id: NFR-CHECK
+    title: Non-Functional Requirements Check
+    description: Evaluate NFR compliance
+    action:
+      type: analysis
+      target: "nfr_notes"
+      template: |
+        Check NFRs:
+        - Security: Authentication, authorization, data protection
+        - Performance: Code-level hotspots, query optimization, resource usage
+        - Reliability: Error handling and recovery mechanisms
+        - Maintainability: Code clarity, documentation, modularity
 
-      - id: TESTABILITY
-        title: Testability Evaluation
-        description: Assess testability aspects
-        action:
-           type: analysis
-           prompt: |
-              Evaluate:
-              - Controllability: Can we control the inputs?
-              - Observability: Can we observe the outputs?
-              - Debuggability: Can we debug failures easily?
+  - id: TESTABILITY
+    title: Testability Evaluation
+    description: Assess testability aspects
+    action:
+      type: analysis
+      target: "testability_notes"
+      template: |
+        Evaluate:
+        - Controllability: Ability to control inputs and state
+        - Observability: Signals, logs, and telemetry available
+        - Debuggability: Ease of isolating failures and reproducing issues
 
-      - id: TECH-DEBT
-        title: Technical Debt Identification
-        description: Identify accumulated technical debt
-        action:
-           type: analysis
-           prompt: |
-              Identify:
-              - Accumulated shortcuts
-              - Missing tests
-              - Outdated dependencies
-              - Architecture violations
+  - id: TECH-DEBT
+    title: Technical Debt Identification
+    description: Identify accumulated technical debt
+    action:
+      type: analysis
+      target: "tech_debt_notes"
+      template: |
+        Identify:
+        - Accumulated shortcuts and TODOs
+        - Missing or flaky tests
+        - Outdated dependencies
+        - Architecture policy violations
 
-      - id: ADVISORY
-        title: Advisory Improvements
-        description: Provide actionable recommendations without code changes
-        action:
-           type: analysis
-           prompt: |
-              Provide:
-              - Do NOT modify source code or tests
-              - Actionable recommendations and prioritized fix list
-              - Example diffs or pseudocode only if needed (do not apply)
-              - Do NOT alter story content beyond QA Results section
-              - Do NOT change story Status or File List
+  - id: ADVISORY
+    title: Advisory Improvements
+    description: Provide actionable recommendations without code changes
+    action:
+      type: analysis
+      target: "console_output"
+      template: |
+        Provide:
+        - Actionable recommendations and prioritized fix list
+        - Example diffs or pseudocode only if needed (do not apply)
+        - Instructions to update only QA Results section of the story
+        - Reminder not to alter story Status or File List
 
-      - id: STANDARDS
-        title: Standards Compliance Check
-        description: Verify adherence to project standards
-        action:
-           type: validation
-           validation:
-              type: checklist
-              required: true
+  - id: STANDARDS
+    title: Standards Compliance Check
+    description: Verify adherence to project standards
+    action:
+      type: validation
+      target: "@{docs.files.codingStandards}"
+      template: |
+        Run checklist validation against coding standards references.
+        Confirm required conventions, lint expectations, and documentation guidelines are met.
+    on_failure: halt
 
-      - id: AC-VALIDATION
-        title: Acceptance Criteria Validation
-        description: Verify each AC is fully implemented
-        action:
-           type: validation
-           validation:
-              type: requirements
-              required: true
+  - id: AC-VALIDATION
+    title: Acceptance Criteria Validation
+    description: Verify each AC is fully implemented
+    action:
+      type: validation
+      target: "!{story_path}"
+      template: |
+        Confirm every acceptance criterion has traceable implementation evidence.
+        Mark gaps that must be addressed before PASS is possible.
+    on_failure: halt
 
-      - id: UPDATE-STORY
-        title: Update Story File - QA Results Section ONLY
-        description: Append QA results to story file
-        action:
-           type: file_operation
-           operation: update
-           target: "{story_path}"
-           content: |
-              Append to "QA Results" only; if absent, add a new "## QA Results" at end. Do not edit other sections.
-              Use and fill this template (avoid gate-like labels, risk totals, or NFR statuses here):
-              Summary: [1–2 sentence narrative of scope and outcome]
-              Evidence Highlights:
-              - Reviewed: [key files/areas]
-              - Context: [diff size, notable triggers]
-              Requirements Traceability (Narrative): [brief mapping; suspected gaps with reasoning]
-              Test Architecture Notes: [coverage approach, levels used, reliability]
-              Testability: [controllability / observability / debuggability]
-              Code Quality (Advisory): [notable patterns/smells; refactor suggestions]
-              Risks/Concerns (Narrative): [qualitative risks; no severities/totals]
-              Advisory Actions:
-              - Must-fix (advisory): [bullets]
-              - Follow-up (advisory): [bullets]
-              Next Steps (Advisory, not a gate): [guidance]
+  - id: UPDATE-STORY
+    title: Update Story File - QA Results Section ONLY
+    description: Append QA results to story file
+    action:
+      type: file_operation
+      operation: update
+      target: "!{story_path}"
+      template: |
+        Append to "QA Results" only; if absent, add a new "## QA Results" at end. Do not edit other sections.
+        Use and fill this template (avoid gate-like labels, risk totals, or NFR statuses here):
+        Summary: [1–2 sentence narrative of scope and outcome]
+        Evidence Highlights:
+        - Reviewed: [key files/areas]
+        - Context: [diff size, notable triggers]
+        Requirements Traceability (Narrative): [brief mapping; suspected gaps with reasoning]
+        Test Architecture Notes: [coverage approach, levels used, reliability]
+        Testability: [controllability / observability / debuggability]
+        Code Quality (Advisory): [notable patterns/smells; refactor suggestions]
+        Risks/Concerns (Narrative): [qualitative risks; no severities/totals]
+        Advisory Actions:
+        - Must-fix (advisory): [bullets]
+        - Follow-up (advisory): [bullets]
+        Next Steps (Advisory, not a gate): [guidance]
 
-      - id: CREATE-GATE
-        title: Create Quality Gate File
-        description: Generate quality gate YAML file
-        action:
-           type: file_operation
-           operation: create
-           target: "@{docs.subdirs.qa}/gates/{story_id}-*.yaml"
-           content: |
-              Load qa-gate.json and use it as the contract to generate the gate artifact based on the assessment done above.
-              Serialize as YAML and write to @{docs.subdirs.qa}/gates/{story_id}-{story_slug}.yaml.
-              Do not modify the story file.
+  - id: CREATE-GATE
+    title: Create Quality Gate File
+    description: Generate quality gate YAML file
+    action:
+      type: file_operation
+      operation: create
+      target: "@{docs.subdirs.qa}/gates/${story}-*.yaml"
+      template: |
+        Load schemas/qa-gate.json as the contract.
+        Populate decision, evidence, risks, test design, and NFR sections based on prior steps.
+        Serialize as YAML and write to @{docs.subdirs.qa}/gates/${story}-{story_slug}.yaml (match existing slug convention).
+        Do not modify the story file when generating the gate artifact.
 
 outputs:
-   artifacts:
-      - name: quality_gate
-        type: file
-        path: "@{docs.subdirs.qa}/gates/{story_id}-*.yaml"
-        format: yaml
-        description: Quality gate assessment file with pass/fail decision
-   updates:
-      - target: "{story_path}"
-        sections:
-           - "QA Results"
-        restrictions: "Only append to QA Results section, never modify other sections"
-
-blocking_conditions:
-   - condition: "Story file is incomplete or missing critical sections"
-     message: "Story file must be complete before review"
-     severity: error
-   - condition: "File List is empty or clearly incomplete"
-     message: "Developer must complete File List before review"
-     severity: error
-   - condition: "No tests exist when they were required"
-     message: "Tests are required for this story"
-     severity: critical
-   - condition: "Code changes don't align with story requirements"
-     message: "Implementation doesn't match requirements"
-     severity: critical
-   - condition: "Critical architectural issues that require discussion"
-     message: "Architecture issues need resolution before review"
-     severity: critical
+  artifacts:
+    - name: quality_gate
+      type: gate
+      path: "@{docs.subdirs.qa}/gates/${story}-*.yaml"
+      format: yaml
+      description: Quality gate assessment file with pass/concerns/fail decision
+  updates:
+    - target: "!{story_path}"
+      sections:
+        - "QA Results"
+      restrictions: "Only append to QA Results section; never modify other sections"
 
 completion:
-   criteria:
-      - Story QA Results section updated
-      - Quality gate file created
-      - Status recommendation provided
-      - All findings documented
-      - Actionable recommendations provided
-   validations:
-      - command: "test -f @{docs.subdirs.qa}/gates/{epic}.{story}-*.yaml"
-        expected_output: "file exists"
+  criteria:
+    - Story QA Results section updated
+    - Quality gate file created
+    - Status recommendation provided
+    - All findings documented
+    - Actionable recommendations provided
+  validations:
+    - command: "test -f @{docs.subdirs.qa}/gates/${story}-*.yaml"
+      expected_output: "file exists"

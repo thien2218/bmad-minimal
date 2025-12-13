@@ -210,10 +210,10 @@
 			]
 		},
 		{
-			"name": "update-docs",
-			"description": "Update or create documentation (API docs via Swagger/OpenAPI for backend, component docs via Storybook for frontend). Prefers in-place documentation over generated artifacts. Supports custom documentation methods.",
+			"name": "update-project-docs",
+			"description": "Update or create project documentation (API docs via Swagger/OpenAPI for backend, component docs via Storybook for frontend) with an in-place-first philosophy.",
 			"optionalParameters": ["type", "method"],
-			"steps": ["tasks/update-docs.yaml"]
+			"steps": ["tasks/update-project-docs.yaml"]
 		}
 	],
 	"rules": [

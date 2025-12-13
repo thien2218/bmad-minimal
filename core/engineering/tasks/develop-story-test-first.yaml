@@ -1,163 +1,150 @@
 $schema: ../../.internal/task.schema.json
 id: develop-story-test-first
 title: Develop Story (Test-First)
-version: 1.0.0
-purpose: Following the Test Driven Development (TDD) methodology, implement a WIP story using a test-first workflow. Read the author's Test Specs in the story, write failing tests from those specs, then implement until tests pass.
+version: 2.0.0
+purpose: "Follow a TDD workflow to implement a WIP story: read specs, write failing tests, implement to green, then update the story record."
 category: development
 agent: dev
 
-inputs:
-   required:
-      - name: story_id
-        type: story_id
-        pattern: "^\\d+\\.\\d+$"
-        examples: ["1.3", "2.1", "3.5"]
-      - name: story_path
-        type: path
-        pattern: "@{docs.subdirs.stories}/{{story}}-*.yaml"
-   optional:
-      - name: test_command
-        type: command
-        examples: ["npm run test", "go test"]
-      - name: build_command
-        type: command
-        examples: ["npm run build", "cargo build"]
-      - name: lint_command
-        type: command
-        examples: ["npm run lint"]
+derived:
+  - name: story_path_resolved
+    type: path
+    source: context
+    pattern: "@{docs.subdirs.stories}/${story}-*.yaml"
+    description: "Concrete path for the story under development."
+    required: true
+  - name: story_status
+    type: string
+    source: file
+    description: "Status read from the story file."
+    required: true
 
 outputs:
-   updates:
-      - target: "{story_path}"
-        sections:
-           - "Dev Agent Record"
-           - "Dev Agent Record/Checkboxes"
-           - "Dev Agent Record/Debug Log References"
-           - "Dev Agent Record/Completion Notes List"
-           - "File List"
-           - "Change Log"
-        restrictions: Only toggle checkboxes and append to allowed sections; do not rename or reorder tasks
-   artifacts:
-      - name: Test Files
-        type: file
-        path: "{project_root}/tests/**"
-        format: text
-        description: Test files created first from the author's specs
-      - name: Implementation Files
-        type: file
-        path: "{project_root}/**"
-        format: text
-        description: Production code implementing the story
+  updates:
+    - target: "!{story_path_resolved}"
+      sections:
+        - "Dev Agent Record"
+        - "Dev Agent Record/Checkboxes"
+        - "Dev Agent Record/Debug Log References"
+        - "Dev Agent Record/Completion Notes List"
+        - "File List"
+        - "Change Log"
+      restrictions: Only toggle checkboxes and append to allowed sections; never edit other story parts
+  artifacts:
+    - name: Test Files
+      type: file
+      path: "{project_root}/tests/**"
+      format: text
+      description: Tests authored from story specs (written first)
+    - name: Implementation Files
+      type: file
+      path: "{project_root}/**"
+      format: text
+      description: Production code implementing the story after tests are in place
 
 prerequisites:
-   status:
-      - entity: story
-        field: status
-        value: "WIP"
-        operator: equals
+  - field: "!{story_status}"
+    value: "WIP"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "dev.blocking.missing_specs"
+    value: "false"
+    operator: "="
+    on_violate: "halt_and_report"
 
-process:
-   mode: sequential
-   steps:
-      - id: LOAD-CONFIG
-        title: Load Core Configuration and Story
-        description: Load config.json; resolve and read story file
-        action:
-           type: file_operation
-           operation: read
-           target: "@{baseDir}/config.json"
+steps:
+  - id: LOAD-CONFIG
+    title: Load Core Configuration and Story
+    description: Load config.json and resolve the story file
+    action:
+      type: file_operation
+      operation: read
+      target: "@{baseDir}/config.json"
+      template: |
+        Resolve !{story_path_resolved} via ${story}; then read the story file to access specs and metadata.
 
-      - id: VERIFY-WIP
-        title: Verify Story Status is WIP
-        description: Halt if story status is not WIP
-        action:
-           type: validation
-           content: |
-              If status != WIP -> HALT and notify user
-        on_failure: halt
+  - id: VERIFY-WIP
+    title: Verify Story Status is WIP
+    description: Ensure the story is ready for implementation
+    action:
+      type: validation
+      template: |
+        If !{story_status} != "WIP": halt and instruct the user to move the story to WIP before running this task.
+    on_failure: halt
 
-      - id: EXTRACT-SPECS
-        title: Extract Test Specs
-        description: Find the Test Specs/Test Cases section in the story
-        action:
-           type: analysis
-           target: "{story_path}#test-specs"
-           content: |
-              - Locate a section named one of: "Test Specs", "Specs", "Test Cases", or similar
-              - If not found, HALT and ask the user to add specs or run *spec-review in QA
+  - id: EXTRACT-SPECS
+    title: Extract Test Specs
+    description: Locate the story's test specs before writing tests
+    action:
+      type: analysis
+      target: "!{story_path_resolved}#test-specs"
+      template: |
+        - Locate a section titled "Test Specs", "Specs", or "Test Cases"
+        - If missing, halt and request the user to add specs or run *spec-outline-review/
 
-      - id: WRITE-TESTS
-        title: Author Tests From Specs (Red)
-        description: Translate specs into runnable tests per project conventions
-        action:
-           type: file_operation
-           operation: create
-           content: |
-              - For each spec, create a focused test case using Given-When-Then intent
-              - Prefer existing frameworks from the repo; follow repo structure/naming
-              - Add necessary fixtures/mocks; keep tests deterministic
-              - Do not implement production code yet
+  - id: WRITE-TESTS
+    title: Author Tests From Specs (Red)
+    description: Translate specs into runnable tests before implementation
+    action:
+      type: file_operation
+      operation: update
+      template: |
+        - For each spec, write a failing test using Given/When/Then intent
+        - Follow repository test structure and naming conventions
+        - Add required fixtures/mocks; keep tests deterministic
 
-      - id: RUN-RED
-        title: Run Tests (Expect Failures)
-        description: Confirm tests fail before implementation
-        action:
-           type: command
-           command: "{test_command}"
-        on_success: continue
-        on_failure: continue
+  - id: RUN-RED
+    title: Run Tests (Expect Failures)
+    description: Confirm that the new tests fail before implementation
+    action:
+      type: command
+      command: "{test_command}"
+      template: "Expect failure; record results in Dev Agent Record/Debug Log References before proceeding."
 
-      - id: IMPLEMENT
-        title: Implement Minimal Code to Pass Tests (Green)
-        description: Implement production code iteratively until tests pass
-        action:
-           type: file_operation
-           operation: update
-           content: |
-              - Implement minimal code to satisfy failing tests
-              - Keep changes small; iterate until all spec-derived tests pass
-              - Update File List with created/modified files
+  - id: IMPLEMENT
+    title: Implement Minimal Code to Pass Tests (Green)
+    description: Implement production code iteratively until tests pass
+    action:
+      type: file_operation
+      operation: update
+      template: |
+        - Implement the minimum code to satisfy failing tests
+        - Keep changes small; rerun tests after each iteration
+        - Update File List with created/modified files
 
-      - id: RUN-GREEN
-        title: Run Tests to Green
-        description: Ensure the suite passes
-        action:
-           type: command
-           command: "{test_command}"
-        retry:
-           max_attempts: 3
-           delay_seconds: 0
+  - id: RUN-GREEN
+    title: Run Tests to Green
+    description: Execute the test suite until it passes
+    action:
+      type: command
+      command: "{test_command}"
+      retry:
+        max_attempts: 3
+        delay_seconds: 0
 
-      - id: REFACTOR
-        title: Refactor with Safety
-        description: Optional refactor while keeping tests green
-        action:
-           type: analysis
-           prompt: |
-              - Identify obvious refactors (naming, duplication, small extractions)
-              - Keep functional behavior; re-run tests after changes
+  - id: REFACTOR
+    title: Refactor with Safety
+    description: Perform optional refactors while keeping tests green
+    action:
+      type: analysis
+      template: |
+        - Identify small refactors (naming, duplication, extractions)
+        - Run tests after each change to ensure they remain green
 
-      - id: COMPLETE
-        title: Update Story and Notes
-        description: Update allowed Dev Agent Record sections only
-        action:
-           type: file_operation
-           operation: update
-           target: "{story_path}"
-           content: |
-              - Append to Debug Log, Completion Notes, Change Log with concise entries
-              - Do not edit non-Dev sections
-
-blocking_conditions:
-   - condition: No Test Specs found in story
-     message: Provide Test Specs in the story or run QA *spec-review
-     severity: error
-   - condition: Tests flaky or non-deterministic
-     message: Stabilize tests before proceeding
-     severity: error
+  - id: UPDATE-STORY
+    title: Update Story and Notes
+    description: Update allowed Dev Agent Record sections and logs
+    action:
+      type: file_operation
+      operation: update
+      target: "!{story_path_resolved}"
+      template: |
+        - Append to Debug Log References with test commands/results
+        - Document Completion Notes and File List entries
+        - Add Change Log entries summarizing changes
 
 completion:
-   criteria:
-      - Spec-derived tests added and passing
-      - Minimal implementation complete with tests green
-      - Dev Agent Record updated in allowed sections
+  criteria:
+    - Spec-derived tests added and passing
+    - Minimal implementation complete with tests green
+    - Dev Agent Record updated in allowed sections

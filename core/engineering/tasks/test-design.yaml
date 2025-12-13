@@ -1,174 +1,181 @@
 $schema: ../../.internal/task.schema.json
 id: test-design
 title: Test Design
-version: 1.0.0
+version: 2.0.0
 purpose: Create comprehensive test scenarios with appropriate test level recommendations for story implementation.
 category: quality
 agent: qa
 
-inputs:
-   required:
-      - name: story_id
-        type: story_id
-        pattern: "^\\d+\\.\\d+$"
-        examples: ["1.3", "2.5"]
-      - name: story_path
-        type: path
-        pattern: "@{docs.subdirs.stories}/{story_id}-*.yaml"
+derived:
+  - name: story_path
+    type: path
+    source: parameters
+    pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
+    description: "Story file path used for AC extraction"
+    required: true
 
-process:
-   mode: sequential
-   steps:
-      - id: ANALYZE-REQ
-        title: Analyze Story Requirements
-        description: Break down each acceptance criterion into testable scenarios
-        action:
-           type: analysis
-           prompt: |
-              For each AC:
-              - Identify core functionality to test
-              - Determine data variations needed
-              - Consider error conditions
-              - Note edge cases
+prerequisites:
+  - field: "!{story_path}"
+    value: "found"
+    operator: "="
+    on_violate: "halt_and_report"
 
-      - id: APPLY-FRAMEWORK
-        title: Apply Test Level Framework
-        description: Determine appropriate test level for each scenario
-        action:
-           type: analysis
-           prompt: |
-              Apply test level criteria from test-levels-framework.yaml:
-              - Unit: Pure logic, algorithms, calculations
-              - Integration: Component interactions, DB operations
-              - E2E: Critical user journeys, compliance
+steps:
+  - id: LOAD-STORY
+    title: Load Story Context
+    description: Load the story file to gather ACs and metadata.
+    action:
+      type: file_operation
+      operation: read
+      target: "!{story_path}"
+    on_failure: halt
 
-      - id: ASSIGN-PRIORITY
-        title: Assign Test Priorities
-        description: Classify tests by priority using matrix
-        action:
-           type: analysis
-           prompt: |
-              Apply priorities from test-priorities-matrix.yaml:
-              - P0: Revenue-critical, security, compliance
-              - P1: Core user journeys, frequently used
-              - P2: Secondary features, admin functions
-              - P3: Nice-to-have, rarely used
+  - id: ANALYZE-REQ
+    title: Analyze Story Requirements
+    description: Break down each acceptance criterion into testable scenarios.
+    action:
+      type: analysis
+      target: "scenario_inputs"
+      template: |
+        For each AC:
+        - Identify core functionality to test
+        - Determine data variations needed
+        - Consider error conditions and sad paths
+        - Note edge cases and state transitions
 
-      - id: DESIGN-SCENARIOS
-        title: Design Test Scenarios
-        description: Create detailed test scenarios for each identified need
-        action:
-           type: analysis
-           prompt: |
-              For each test need, create:
-              - ID: {story_id}-{LEVEL}-{SEQ}
-              - Requirement: AC reference
-              - Priority: P0|P1|P2|P3
-              - Level: unit|integration|e2e
-              - Description: What is being tested
-              - Justification: Why this level was chosen
-              - Risk mitigation: Which risks are addressed
+  - id: APPLY-FRAMEWORK
+    title: Apply Test Level Framework
+    description: Determine appropriate test level for every scenario.
+    action:
+      type: analysis
+      target: "level_assignments"
+      template: |
+        Using data/test-levels-framework.yaml, select unit vs integration vs e2e per scenario.
+        Capture rationale referencing architecture constraints, dependencies, and observability needs.
 
-      - id: VALIDATE-COVERAGE
-        title: Validate Test Coverage
-        description: Ensure comprehensive coverage without redundancy
-        action:
-           type: validation
-           validation:
-              type: checklist
-              required: true
-           prompt: |
-              Ensure:
-              - Every AC has at least one test
-              - No duplicate coverage across levels
-              - Critical paths have multiple levels
-              - Risk mitigations are addressed
+  - id: ASSIGN-PRIORITY
+    title: Assign Test Priorities
+    description: Classify tests by priority using the matrix.
+    action:
+      type: analysis
+      target: "priority_assignments"
+      template: |
+        Apply data/test-priorities-matrix.yaml:
+        - P0: Revenue-critical, security, compliance
+        - P1: Core user journeys, frequently used paths
+        - P2: Secondary features or admin flows
+        - P3: Nice-to-have or low-risk
+        Document justification for each priority.
 
-      - id: CREATE-REPORT
-        title: Create Test Design Document
-        description: Generate comprehensive test design report
-        action:
-           type: file_operation
-           operation: create
-           target: "@{docs.subdirs.qa}/assessments/{story_id}-test-design-{YYYYMMDD}.md"
-           content: |
-              # Test Design: Story {story_id}
+  - id: DESIGN-SCENARIOS
+    title: Design Test Scenarios
+    description: Create detailed scenarios for each identified need.
+    action:
+      type: analysis
+      target: "scenario_catalog"
+      template: |
+        For each test need, define:
+        - ID: ${story}-{{LEVEL}}-{{SEQ}}
+        - Requirement: AC reference or requirement text
+        - Priority: P0|P1|P2|P3
+        - Level: unit|integration|e2e
+        - Description: What is being validated
+        - Justification: Why this level/priority combination
+        - Risk mitigation: Which risks are addressed
 
-              Date: {date}
-              Designer: Quinn (Test Architect)
+  - id: VALIDATE-COVERAGE
+    title: Validate Test Coverage
+    description: Ensure comprehensive coverage without redundancy.
+    action:
+      type: validation
+      target: "scenario_catalog"
+      template: |
+        Ensure:
+        - Every AC has at least one scenario
+        - No duplicate coverage across levels
+        - Critical paths have layered coverage where needed
+        - Risk mitigations are explicitly tied to scenarios
+    on_failure: halt
 
-              ## Test Strategy Overview
+  - id: CREATE-REPORT
+    title: Create Test Design Document
+    description: Generate comprehensive test design report.
+    action:
+      type: file_operation
+      operation: create
+      target: "@{docs.subdirs.qa}/assessments/${story}-test-design-{{YYYYMMDD}}.md"
+      template: |
+        # Test Design: Story ${story}
 
-              - Total test scenarios: X
-              - Unit tests: Y (A%)
-              - Integration tests: Z (B%)
-              - E2E tests: W (C%)
-              - Priority distribution: P0: X, P1: Y, P2: Z
+        Date: {{date}}
+        Designer: Quinn (Test Architect)
 
-              ## Test Scenarios by Acceptance Criteria
+        ## Test Strategy Overview
 
-              ### AC1: {description}
+        - Total test scenarios: {{scenario_totals.total}}
+        - Unit tests: {{scenario_totals.unit}} ({{scenario_totals.unit_pct}})
+        - Integration tests: {{scenario_totals.integration}} ({{scenario_totals.integration_pct}})
+        - E2E tests: {{scenario_totals.e2e}} ({{scenario_totals.e2e_pct}})
+        - Priority distribution: P0 {{priorities.p0}}, P1 {{priorities.p1}}, P2 {{priorities.p2}}, P3 {{priorities.p3}}
 
-              #### Scenarios
+        ## Test Scenarios by Acceptance Criteria
 
-              | ID | Level | Priority | Test | Justification |
-              |---|---|---|---|---|
-              | 1.3-UNIT-001 | Unit | P0 | Validate input format | Pure validation logic |
-              | 1.3-INT-001 | Integration | P0 | Service processes request | Multi-component flow |
-              | 1.3-E2E-001 | E2E | P1 | User completes journey | Critical path validation |
+        {{scenario_tables}}
 
-              ## Risk Coverage
+        ## Risk Coverage
 
-              [Map test scenarios to identified risks if risk profile exists]
+        {{risk_mapping}}
 
-              ## Recommended Execution Order
+        ## Recommended Execution Order
 
-              1. P0 Unit tests (fail fast)
-              2. P0 Integration tests
-              3. P0 E2E tests
-              4. P1 tests in order
-              5. P2+ as time permits
+        1. P0 Unit tests (fail fast)
+        2. P0 Integration tests
+        3. P0 E2E tests
+        4. Remaining P1 scenarios
+        5. P2+ as time permits
 
-      - id: CREATE-GATE-BLOCK
-        title: Generate Gate YAML Block
-        description: Create test_design block for quality gate
-        action:
-           type: file_operation
-           operation: create
-           target: "test_design_block.yaml"
-           content: |
-              test_design:
-                scenarios_total: X
-                by_level:
-                  unit: Y
-                  integration: Z
-                  e2e: W
-                by_priority:
-                  p0: A
-                  p1: B
-                  p2: C
-                coverage_gaps: []
+  - id: CREATE-GATE-BLOCK
+    title: Generate Gate YAML Block
+    description: Create `test_design` block for the quality gate artifact.
+    action:
+      type: file_operation
+      operation: create
+      target: "@{docs.subdirs.qa}/gates/${story}-test-design-block.yaml"
+      template: |
+        test_design:
+          scenarios_total: {{scenario_totals.total}}
+          by_level:
+            unit: {{scenario_totals.unit}}
+            integration: {{scenario_totals.integration}}
+            e2e: {{scenario_totals.e2e}}
+          by_priority:
+            p0: {{priorities.p0}}
+            p1: {{priorities.p1}}
+            p2: {{priorities.p2}}
+            p3: {{priorities.p3}}
+          coverage_gaps: {{coverage_gaps}}
 
 outputs:
-   artifacts:
-      - name: test_design_document
-        type: report
-        path: "@{docs.subdirs.qa}/assessments/{story_id}-test-design-{YYYYMMDD}.md"
-        format: markdown
-        description: Comprehensive test design document with scenarios
-      - name: gate_test_block
-        type: file
-        path: "test_design_block.yaml"
-        format: yaml
-        description: Test design block for gate file
+  artifacts:
+    - name: test_design_document
+      type: report
+      path: "@{docs.subdirs.qa}/assessments/${story}-test-design-{{YYYYMMDD}}.md"
+      format: markdown
+      description: Comprehensive test design document with scenarios
+    - name: gate_test_block
+      type: gate
+      path: "@{docs.subdirs.qa}/gates/${story}-test-design-block.yaml"
+      format: yaml
+      description: Test design block for inclusion in quality gate files
 
 completion:
-   criteria:
-      - Every AC has test coverage
-      - Test levels are appropriate
-      - No duplicate coverage across levels
-      - Priorities align with business risk
-      - Test IDs follow naming convention
-      - Scenarios are atomic and independent
-   validations:
-      - command: "test -f @{docs.subdirs.qa}/assessments/{story_id}-test-design-{YYYYMMDD}.md"
+  criteria:
+    - Every acceptance criterion mapped to at least one scenario
+    - Test levels selected per framework guidance
+    - Priorities align with business risk matrix
+    - Scenario IDs follow naming convention
+    - Test design report generated in QA assessments directory
+    - Gate test_design block created
+  validations:
+    - command: "test -f @{docs.subdirs.qa}/assessments/${story}-test-design-{{YYYYMMDD}}.md"
+      expected_output: "file exists"

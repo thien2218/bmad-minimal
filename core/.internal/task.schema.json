@@ -223,7 +223,7 @@
 				"properties": {
 					"id": {
 						"type": "string",
-						"pattern": "^[A-Z]+$"
+						"pattern": "^[A-Z-]+$"
 					},
 					"title": {
 						"type": "string"
@@ -251,6 +251,7 @@
 					"action": {
 						"type": "object",
 						"description": "Action to perform",
+						"required": ["type", "target"],
 						"properties": {
 							"type": {
 								"type": "string",
@@ -287,6 +288,10 @@
 							"template": {
 								"type": "string",
 								"description": "Template to use to fill out content of some file/report"
+							},
+							"schema": {
+								"type": "string",
+								"description": "Path to a predefined schema file to load and populate"
 							},
 							"prompt_user": {
 								"type": "string",

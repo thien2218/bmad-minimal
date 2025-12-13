@@ -1,233 +1,205 @@
 $schema: ../../.internal/task.schema.json
 id: develop-story
 title: Develop Story Task
-version: 1.0.0
-purpose: Implement an WIP story end-to-end using an implementation-first workflow; testing and validation occur after implementation is complete, following the story's Tasks/Subtasks with formal workflow
+version: 2.0.0
+purpose: Implement a WIP story end-to-end using an implementation-first workflow; execute tasks/subtasks sequentially, then validate and document results.
 category: development
 agent: dev
 
-inputs:
-   required:
-      - name: story_id
-        type: story_id
-        pattern: "^\\d+\\.\\d+$"
-        examples: ["1.3", "2.1", "3.5"]
-      - name: story_path
-        type: path
-        pattern: "@{docs.subdirs.stories}/{{story}}-*.yaml"
-   optional:
-      - name: test_command
-        type: command
-        examples: ["npm run test", "go test"]
-      - name: build_command
-        type: command
-        examples: ["npm run build", "cargo build"]
-      - name: lint_command
-        type: command
-        examples: ["npm run lint"]
+derived:
+  - name: story_path_resolved
+    type: path
+    source: context
+    pattern: "@{docs.subdirs.stories}/${story}-*.yaml"
+    description: "Concrete story file path resolved from ${story}."
+    required: true
+  - name: story_status
+    type: string
+    source: file
+    description: "Status field read from the target story file."
+    required: true
 
 outputs:
-   updates:
-      - target: "{story_path}"
-        sections:
-           - "Tasks / Subtasks Checkboxes"
-           - "Dev Agent Record"
-           - "Dev Agent Record/Checkboxes"
-           - "Dev Agent Record/Debug Log References"
-           - "Dev Agent Record/Completion Notes List"
-           - "File List"
-           - "Change Log"
-           - "Status"
-           - "Agent Model Used"
-        restrictions: Only toggle checkboxes and add to allowed sections, do not rename or reorder tasks
-   artifacts:
-      - name: Test Files
-        type: file
-        path: "{project_root}/tests/**"
-        format: text
-        description: Test files created after implementation during validation phase
-      - name: Implementation Files
-        type: file
-        path: "{project_root}/**"
-        format: text
-        description: Production code implementing the story
+  updates:
+    - target: "!{story_path_resolved}"
+      sections:
+        - "Tasks / Subtasks Checkboxes"
+        - "Dev Agent Record"
+        - "Dev Agent Record/Checkboxes"
+        - "Dev Agent Record/Debug Log References"
+        - "Dev Agent Record/Completion Notes List"
+        - "File List"
+        - "Change Log"
+        - "Status"
+        - "Agent Model Used"
+      restrictions: Only toggle checkboxes and append to allowed sections; never rename or reorder tasks
+  artifacts:
+    - name: Test Files
+      type: file
+      path: "{project_root}/tests/**"
+      format: text
+      description: Tests written after implementation during validation
+    - name: Implementation Files
+      type: file
+      path: "{project_root}/**"
+      format: text
+      description: Production code implementing the story
 
 prerequisites:
-   status:
-      - entity: story
-        field: status
-        value: "WIP"
-        operator: equals
+  - field: "!{story_status}"
+    value: "WIP"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "dev.blocking.unapproved_dependencies"
+    value: "false"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "dev.blocking.ambiguous_requirements"
+    value: "false"
+    operator: "="
+    on_violate: "halt_and_report"
 
-process:
-   mode: sequential
-   steps:
-      - id: LOAD-1
-        title: Load Core Configuration and Inputs
-        description: Load config.json and resolve story file
-        action:
-           type: file_operation
-           operation: read
-           target: "@{baseDir}/config.json"
-           content: |
-              Extract key configurations:
-              - docs.subdirs.stories
-              - qa.* settings
-              - workflow.* settings
+steps:
+  - id: LOAD-CONFIG
+    title: Load Core Configuration and Inputs
+    description: Load config.json and gather settings required for development
+    action:
+      type: file_operation
+      operation: read
+      target: "@{baseDir}/config.json"
+      template: |
+        Extract:
+        - docs.subdirs.stories
+        - qa.* settings
+        - workflow.* settings
+        Resolve !{story_path_resolved} using ${story}.
 
-              Resolve and load target story file using {{story_id}} and {{story_path}}
+  - id: LOAD-STORY
+    title: Load Story File
+    description: Read the story file to access tasks, subtasks, and acceptance criteria
+    action:
+      type: file_operation
+      operation: read
+      target: "!{story_path_resolved}"
 
-      - id: CHECK-1
-        title: Check Story Status
-        description: Verify story status is WIP
-        action:
-           type: validation
-           content: |
-              If status is not WIP:
-              HALT and inform user why execution cannot proceed
-        on_failure: halt
+  - id: VERIFY-STATUS
+    title: Verify Story Status is WIP
+    description: Halt if the story is not ready for development
+    action:
+      type: validation
+      template: |
+        If !{story_status} != "WIP": halt, report to the user, and request status correction before proceeding.
+    on_failure: halt
 
-      - id: TASK-1
-        title: Read First or Next Task
-        description: Select next incomplete task/subtask
-        action:
-           type: analysis
-           target: "{story_path}#tasks-and-subtasks"
-           content: |
-              - Parse the story's "Tasks / Subtasks" list
-              - Select the first incomplete task/subtask in order
-              - Output: Selected task/subtask to work on
+  - id: SELECT-TASK
+    title: Read First or Next Task
+    description: Select the next incomplete task/subtask from the story
+    action:
+      type: analysis
+      target: "!{story_path_resolved}#tasks-and-subtasks"
+      template: |
+        - Parse the "Tasks / Subtasks" list in order
+        - Select the first incomplete task/subtask
+        - Record the selection for implementation
 
-      - id: IMPLEMENT-1
-        title: Implement Task and Subtasks
-        description: Write production code to satisfy acceptance criteria and task requirements
-        action:
-           type: file_operation
-           operation: create
-           content: |
-              - Write production code to satisfy the acceptance criteria for the selected task/subtask
-              - Keep changes scoped to the current task/subtask
-              - Update File List with files created/modified (paths relative to repo root)
-              - Output: Implementation ready for validation
+  - id: IMPLEMENT-TASK
+    title: Implement Task and Subtasks
+    description: Write production code to satisfy the selected task and its acceptance criteria
+    action:
+      type: file_operation
+      operation: update
+      template: |
+        - Implement only the current task/subtask scope
+        - Update the File List with created/modified files (relative paths)
+        - Document key decisions in Dev Agent Record/Completion Notes
 
-      - id: REPEAT-1
-        title: Check for Remaining Tasks
-        description: Determine if more tasks remain
-        action:
-           type: decision
-           prompt: Are there incomplete tasks/subtasks remaining?
-        condition:
-           if: "some tasks still remain"
-           then: "TASK-1"
-           else: "TESTS-1"
+  - id: CHECK-REMAINING
+    title: Check for Remaining Tasks
+    description: Determine if more tasks remain before moving to validation
+    action:
+      type: decision
+      prompt_user: |
+        Are there incomplete tasks/subtasks remaining? If yes, return to SELECT-TASK; otherwise continue to test creation.
 
-      - id: TESTS-1
-        title: Write Tests After Implementation
-        description: Create tests for implemented features based on acceptance criteria
-        action:
-           type: file_operation
-           operation: create
-           content: |
-              - Write unit/integration tests as appropriate
-              - Use mocks/stubs where appropriate
-              - Keep tests isolated and deterministic
-              - Output: Test files/cases added
+  - id: WRITE-TESTS
+    title: Write Tests After Implementation
+    description: Add unit/integration tests covering the implemented functionality
+    action:
+      type: file_operation
+      operation: update
+      template: |
+        - Write deterministic tests aligned with acceptance criteria
+        - Use mocks/stubs where appropriate
+        - Record new test files in the File List
 
-      - id: VALIDATE-1
-        title: Execute Validations
-        description: Run tests and validation tasks
-        action:
-           type: command
-           command: "{test_command}"
-           content: |
-              - Run test suite
-              - Execute checklist: story-dod-checklist
-        retry:
-           max_attempts: 3
-           delay_seconds: 0
-        on_failure: continue
+  - id: RUN-TESTS
+    title: Execute Validations
+    description: Run the test suite and execute the story-dod checklist
+    action:
+      type: command
+      command: "{test_command}"
+      template: |
+        - Run all relevant tests
+        - Execute story-dod-checklist items after the command
+      retry:
+        max_attempts: 3
+        delay_seconds: 0
 
-      - id: VALIDATE-2
-        title: Handle Validation Failures
-        description: Fix issues or mark as blocked
-        action:
-           type: decision
-           content: |
-              If failures occur and not due to incorrect tests:
-              - Fix the corresponding implementation
-              - Retry validation (max 3 attempts)
-              - On 3rd failure: Set Status = "Blocked" and HALT
-        condition:
-           if: "validation_failed && attempts >= 3"
-           then: "BLOCK-1"
+  - id: HANDLE-FAILURES
+    title: Handle Validation Failures
+    description: Address failures or mark the story as blocked when limits are reached
+    action:
+      type: decision
+      template: |
+        If tests fail (and failures are valid):
+        - Fix issues and rerun RUN-TESTS (max 3 attempts)
+        - After 3 failed attempts, branch to BLOCK-STORY
 
-      - id: UPDATE-1
-        title: Mark Checkboxes and Update Story
-        description: Update story file with completion status
-        action:
-           type: file_operation
-           operation: update
-           target: "{story_path}"
-           content: |
-              - Mark completed Tasks/Subtasks with [x]
-              - Update allowed sections (see outputs.updates.sections)
-              - Only toggle - [ ] → - [x]; do not rename, reorder, or edit task text
-              - Output: Updated story file saved
+  - id: UPDATE-STORY
+    title: Mark Checkboxes and Update Story Metadata
+    description: Update allowable sections in the story file after successful implementation
+    action:
+      type: file_operation
+      operation: update
+      target: "!{story_path_resolved}"
+      template: |
+        - Mark completed tasks/subtasks with [x] only (no renaming or reordering)
+        - Append entries to Debug Log References, Completion Notes, File List, and Change Log
+        - Update Status to "Review" when ready
 
-      - id: BLOCK-1
-        title: Handle Blocked Conditions
-        description: Set status to Blocked when conditions met
-        action:
-           type: file_operation
-           operation: update
-           target: "{story_path}"
-           content: |
-              Set Status to "Blocked" if any apply:
-              - Unapproved dependencies needed (confirm with user)
-              - Ambiguity remains after story check
-              - Three consecutive implementation/fix failures
-              - Missing configuration
-              - Failing regression
-        on_failure: halt
+  - id: BLOCK-STORY
+    title: Handle Blocked Conditions
+    description: Set the story status to Blocked when prerequisites cannot be satisfied
+    action:
+      type: file_operation
+      operation: update
+      target: "!{story_path_resolved}"
+      template: |
+        Set Status to "Blocked" if:
+        - Unapproved dependencies are required
+        - Requirements remain ambiguous
+        - Three consecutive implementation/validation failures occur
+        - Required configuration is missing
+        - Regression failures persist
 
-      - id: COMPLETE-1
-        title: Complete Story Implementation
-        description: Final validation and status update
-        action:
-           type: validation
-           content: |
-              Declare implementation complete only when all items below are true:
-              - All Tasks and Subtasks are marked [x] and have tests
-              - Validations and full regression pass
-              - File List is complete
-              - Validation has been run with story-dod-checklist
-              - Story Status is updated:
-                * "Blocked" if any blocking condition is met
-                * "Review" otherwise
-              - HALT
-
-blocking_conditions:
-   - condition: Unapproved dependencies needed
-     message: Story requires dependencies not approved by user
-     severity: error
-   - condition: Ambiguity in requirements
-     message: Story requirements are not clear enough to implement
-     severity: error
-   - condition: Three consecutive implementation failures
-     message: Failed to implement correctly after 3 attempts
-     severity: critical
-   - condition: Missing configuration
-     message: Required configuration not found in config.json
-     severity: critical
-   - condition: Failing regression
-     message: Implementation breaks existing functionality
-     severity: critical
+  - id: COMPLETE-STORY
+    title: Complete Story Implementation
+    description: Final validation and status update once all work is done
+    action:
+      type: validation
+      template: |
+        Declare implementation complete only when:
+        - All tasks/subtasks are checked and have corresponding tests
+        - Tests/regression pass
+        - File List and Dev Agent Record are complete
+        - story-dod-checklist executed successfully
+        - Status is "Review" (or "Blocked" when applicable)
 
 completion:
-   checklist: story-dod-checklist
-   criteria:
-      - All Tasks and Subtasks marked complete
-      - All tests written and passing
-      - Validations and regression pass
-      - File List is complete
-      - Status updated appropriately
+  checklist: story-dod-checklist
+  criteria:
+    - All tasks and subtasks marked complete
+    - Tests written and passing
+    - Validations/regression pass
+    - File List and Dev Agent Record updated
+    - Final status set appropriately (Review or Blocked)
