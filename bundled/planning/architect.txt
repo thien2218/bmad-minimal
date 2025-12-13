@@ -12,7 +12,7 @@
 
 ```json
 {
-	"version": "1.3.0",
+	"version": "1.4.0",
 	"precedence": [
 		"policy",
 		"rules.hard",
@@ -57,6 +57,68 @@
 					"action": "execute_dependency_task"
 				}
 			]
+		},
+		"references": {
+			"fileResolution": {
+				"pattern": "^@\\{[a-zA-Z0-9_-.]+\\}$",
+				"description": "Resolve reference to a property in config.json",
+				"examples": [
+					{
+						"input": "@{baseDir}",
+						"resolvedFrom": "config.json.baseDir"
+					},
+					{
+						"input": "@{docs.files.codingStandards}",
+						"resolvedFrom": "config.json.docs.files.codingStandards"
+					},
+					{
+						"input": "@{docs.subdirs.engineering}",
+						"resolvedFrom": "config.json.docs.subdirs.engineering"
+					}
+				]
+			},
+			"inputResolution": {
+				"pattern": "^\\$\\{[a-zA-Z0-9_-.]+\\}$",
+				"description": "Resolve reference to a command's input parameter or value for the current task being executed",
+				"examples": [
+					{
+						"input": "${story}",
+						"resolvedFrom": "currentCommand.parameters.story"
+					},
+					{
+						"input": "${test_command}",
+						"resolvedFrom": "currentCommand.optionalParameters.test_command"
+					}
+				]
+			},
+			"knowledgeResolution": {
+				"pattern": "^!\\{[a-zA-Z0-9_-.]+\\}$",
+				"description": "Resolve reference to knowledge loaded from the agent's context",
+				"examples": [
+					{
+						"input": "!{coding_standards}",
+						"resolvedFrom": "context.codingStandards"
+					},
+					{
+						"input": "!{tech_stack}",
+						"resolvedFrom": "context.architecture.tech_stack"
+					}
+				]
+			},
+			"templatePopulation": {
+				"pattern": "^\\{\\{[a-zA-Z0-9_-.]+\\}\\}$",
+				"description": "Resolve reference from any source when populating values into a template",
+				"examples": [
+					{
+						"input": "{{story_id}}",
+						"resolvedFrom": "anySource.story_id"
+					},
+					{
+						"input": "{{qa_results.summary}}",
+						"resolvedFrom": "anySource.qa_results.summary"
+					}
+				]
+			}
 		},
 		"elicitDefaults": {
 			"elicitRequired": true,
@@ -173,29 +235,19 @@
 		},
 		{
 			"id": "CFG-R001",
-			"title": "Resolve @{*} references from core config",
-			"enforcements": [
-				"Locate config.json via terminal command or user input and load it",
-				"Expand @{docs.files.X} => @{docs.dir}/<file>, @{docs.subdirs.X} => @{docs.dir}/<subdir>"
-			],
-			"severity": "hard",
-			"actionOnViolation": "abort_and_report"
-		},
-		{
-			"id": "CFG-R002",
 			"title": "Non-padded numbering in epic/story/enhancement filenames",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},
 		{
-			"id": "CFG-R003",
+			"id": "CFG-R002",
 			"title": "Present choices as numbered lists",
 			"severity": "soft",
 			"actionOnViolation": "warn_and_reformat"
 		},
 		{
-			"id": "CFG-R004",
-			"title": "Execute dependency tasks literally",
+			"id": "CFG-R003",
+			"title": "Load and execute dependency files in commands' `steps` property literally",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		}
@@ -315,19 +367,97 @@ sections:
         type: table
         columns: [Category, Technology, Version, Purpose, Rationale]
         rows:
-          - ["Language", "{{language}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Runtime/VM", "{{runtime}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Framework/Engine", "{{framework_or_engine}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Build Tool", "{{build_tool}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Package Manager", "{{pkg_manager}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Native SDKs/Bindings", "{{native_sdks}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Data Store/Files", "{{data_store}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Messaging/IPC", "{{messaging}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["GPU/Accel Libraries", "{{accel_libs}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Testing", "{{test_tooling}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Packaging/Distribution", "{{packaging}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["CI/CD", "{{cicd}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Observability", "{{observability}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - [
+              "Language",
+              "{{language}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Runtime/VM",
+              "{{runtime}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Framework/Engine",
+              "{{framework_or_engine}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Build Tool",
+              "{{build_tool}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Package Manager",
+              "{{pkg_manager}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Native SDKs/Bindings",
+              "{{native_sdks}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Data Store/Files",
+              "{{data_store}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Messaging/IPC",
+              "{{messaging}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "GPU/Accel Libraries",
+              "{{accel_libs}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Testing",
+              "{{test_tooling}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Packaging/Distribution",
+              "{{packaging}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "CI/CD",
+              "{{cicd}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Observability",
+              "{{observability}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
 
   - id: source-tree
     title: Source Tree
@@ -902,7 +1032,13 @@ sections:
         type: table
         columns: [Category, Technology, Version, Purpose, Rationale]
         rows:
-          - ["Frontend Language", "{{fe_language}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - [
+              "Frontend Language",
+              "{{fe_language}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
           - [
               "Frontend Framework",
               "{{fe_framework}}",
@@ -917,8 +1053,20 @@ sections:
               "{{purpose}}",
               "{{why_chosen}}",
             ]
-          - ["State Management", "{{state_mgmt}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Backend Language", "{{be_language}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - [
+              "State Management",
+              "{{state_mgmt}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Backend Language",
+              "{{be_language}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
           - [
               "Backend Framework",
               "{{be_framework}}",
@@ -926,21 +1074,111 @@ sections:
               "{{purpose}}",
               "{{why_chosen}}",
             ]
-          - ["API Style", "{{api_style}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Database", "{{database}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Cache", "{{cache}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["File Storage", "{{storage}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Authentication", "{{auth}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Frontend Testing", "{{fe_test}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Backend Testing", "{{be_test}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["E2E Testing", "{{e2e_test}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Build Tool", "{{build_tool}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Bundler", "{{bundler}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["IaC Tool", "{{iac_tool}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["CI/CD", "{{cicd}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Monitoring", "{{monitoring}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Logging", "{{logging}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["CSS Framework", "{{css_framework}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - [
+              "API Style",
+              "{{api_style}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Database",
+              "{{database}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Cache",
+              "{{cache}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "File Storage",
+              "{{storage}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Authentication",
+              "{{auth}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Frontend Testing",
+              "{{fe_test}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Backend Testing",
+              "{{be_test}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "E2E Testing",
+              "{{e2e_test}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Build Tool",
+              "{{build_tool}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Bundler",
+              "{{bundler}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "IaC Tool",
+              "{{iac_tool}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "CI/CD",
+              "{{cicd}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Monitoring",
+              "{{monitoring}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Logging",
+              "{{logging}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "CSS Framework",
+              "{{css_framework}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
 
   - id: data-models
     title: Data Models
@@ -1435,9 +1673,24 @@ sections:
         type: table
         columns: [Environment, Frontend URL, Backend URL, Purpose]
         rows:
-          - ["Development", "{{dev_fe_url}}", "{{dev_be_url}}", "Local development"]
-          - ["Staging", "{{staging_fe_url}}", "{{staging_be_url}}", "Pre-production testing"]
-          - ["Production", "{{prod_fe_url}}", "{{prod_be_url}}", "Live environment"]
+          - [
+              "Development",
+              "{{dev_fe_url}}",
+              "{{dev_be_url}}",
+              "Local development",
+            ]
+          - [
+              "Staging",
+              "{{staging_fe_url}}",
+              "{{staging_be_url}}",
+              "Pre-production testing",
+            ]
+          - [
+              "Production",
+              "{{prod_fe_url}}",
+              "{{prod_be_url}}",
+              "Live environment",
+            ]
 
   - id: security-performance
     title: Security and Performance
@@ -2514,8 +2767,20 @@ sections:
         columns: [Category, Technology, Version, Purpose, Rationale]
         instruction: Fill in appropriate technology choices based on the selected framework and project requirements.
         rows:
-          - ["Framework", "{{framework}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["UI Library", "{{ui_library}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - [
+              "Framework",
+              "{{framework}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "UI Library",
+              "{{ui_library}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
           - [
               "State Management",
               "{{state_management}}",
@@ -2523,10 +2788,34 @@ sections:
               "{{purpose}}",
               "{{why_chosen}}",
             ]
-          - ["Routing", "{{routing_library}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Build Tool", "{{build_tool}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Styling", "{{styling_solution}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Testing", "{{test_framework}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - [
+              "Routing",
+              "{{routing_library}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Build Tool",
+              "{{build_tool}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Styling",
+              "{{styling_solution}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Testing",
+              "{{test_framework}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
           - [
               "Component Library",
               "{{component_lib}}",
@@ -2534,9 +2823,27 @@ sections:
               "{{purpose}}",
               "{{why_chosen}}",
             ]
-          - ["Form Handling", "{{form_library}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Animation", "{{animation_lib}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
-          - ["Dev Tools", "{{dev_tools}}", "{{version}}", "{{purpose}}", "{{why_chosen}}"]
+          - [
+              "Form Handling",
+              "{{form_library}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Animation",
+              "{{animation_lib}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
+          - [
+              "Dev Tools",
+              "{{dev_tools}}",
+              "{{version}}",
+              "{{purpose}}",
+              "{{why_chosen}}",
+            ]
 
   - id: source-tree
     title: Source Tree

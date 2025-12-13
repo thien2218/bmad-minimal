@@ -12,7 +12,7 @@
 
 ```json
 {
-	"version": "1.3.0",
+	"version": "1.4.0",
 	"precedence": [
 		"policy",
 		"rules.hard",
@@ -88,6 +88,68 @@
 					"action": "execute_dependency_task"
 				}
 			]
+		},
+		"references": {
+			"fileResolution": {
+				"pattern": "^@\\{[a-zA-Z0-9_-.]+\\}$",
+				"description": "Resolve reference to a property in config.json",
+				"examples": [
+					{
+						"input": "@{baseDir}",
+						"resolvedFrom": "config.json.baseDir"
+					},
+					{
+						"input": "@{docs.files.codingStandards}",
+						"resolvedFrom": "config.json.docs.files.codingStandards"
+					},
+					{
+						"input": "@{docs.subdirs.engineering}",
+						"resolvedFrom": "config.json.docs.subdirs.engineering"
+					}
+				]
+			},
+			"inputResolution": {
+				"pattern": "^\\$\\{[a-zA-Z0-9_-.]+\\}$",
+				"description": "Resolve reference to a command's input parameter or value for the current task being executed",
+				"examples": [
+					{
+						"input": "${story}",
+						"resolvedFrom": "currentCommand.parameters.story"
+					},
+					{
+						"input": "${test_command}",
+						"resolvedFrom": "currentCommand.optionalParameters.test_command"
+					}
+				]
+			},
+			"knowledgeResolution": {
+				"pattern": "^!\\{[a-zA-Z0-9_-.]+\\}$",
+				"description": "Resolve reference to knowledge loaded from the agent's context",
+				"examples": [
+					{
+						"input": "!{coding_standards}",
+						"resolvedFrom": "context.codingStandards"
+					},
+					{
+						"input": "!{tech_stack}",
+						"resolvedFrom": "context.architecture.tech_stack"
+					}
+				]
+			},
+			"templatePopulation": {
+				"pattern": "^\\{\\{[a-zA-Z0-9_-.]+\\}\\}$",
+				"description": "Resolve reference from any source when populating values into a template",
+				"examples": [
+					{
+						"input": "{{story_id}}",
+						"resolvedFrom": "anySource.story_id"
+					},
+					{
+						"input": "{{qa_results.summary}}",
+						"resolvedFrom": "anySource.qa_results.summary"
+					}
+				]
+			}
 		},
 		"elicitDefaults": {
 			"elicitRequired": true,
@@ -206,29 +268,19 @@
 		},
 		{
 			"id": "CFG-R001",
-			"title": "Resolve @{*} references from core config",
-			"enforcements": [
-				"Locate config.json via terminal command or user input and load it",
-				"Expand @{docs.files.X} => @{docs.dir}/<file>, @{docs.subdirs.X} => @{docs.dir}/<subdir>"
-			],
-			"severity": "hard",
-			"actionOnViolation": "abort_and_report"
-		},
-		{
-			"id": "CFG-R002",
 			"title": "Non-padded numbering in epic/story/enhancement filenames",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},
 		{
-			"id": "CFG-R003",
+			"id": "CFG-R002",
 			"title": "Present choices as numbered lists",
 			"severity": "soft",
 			"actionOnViolation": "warn_and_reformat"
 		},
 		{
-			"id": "CFG-R004",
-			"title": "Execute dependency tasks literally",
+			"id": "CFG-R003",
+			"title": "Load and execute dependency files in commands' `steps` property literally",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},
@@ -436,211 +488,211 @@ Keep it action-oriented and forward-looking.]]
 $schema: ../../.internal/task.schema.json
 id: correct-course
 title: Correct Course Task
-version: 1.0.0
+version: 2.0.0
 purpose: Guide structured response to change triggers using change-checklist to analyze impacts, explore solutions, and produce a Sprint Change Proposal document
 category: planning
 agent: pdm
 
 inputs:
-   required:
-      - name: change_trigger
-        type: string
-        examples:
-           [
-              "Bug discovered",
-              "Scope change request",
-              "Technical constraint identified",
-           ]
-      - name: initial_impact
-        type: string
-   optional:
-      - name: interaction_mode
-        type: string
-        default: "incremental"
-        examples: ["incremental", "yolo"]
+  required:
+    - name: change_trigger
+      type: string
+      examples:
+        [
+          "Bug discovered",
+          "Scope change request",
+          "Technical constraint identified",
+        ]
+    - name: initial_impact
+      type: string
+  optional:
+    - name: interaction_mode
+      type: string
+      default: "incremental"
+      examples: ["incremental", "yolo"]
 
 outputs:
-   updates:
-      - target: "@{docs.subdirs.epics}/*.yaml"
-        sections: ["User Stories", "Acceptance Criteria", "Priority"]
-        restrictions: Only as specified in approved change proposal
-      - target: "@{docs.files.prd}"
-        sections: ["Requirements", "Scope", "Technical Constraints"]
-        restrictions: Only as specified in approved change proposal
-      - target: "@{docs.dir}/?(*-)architecture.md"
-        sections: ["Components", "Diagrams", "Technology Stack"]
-        restrictions: Only as specified in approved change proposal
+  updates:
+    - target: "@{docs.subdirs.epics}/*.yaml"
+      sections: ["User Stories", "Acceptance Criteria", "Priority"]
+      restrictions: Only as specified in approved change proposal
+    - target: "@{docs.files.prd}"
+      sections: ["Requirements", "Scope", "Technical Constraints"]
+      restrictions: Only as specified in approved change proposal
+    - target: "@{docs.dir}/?(*-)architecture.md"
+      sections: ["Components", "Diagrams", "Technology Stack"]
+      restrictions: Only as specified in approved change proposal
 
 process:
-   mode: sequential
-   steps:
-      - id: SETUP-1
-        title: Initial Setup & Mode Selection
-        description: Acknowledge task, verify inputs, and establish interaction mode
-        action:
-           type: elicit
-           prompt: |
-              Correct Course Task (Change Navigation & Integration) initiated.
+  mode: sequential
+  steps:
+    - id: SETUP-1
+      title: Initial Setup & Mode Selection
+      description: Acknowledge task, verify inputs, and establish interaction mode
+      action:
+        type: elicit
+        prompt: |
+          Correct Course Task (Change Navigation & Integration) initiated.
 
-              Please confirm:
-              1. Change trigger: {change_trigger}
-              2. Initial impact assessment: {initial_impact}
+          Please confirm:
+          1. Change trigger: {change_trigger}
+          2. Initial impact assessment: {initial_impact}
 
-              Select interaction mode:
-              - Incremental (Default & Recommended): Work through change-checklist section by section
-              - YOLO Mode: Conduct batched analysis with consolidated findings
-           options:
-              - "Incremental - section by section with detailed refinement"
-              - "YOLO - batched analysis for quick assessment"
-           validation:
-              type: string
-              pattern: "^(incremental|yolo)$"
-        elicit: true
+          Select interaction mode:
+          - Incremental (Default & Recommended): Work through change-checklist section by section
+          - YOLO Mode: Conduct batched analysis with consolidated findings
+        options:
+          - "Incremental - section by section with detailed refinement"
+          - "YOLO - batched analysis for quick assessment"
+        validation:
+          type: string
+          pattern: "^(incremental|yolo)$"
+      elicit: true
 
-      - id: SETUP-2
-        title: Verify Access to Artifacts
-        action:
-           type: validation
-           target: "project artifacts"
-           validation:
-              type: string
-              required: true
-        description: Confirm access to PRD, Epics/Stories, Architecture Documents, and change-checklist
+    - id: SETUP-2
+      title: Verify Access to Artifacts
+      action:
+        type: validation
+        target: "project artifacts"
+        validation:
+          type: string
+          required: true
+      description: Confirm access to PRD, Epics/Stories, Architecture Documents, and change-checklist
 
-      - id: ANALYSIS-1
-        title: Execute Change Context Analysis
-        description: Work through Section 1 of change-checklist - Change Context
-        action:
-           type: analysis
-           target: checklists/change-checklist.md#section-1
-           prompt: Analyze change context including trigger, timing, and initial assessment
-        elicit: true
+    - id: ANALYSIS-1
+      title: Execute Change Context Analysis
+      description: Work through Section 1 of change-checklist - Change Context
+      action:
+        type: analysis
+        target: checklists/change-checklist.md#section-1
+        prompt: Analyze change context including trigger, timing, and initial assessment
+      elicit: true
 
-      - id: ANALYSIS-2
-        title: Epic/Story Impact Analysis
-        description: Work through Section 2 of change-checklist - Epic/Story Impact
-        action:
-           type: analysis
-           target: checklists/change-checklist.md#section-2
-           prompt: Assess impact on current epics, stories, and sprint work
-        elicit: true
+    - id: ANALYSIS-2
+      title: Epic/Story Impact Analysis
+      description: Work through Section 2 of change-checklist - Epic/Story Impact
+      action:
+        type: analysis
+        target: checklists/change-checklist.md#section-2
+        prompt: Assess impact on current epics, stories, and sprint work
+      elicit: true
 
-      - id: ANALYSIS-3
-        title: Artifact Conflict Resolution
-        description: Work through Section 3 of change-checklist - Artifact Conflicts
-        action:
-           type: analysis
-           target: checklists/change-checklist.md#section-3
-           prompt: Identify and resolve conflicts in project artifacts
-        elicit: true
+    - id: ANALYSIS-3
+      title: Artifact Conflict Resolution
+      description: Work through Section 3 of change-checklist - Artifact Conflicts
+      action:
+        type: analysis
+        target: checklists/change-checklist.md#section-3
+        prompt: Identify and resolve conflicts in project artifacts
+      elicit: true
 
-      - id: ANALYSIS-4
-        title: Path Evaluation & Recommendation
-        description: Work through Section 4 of change-checklist - Path Forward
-        action:
-           type: decision
-           prompt: |
-              Based on analysis, determine recommended path:
-              1. Adjust scope within current sprint
-              2. Rollback specific elements
-              3. Re-scope features
-              4. Defer to next sprint
-              5. Fundamental replan needed (handoff to PM/Architect)
-        elicit: true
+    - id: ANALYSIS-4
+      title: Path Evaluation & Recommendation
+      description: Work through Section 4 of change-checklist - Path Forward
+      action:
+        type: decision
+        prompt: |
+          Based on analysis, determine recommended path:
+          1. Adjust scope within current sprint
+          2. Rollback specific elements
+          3. Re-scope features
+          4. Defer to next sprint
+          5. Fundamental replan needed (handoff to PM/Architect)
+      elicit: true
 
-      - id: DRAFT-1
-        title: Draft Proposed Changes
-        description: Create specific, actionable proposed updates to affected artifacts
-        action:
-           type: analysis
-           content: |
-              Based on checklist analysis and chosen path:
-              - Identify specific artifacts requiring updates
-              - Draft explicit changes for each artifact
-              - Include:
-                * User story revisions with before/after text
-                * Acceptance criteria modifications
-                * PRD section updates
-                * Architecture diagram changes
-                * Technology/configuration updates
-        condition:
-           if: "path != 'fundamental_replan'"
-           then: "DRAFT-2"
-           else: "HANDOFF-1"
-        elicit: true
+    - id: DRAFT-1
+      title: Draft Proposed Changes
+      description: Create specific, actionable proposed updates to affected artifacts
+      action:
+        type: analysis
+        content: |
+          Based on checklist analysis and chosen path:
+          - Identify specific artifacts requiring updates
+          - Draft explicit changes for each artifact
+          - Include:
+            * User story revisions with before/after text
+            * Acceptance criteria modifications
+            * PRD section updates
+            * Architecture diagram changes
+            * Technology/configuration updates
+      condition:
+        if: "path != 'fundamental_replan'"
+        then: "DRAFT-2"
+        else: "HANDOFF-1"
+      elicit: true
 
-      - id: DRAFT-2
-        title: Review and Refine Proposed Changes
-        description: Iterate on proposed changes based on interaction mode
-        action:
-           type: elicit
-           prompt: Review proposed changes and refine as needed
-           validation:
-              type: string
-              required: true
-        condition:
-           if: "interaction_mode == 'incremental'"
-        elicit: true
+    - id: DRAFT-2
+      title: Review and Refine Proposed Changes
+      description: Iterate on proposed changes based on interaction mode
+      action:
+        type: elicit
+        prompt: Review proposed changes and refine as needed
+        validation:
+          type: string
+          required: true
+      condition:
+        if: "interaction_mode == 'incremental'"
+      elicit: true
 
-      - id: REVIEW-1
-        title: Present Sprint Change Proposal for Review
-        description: Present complete proposal to user for feedback
-        action:
-           type: elicit
-           prompt: |
-              Sprint Change Proposal complete. Please review:
+    - id: REVIEW-1
+      title: Present Sprint Change Proposal for Review
+      description: Present complete proposal to user for feedback
+      action:
+        type: elicit
+        prompt: |
+          Sprint Change Proposal complete. Please review:
 
-              {proposal_summary}
+          {proposal_summary}
 
-              Would you like to:
-              1. Approve as-is
-              2. Request specific adjustments
-              3. Reject and restart analysis
-        elicit: true
+          Would you like to:
+          1. Approve as-is
+          2. Request specific adjustments
+          3. Reject and restart analysis
+      elicit: true
 
-      - id: HANDOFF-1
-        title: Handoff for Fundamental Replan
-        description: Provide handoff guidance when fundamental replanning is needed
-        action:
-           type: elicit
-           prompt: |
-              Change analysis indicates fundamental replanning is required.
+    - id: HANDOFF-1
+      title: Handoff for Fundamental Replan
+      description: Provide handoff guidance when fundamental replanning is needed
+      action:
+        type: elicit
+        prompt: |
+          Change analysis indicates fundamental replanning is required.
 
-              This change exceeds the scope of sprint-level adjustments and requires:
-              - Architectural review
-              - Product management reassessment
-              - Timeline impact analysis
+          This change exceeds the scope of sprint-level adjustments and requires:
+          - Architectural review
+          - Product management reassessment
+          - Timeline impact analysis
 
-              Recommended next steps:
-              1. Schedule architecture review session
-              2. Engage product stakeholders for scope discussion
-              3. Conduct impact assessment on current sprint commitments
+          Recommended next steps:
+          1. Schedule architecture review session
+          2. Engage product stakeholders for scope discussion
+          3. Conduct impact assessment on current sprint commitments
 
-              Please coordinate with PM/Architect for next steps.
-        elicit: true
+          Please coordinate with PM/Architect for next steps.
+      elicit: true
 
-      - id: FINALIZE-1
-        title: Finalize and Determine Next Steps
-        description: Obtain approval and provide guidance on next steps
-        action:
-           type: decision
-           prompt: Determine if changes can be implemented directly or require fundamental replan
-        on_failure: halt
+    - id: FINALIZE-1
+      title: Finalize and Determine Next Steps
+      description: Obtain approval and provide guidance on next steps
+      action:
+        type: decision
+        prompt: Determine if changes can be implemented directly or require fundamental replan
+      on_failure: halt
 
 blocking_conditions:
-   - condition: Missing critical project artifacts
-     message: Cannot proceed without access to PRD, Epics, and Architecture documents
-     severity: critical
-   - condition: Change requires capabilities beyond current sprint
-     message: Change scope exceeds current sprint capacity - requires replanning
-     severity: error
+  - condition: Missing critical project artifacts
+    message: Cannot proceed without access to PRD, Epics, and Architecture documents
+    severity: critical
+  - condition: Change requires capabilities beyond current sprint
+    message: Change scope exceeds current sprint capacity - requires replanning
+    severity: error
 
 completion:
-   checklist: change-checklist
-   criteria:
-      - All sections of change-checklist addressed
-      - User approval obtained
-      - Next steps clearly defined
+  checklist: change-checklist
+  criteria:
+    - All sections of change-checklist addressed
+    - User approval obtained
+    - Next steps clearly defined
 
 
 
@@ -1256,209 +1308,166 @@ After presenting the report, ask if the user wants:
 $schema: ../../.internal/task.schema.json
 id: create-epic
 title: Create Epic Task
-version: 1.0.0
-purpose: Create a single epic for an initiative listed in a PRD
+version: 2.0.0
+purpose: Create a single epic for an initiative listed in the PRD, aligned with architecture constraints and ready for downstream story creation
 category: planning
 agent: pdm
 
-inputs:
-   required:
-      - name: epic_number
-        type: number
-        examples: [1, 3, 4]
-      - name: enhancement_name
-        type: string
-        examples:
-           [
-              "Add Export Feature",
-              "Update Dashboard Analytics",
-              "Enhance Search Functionality",
-           ]
+derived:
+  - name: epic_number
+    type: number
+    source: parameters
+    description: "Epic number requested via ${epic_number}."
+    required: true
+  - name: enhancement_name
+    type: string
+    source: parameters
+    description: "Enhancement name provided via ${enhancement_name}."
+    required: true
+  - name: epic_file_target
+    type: path
+    source: context
+    pattern: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
+    description: "Path for the epic YAML to create/update."
+    required: true
 
 outputs:
-   artifacts:
-      - name: epic_document
-        type: file
-        path: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
-        format: yaml
+  artifacts:
+    - name: Epic Document
+      type: file
+      path: "!{epic_file_target}"
+      format: yaml
 
-process:
-   mode: sequential
-   steps:
-      - id: ANALYZE-PROJECT
-        title: Project Analysis
-        description: Gather essential information about the existing project
-        action:
-           type: analysis
-           prompt: |
-              Before creating the epic, analyze:
-              - PRD epic list and goals
-              - Initiative scope and requirements
-              - Architecture constraints and dependencies
-              - Success criteria and acceptance thresholds
+prerequisites:
+  - field: "@{docs.subdirs.epics}"
+    value: "writable"
+    operator: "="
+    on_violate: "halt_and_report"
 
-      - id: VALIDATE-SCOPE
-        title: Validate Enhancement Scope
-        description: Ensure the enhancement is appropriate for this task
-        action:
-           type: validation
-           validation:
-              type: string
-              required: true
-           prompt: |
-              Validate that:
-              - Epic is listed in the PRD epic list
-              - Epic scope aligns with PRD goals
-              - Epic can be completed in reasonable number of stories
-              - Dependencies and constraints are understood
+steps:
+  - id: ANALYZE-PROJECT
+    title: Project Analysis
+    description: Gather essential information about the existing project before drafting the epic
+    action:
+      type: analysis
+      template: |
+        Analyze:
+        - PRD epic list and goals (from @{docs.files.prd})
+        - Initiative scope and requirements
+        - Architecture constraints/dependencies (from @{docs.dir}/?(*-)architecture.md)
+        - Success criteria and acceptance thresholds
 
-              If any of these are false, recommend reviewing the PRD first
-        on_failure: halt
+  - id: VALIDATE-SCOPE
+    title: Validate Enhancement Scope
+    description: Ensure the enhancement is appropriate for a single epic
+    action:
+      type: validation
+      template: |
+        Confirm:
+        - Enhancement appears in the PRD epic list
+        - Scope aligns with PRD goals
+        - Work can be completed within a reasonable number of stories
+        - Dependencies and constraints are understood
 
-      - id: CREATE-EPIC-HEADER
-        title: Create Epic File with Schema Structure
-        description: Initialize epic YAML file following the epic schema structure
-        action:
-           type: file_operation
-           operation: create
-           target: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
-           content: |
-              status: Draft
-              epic-overview:
-                goal: "{1-2 sentences describing what the epic will accomplish and why it adds value}"
-                description: ""
-                definition_of_done: []
-              scope-boundaries:
-                in-scope: []
-                out-of-scope: []
-              requirements-mapping:
-                functional-requirements: []
-                non-functional-requirements: []
-              story-breakdown:
-                story-list: []
-                story-sequencing-rationale: ""
-              dependencies:
-                dependencies: []
-                story-dependencies: []
+        Halt and request PRD review if any check fails.
+    on_failure: halt
 
-      - id: ADD-EPIC-DESCRIPTION
-        title: Add Epic Description
-        description: Update epic-overview section with detailed description
-        action:
-           type: file_operation
-           operation: update
-           target: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
-           content: |
-              epic-overview:
-                description: |
-                  Initiative: {enhancement_name}
-                  
-                  PRD Context:
-                  {prd_context}
-                  
-                  Implementation approach: {clear description}
-                  Success criteria: {measurable outcomes}
+  - id: CREATE-EPIC-FILE
+    title: Create Epic File with Schema Structure
+    description: Initialize the epic YAML using the canonical epic schema
+    action:
+      type: file_operation
+      operation: create
+      target: "!{epic_file_target}"
+      schema: "core/engineering/schemas/epic.json"
 
-      - id: DEFINE-STORIES
-        title: Define Stories
-        description: List 1-3 focused stories that complete the epic
-        action:
-           type: elicit
-           prompt: |
-              Define focused stories with priorities (1-5, 1=highest):
-              - Follow the story breakdown from the PRD
-              - Sequence by dependencies first
-              - Then by priority to deliver highest value
-              - Each story should be completable in one sprint
-           validation:
-              type: array
-              required: true
-        elicit: true
+  - id: ADD-EPIC-DESCRIPTION
+    title: Add Epic Description
+    description: Populate the epic-overview section with PRD/architecture context
+    action:
+      type: file_operation
+      operation: update
+      target: "!{epic_file_target}"
 
-      - id: ADD-STORIES
-        title: Add Stories to Epic
-        description: Update story-breakdown section with story list and sequencing
-        action:
-           type: file_operation
-           operation: update
-           target: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
-           content: |
-              story-breakdown:
-                story-list:
-                  - "1: **{Story 1 title}** - {Story 1 brief description} [Priority: {1-5}]"
-                  - "2: **{Story 2 title}** - {Story 2 brief description} [Priority: {1-5}]"
-                  - "3: **{Story 3 title}** - {Story 3 brief description} [Priority: {1-5}]"
-                story-sequencing-rationale: |
-                  Stories are sequenced by dependencies first, then by priority to deliver highest value.
-                  Each story builds upon previous stories and is sized for AI agent execution (2-4 hours).
+  - id: DEFINE-STORIES
+    title: Define Stories
+    description: Capture 1–3 focused stories that complete the epic
+    action:
+      type: elicit
+      prompt_user: |
+        Define focused stories with priorities (1-5, 1 = highest):
+        - Follow the PRD story breakdown
+        - Sequence by dependencies first, then priority
+        - Ensure each story can complete within one sprint
+      validation:
+        type: array
+        required: true
+    elicit: true
 
-      - id: ADD-SCOPE-BOUNDARIES
-        title: Add Scope and Boundaries
-        description: Update scope-boundaries section with in-scope and out-of-scope items
-        action:
-           type: file_operation
-           operation: update
-           target: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
-           content: |
-              scope-boundaries:
-                in-scope:
-                  - "Initiative: {enhancement_name}"
-                  - "Requirements from PRD epic definition"
-                  - "Architecture constraints and dependencies"
-                  - "Stories defined in epic breakdown"
-                out-of-scope:
-                  - "Other PRD epics and initiatives"
-                  - "Requirements not in current PRD"
-                  - "Cross-cutting concerns handled elsewhere"
+  - id: ADD-STORIES
+    title: Add Stories to Epic
+    description: Update story-breakdown with the elicited stories and sequencing rationale
+    action:
+      type: file_operation
+      operation: update
+      target: "!{epic_file_target}"
+      template: |
+        story-breakdown:
+          story-list:
+            {{story_list_entries}}
+          story-sequencing-rationale: |
+            {{story_sequencing_rationale}}
 
-      - id: ADD-DOD
-        title: Add Definition of Done
-        description: Update epic-overview definition_of_done per schema
-        action:
-           type: file_operation
-           operation: update
-           target: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
-           content: |
-              epic-overview:
-                definition_of_done:
-                  - "1: All stories completed with acceptance criteria met"
-                  - "2: Epic goals from PRD achieved"
-                  - "3: Integration points working correctly"
-                  - "4: Documentation updated appropriately"
-                  - "5: Quality gates passed"
+  - id: ADD-SCOPE-BOUNDARIES
+    title: Add Scope and Boundaries
+    description: Document in-scope/out-of-scope elements for the epic
+    action:
+      type: file_operation
+      operation: update
+      target: "!{epic_file_target}"
+      template: |
+        scope-boundaries:
+          in-scope:
+            {{in_scope_items}}
+          out-of-scope:
+            {{out_scope_items}}
 
-      - id: VALIDATE-EPIC
-        title: Validate Epic Completeness
-        description: Ensure all required elements are present
-        action:
-           type: validation
-           prompt: |
-              Validate that the epic includes:
-              - Clear goal and description aligned with PRD
-              - Stories that support PRD epic objectives
-              - Scope boundaries matching PRD definition
-              - Definition of done
-              - All stories follow PRD requirements
+  - id: ADD-DOD
+    title: Add Definition of Done
+    description: Capture the epic's Definition of Done within epic-overview
+    action:
+      type: file_operation
+      operation: update
+      target: "!{epic_file_target}"
+      template: |
+        epic-overview:
+          definition_of_done:
+            - "1: All stories completed with acceptance criteria met"
+            - "2: Epic goals from PRD achieved"
+            - "3: Integration points working correctly"
+            - "4: Documentation updated appropriately"
+            - "5: Quality gates passed"
 
-blocking_conditions:
-   - condition: "Enhancement requires more than 3 stories"
-     message: Scope too large for this task - use full PRD process
-     severity: error
-   - condition: "Significant architectural changes required"
-     message: Architectural planning needed - use full process
-     severity: error
-   - condition: "High risk to existing system"
-     message: Risk assessment needed - use full process
-     severity: error
+  - id: VALIDATE-EPIC
+    title: Validate Epic Completeness
+    description: Ensure the epic includes every required section
+    action:
+      type: validation
+      template: |
+        Confirm the epic includes:
+        - Clear goal/description aligned with PRD
+        - Stories supporting PRD objectives
+        - Scope boundaries matching PRD definition
+        - Definition of Done covering success criteria
+        - Dependencies understood and documented
 
 completion:
-   criteria:
-      - Epic scope aligns with PRD epic definition
-      - Stories support PRD goals and requirements
-      - Dependencies and constraints are understood
-      - Stories are logically sequenced for implementation
-      - Acceptance criteria are clearly defined
-      - Epic delivers value per PRD objectives
+  criteria:
+    - Epic scope aligns with PRD epic definition
+    - Stories support PRD goals and requirements
+    - Dependencies and constraints are understood
+    - Stories are sequenced logically for implementation
+    - Acceptance criteria are clearly defined
 
 
 
@@ -1467,348 +1476,310 @@ completion:
 $schema: ../../.internal/task.schema.json
 id: create-story
 title: Create Next Story Task
-version: 1.0.0
+version: 2.0.0
 purpose: Identify the next logical story based on project progress and epic definitions, then prepare a comprehensive, self-contained story file ready for implementation
 category: planning
 agent: pdm
 
-inputs:
-   required:
-      - name: epic
-        type: number
-        examples: [1, 2, 3]
-   optional:
-      - name: story
-        type: number
-        examples: [1, 2, 3]
+derived:
+  - name: epic_resolved
+    type: number
+    source: parameters
+    description: "Epic number provided via ${epic}."
+    required: true
+  - name: story_resolved
+    type: number
+    source: context
+    description: "Story number to create. Uses ${story} when provided; otherwise determined from existing files."
+    required: true
+  - name: epic_file_path
+    type: path
+    source: context
+    pattern: "@{docs.subdirs.epics}/{epic_resolved}-*.yaml"
+    description: "Epic YAML file that defines the requirements for the story."
+    required: true
+  - name: story_file_target
+    type: path
+    source: context
+    description: "Resolved output path for the new story file ({epic_resolved}.{story_resolved}-*.yaml)."
+    required: true
+  - name: previous_story_file
+    type: path
+    source: context
+    description: "Highest numbered existing story file under @{docs.subdirs.stories} for the epic."
+    required: false
+  - name: previous_story_status
+    type: string
+    source: context
+    description: "Status of the previous story if it exists."
+    required: false
 
 outputs:
-   artifacts:
-      - name: Story File
-        type: file
-        path: "@{docs.subdirs.stories}/{epic}.{story}-*.yaml"
-        format: yaml
-   updates:
-      - target: "@{docs.subdirs.stories}/*.yaml"
-        sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
-        restrictions: Only create new story, do not modify existing stories
+  artifacts:
+    - name: Story File
+      type: file
+      path: "!{story_file_target}"
+      format: yaml
+  updates:
+    - target: "!{story_file_target}"
+      sections:
+        - "Status"
+        - "Dev Notes"
+        - "Tasks / Subtasks"
+      restrictions: Only create new story files; do not modify existing stories
 
-process:
-   mode: sequential
-   steps:
-      - id: CONFIG-1
-        title: Load Core Configuration
-        description: Load config.json and extract key configurations
-        action:
-           type: file_operation
-           operation: read
-           target: "@{baseDir}/config.json"
-           validation:
-              type: string
-              required: true
-        on_failure: halt
+prerequisites:
+  - field: "@{docs.subdirs.epics}"
+    value: "readable"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "@{docs.subdirs.stories}"
+    value: "writable"
+    operator: "="
+    on_violate: "halt_and_report"
 
-      - id: CONFIG-2
-        title: Validate Configuration
-        description: Ensure required configuration exists
-        action:
-           type: validation
-           content: |
-              Extract and validate:
-              - docs.subdirs.stories
-              - prd.* settings
-              - architecture.* settings
-              - workflow.* settings
+steps:
+  - id: CONFIG-1
+    title: Load Core Configuration
+    description: Load config.json and extract key configurations required for story creation
+    action:
+      type: file_operation
+      operation: read
+      target: "@{baseDir}/config.json"
+      validation:
+        type: string
+        required: true
+    on_failure: halt
 
-              If config.json not found:
-              HALT with message: "config.json not found. This file is required for story creation."
-        condition:
-           if: "config_missing"
-           then: "HALT"
+  - id: VALIDATE-CONFIG
+    title: Validate Required Configuration Entries
+    description: Ensure docs, PRD, architecture, and workflow settings exist before proceeding
+    action:
+      type: validation
+      template: |
+        Extract and validate:
+        - docs.subdirs.stories
+        - docs.subdirs.epics
+        - prd.* settings
+        - architecture.* settings
+        - workflow.* settings
 
-      - id: IDENTIFY-1
-        title: Locate Epic Files and Review Existing Stories
-        description: Find epic files based on configured PRD/epic locations
-        action:
-           type: analysis
-           content: |
-              Based on configured PRD/epic locations:
-              - Locate epic files (from configured epics path or monolithic PRD sections)
-              - If docs.subdirs.stories has story files, load highest {epic}.{story}-*.yaml
-              - Determine next sequential story
+        If any required configuration is missing, HALT with guidance to restore config.json from bmad-core or rerun the installer.
 
-      - id: IDENTIFY-2
-        title: Verify Story Status
-        description: Check if previous story is complete
-        action:
-           type: validation
-           prompt: |
-              If highest story exists and status != 'Done':
-              ALERT: Found incomplete story!
-              File: {lastEpicNum}.{lastStoryNum}-*.yaml
-              Status: {current_status}
+  - id: IDENTIFY-EPIC
+    title: Locate Epic Files and Determine Next Story
+    description: Locate the epic file and identify the next sequential story number (or use the supplied ${story})
+    action:
+      type: analysis
+      template: |
+        Based on configured PRD/epic locations:
+        - Locate epic files (either dedicated epics path or sections in PRD).
+        - If @{docs.subdirs.stories} already has files for epic !{epic_resolved}, load the highest `{epic}.{story}-*.yaml` to determine !{previous_story_file} and compute !{story_resolved}.
+        - If ${story} is supplied, set !{story_resolved} accordingly.
+        - Resolve !{story_file_target} for downstream steps.
 
-              You should fix this story first, but would you like to accept risk & override to create the next story in draft?
-        condition:
-           if: "last_story_status != 'Done'"
-        elicit: true
+  - id: VERIFY-PREVIOUS
+    title: Verify Previous Story Status
+    description: If a previous story exists and is not Done, warn the user and allow override
+    action:
+      type: validation
+      template: |
+        If !{previous_story_file} exists and !{previous_story_status} != "Done":
+        ALERT: Found incomplete story!
+        File: !{previous_story_file}
+        Status: !{previous_story_status}
 
-      - id: IDENTIFY-3
-        title: Handle Epic Completion
-        description: Check if current epic is complete
-        action:
-           type: elicit
-           prompt: |
-              Epic {epic} Complete: All stories in Epic {epic} have been completed.
+        Ask the user whether to accept risk and override to create the next story in draft.
+    elicit: true
 
-              Would you like to:
-              1) Begin Epic {epic + 1} with story 1
-              2) Select a specific story to work on
-              3) Cancel story creation
+  - id: HANDLE-EPIC-COMPLETE
+    title: Handle Epic Completion Scenario
+    description: Confirm next action when the current epic is complete
+    action:
+      type: elicit
+      prompt_user: |
+        Epic {{epic_number}} complete: all stories in epic {{epic_number}} are finished.
 
-              CRITICAL: NEVER automatically skip to another epic. User MUST explicitly instruct which story to create.
-        condition:
-           if: "epic_complete == true"
-        elicit: true
+        Select an option:
+        1) Begin epic {{next_epic_number}} with story 1
+        2) Select a specific story to work on
+        3) Cancel story creation
 
-      - id: ANNOUNCE-1
-        title: Announce Identified Story
-        description: Inform user of the next story to be created
-        action:
-           type: elicit
-           prompt: |
-              Identified next story for preparation: {epic}.{story} - {Story Title}
+        CRITICAL: Never switch epics without explicit user instruction.
+      options: ["1", "2", "3"]
+      validation:
+        type: string
+        pattern: "^[1-3]$"
+        required: true
+    elicit: true
 
-      - id: GATHER-1
-        title: Gather Story Requirements
-        description: Extract story requirements from epic file
-        action:
-           type: file_operation
-           operation: read
-           target: "@{docs.subdirs.epics}/{epic}-*.yaml"
-           content: |
-              Extract:
-              - Story title and description
-              - Acceptance criteria
-              - Priority
-              - Dependencies
+  - id: ANNOUNCE-STORY
+    title: Announce Identified Story
+    description: Inform the user of the story that will be drafted
+    action:
+      type: elicit
+      prompt_user: |
+        Identified next story for preparation: {{epic_resolved}}.{{story_resolved}} - {{story_title}}
+    elicit: true
 
-      - id: GATHER-2
-        title: Review Previous Story Context
-        description: If previous story exists, extract lessons learned
-        action:
-           type: analysis
-           target: "@{docs.subdirs.stories}/{previousEpicNum}.{previousStoryNum}-*.yaml"
-           content: |
-              Review Dev Agent Record sections for:
-              - Completion Notes and Debug Log References
-              - Implementation deviations and technical decisions
-              - Challenges encountered and lessons learned
+  - id: GATHER-EPIC
+    title: Gather Story Requirements from Epic
+    description: Read the epic YAML to extract requirements for the story
+    action:
+      type: file_operation
+      operation: read
+      target: "!{epic_file_path}"
+      template: |
+        Extract:
+        - Story title and description
+        - Acceptance criteria
+        - Priority
+        - Dependencies
 
-              Extract relevant insights for current story
-        condition:
-           if: "previous_story_exists == true"
+  - id: REVIEW-PREVIOUS
+    title: Review Previous Story Context
+    description: If a previous story exists, extract lessons learned and insights
+    action:
+      type: analysis
+      target: "!{previous_story_file}"
+      template: |
+        Review Dev Agent Record sections for:
+        - Completion notes and debug log references
+        - Implementation deviations and technical decisions
+        - Challenges encountered and lessons learned
 
-      - id: ARCH-1
-        title: Determine Architecture Reading Strategy
-        description: Select architecture documents based on configuration
-        action:
-           type: decision
-           content: |
-              Read @{docs.dir}/?(*-)architecture.md
-              Follow structured reading order
+        Capture any insights relevant to the new story.
 
-      - id: ARCH-2
-        title: Read Architecture Documents
-        description: Read relevant architecture documents or sections based on story type
-        action:
-           type: file_operation
-           operation: read
-           content: |
-              For ALL Stories:
-              - tech-stack
-              - unified-project-structure
-              - coding-standards
-              - testing-strategy
+  - id: ARCH-STRATEGY
+    title: Determine Architecture Reading Strategy
+    description: Select the architecture documents needed for this story
+    action:
+      type: decision
+      template: |
+        Determine which architecture documents to read based on story type:
+        - Always read tech-stack, unified-project-structure, coding-standards, testing-strategy.
+        - Backend/API stories: include data-models, database-schema, @{docs.files.beArchitecture}, rest-api-spec, external-apis.
+        - Frontend/UI stories: include @{docs.files.feArchitecture}, components, core-workflows, UI data-models.
+        - Full-stack: read both backend and frontend sections.
 
-              For Backend/API Stories, additionally:
-              - data-models
-              - database-schema
-              - @{docs.files.beArchitecture} file
-              - rest-api-spec
-              - external-apis
+  - id: ARCH-READ
+    title: Read Architecture Documents
+    description: Load the selected architecture sections for reference
+    action:
+      type: file_operation
+      operation: read
+      target: "@{docs.dir}/?(*-)architecture.md"
+      template: |
+        Follow the reading strategy from ARCH-STRATEGY and load each required section before extracting technical details.
 
-              For Frontend/UI Stories, additionally:
-              - @{docs.files.feArchitecture} file
-              - components
-              - core-workflows
-              - data-models
+  - id: ARCH-EXTRACT
+    title: Extract Story-Specific Technical Details
+    description: Capture only the technical context required to implement the story
+    action:
+      type: analysis
+      template: |
+        Extract ONLY information directly relevant to the story:
+        - Data models, schemas, or structures
+        - API endpoints to implement or consume
+        - Component specifications for UI elements
+        - File paths and naming conventions for new code
+        - Testing requirements and standards
+        - Security or performance considerations
 
-              For Full-Stack Stories:
-              - Read both Backend and Frontend sections
+        Always cite the architecture source (e.g., [Source: architecture/<file>.md#{section}]). Do not invent details.
 
-      - id: ARCH-3
-        title: Extract Story-Specific Technical Details
-        description: Extract ONLY relevant information for current story
-        action:
-           type: analysis
-           content: |
-              Extract ONLY information directly relevant to implementing the current story.
-              Do NOT invent new libraries, patterns, or standards not in source documents.
+  - id: STRUCTURE-CHECK
+    title: Verify Project Structure Alignment
+    description: Cross-reference requirements with the project structure guide
+    action:
+      type: validation
+      target: "@{docs.dir}/?(*-)architecture.md#unified-project-structure"
+      template: |
+        - Ensure file paths, component locations, and module names align with the unified structure.
+        - Document any structural conflicts under "Project Structure Notes" in the story.
 
-              Extract:
-              - Specific data models, schemas, or structures the story will use
-              - API endpoints the story must implement or consume
-              - Component specifications for UI elements in the story
-              - File paths and naming conventions for new code
-              - Testing requirements specific to the story's features
-              - Security or performance considerations affecting the story
+  - id: CREATE-STORY
+    title: Create Story File
+    description: Populate story schema with the extracted story data
+    action:
+      type: file_operation
+      operation: create
+      target: "!{story_file_target}"
+      schema: "core/engineering/schemas/story.json"
 
-              ALWAYS cite source. Example: [Source: architecture/<file_name>.md#{section}]
+  - id: RISK-ASSESS
+    title: Assess Story Risk
+    description: Evaluate risks specific to the story implementation
+    action:
+      type: analysis
+      template: |
+        Assess:
+        - Impact on existing functionality
+        - Technical complexity and unknowns
+        - Integration challenges
+        - Data migration or schema changes
+        - Performance implications
+        - Security considerations
 
-      - id: STRUCTURE-1
-        title: Verify Project Structure Alignment
-        description: Cross-reference with Project Structure Guide
-        action:
-           type: validation
-           target: "@{docs.dir}/?(*-)architecture.md#unified-project-structure"
-           content: |
-              - Cross-reference story requirements with Project Structure Guide
-              - Ensure file paths, component locations, module names align
-              - Document any structural conflicts in "Project Structure Notes"
+        Document the primary risk, mitigation strategies, and rollback plan.
 
-      - id: CREATE-1
-        title: Create Story File
-        description: Populate story template with full context
-        action:
-           type: file_operation
-           operation: create
-           target: "@{docs.subdirs.stories}/{epic}.{story}-*.yaml"
-           content: |
-              story:
-                id: "{epic}.{story}"
-                title: "{Title}"
-                status: Draft
-                priority: "{priority}"
-                statement: "{story_statement}"
-              acceptance_criteria: "{acceptance_criteria}"
-              dev_notes:
-                policy: "This section MUST contain ONLY information extracted from architecture documents. NEVER invent or assume technical details."
-                previous_story_insights: "{previous_insights}"
-                data_models:
-                  value: "{data_models}"
-                  source: "@{docs.dir}/<scope>-architecture.md#{section}"
-                api_specifications:
-                  value: "{api_specs}"
-                  source: "@{docs.dir}/<scope>-architecture.md#{section}"
-                component_specifications:
-                  value: "{component_specs}"
-                  source: "@{docs.dir}/<scope>-architecture.md#{section}"
-                file_locations:
-                  value: "{file_locations}"
-                  source: "@{docs.dir}/<scope>-architecture.md#{section}"
-                testing_requirements:
-                  value: "{testing_requirements}"
-                  source: "@{docs.dir}/<scope>-architecture.md#{section}"
-                technical_constraints:
-                  value: "{technical_constraints}"
-                  source: "@{docs.dir}/<scope>-architecture.md#{section}"
-                notes_missing_guidance: "If information for a category is not found in architecture docs, explicitly state: 'No specific guidance found in architecture docs'"
-              tasks_subtasks: "{generated_tasks}"
-              risk_mitigation:
-                primary_risk: "{primary_risk}"
-                mitigation_strategies: "{mitigation_strategies}"
-                rollback_plan: "{rollback_plan}"
-              project_structure_notes: "{structure_notes}"
+  - id: TASKS-GENERATE
+    title: Generate Tasks and Subtasks
+    description: Produce detailed technical tasks aligned with the story requirements
+    action:
+      type: analysis
+      template: |
+        Generate a sequential task list based ONLY on:
+        - Epic requirements
+        - Story acceptance criteria
+        - Reviewed architecture information
 
-      - id: RISK-1
-        title: Assess Story Risk
-        description: Evaluate risks specific to this story implementation
-        action:
-           type: analysis
-           content: |
-              Assess story-specific risks:
-              - Impact on existing functionality
-              - Technical complexity and unknowns
-              - Integration challenges
-              - Data migration or schema changes
-              - Performance implications
-              - Security considerations
+        Each task must:
+        - Reference the relevant architecture documentation
+        - Include explicit unit-test subtasks
+        - Assign Difficulty (1-10) reflecting complexity and uncertainty
+        - Link to acceptance criteria where applicable (e.g., Task 1 (AC: 1, 3))
 
-              Define:
-              - Primary risk for this story
-              - Concrete mitigation strategies
-              - Rollback plan if implementation fails
+  - id: FINALIZE-STORY
+    title: Review and Complete Story Draft
+    description: Perform a final review and ensure the story is marked Draft
+    action:
+      type: validation
+      template: |
+        - Review all sections for completeness and accuracy
+        - Verify every technical detail has a source reference
+        - Ensure tasks align with epic requirements and architecture constraints
+        - Confirm the story status is "Draft" and save the file
 
-      - id: TASKS-1
-        title: Generate Tasks and Subtasks
-        description: Create detailed technical tasks based on requirements
-        action:
-           type: analysis
-           content: |
-              Generate detailed, sequential list of technical tasks based ONLY on:
-              - Epic Requirements
-              - Story AC
-              - Reviewed Architecture Information
+  - id: HANDOFF-SUMMARY
+    title: Provide Summary and Next Steps
+    description: Communicate story creation results to the user
+    action:
+      type: elicit
+      prompt_user: |
+        Story created: !{story_file_target}
+        Status: Draft
 
-              Each task must:
-              - Reference relevant architecture documentation
-              - Include unit testing as explicit subtasks
-              - Assign Difficulty (1-10) reflecting complexity and uncertainty
-              - Link to ACs where applicable (e.g., Task 1 (AC: 1, 3))
+        Key technical components included from architecture docs:
+        {{component_summary}}
 
-      - id: FINALIZE-1
-        title: Review and Complete Story Draft
-        description: Final review and status setting
-        action:
-           type: validation
-           content: |
-              - Review all sections for completeness and accuracy
-              - Verify all source references are included for technical details
-              - Ensure tasks align with both epic requirements and architecture constraints
-              - Set Status to "Draft"
-              - Save the story file
+        Deviations or conflicts noted:
+        {{conflicts}}
 
-      - id: HANDOFF-1
-        title: Provide Summary and Next Steps
-        description: Communicate story creation results to user
-        action:
-           type: elicit
-           prompt: |
-              Story created: @{docs.subdirs.stories}/{epic}.{story}-*.yaml
-              Status: Draft
+        Checklist results:
+        {{checklist_results}}
 
-              Key technical components included from architecture docs:
-              {component_summary}
-
-              Any deviations or conflicts noted:
-              {conflicts}
-
-              Checklist Results:
-              {checklist_results}
-
-              Next steps:
-              For Complex stories, suggest the user carefully review the story draft
-
-blocking_conditions:
-   - condition: config.json not found
-     message: This file is required for story creation. Copy from bmad-core or run BMad installer
-     severity: critical
-   - condition: No epic files found
-     message: Cannot create story without epic definitions
-     severity: critical
-   - condition: Architecture documents missing
-     message: Cannot provide technical context without architecture documentation
-     severity: error
+        Next steps: Review the story draft (especially for complex stories) before handing off to development.
+    elicit: true
 
 completion:
-   checklist: story-draft-checklist
-   criteria:
-      - Story file created with status Draft
-      - All technical context extracted from architecture
-      - Source references included for all technical details
-      - Tasks aligned with requirements and architecture
-      - Checklist executed successfully
+  checklist: story-draft-checklist
+  criteria:
+    - Story file created with status Draft
+    - All technical context extracted from architecture
+    - Source references included for every technical detail
+    - Tasks align with requirements and architecture constraints
+    - Story-draft checklist executed successfully
 
 
 
@@ -2195,224 +2166,208 @@ Be pragmatic - perfect documentation doesn't exist, but it must be enough to pro
 $schema: ../../.internal/task.schema.json
 id: create-adhoc-epic
 title: Create Enhancement Epic from Brownfield Docs
-version: 1.0.0
+version: 2.0.0
 purpose: Create a single epic for the highest-order enhancement using PRD and Architecture docs in @{docs.subdirs.epics} as authoritative references. Output YAML strictly follows the epic schema.
 category: planning
 agent: pdm
 
-inputs:
-   required:
-      - name: epic_description
-        type: string
-   optional:
-      - name: epic_enhancement_number
-        type: number
+derived:
+  - name: epic_enhancement_number_resolved
+    type: number
+    source: context
+    description: "Use optional ${epic_enhancement_number}; otherwise detect the highest adhoc enhancement number and increment it."
+    required: true
+  - name: epic_file_candidate
+    type: path
+    source: context
+    description: "Resolved target file path for the epic being created (adhoc-<number>-<slug>.yaml)."
+    required: true
+  - name: prd_file
+    type: path
+    source: context
+    pattern: "@{docs.files.prd}"
+    required: true
+  - name: architecture_file
+    type: path
+    source: context
+    pattern: "@{docs.files.architecture}"
+    required: true
+  - name: impact_assessment
+    type: string
+    source: context
+    pattern: "^[1-4]$"
+    description: "Response captured from Assess Document Impact step"
 
 outputs:
-   artifacts:
-      - name: Epic File
-        type: file
-        path: "@{docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml"
-        format: yaml
-      - name: Documentation Updates
-        type: file
-        path: "@{docs.dir}/"
-        format: markdown
+  artifacts:
+    - name: Epic File
+      type: file
+      path: "!{epic_file_candidate}"
+      format: yaml
+    - name: Documentation Updates
+      type: file
+      path: "@{docs.dir}/"
+      format: markdown
 
-process:
-   mode: sequential
-   steps:
-      - id: CONFIG-1
-        title: Load Core Configuration
-        description: Load config.json and verify docs paths
-        action:
-           type: file_operation
-           operation: read
-           target: "@{baseDir}/config.json"
-           validation:
-              type: string
-              required: true
-        on_failure: halt
+prerequisites:
+  - field: "@{docs.subdirs.epics}"
+    value: "writable"
+    operator: "="
+    on_violate: "halt_and_report"
 
-      - id: DISCOVER-1
-        title: Detect Highest Enhancement Number
-        description: Determine the highest enhancement number from epics docs
-        action:
-           type: analysis
-           content: |
-              Inspect @{docs.subdirs.epics} for files:
-              - adhoc-*.yaml
-              Extract all enhancement numbers and compute the maximum value.
-              If input epic_enhancement_number is provided, use it instead.
+steps:
+  - id: CONFIG-1
+    title: Load Core Configuration
+    description: Load config.json and verify docs paths
+    action:
+      type: file_operation
+      operation: read
+      target: "@{baseDir}/config.json"
+      validation:
+        type: string
+        required: true
+    on_failure: halt
 
-      - id: VALIDATE-1
-        title: Validate Epic Non-Existence or Confirm Overwrite
-        description: Ensure we do not overwrite an existing epic unintentionally
-        action:
-           type: validation
-           prompt: |
-              Check if epic file exists: @{docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml
-              If it exists, choose:
-              1) Skip (do not create)
-              2) Overwrite (replace content)
-              3) Create new variant with different slug
-        elicit: true
+  - id: DISCOVER-1
+    title: Detect Highest Enhancement Number
+    description: Determine the highest enhancement number from existing adhoc epic files
+    action:
+      type: analysis
+      template: |
+        Inspect @{docs.subdirs.epics} for files named adhoc-*.yaml.
+        If ${epic_enhancement_number} is supplied, set !{epic_enhancement_number_resolved} to that value.
+        Otherwise compute the maximum enhancement number from the existing files and increment it to populate !{epic_enhancement_number_resolved}.
+        Record the resolved number and the associated slug candidates so downstream steps can reference !{epic_file_candidate}.
 
-      - id: READ-1
-        title: Read PRD for Enhancement
-        description: Read PRD for the detected enhancement
-        action:
-           type: file_operation
-           operation: read
-           target: "@{docs.files.prd}"
-           validation:
-              type: string
-              required: true
+  - id: VALIDATE-1
+    title: Validate Epic Non-Existence or Confirm Overwrite
+    description: Ensure we do not overwrite an existing epic unintentionally
+    action:
+      type: elicit
+      prompt_user: |
+        Check if epic file exists: !{epic_file_candidate}
+        If it exists, choose:
+        1) Skip (do not create)
+        2) Overwrite (replace content)
+        3) Create new variant with different slug
+      options: ["1", "2", "3"]
+      validation:
+        type: string
+        pattern: "^[1-3]$"
+        required: true
+    elicit: true
 
-      - id: READ-2
-        title: Read Architecture for Enhancement
-        description: Read Architecture doc for the detected enhancement
-        action:
-           type: file_operation
-           operation: read
-           target: "@{docs.files.architecture}"
-           validation:
-              type: string
-              required: true
+  - id: READ-1
+    title: Read PRD for Enhancement
+    description: Read PRD for the detected enhancement
+    action:
+      type: file_operation
+      operation: read
+      target: "!{prd_file}"
+      validation:
+        type: string
+        required: true
 
-      - id: EXTRACT-1
-        title: Extract Epic Inputs from PRD/Architecture
-        description: Extract goal, description, DOD, scope boundaries, FR/NFR mappings, and initial story list
-        action:
-           type: analysis
-           content: |
-              From PRD:
-              - Identify epic goal and high-level description
-              - Map Functional Requirements (FRs) and Non-Functional Requirements (NFRs) applicable to the enhancement
-              - Propose initial 1–3 story list with brief goals and priorities (1–5)
+  - id: READ-2
+    title: Read Architecture for Enhancement
+    description: Read Architecture doc for the detected enhancement
+    action:
+      type: file_operation
+      operation: read
+      target: "!{architecture_file}"
+      validation:
+        type: string
+        required: true
 
-              From Architecture:
-              - Note key integration points and compatibility constraints
-              - Gather boundaries to fill in-scope/out-of-scope
+  - id: EXTRACT-1
+    title: Extract Epic Inputs from PRD/Architecture
+    description: Extract goal, description, DOD, scope boundaries, FR/NFR mappings, and initial story list
+    action:
+      type: analysis
+      template: |
+        From PRD (!{prd_file}):
+        - Identify epic goal and high-level description.
+        - Map Functional Requirements (FRs) and Non-Functional Requirements (NFRs) applicable to the enhancement.
+        - Propose an initial 1–3 story list with brief goals and priorities (1–5).
 
-      - id: CREATE-1
-        title: Create Epic YAML (schema-aligned)
-        description: Initialize the epic file following core/engineering/schemas/epic.json sections
-        action:
-           type: file_operation
-           operation: create
-           target: "@{docs.subdirs.epics}/adhoc-{epic_enhancement_number}-{enhancement_name}.yaml"
-           content: |
-              status: Draft
-              epic-overview:
-                goal: "{epic_goal}"
-                description: |
-                  {epic_description}
-                definition_of_done:
-                  - "1: End-to-end functionality delivered per PRD"
-                  - "2: Existing functionality compatibility maintained"
-                  - "3: Performance/security expectations met"
-                  - "4: Documentation updated appropriately"
-              scope-boundaries:
-                in-scope:
-                  - "{in_scope_item_1}"
-                  - "{in_scope_item_2}"
-                out-of-scope:
-                  - "{out_of_scope_item_1}"
-                  - "{out_of_scope_item_2}"
-              requirements-mapping:
-                functional-requirements:
-                  - "**{FR id}**: {FR summary} - {implementation_scope}"
-                non-functional-requirements:
-                  - "**{NFR id}**: {NFR summary} - {acceptance_threshold}"
-              story-breakdown:
-                story-list:
-                  - "1: **{Story 1 title}** - {Story 1 goal} [Priority: {1-5}]"
-                  - "2: **{Story 2 title}** - {Story 2 goal} [Priority: {1-5}]"
-                story-sequencing-rationale: "{why_this_order}"
-              dependencies:
-                dependencies:
-                  - "**{dep_type}**: {dep_description} - {dep_impact}"
-                story-dependencies:
-                  - "Story {story_id} depends on {prereq_story_id}: {reason}"
+        From Architecture (!{architecture_file}):
+        - Capture integration points and compatibility constraints.
+        - Gather boundaries for in-scope vs out-of-scope lists.
 
-      - id: VALIDATE-2
-        title: Validate Epic Completeness
-        description: Ensure required sections are present and consistent
-        action:
-           type: validation
-           content: |
-              Confirm presence and basic completeness of:
-              - epic-overview (goal, description, definition_of_done)
-              - scope-boundaries (in-scope, out-of-scope)
-              - requirements-mapping (FRs and NFRs)
-              - story-breakdown (story-list and rationale)
-              - dependencies
+  - id: CREATE-1
+    title: Create Epic YAML (schema-aligned)
+    description: Initialize the epic file following core/engineering/schemas/epic.json sections
+    action:
+      type: file_operation
+      operation: create
+      target: "!{epic_file_candidate}"
+      schema: "core/engineering/schemas/epic.json"
 
-      - id: ASSESS-DOCUMENT-IMPACT
-        title: Assess impact on PRD and architecture documents
-        description: Evaluate if this epic requires updates to existing documentation
-        action:
-           type: elicit
-           prompt: |
-              Evaluate whether this epic has any impact on the PRD and/or architecture documents:
+  - id: VALIDATE-2
+    title: Validate Epic Completeness
+    description: Ensure required sections are present and consistent
+    action:
+      type: validation
+      template: |
+        Confirm presence and basic completeness of:
+        - epic-overview (goal, description, definition_of_done)
+        - scope-boundaries (in-scope, out-of-scope)
+        - requirements-mapping (FRs and NFRs)
+        - story-breakdown (story-list and rationale)
+        - dependencies
 
-              PRD Impact:
-              - Update relevant sections (scope, requirements, constraints) if behavior or requirements change
+  - id: ASSESS-DOCUMENT-IMPACT
+    title: Assess impact on PRD and architecture documents
+    description: Evaluate if this epic requires updates to existing documentation
+    action:
+      type: elicit
+      prompt_user: |
+        Evaluate whether this epic impacts the PRD and/or architecture documents:
 
-              Architecture Impact:
-              - Update affected files/sections if component responsibilities, data models, APIs, or patterns are affected
+        1. No impact on PRD or Architecture
+        2. PRD impact only
+        3. Architecture impact only
+        4. Both PRD and Architecture impact
 
-              Options:
-              1. No impact on PRD or Architecture
-              2. PRD impact only
-              3. Architecture impact only
-              4. Both PRD and Architecture impact
+        Select the impact assessment (1-4).
+      options: ["1", "2", "3", "4"]
+      validation:
+        type: string
+        pattern: "^[1-4]$"
+        required: true
+    elicit: true
 
-              Select the impact assessment:
-           options: ["1", "2", "3", "4"]
-           validation:
-              type: string
-              pattern: "^[1-4]$"
-              required: true
+  - id: UPDATE-DOCUMENTS
+    title: Update affected documentation if needed
+    description: Update PRD and/or architecture documents based on impact assessment
+    action:
+      type: analysis
+      template: |
+        If !{impact_assessment} == "1", document that no documentation updates are required.
+        Otherwise, update the affected documents:
+        - PRD: revise relevant sections when scope, requirements, or constraints change.
+        - Architecture: update affected files/sections when component responsibilities, data models, APIs, or patterns change.
+        - Record a brief note in the epic YAML summarizing documentation updates and add any necessary change-log entries.
 
-      - id: UPDATE-DOCUMENTS
-        title: Update affected documentation if needed
-        description: Update PRD and/or architecture documents based on impact assessment
-        condition:
-           if: "inputs.impact_assessment != '1'"
-        action:
-           type: analysis
-           content: |
-              Based on impact assessment, update the affected documents:
+  - id: HANDOFF-1
+    title: Provide Summary
+    description: Summarize created epic file and next steps
+    action:
+      type: elicit
+      prompt_user: |
+        Epic created: !{epic_file_candidate}
+        Status: Draft
+        Stories proposed: {{story_count}}
 
-              - PRD: update relevant sections if behavior or requirements change
-              - Architecture: update affected files/sections if patterns are affected
-              - Record a brief note in the epic YAML summarizing documentation updates
-              - Create change-log record if PRD/Architecture are impacted (update the Change Log tables)
-
-      - id: HANDOFF-1
-        title: Provide Summary
-        description: Summarize created epic file and next steps
-        action:
-           type: elicit
-           prompt: |
-              Epic created: @{docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml
-              Status: Draft
-              Stories proposed: {story_count}
-              Next: Review story list and priorities, then proceed to story creation.
-
-blocking_conditions:
-   - condition: "PRD file for detected enhancement not found"
-     message: "Missing PRD docs. Cannot derive epic."
-     severity: critical
+        Next: Review the story list and priorities, then proceed to story creation.
+    elicit: true
 
 completion:
-   criteria:
-      - Epic file created with Status Draft
-      - Sections present per epic schema
-      - Story list proposed with priorities
-      - Documentation impact is assessed and updates are made if needed
+  criteria:
+    - Epic file created with Status Draft
+    - Sections present per epic schema
+    - Story list proposed with priorities
+    - Documentation impact is assessed and updates are made if needed
 
 
 
@@ -2421,557 +2376,393 @@ completion:
 $schema: ../../.internal/task.schema.json
 id: create-adhoc-story
 title: Create Enhancement Story from Enhancement Epic
-version: 1.0.0
-purpose: Create one story for the highest-order enhancement epic, referencing its epic YAML and the corresponding PRD/Architecture docs. Output YAML strictly follows the story schema.
+version: 2.0.0
+purpose: Create one story for the highest-order enhancement epic, referencing its epic YAML and PRD/Architecture docs. Output YAML strictly follows the story schema.
 category: planning
 agent: pdm
 
-inputs:
-   required:
-      - name: enhancement_epic
-        type: number
-        examples: [1, 2, 3]
-   optional:
-      - name: story_enhancement_number
-        type: number
+derived:
+  - name: epic_enhancement_number_resolved
+    type: number
+    source: parameters
+    description: "Enhancement epic number (uses ${enhancement_epic}; auto-detects highest adhoc epic when not provided)."
+    required: true
+  - name: story_enhancement_number_resolved
+    type: number
+    source: context
+    description: "Story enhancement number (uses ${story_enhancement_number} or next sequential adhoc story)."
+    required: true
+  - name: epic_file_path
+    type: path
+    source: context
+    pattern: "@{docs.subdirs.epics}/adhoc-{epic_enhancement_number_resolved}-*.yaml"
+    required: true
+  - name: story_file_target
+    type: path
+    source: context
+    pattern: "@{docs.subdirs.stories}/adhoc-{epic_enhancement_number_resolved}.{story_enhancement_number_resolved}-*.yaml"
+    required: true
+  - name: previous_story_file
+    type: path
+    source: context
+    description: "Highest existing adhoc story file for the enhancement."
+    required: false
+  - name: previous_story_status
+    type: string
+    source: context
+    description: "Status of the previous adhoc story if it exists."
+    required: false
+  - name: impact_assessment
+    type: string
+    source: context
+    pattern: "^[1-4]$"
+    description: "Response captured during Assess Document Impact (1-4)."
 
 outputs:
-   artifacts:
-      - name: Story File
-        type: file
-        path: "@{docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-*.yaml"
-        format: yaml
-      - name: Documentation Updates
-        type: file
-        path: "@{docs.dir}/"
-        format: markdown
-   updates:
-      - target: "@{docs.subdirs.stories}/*.yaml"
-        sections: ["Status", "Dev Notes", "Tasks / Subtasks"]
-        restrictions: Only create new story, do not modify existing stories
+  artifacts:
+    - name: Story File
+      type: file
+      path: "!{story_file_target}"
+      format: yaml
+    - name: Documentation Updates
+      type: file
+      path: "@{docs.dir}/"
+      format: markdown
+  updates:
+    - target: "!{story_file_target}"
+      sections:
+        - "Status"
+        - "Dev Notes"
+        - "Tasks / Subtasks"
+      restrictions: Only create a new story; do not modify existing stories
 
-process:
-   mode: sequential
-   steps:
-      - id: CONFIG-1
-        title: Load Core Configuration
-        description: Load config.json and verify docs paths
-        action:
-           type: file_operation
-           operation: read
-           target: "@{baseDir}/config.json"
-           validation:
-              type: string
-              required: true
-        on_failure: halt
+prerequisites:
+  - field: "@{docs.subdirs.epics}"
+    value: "readable"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "@{docs.subdirs.stories}"
+    value: "writable"
+    operator: "="
+    on_violate: "halt_and_report"
 
-      - id: IDENTIFY-1
-        title: Locate Highest Enhancement Epic
-        description: Determine highest enhancement epic from @{docs.subdirs.epics}
-        action:
-           type: analysis
-           content: |
-              Scan @{docs.subdirs.epics} for epic files: adhoc-*.yaml
-              Extract enhancement numbers and select the maximum value.
-              If input epic_enhancement_number provided, use it instead.
+steps:
+  - id: CONFIG-1
+    title: Load Core Configuration
+    description: Load config.json and verify docs paths needed for adhoc enhancement work
+    action:
+      type: file_operation
+      operation: read
+      target: "@{baseDir}/config.json"
+      validation:
+        type: string
+        required: true
+    on_failure: halt
 
-      - id: IDENTIFY-2
-        title: Determine Next Story Number
-        description: Determine next sequential story number within the enhancement epic
-        action:
-           type: analysis
-           content: |
-              Scan @{docs.subdirs.stories} for files: adhoc-{epic_enhancement_number}.*-*.yaml
-              Extract existing story numbers and compute next (start at 1 if none exist).
-              If input story_enhancement_number provided, use it instead.
+  - id: IDENTIFY-EPIC
+    title: Locate Highest Enhancement Epic
+    description: Determine the target enhancement epic number and file
+    action:
+      type: analysis
+      template: |
+        Scan @{docs.subdirs.epics} for files named adhoc-*.yaml.
+        - If ${enhancement_epic} is provided, set !{epic_enhancement_number_resolved} to that value.
+        - Otherwise choose the maximum enhancement number and set !{epic_enhancement_number_resolved} accordingly.
+        Resolve !{epic_file_path} for downstream steps.
 
-      - id: VERIFY-1
-        title: Check Previous Story Completion (if any)
-        description: Warn if previous story exists and is not Done
-        action:
-           type: validation
-           prompt: |
-              If previous story exists and status != 'Done':
-              ALERT: Found incomplete story!
-              File: adhoc-{epic_enhancement_number}.{last_story_num}-*.yaml
-              Status: {current_status}
+  - id: IDENTIFY-STORY
+    title: Determine Next Story Number
+    description: Select the next adhoc story number within the enhancement
+    action:
+      type: analysis
+      template: |
+        Scan @{docs.subdirs.stories} for adhoc-!{epic_enhancement_number_resolved}.*-*.yaml.
+        - Compute the next sequential story number (start at 1 if none exist).
+        - If ${story_enhancement_number} is provided, honor it instead.
+        - Record !{previous_story_file}, !{previous_story_status}, and resolve !{story_file_target}.
 
-              You should finish this story first. Proceed to create the next story in Draft anyway?
-        elicit: true
+  - id: VERIFY-PREVIOUS
+    title: Check Previous Story Completion
+    description: Warn when a previous adhoc story remains incomplete
+    action:
+      type: validation
+      template: |
+        If !{previous_story_file} exists and !{previous_story_status} != "Done":
+        ALERT: Found incomplete story.
+        File: !{previous_story_file}
+        Status: !{previous_story_status}
 
-      - id: READ-EPIC
-        title: Read Epic YAML
-        description: Extract story-level requirements from the epic file
-        action:
-           type: file_operation
-           operation: read
-           target: "@{docs.subdirs.epics}/adhoc-{epic_enhancement_number}-*.yaml"
-           content: |
-              Extract from epic:
-              - Initial story title/goal candidates (story-breakdown.story-list)
-              - Acceptance criteria references and priorities
-              - Dependencies (if any)
+        Ask if the user wants to accept risk and create the next story anyway.
+    elicit: true
 
-      - id: READ-DOCS
-        title: Read PRD and Architecture for Enhancement
-        description: Extract technical context from PRD and Architecture docs
-        action:
-           type: file_operation
-           operation: read
-           content: |
-              Read:
-              - @{docs.files.prd}
+  - id: READ-EPIC
+    title: Read Epic YAML
+    description: Extract story-level requirements from the enhancement epic
+    action:
+      type: file_operation
+      operation: read
+      target: "!{epic_file_path}"
+      template: |
+        Extract from story-breakdown:
+        - Candidate titles/goals
+        - Acceptance criteria references and priorities
+        - Dependencies
 
-      - id: EXTRACT-TECH
-        title: Extract Technical Details for Story
-        description: Extract ONLY relevant technical context to guide implementation
-        action:
-           type: analysis
-           content: |
-              Extract strictly from docs (do NOT invent):
-              - Data models or schemas relevant to this story
-              - API endpoints and contracts
-              - Component specifications (for UI)
-              - File paths and naming conventions
-              - Testing requirements
-              - Security/performance considerations
-              Include doc references where applicable.
+  - id: READ-DOCS
+    title: Read PRD and Architecture for Enhancement
+    description: Collect supporting context from PRD and architecture docs
+    action:
+      type: file_operation
+      operation: read
+      target: "@{docs.files.prd}"
+      template: |
+        Load @{docs.files.prd} plus relevant architecture documents (@{docs.dir}/?(*-)architecture.md) before extracting technical details for the story.
 
-      - id: CREATE-1
-        title: Create Story YAML (schema-aligned)
-        description: Initialize story file following core/engineering/schemas/story.json sections
-        action:
-           type: file_operation
-           operation: create
-           target: "@{docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-{story_slug}.yaml"
-           content: |
-              story:
-                id: "adhoc-{epic_enhancement_number}.{story_enhancement_number}"
-                title: "{story_title}"
-                status: Draft
-                priority: "{priority}"
-                statement: "As a {user_role}, I want {specific_action}, so that {benefit}."
-              acceptance_criteria:
-                - "{AC 1}"
-                - "{AC 2}"
-              dev_notes:
-                policy: "This section MUST contain ONLY information extracted from PRD/Architecture. NEVER invent technical details."
-                doc_impact_summary: "{Updated PRD sections: ..., Architecture: ... | No updates needed}"
-                testing_standards:
-                  - "{test standard 1}"
-                previous_story_insights: "{prior insights if any}"
-                data_models:
-                  value: "{data models used}"
-                  source: "@{docs.files.prd}#{section}"
-                api_specifications:
-                  value: "{API specs}"
-                  source: "@{docs.files.prd}#{section}"
-                component_specifications:
-                  value: "{component specs}"
-                  source: "@{docs.files.prd}#{section}"
-                file_locations:
-                  value: "{file paths and naming conventions}"
-                  source: "@{docs.files.prd}#{section}"
-                testing_requirements:
-                  value: "{testing requirements}"
-                  source: "@{docs.files.prd}#{section}"
-                technical_constraints:
-                  value: "{constraints}"
-                  source: "@{docs.files.prd}#{section}"
-                notes_missing_guidance: "If information for a category is not found, state: 'No specific guidance found in docs'"
-              test_specs:
-                specs:
-                  - "1: [AC 1] Given ..., When ..., Then ..."
-                artifacts:
-                  - path: "{path/to/test}"
-                    purpose: "{purpose}"
-              risk_mitigation:
-                primary_risk: "{primary_risk}"
-                mitigation_strategies:
-                  - "{strategy 1}"
-                rollback_plan: "{rollback_plan}"
-              change_log:
-                - date: "{YYYY-MM-DD}"
-                  version: "{v0.1}"
-                  description: "Initial draft"
-                  author: "{name}"
-              developer_record:
-                agent_model: "{agent_model_name_version}"
-                debug_log_references: []
-                completion_notes: []
-                file_list: []
-              qa_results: ""
+  - id: EXTRACT-TECH
+    title: Extract Technical Details for Story
+    description: Capture only doc-sourced technical context to guide implementation
+    action:
+      type: analysis
+      template: |
+        Extract strictly from PRD/architecture (never invent):
+        - Data models or schemas relevant to the story
+        - API endpoints and contracts
+        - Component specifications (UI)
+        - File paths and naming conventions
+        - Testing requirements
+        - Security/performance considerations
+        Cite doc references for every extracted detail.
 
-      - id: ASSESS-DOCUMENT-IMPACT
-        title: Assess impact on PRD and architecture documents
-        description: Evaluate if this story requires updates to existing documentation
-        action:
-           type: elicit
-           prompt: |
-              Evaluate whether this story has any impact on the PRD and/or architecture documents:
+  - id: CREATE-STORY
+    title: Create Story YAML (schema-aligned)
+    description: Create the adhoc story file using the canonical story schema
+    action:
+      type: file_operation
+      operation: create
+      target: "!{story_file_target}"
+      schema: "core/engineering/schemas/story.json"
 
-              PRD Impact:
-              - Update relevant sections (scope, requirements, constraints) if behavior or requirements change
+  - id: ASSESS-DOCUMENT-IMPACT
+    title: Assess impact on PRD and architecture documents
+    description: Determine whether supporting docs need updates for this story
+    action:
+      type: elicit
+      prompt_user: |
+        Evaluate whether this story impacts PRD and/or architecture documents:
+        1. No impact
+        2. PRD impact only
+        3. Architecture impact only
+        4. Both PRD and Architecture impact
 
-              Architecture Impact:
-              - Update affected files/sections if component responsibilities, data models, APIs, or patterns are affected
+        Select the impact assessment (1-4).
+      options: ["1", "2", "3", "4"]
+      validation:
+        type: string
+        pattern: "^[1-4]$"
+        required: true
+    elicit: true
 
-              Options:
-              1. No impact on PRD or Architecture
-              2. PRD impact only
-              3. Architecture impact only
-              4. Both PRD and Architecture impact
+  - id: UPDATE-DOCUMENTS
+    title: Update affected documentation if needed
+    description: Apply PRD/architecture updates based on the selected impact assessment
+    action:
+      type: analysis
+      template: |
+        If !{impact_assessment} == "1": record "No PRD/Architecture changes" in dev notes.
+        Otherwise:
+        - Update PRD sections for scope, requirements, or constraints changes.
+        - Update Architecture docs when components, data models, APIs, or patterns change.
+        - Summarize updates in the story dev_notes (doc_impact_summary) and add change-log entries.
 
-              Select the impact assessment:
-           options: ["1", "2", "3", "4"]
-           validation:
-              type: string
-              pattern: "^[1-4]$"
-              required: true
+  - id: HANDOFF-1
+    title: Provide Summary and Next Steps
+    description: Communicate story creation results and follow-ups
+    action:
+      type: elicit
+      prompt_user: |
+        Story created: !{story_file_target}
+        Status: Draft
 
-      - id: UPDATE-DOCUMENTS
-        title: Update affected documentation if needed
-        description: Update PRD and/or architecture documents based on impact assessment
-        condition:
-           if: "inputs.impact_assessment != '1'"
-        action:
-           type: analysis
-           content: |
-              Based on impact assessment, update the affected documents:
+        Checklist results: {{checklist_results}}
 
-              - PRD: update relevant sections if behavior or requirements change
-              - Architecture: update affected files/sections if patterns are affected
-              - Record a brief note in the story YAML under dev_notes.doc_impact_summary summarizing documentation updates
-              - Create change-log record if PRD/Architecture are impacted (update the Change Log tables)
-
-      - id: HANDOFF-1
-        title: Provide Summary and Next Steps
-        description: Communicate story creation results
-        action:
-           type: elicit
-           prompt: |
-              Story created: @{docs.subdirs.stories}/adhoc-{epic_enhancement_number}.{story_enhancement_number}-*.yaml
-              Status: Draft
-
-              Checklist Results:
-              {checklist_results}
-
-              Next steps:
-              - Review draft story and approve
-              - Proceed to implementation when ready
-
-blocking_conditions:
-   - condition: "No enhancement epic found in @{docs.subdirs.epics}"
-     message: "Cannot create a story without an enhancement epic."
-     severity: critical
+        Next steps:
+        - Review the draft story and approve
+        - Proceed to implementation when ready
+    elicit: true
 
 completion:
-   criteria:
-      - Story YAML created with Status Draft
-      - Story content aligned with epic and PRD
-      - Checklist executed
-      - Documentation impact is assessed and updates are made if needed
+  criteria:
+    - Story YAML created with status Draft
+    - Story content aligned with epic and PRD
+    - Checklist executed
+    - Documentation impact assessed and updates recorded when needed
 
 
 
 # Dependency: tasks/create-standalone-story.yaml
 
-$schema: "../../.internal/task.schema.json"
-id: "create-standalone-story"
-title: "Create Standalone Story"
-version: "1.0.0"
-purpose: "Create a single user story for very small standalone enhancements that can be completed in one focused development session. This task is for minimal additions or bug fixes that require existing system integration awareness."
-category: "planning"
-agent: "pdm"
+$schema: ../../.internal/task.schema.json
+id: create-standalone-story
+title: Create Standalone Story
+version: 2.0.0
+purpose: Create a single user story for very small standalone enhancements that can be completed in one focused development session while following existing system patterns.
+category: planning
+agent: pdm
 
-inputs:
-   required:
-      - name: "description"
-        type: "string"
-   optional:
-      - name: "story_enhancement_number"
-        type: "string"
-        examples: ["1", "2", "3"]
-
-process:
-   mode: "sequential"
-   steps:
-      - id: "ASSESS-SCOPE"
-        title: "Assess if standalone story is appropriate"
-        description: "Verify this enhancement meets criteria for standalone story vs epic vs full PRD process"
-        action:
-           type: "elicit"
-           prompt: |
-              Before creating a standalone story, confirm this enhancement meets ALL criteria:
-
-              **Use standalone story when:**
-              - Enhancement can be completed in a single story
-              - No new architecture or significant design is required
-              - Change follows existing patterns exactly
-              - Integration is straightforward with minimal risk
-              - Change is isolated with clear boundaries
-
-              **Use create-epic when:**
-              - Enhancement requires 2-3 coordinated stories
-              - Some design work is needed
-              - Multiple integration points are involved
-
-              **Use full PRD/Architecture process when:**
-              - Enhancement requires multiple coordinated stories
-              - Architectural planning is needed
-              - Significant integration work is required
-
-              Does this enhancement meet standalone story criteria? (1=Yes, 2=No, escalate to epic, 3=No, escalate to PRD)
-           options: ["1", "2", "3"]
-           validation:
-              type: "string"
-              pattern: "^[1-3]$"
-              required: true
-
-      - id: "GATHER-CONTEXT"
-        title: "Gather minimal project context"
-        description: "Collect essential context about existing system and change scope"
-        action:
-           type: "analysis"
-           content: |
-              Gather minimal but essential context about the existing project:
-
-              **Current System Context:**
-              - Relevant existing functionality identified
-              - Technology stack for this area noted
-              - Integration point(s) clearly understood
-              - Existing patterns for similar work identified
-
-              **Change Scope:**
-              - Specific change clearly defined
-              - Impact boundaries identified
-              - Success criteria established
-
-      - id: "CREATE-STORY-FILE"
-        title: "Create standalone story YAML file"
-        description: "Create the story file using the standard story template"
-        action:
-           type: "file_operation"
-           operation: "create"
-           target: "@{docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.yaml"
-           content: |
-              template:
-                id: story-template-v2
-                name: Story Document
-                version: "2.0"
-                output:
-                  format: json
-                  filename: "@{docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.json"
-                  title: "Story {story_enhancement_number}: {story_title_short}"
-              workflow:
-                mode: interactive
-                elicitation: advanced-elicitation
-              sections:
-                - id: status
-                  title: Status
-                  type: choice
-                  choices: ["Draft", "Spec Review", "WIP", "Blocked", "Review", "Done"]
-                  instruction: "Select the current status of the story"
-                  owner: product-development-master
-                  editors: [product-development-master, product-master, developer, qa-agent]
-                - id: priority
-                  title: Priority
-                  type: choice
-                  choices: ["1", "2", "3", "4", "5"]
-                  instruction: "Story priority (1 = highest). Used by PDM for sequencing."
-                  owner: product-development-master
-                  editors: [product-development-master, product-master]
-                - id: story
-                  title: Story
-                  type: template-text
-                  template: "**As a** {role},\n**I want** {action},\n**so that** {benefit}"
-                  instruction: "Define the user story using the standard format with role, action, and benefit"
-                  elicit: true
-                  owner: product-development-master
-                  editors: [product-development-master, product-master]
-                - id: acceptance-criteria
-                  title: Acceptance Criteria
-                  type: numbered-list
-                  instruction: "Define clear acceptance criteria that can be tested"
-                  elicit: true
-                  owner: product-development-master
-                  editors: [product-development-master, product-master]
-                - id: tasks-and-subtasks
-                  title: Tasks / Subtasks
-                  type: bullet-list
-                  instruction: "Break down the story into specific tasks and subtasks needed for implementation. Reference applicable acceptance criteria numbers where relevant. Assign a Difficulty for each task and subtask (integer 1-10) capturing both complexity and uncertainty."
-                  template: "- [ ] Task 1 (AC: # if applicable) [Diff: 1-10]\n  - [ ] Subtask 1.1... [Diff: 1-10]\n- [ ] Task 2 (AC: # if applicable) [Diff: 1-10]\n  - [ ] Subtask 2.1... [Diff: 1-10]"
-                  elicit: true
-                  owner: product-development-master
-                  editors: [product-development-master, product-master, developer]
-                - id: dev-notes
-                  title: Dev Notes
-                  instruction: "Leave this section empty at first on initialization as it will be populated later on. Populate relevant information from actual artifacts from docs folder, relevant to this story. Do not invent information. Include enough information so the dev agent should NEVER need to read architecture documents."
-                  elicit: true
-                  owner: product-development-master
-                  editors: [product-development-master, product-master]
-                - id: testing-standards
-                  title: Testing
-                  instruction: "List Relevant Testing Standards from Architecture the Developer needs to conform to: test file location, test standards, testing frameworks and patterns, specific testing requirements."
-                  elicit: true
-                  owner: product-development-master
-                  editors: [product-development-master, product-master]
-                - id: test-specs
-                  title: Test Specs
-                  instruction: "Maintain both test specifications and a list of relevant test files for this story."
-                  owner: qa-agent
-                  editors: [qa-agent, developer]
-                  sections:
-                    - id: specs
-                      title: Specifications
-                      type: numbered-list
-                      instruction: "List concise Given-When-Then specs. Include AC references."
-                      template: "{spec_number}: [AC {ac_numbers}] {short_description} — Given {given}, When {when}, Then {then}"
-                      elicit: true
-                    - id: artifacts
-                      title: Artifacts
-                      type: bullet-list
-                      instruction: "List existing or planned test files relevant to this story (paths with brief purpose)."
-                      template: "- {path} — {purpose}"
-                      elicit: false
-                - id: risk-mitigation
-                  title: Risk Mitigation
-                  instruction: "Document risks and mitigation strategies for this story implementation."
-                  owner: product-development-master
-                  editors: [product-development-master, product-master]
-                  sections:
-                    - id: primary-risk
-                      title: Primary Risk
-                      type: paragraph
-                      instruction: "Describe the main risk this story poses to the existing system and users."
-                      elicit: true
-                    - id: mitigation-strategies
-                      title: Mitigation Strategies
-                      type: bullet-list
-                      instruction: "List concrete mitigation actions to reduce likelihood/impact of the risk."
-                      template: "- {mitigation_action}"
-                      elicit: true
-                    - id: rollback-plan
-                      title: Rollback Plan
-                      type: paragraph
-                      instruction: "Outline how to quickly revert changes if needed, including preconditions and steps."
-                      elicit: true
-                - id: change-log
-                  title: Change Log
-                  type: table
-                  columns: ["Date", "Version", "Description", "Author"]
-                  instruction: "Track changes made to this story document"
-                  owner: product-development-master
-                  editors: [product-development-master, product-master, developer, qa-agent]
-                - id: developer-record
-                  title: Dev Agent Record
-                  instruction: "This section is populated by the development agent during implementation"
-                  owner: developer
-                  editors: [developer]
-                  sections:
-                    - id: agent-model
-                      title: Agent Model Used
-                      template: "{agent_model_name_version}"
-                      instruction: "Record the specific AI agent model and version used for development"
-                      owner: developer
-                      editors: [developer]
-                    - id: debug-log-references
-                      title: Debug Log References
-                      instruction: "Reference any debug logs or traces generated during development"
-                      owner: developer
-                      editors: [developer]
-                    - id: completion-notes
-                      title: Completion Notes List
-                      instruction: "Notes about the completion of tasks and any issues encountered"
-                      owner: developer
-                      editors: [developer]
-                    - id: file-list
-                      title: File List
-                      instruction: "List all files created, modified, or affected during story implementation"
-                      owner: developer
-                      editors: [developer]
-                - id: qa-results
-                  title: QA Results
-                  instruction: "Results from QA Agent QA review of the completed story implementation"
-                  owner: qa-agent
-                  editors: [qa-agent]
-
-      - id: "ASSESS-DOCUMENT-IMPACT"
-        title: "Assess impact on PRD and architecture documents"
-        description: "Evaluate if this story requires updates to existing documentation"
-        action:
-           type: "elicit"
-           prompt: |
-              Evaluate whether this story has any impact on the PRD and/or architecture documents:
-
-              **PRD Impact:**
-              - Update relevant sections (scope, requirements, constraints) if behavior or requirements change
-
-              **Architecture Impact:**
-              - Update affected files/sections if component responsibilities, data models, APIs, or patterns are affected
-
-              **Options:**
-              1. No impact on PRD or Architecture
-              2. PRD impact only
-              3. Architecture impact only
-              4. Both PRD and Architecture impact
-
-              Select the impact assessment:
-           options: ["1", "2", "3", "4"]
-           validation:
-              type: "string"
-              pattern: "^[1-4]$"
-              required: true
-
-      - id: "UPDATE-DOCUMENTS"
-        title: "Update affected documentation if needed"
-        description: "Update PRD and/or architecture documents based on impact assessment"
-        condition:
-           if: "inputs.impact_assessment != '1'"
-        action:
-           type: "analysis"
-           content: |
-              Based on impact assessment, update the affected documents:
-
-              - PRD: update relevant sections if behavior or requirements change
-              - Architecture: update affected files/sections if patterns are affected
-              - Record a brief note in the story YAML under dev-notes summarizing documentation updates
-              - Create change-log record if PRD/Architecture are impacted
-
-      - id: "VALIDATE-COMPLETION"
-        title: "Validate story creation completion"
-        description: "Confirm all success criteria are met"
-        action:
-           type: "validation"
-           validation:
-              type: "checklist"
-              required: true
-              items:
-                 - "Enhancement is clearly defined and appropriately scoped for single session"
-                 - "Integration approach is straightforward and low-risk"
-                 - "Existing system patterns are identified and will be followed"
-                 - "Rollback plan is simple and feasible"
-                 - "Acceptance criteria include existing functionality verification"
-                 - "Story file is created at @{docs.subdirs.stories}/standln-{story_enhancement_number}-*.yaml"
-                 - "PRD and/or architecture docs are updated where impacted or explicitly confirmed as not requiring updates"
+derived:
+  - name: enhancement_description
+    type: string
+    source: parameters
+    description: "User-supplied description of the standalone enhancement (${description})."
+    required: true
+  - name: story_enhancement_number_resolved
+    type: number
+    source: context
+    description: "Identifier used in story filename (uses ${story_enhancement_number} when provided, otherwise auto-increments)."
+    required: true
+  - name: story_file_target
+    type: path
+    source: context
+    pattern: "@{docs.subdirs.stories}/standln-{story_enhancement_number_resolved}-*.yaml"
+    required: true
+  - name: impact_assessment
+    type: string
+    source: context
+    pattern: "^[1-4]$"
+    description: "Response collected during Assess Document Impact (1-4)."
 
 outputs:
-   artifacts:
-      - name: "standalone-story"
-        type: "file"
-        path: "@{docs.subdirs.stories}/standln-{story_enhancement_number}-{story_title_short}.yaml"
-        format: "yaml"
-        description: "Standalone story YAML file"
-      - name: "documentation-updates"
-        type: "file"
-        path: "@{docs.dir}/"
-        format: "markdown"
-        description: "Updated PRD and/or architecture documents if impacted"
+  artifacts:
+    - name: Standalone Story
+      type: file
+      path: "!{story_file_target}"
+      format: yaml
+    - name: Documentation Updates
+      type: file
+      path: "@{docs.dir}/"
+      format: markdown
+
+prerequisites:
+  - field: "@{docs.subdirs.stories}"
+    value: "writable"
+    operator: "="
+    on_violate: "halt_and_report"
+
+steps:
+  - id: ASSESS-SCOPE
+    title: Assess if standalone story is appropriate
+    description: Confirm the enhancement meets the criteria for a standalone story
+    action:
+      type: elicit
+      prompt_user: |
+        Before creating a standalone story, confirm this enhancement meets ALL criteria:
+
+        Use standalone story when:
+        - Enhancement can be completed in a single story
+        - No new architecture or significant design is required
+        - Change follows existing patterns exactly
+        - Integration is straightforward with minimal risk
+        - Change is isolated with clear boundaries
+
+        Use create-epic when:
+        - Enhancement requires 2–3 coordinated stories
+        - Some design work is needed
+        - Multiple integration points are involved
+
+        Use full PRD/Architecture process when:
+        - Enhancement requires multiple coordinated stories
+        - Architectural planning is needed
+        - Significant integration work is required
+
+        Does this enhancement meet standalone story criteria?
+        1 = Yes
+        2 = No, escalate to epic
+        3 = No, escalate to PRD
+      options: ["1", "2", "3"]
+      validation:
+        type: string
+        pattern: "^[1-3]$"
+        required: true
+    elicit: true
+
+  - id: GATHER-CONTEXT
+    title: Gather minimal project context
+    description: Collect essential context about the existing system and change scope
+    action:
+      type: analysis
+      template: |
+        Capture:
+        **Current System Context**
+        - Relevant existing functionality
+        - Technology stack for this area
+        - Integration points that must remain intact
+        - Existing patterns to follow
+
+        **Change Scope**
+        - Specific change definition
+        - Impact boundaries
+        - Success criteria
+
+  - id: CREATE-STORY-FILE
+    title: Create standalone story YAML file
+    description: Create the story using the canonical story schema
+    action:
+      type: file_operation
+      operation: create
+      target: "!{story_file_target}"
+      schema: "core/engineering/schemas/story.json"
+
+  - id: ASSESS-DOCUMENT-IMPACT
+    title: Assess impact on PRD and architecture documents
+    description: Determine if documentation updates are needed for this standalone story
+    action:
+      type: elicit
+      prompt_user: |
+        Evaluate whether this story impacts PRD and/or architecture documents:
+        1. No impact
+        2. PRD impact only
+        3. Architecture impact only
+        4. Both PRD and Architecture impact
+
+        Select the impact assessment (1-4).
+      options: ["1", "2", "3", "4"]
+      validation:
+        type: string
+        pattern: "^[1-4]$"
+        required: true
+    elicit: true
+
+  - id: UPDATE-DOCUMENTS
+    title: Update affected documentation if needed
+    description: Apply PRD/architecture updates when the impact assessment requires it
+    action:
+      type: analysis
+      template: |
+        If !{impact_assessment} == "1": document "No documentation updates required."
+        Otherwise:
+        - Update PRD sections for scope/requirement changes
+        - Update architecture docs for component/data/API changes
+        - Summarize updates in the story dev notes and change log
+
+  - id: VALIDATE-COMPLETION
+    title: Validate story creation completion
+    description: Confirm all success criteria are met for the standalone story
+    action:
+      type: validation
+      template: |
+        Confirm:
+        - Enhancement is clearly defined and scoped for a single session
+        - Integration approach is straightforward and low-risk
+        - Existing patterns are identified and followed
+        - Rollback plan is simple and feasible
+        - Acceptance criteria include existing functionality verification
+        - Story file created at @{docs.subdirs.stories}/standln-{{story_enhancement_number_resolved}}-*.yaml
+        - Documentation updates recorded or explicitly not required
 
 completion:
-   criteria:
-      - "Story enhancement meets standalone story criteria"
-      - "Story file is created with proper YAML structure"
-      - "All required sections are populated with elicited content"
-      - "Documentation impact is assessed and updates are made if needed"
-      - "Success criteria validation is complete"
+  criteria:
+    - Story enhancement meets standalone criteria
+    - Story file created with proper schema structure
+    - All required sections populated with elicited content
+    - Documentation impact assessed and updated as needed
+    - Completion validation executed successfully

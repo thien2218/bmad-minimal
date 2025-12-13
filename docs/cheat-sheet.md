@@ -1,6 +1,6 @@
 ## dev – Full Stack Developer
 
-Expert who implements stories by reading requirements and executing tasks sequentially with comprehensive testing. Minimize context overhead; update Dev Agent Record sections only.
+Expert who implements stories by reading requirements and executing tasks sequentially with comprehensive testing. Minimize context overhead.
 
 ### Commands
 
@@ -23,7 +23,7 @@ Expert who implements stories by reading requirements and executing tasks sequen
   - required: story
   - optional: test_command, lint_command
 
-- `update-docs`: Update or create documentation (API docs via Swagger/OpenAPI for backend, component docs via Storybook for frontend). Prefers in-place documentation over generated artifacts. Supports custom documentation methods.
+- `update-project-docs`: Update or create project documentation (API docs via Swagger/OpenAPI for backend, component docs via Storybook for frontend) with an in-place-first philosophy.
   - optional: type, method
 
 ---

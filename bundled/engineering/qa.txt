@@ -12,7 +12,7 @@
 
 ```json
 {
-	"version": "1.3.0",
+	"version": "1.4.0",
 	"precedence": [
 		"policy",
 		"rules.hard",
@@ -87,6 +87,68 @@
 					"targets": ["tasks/test-design.yaml"]
 				}
 			]
+		},
+		"references": {
+			"fileResolution": {
+				"pattern": "^@\\{[a-zA-Z0-9_-.]+\\}$",
+				"description": "Resolve reference to a property in config.json",
+				"examples": [
+					{
+						"input": "@{baseDir}",
+						"resolvedFrom": "config.json.baseDir"
+					},
+					{
+						"input": "@{docs.files.codingStandards}",
+						"resolvedFrom": "config.json.docs.files.codingStandards"
+					},
+					{
+						"input": "@{docs.subdirs.engineering}",
+						"resolvedFrom": "config.json.docs.subdirs.engineering"
+					}
+				]
+			},
+			"inputResolution": {
+				"pattern": "^\\$\\{[a-zA-Z0-9_-.]+\\}$",
+				"description": "Resolve reference to a command's input parameter or value for the current task being executed",
+				"examples": [
+					{
+						"input": "${story}",
+						"resolvedFrom": "currentCommand.parameters.story"
+					},
+					{
+						"input": "${test_command}",
+						"resolvedFrom": "currentCommand.optionalParameters.test_command"
+					}
+				]
+			},
+			"knowledgeResolution": {
+				"pattern": "^!\\{[a-zA-Z0-9_-.]+\\}$",
+				"description": "Resolve reference to knowledge loaded from the agent's context",
+				"examples": [
+					{
+						"input": "!{coding_standards}",
+						"resolvedFrom": "context.codingStandards"
+					},
+					{
+						"input": "!{tech_stack}",
+						"resolvedFrom": "context.architecture.tech_stack"
+					}
+				]
+			},
+			"templatePopulation": {
+				"pattern": "^\\{\\{[a-zA-Z0-9_-.]+\\}\\}$",
+				"description": "Resolve reference from any source when populating values into a template",
+				"examples": [
+					{
+						"input": "{{story_id}}",
+						"resolvedFrom": "anySource.story_id"
+					},
+					{
+						"input": "{{qa_results.summary}}",
+						"resolvedFrom": "anySource.qa_results.summary"
+					}
+				]
+			}
 		},
 		"elicitDefaults": {
 			"elicitRequired": true,
@@ -165,29 +227,19 @@
 		},
 		{
 			"id": "CFG-R001",
-			"title": "Resolve @{*} references from core config",
-			"enforcements": [
-				"Locate config.json via terminal command or user input and load it",
-				"Expand @{docs.files.X} => @{docs.dir}/<file>, @{docs.subdirs.X} => @{docs.dir}/<subdir>"
-			],
-			"severity": "hard",
-			"actionOnViolation": "abort_and_report"
-		},
-		{
-			"id": "CFG-R002",
 			"title": "Non-padded numbering in epic/story/enhancement filenames",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},
 		{
-			"id": "CFG-R003",
+			"id": "CFG-R002",
 			"title": "Present choices as numbered lists",
 			"severity": "soft",
 			"actionOnViolation": "warn_and_reformat"
 		},
 		{
-			"id": "CFG-R004",
-			"title": "Execute dependency tasks literally",
+			"id": "CFG-R003",
+			"title": "Load and execute dependency files in commands' `steps` property literally",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},
@@ -591,254 +643,292 @@
 $schema: ../../.internal/task.schema.json
 id: review-story
 title: Review Story
-version: 1.0.0
+version: 2.0.0
 purpose: Perform a comprehensive test architecture review with quality gate decision. This adaptive, risk-aware review creates both a story update and a detailed gate file.
 category: quality
 agent: qa
 
-inputs:
-   optional:
-      - name: story_id
-        type: story_id
-        pattern: "^\\d+\\.\\d+$"
-        examples: ["1.3", "2.5"]
-      - name: story_path
-        type: path
-        pattern: "@{docs.subdirs.stories}/{epic}.{story}-*.yaml"
-      - name: architecture_refs
-        type: path
-        pattern: "@{docs.dir}/?(*-)architecture.md"
-      - name: coding_standards
-        type: path
-        location: "@{docs.files.codingStandards}"
+derived:
+  - name: story_path
+    type: path
+    source: parameters
+    pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
+    description: "Story file path resolved from provided story identifier"
+    required: true
+  - name: story_status
+    type: string
+    source: file
+    pattern: "Draft|Spec Review|WIP|Blocked|Review|Done"
+    description: "Status value read from the story file"
+    required: true
+  - name: story_file_ready
+    type: boolean
+    source: context
+    description: "True when the story file contains all required baseline sections"
+    required: true
+  - name: file_list_complete
+    type: boolean
+    source: context
+    description: "True when the File List section is fully populated"
+    required: true
+  - name: tests_ready
+    type: boolean
+    source: context
+    description: "True when required tests exist for the story scope"
+    required: true
+  - name: requirement_alignment
+    type: boolean
+    source: context
+    description: "True when code changes align with documented requirements"
+    required: true
+  - name: architecture_blockers_clear
+    type: boolean
+    source: context
+    description: "True when no critical architectural issues remain unresolved"
+    required: true
 
 prerequisites:
-   status:
-      - entity: story
-        field: status
-        value: Review
-        operator: includes
+  - field: "!{story_path}"
+    value: "found"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "!{story_status}"
+    value: "Review"
+    operator: "contains"
+    on_violate: "halt_and_report"
+  - field: "!{story_file_ready}"
+    value: "true"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "!{file_list_complete}"
+    value: "true"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "!{tests_ready}"
+    value: "true"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "!{requirement_alignment}"
+    value: "true"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "!{architecture_blockers_clear}"
+    value: "true"
+    operator: "="
+    on_violate: "halt_and_report"
 
-process:
-   mode: sequential
-   steps:
-      - id: LOAD-CONFIG
-        title: Load Configuration and Story
-        description: Load core configuration and resolve story file path
-        action:
-           type: file_operation
-           operation: read
-           target: "@{baseDir}/config.json"
-           content: |
-              Extract config.docs.subdirs.qa and docs.subdirs.stories settings.
-              Resolve story_path if not provided.
-        on_failure: continue
+steps:
+  - id: LOAD-CONFIG
+    title: Load Configuration and Story
+    description: Load core configuration and resolve story file path
+    action:
+      type: file_operation
+      operation: read
+      target: "@{baseDir}/config.json"
+      template: |
+        Extract docs.subdirs.qa and docs.subdirs.stories settings.
+        Resolve !{story_path} if not provided.
+    on_failure: continue
 
-      - id: CHECK-REVIEW
-        title: Check Story Status
-        description: Verify story status includes the word "Review"
-        action:
-           type: validation
-           content: |
-              If status does not include the word "Review":
-              HALT and inform user why execution cannot proceed
-        on_failure: halt
+  - id: CHECK-REVIEW
+    title: Check Story Status
+    description: Verify story status includes the word "Review"
+    action:
+      type: validation
+      target: "!{story_status}"
+      template: |
+        If status does not include "Review", halt execution and notify the user to transition the story first.
+    on_failure: halt
 
-      - id: RISK-ASSESSMENT
-        title: Risk Assessment (Determines Review Depth)
-        description: Auto-escalate to deep review based on risk factors
-        action:
-           type: analysis
-           prompt: |
-              Evaluate if deep review is needed when:
-              - Auth/payment/security files touched
-              - No tests added to story
-              - Diff > 500 lines
-              - Previous gate was FAIL/CONCERNS
-              - Story has > 5 acceptance criteria
+  - id: RISK-ASSESSMENT
+    title: Risk Assessment (Determines Review Depth)
+    description: Auto-escalate to deep review based on risk factors
+    action:
+      type: analysis
+      target: "console_output"
+      template: |
+        Evaluate if deep review is needed when:
+        - Auth/payment/security files touched
+        - No tests added to story
+        - Diff > 500 lines
+        - Previous gate was FAIL or CONCERNS
+        - Story has more than 5 acceptance criteria
+        Capture escalation rationale in notes.
 
-      - id: REQ-TRACE
-        title: Requirements Traceability
-        description: Map each acceptance criteria to its validating tests
-        action:
-           type: analysis
-           prompt: |
-              - Map each acceptance criteria to tests
-              - Document mapping with Given-When-Then (not test code)
-              - Identify coverage gaps
-              - Verify all requirements have corresponding test cases
+  - id: REQ-TRACE
+    title: Requirements Traceability
+    description: Map each acceptance criteria to its validating tests
+    action:
+      type: analysis
+      target: "traceability_notes"
+      template: |
+        - Map each acceptance criteria to tests using Given-When-Then narratives.
+        - Identify coverage gaps and suspected missing tests.
+        - Verify all requirements have corresponding validation evidence.
 
-      - id: CODE-QUALITY
-        title: Code Quality Review (Advisory Only)
-        description: Review code quality without making changes
-        action:
-           type: analysis
-           prompt: |
-              Review (advisory only):
-              - Architecture and design patterns
-              - Refactoring opportunities (recommend, do not implement)
-              - Code duplication or inefficiencies
-              - Performance optimizations
-              - Security vulnerabilities
-              - Best practices adherence
+  - id: CODE-QUALITY
+    title: Code Quality Review (Advisory Only)
+    description: Review code quality without making changes
+    action:
+      type: analysis
+      target: "code_quality_notes"
+      template: |
+        Review (advisory only):
+        - Architecture and design patterns
+        - Refactoring opportunities (recommend, do not implement)
+        - Code duplication or inefficiencies
+        - Performance optimizations
+        - Security vulnerabilities
+        - Best practices adherence
 
-      - id: TEST-ARCH
-        title: Test Architecture Assessment
-        description: Evaluate test coverage and design
-        action:
-           type: analysis
-           prompt: |
-              Assess:
-              - Test coverage adequacy at appropriate levels
-              - Test level appropriateness (unit vs integration vs e2e)
-              - Test design quality and maintainability
-              - Test data management strategy
-              - Mock/stub usage appropriateness
-              - Edge case and error scenario coverage
-              - Test execution time and reliability
+  - id: TEST-ARCH
+    title: Test Architecture Assessment
+    description: Evaluate test coverage and design
+    action:
+      type: analysis
+      target: "test_arch_notes"
+      template: |
+        Assess:
+        - Coverage adequacy by level (unit/integration/e2e)
+        - Test design quality and maintainability
+        - Test data strategy and fixtures
+        - Mock/stub usage
+        - Edge case and error scenario coverage
+        - Test execution reliability and runtimes
 
-      - id: NFR-CHECK
-        title: Non-Functional Requirements Check
-        description: Evaluate NFR compliance
-        action:
-           type: analysis
-           prompt: |
-              Check NFRs:
-              - Security: Authentication, authorization, data protection
-              - Performance: Code-level analysis (potential bottlenecks, query optimization opportunities, algorithmic efficiency, resource usage patterns) - excludes benchmark metrics
-              - Reliability: Error handling, recovery mechanisms
-              - Maintainability: Code clarity, documentation
+  - id: NFR-CHECK
+    title: Non-Functional Requirements Check
+    description: Evaluate NFR compliance
+    action:
+      type: analysis
+      target: "nfr_notes"
+      template: |
+        Check NFRs:
+        - Security: Authentication, authorization, data protection
+        - Performance: Code-level hotspots, query optimization, resource usage
+        - Reliability: Error handling and recovery mechanisms
+        - Maintainability: Code clarity, documentation, modularity
 
-      - id: TESTABILITY
-        title: Testability Evaluation
-        description: Assess testability aspects
-        action:
-           type: analysis
-           prompt: |
-              Evaluate:
-              - Controllability: Can we control the inputs?
-              - Observability: Can we observe the outputs?
-              - Debuggability: Can we debug failures easily?
+  - id: TESTABILITY
+    title: Testability Evaluation
+    description: Assess testability aspects
+    action:
+      type: analysis
+      target: "testability_notes"
+      template: |
+        Evaluate:
+        - Controllability: Ability to control inputs and state
+        - Observability: Signals, logs, and telemetry available
+        - Debuggability: Ease of isolating failures and reproducing issues
 
-      - id: TECH-DEBT
-        title: Technical Debt Identification
-        description: Identify accumulated technical debt
-        action:
-           type: analysis
-           prompt: |
-              Identify:
-              - Accumulated shortcuts
-              - Missing tests
-              - Outdated dependencies
-              - Architecture violations
+  - id: TECH-DEBT
+    title: Technical Debt Identification
+    description: Identify accumulated technical debt
+    action:
+      type: analysis
+      target: "tech_debt_notes"
+      template: |
+        Identify:
+        - Accumulated shortcuts and TODOs
+        - Missing or flaky tests
+        - Outdated dependencies
+        - Architecture policy violations
 
-      - id: ADVISORY
-        title: Advisory Improvements
-        description: Provide actionable recommendations without code changes
-        action:
-           type: analysis
-           prompt: |
-              Provide:
-              - Do NOT modify source code or tests
-              - Actionable recommendations and prioritized fix list
-              - Example diffs or pseudocode only if needed (do not apply)
-              - Do NOT alter story content beyond QA Results section
-              - Do NOT change story Status or File List
+  - id: ADVISORY
+    title: Advisory Improvements
+    description: Provide actionable recommendations without code changes
+    action:
+      type: analysis
+      target: "console_output"
+      template: |
+        Provide:
+        - Actionable recommendations and prioritized fix list
+        - Example diffs or pseudocode only if needed (do not apply)
+        - Instructions to update only QA Results section of the story
+        - Reminder not to alter story Status or File List
 
-      - id: STANDARDS
-        title: Standards Compliance Check
-        description: Verify adherence to project standards
-        action:
-           type: validation
-           validation:
-              type: checklist
-              required: true
+  - id: STANDARDS
+    title: Standards Compliance Check
+    description: Verify adherence to project standards
+    action:
+      type: validation
+      target: "@{docs.files.codingStandards}"
+      template: |
+        Run checklist validation against coding standards references.
+        Confirm required conventions, lint expectations, and documentation guidelines are met.
+    on_failure: halt
 
-      - id: AC-VALIDATION
-        title: Acceptance Criteria Validation
-        description: Verify each AC is fully implemented
-        action:
-           type: validation
-           validation:
-              type: requirements
-              required: true
+  - id: AC-VALIDATION
+    title: Acceptance Criteria Validation
+    description: Verify each AC is fully implemented
+    action:
+      type: validation
+      target: "!{story_path}"
+      template: |
+        Confirm every acceptance criterion has traceable implementation evidence.
+        Mark gaps that must be addressed before PASS is possible.
+    on_failure: halt
 
-      - id: UPDATE-STORY
-        title: Update Story File - QA Results Section ONLY
-        description: Append QA results to story file
-        action:
-           type: file_operation
-           operation: update
-           target: "{story_path}"
-           content: |
-              Append to "QA Results" only; if absent, add a new "## QA Results" at end. Do not edit other sections.
-              Use and fill this template (avoid gate-like labels, risk totals, or NFR statuses here):
-              Summary: [1–2 sentence narrative of scope and outcome]
-              Evidence Highlights:
-              - Reviewed: [key files/areas]
-              - Context: [diff size, notable triggers]
-              Requirements Traceability (Narrative): [brief mapping; suspected gaps with reasoning]
-              Test Architecture Notes: [coverage approach, levels used, reliability]
-              Testability: [controllability / observability / debuggability]
-              Code Quality (Advisory): [notable patterns/smells; refactor suggestions]
-              Risks/Concerns (Narrative): [qualitative risks; no severities/totals]
-              Advisory Actions:
-              - Must-fix (advisory): [bullets]
-              - Follow-up (advisory): [bullets]
-              Next Steps (Advisory, not a gate): [guidance]
+  - id: UPDATE-STORY
+    title: Update Story File - QA Results Section ONLY
+    description: Append QA results to story file
+    action:
+      type: file_operation
+      operation: update
+      target: "!{story_path}"
+      template: |
+        Append to "QA Results" only; if absent, add a new "## QA Results" at end. Do not edit other sections.
+        Use and fill this template (avoid gate-like labels, risk totals, or NFR statuses here):
+        Summary: [1–2 sentence narrative of scope and outcome]
+        Evidence Highlights:
+        - Reviewed: [key files/areas]
+        - Context: [diff size, notable triggers]
+        Requirements Traceability (Narrative): [brief mapping; suspected gaps with reasoning]
+        Test Architecture Notes: [coverage approach, levels used, reliability]
+        Testability: [controllability / observability / debuggability]
+        Code Quality (Advisory): [notable patterns/smells; refactor suggestions]
+        Risks/Concerns (Narrative): [qualitative risks; no severities/totals]
+        Advisory Actions:
+        - Must-fix (advisory): [bullets]
+        - Follow-up (advisory): [bullets]
+        Next Steps (Advisory, not a gate): [guidance]
 
-      - id: CREATE-GATE
-        title: Create Quality Gate File
-        description: Generate quality gate YAML file
-        action:
-           type: file_operation
-           operation: create
-           target: "@{docs.subdirs.qa}/gates/{story_id}-*.yaml"
-           content: |
-              Load qa-gate.json and use it as the contract to generate the gate artifact based on the assessment done above.
-              Serialize as YAML and write to @{docs.subdirs.qa}/gates/{story_id}-{story_slug}.yaml.
-              Do not modify the story file.
+  - id: CREATE-GATE
+    title: Create Quality Gate File
+    description: Generate quality gate YAML file
+    action:
+      type: file_operation
+      operation: create
+      target: "@{docs.subdirs.qa}/gates/${story}-*.yaml"
+      template: |
+        Load schemas/qa-gate.json as the contract.
+        Populate decision, evidence, risks, test design, and NFR sections based on prior steps.
+        Serialize as YAML and write to @{docs.subdirs.qa}/gates/${story}-{story_slug}.yaml (match existing slug convention).
+        Do not modify the story file when generating the gate artifact.
 
 outputs:
-   artifacts:
-      - name: quality_gate
-        type: file
-        path: "@{docs.subdirs.qa}/gates/{story_id}-*.yaml"
-        format: yaml
-        description: Quality gate assessment file with pass/fail decision
-   updates:
-      - target: "{story_path}"
-        sections:
-           - "QA Results"
-        restrictions: "Only append to QA Results section, never modify other sections"
-
-blocking_conditions:
-   - condition: "Story file is incomplete or missing critical sections"
-     message: "Story file must be complete before review"
-     severity: error
-   - condition: "File List is empty or clearly incomplete"
-     message: "Developer must complete File List before review"
-     severity: error
-   - condition: "No tests exist when they were required"
-     message: "Tests are required for this story"
-     severity: critical
-   - condition: "Code changes don't align with story requirements"
-     message: "Implementation doesn't match requirements"
-     severity: critical
-   - condition: "Critical architectural issues that require discussion"
-     message: "Architecture issues need resolution before review"
-     severity: critical
+  artifacts:
+    - name: quality_gate
+      type: gate
+      path: "@{docs.subdirs.qa}/gates/${story}-*.yaml"
+      format: yaml
+      description: Quality gate assessment file with pass/concerns/fail decision
+  updates:
+    - target: "!{story_path}"
+      sections:
+        - "QA Results"
+      restrictions: "Only append to QA Results section; never modify other sections"
 
 completion:
-   criteria:
-      - Story QA Results section updated
-      - Quality gate file created
-      - Status recommendation provided
-      - All findings documented
-      - Actionable recommendations provided
-   validations:
-      - command: "test -f @{docs.subdirs.qa}/gates/{epic}.{story}-*.yaml"
-        expected_output: "file exists"
+  criteria:
+    - Story QA Results section updated
+    - Quality gate file created
+    - Status recommendation provided
+    - All findings documented
+    - Actionable recommendations provided
+  validations:
+    - command: "test -f @{docs.subdirs.qa}/gates/${story}-*.yaml"
+      expected_output: "file exists"
 
 
 
@@ -853,107 +943,107 @@ type: framework
 category: testing
 scope: project
 content:
-   framework:
-      name: Test Levels Framework
-      version: "1.0"
-      levels:
-         - level: unit
-           description: Testing pure functions and business logic
-           criteria:
-              - Testing pure functions and business logic
-              - Algorithm correctness
-              - Input validation and data transformation
-              - Error handling in isolated components
-              - Complex calculations or state machines
-           characteristics:
-              - Fast execution (immediate feedback)
-              - No external dependencies (DB, API, file system)
-              - Highly maintainable and stable
-              - Easy to debug failures
-           favor_when:
-              - Logic can be isolated
-              - No side effects involved
-              - Fast feedback needed
-              - High cyclomatic complexity
-           example:
-              component: PriceCalculator
-              scenario: Calculate discount with multiple rules
-              justification: Complex business logic with multiple branches
-              mock_requirements: None - pure function
-           naming_convention: "test_{component}_{scenario}"
-         - level: integration
-           description: Component interaction verification
-           criteria:
-              - Component interaction verification
-              - Database operations and transactions
-              - API endpoint contracts
-              - Service-to-service communication
-              - Middleware and interceptor behavior
-           characteristics:
-              - Moderate execution time
-              - Tests component boundaries
-              - May use test databases or containers
-              - Validates system integration points
-           favor_when:
-              - Testing persistence layer
-              - Validating service contracts
-              - Testing middleware/interceptors
-              - Component boundaries critical
-           example:
-              components: ["UserService", "AuthRepository"]
-              scenario: Create user with role assignment
-              justification: Critical data flow between service and persistence
-              test_environment: In-memory database
-           naming_convention: "test_{flow}_{interaction}"
-         - level: e2e
-           description: Critical user journeys and cross-system workflows
-           criteria:
-              - Critical user journeys
-              - Cross-system workflows
-              - Visual regression testing
-              - Compliance and regulatory requirements
-              - Final validation before release
-           characteristics:
-              - Slower execution
-              - Tests complete workflows
-              - Requires full environment setup
-              - Most realistic but most brittle
-           favor_when:
-              - User-facing critical paths
-              - Multi-system interactions
-              - Regulatory compliance scenarios
-              - Visual regression important
-           example:
-              journey: Complete checkout process
-              scenario: User purchases with saved payment method
-              justification: Revenue-critical path requiring full validation
-              environment: Staging with test payment gateway
-           naming_convention: "test_{journey}_{outcome}"
-      anti_patterns:
-         - E2E testing for business logic validation
-         - Unit testing framework behavior
-         - Integration testing third-party libraries
-         - Duplicate coverage across levels
-      duplicate_coverage_guard:
-         check_before_adding:
-            - Is this already tested at a lower level?
-            - Can a unit test cover this instead of integration?
-            - Can an integration test cover this instead of E2E?
-         acceptable_overlap:
-            - Testing different aspects (unit logic, integration interaction, e2e user experience)
-            - Critical paths requiring defense in depth
-            - Regression prevention for previously broken functionality
-      test_id_format:
-         pattern: "{EPIC}.{STORY}-{LEVEL}-{SEQ}"
-         examples:
-            - "1.3-UNIT-001"
-            - "1.3-INT-002"
-            - "1.3-E2E-001"
+  framework:
+    name: Test Levels Framework
+    version: "1.0"
+    levels:
+      - level: unit
+        description: Testing pure functions and business logic
+        criteria:
+          - Testing pure functions and business logic
+          - Algorithm correctness
+          - Input validation and data transformation
+          - Error handling in isolated components
+          - Complex calculations or state machines
+        characteristics:
+          - Fast execution (immediate feedback)
+          - No external dependencies (DB, API, file system)
+          - Highly maintainable and stable
+          - Easy to debug failures
+        favor_when:
+          - Logic can be isolated
+          - No side effects involved
+          - Fast feedback needed
+          - High cyclomatic complexity
+        example:
+          component: PriceCalculator
+          scenario: Calculate discount with multiple rules
+          justification: Complex business logic with multiple branches
+          mock_requirements: None - pure function
+        naming_convention: "test_{component}_{scenario}"
+      - level: integration
+        description: Component interaction verification
+        criteria:
+          - Component interaction verification
+          - Database operations and transactions
+          - API endpoint contracts
+          - Service-to-service communication
+          - Middleware and interceptor behavior
+        characteristics:
+          - Moderate execution time
+          - Tests component boundaries
+          - May use test databases or containers
+          - Validates system integration points
+        favor_when:
+          - Testing persistence layer
+          - Validating service contracts
+          - Testing middleware/interceptors
+          - Component boundaries critical
+        example:
+          components: ["UserService", "AuthRepository"]
+          scenario: Create user with role assignment
+          justification: Critical data flow between service and persistence
+          test_environment: In-memory database
+        naming_convention: "test_{flow}_{interaction}"
+      - level: e2e
+        description: Critical user journeys and cross-system workflows
+        criteria:
+          - Critical user journeys
+          - Cross-system workflows
+          - Visual regression testing
+          - Compliance and regulatory requirements
+          - Final validation before release
+        characteristics:
+          - Slower execution
+          - Tests complete workflows
+          - Requires full environment setup
+          - Most realistic but most brittle
+        favor_when:
+          - User-facing critical paths
+          - Multi-system interactions
+          - Regulatory compliance scenarios
+          - Visual regression important
+        example:
+          journey: Complete checkout process
+          scenario: User purchases with saved payment method
+          justification: Revenue-critical path requiring full validation
+          environment: Staging with test payment gateway
+        naming_convention: "test_{journey}_{outcome}"
+    anti_patterns:
+      - E2E testing for business logic validation
+      - Unit testing framework behavior
+      - Integration testing third-party libraries
+      - Duplicate coverage across levels
+    duplicate_coverage_guard:
+      check_before_adding:
+        - Is this already tested at a lower level?
+        - Can a unit test cover this instead of integration?
+        - Can an integration test cover this instead of E2E?
+      acceptable_overlap:
+        - Testing different aspects (unit logic, integration interaction, e2e user experience)
+        - Critical paths requiring defense in depth
+        - Regression prevention for previously broken functionality
+    test_id_format:
+      pattern: "{EPIC}.{STORY}-{LEVEL}-{SEQ}"
+      examples:
+        - "1.3-UNIT-001"
+        - "1.3-INT-002"
+        - "1.3-E2E-001"
 usage:
-   agents: ["qa", "dev"]
-   phases: ["testing", "development", "review"]
-   tasks: ["test-design"]
-   load_when: on_demand
+  agents: ["qa", "dev"]
+  phases: ["testing", "development", "review"]
+  tasks: ["test-design"]
+  load_when: on_demand
 
 
 
@@ -968,175 +1058,175 @@ type: matrix
 category: testing
 scope: project
 content:
-   matrix:
-      dimensions:
-         - name: priority_level
-           values: ["P0", "P1", "P2", "P3"]
-         - name: coverage_type
-           values: ["unit", "integration", "e2e"]
-      priority_levels:
-         - level: P0
-           name: Critical (Must Test)
-           criteria:
-              - Revenue-impacting functionality
-              - Security-critical paths
-              - Data integrity operations
-              - Regulatory compliance requirements
-              - Previously broken functionality (regression prevention)
-           examples:
-              - Payment processing
-              - Authentication/authorization
-              - User data creation/deletion
-              - Financial calculations
-              - GDPR/privacy compliance
-           testing_requirements:
-              - Comprehensive coverage at all levels
-              - Both happy and unhappy paths
-              - Edge cases and error scenarios
-           coverage_targets:
-              unit: ">90%"
-              integration: ">80%"
-              e2e: "All critical paths"
-         - level: P1
-           name: High (Should Test)
-           criteria:
-              - Core user journeys
-              - Frequently used features
-              - Features with complex logic
-              - Integration points between systems
-              - Features affecting user experience
-           examples:
-              - User registration flow
-              - Search functionality
-              - Data import/export
-              - Notification systems
-              - Dashboard displays
-           testing_requirements:
-              - Primary happy paths required
-              - Key error scenarios
-              - Critical edge cases
-           coverage_targets:
-              unit: ">80%"
-              integration: ">60%"
-              e2e: "Main happy paths"
-         - level: P2
-           name: Medium (Nice to Test)
-           criteria:
-              - Secondary features
-              - Admin functionality
-              - Reporting features
-              - Configuration options
-              - UI polish and aesthetics
-           examples:
-              - Admin settings panels
-              - Report generation
-              - Theme customization
-              - Help documentation
-              - Analytics tracking
-           testing_requirements:
-              - Happy path coverage
-              - Basic error handling
-              - Can defer edge cases
-           coverage_targets:
-              unit: ">60%"
-              integration: ">40%"
-              e2e: "Smoke tests"
-         - level: P3
-           name: Low (Test if Time Permits)
-           criteria:
-              - Rarely used features
-              - Nice-to-have functionality
-              - Cosmetic issues
-              - Non-critical optimizations
-           examples:
-              - Advanced preferences
-              - Legacy feature support
-              - Experimental features
-              - Debug utilities
-           testing_requirements:
-              - Smoke tests only
-              - Can rely on manual testing
-              - Document known limitations
-           coverage_targets:
-              unit: "Best effort"
-              integration: "Best effort"
-              e2e: "Manual only"
-      risk_adjustments:
-         increase_priority:
-            - condition: High user impact
-              threshold: "affects >50% of users"
-            - condition: High financial impact
-              threshold: ">$10K potential loss"
-            - condition: Security vulnerability potential
-              threshold: null
-            - condition: Compliance/legal requirements
-              threshold: null
-            - condition: Customer-reported issues
-              threshold: null
-            - condition: Complex implementation
-              threshold: ">500 LOC"
-            - condition: Multiple system dependencies
-              threshold: null
-         decrease_priority:
-            - Feature flag protected
-            - Gradual rollout planned
-            - Strong monitoring in place
-            - Easy rollback capability
-            - Low usage metrics
-            - Simple implementation
-            - Well-isolated component
-      priority_assignment_rules:
-         - Start with business impact - What happens if this fails?
-         - Consider probability - How likely is failure?
-         - Factor in detectability - Would we know if it failed?
-         - Account for recoverability - Can we fix it quickly?
-      decision_tree:
-         root: Is it revenue-critical?
-         branches:
+  matrix:
+    dimensions:
+      - name: priority_level
+        values: ["P0", "P1", "P2", "P3"]
+      - name: coverage_type
+        values: ["unit", "integration", "e2e"]
+    priority_levels:
+      - level: P0
+        name: Critical (Must Test)
+        criteria:
+          - Revenue-impacting functionality
+          - Security-critical paths
+          - Data integrity operations
+          - Regulatory compliance requirements
+          - Previously broken functionality (regression prevention)
+        examples:
+          - Payment processing
+          - Authentication/authorization
+          - User data creation/deletion
+          - Financial calculations
+          - GDPR/privacy compliance
+        testing_requirements:
+          - Comprehensive coverage at all levels
+          - Both happy and unhappy paths
+          - Edge cases and error scenarios
+        coverage_targets:
+          unit: ">90%"
+          integration: ">80%"
+          e2e: "All critical paths"
+      - level: P1
+        name: High (Should Test)
+        criteria:
+          - Core user journeys
+          - Frequently used features
+          - Features with complex logic
+          - Integration points between systems
+          - Features affecting user experience
+        examples:
+          - User registration flow
+          - Search functionality
+          - Data import/export
+          - Notification systems
+          - Dashboard displays
+        testing_requirements:
+          - Primary happy paths required
+          - Key error scenarios
+          - Critical edge cases
+        coverage_targets:
+          unit: ">80%"
+          integration: ">60%"
+          e2e: "Main happy paths"
+      - level: P2
+        name: Medium (Nice to Test)
+        criteria:
+          - Secondary features
+          - Admin functionality
+          - Reporting features
+          - Configuration options
+          - UI polish and aesthetics
+        examples:
+          - Admin settings panels
+          - Report generation
+          - Theme customization
+          - Help documentation
+          - Analytics tracking
+        testing_requirements:
+          - Happy path coverage
+          - Basic error handling
+          - Can defer edge cases
+        coverage_targets:
+          unit: ">60%"
+          integration: ">40%"
+          e2e: "Smoke tests"
+      - level: P3
+        name: Low (Test if Time Permits)
+        criteria:
+          - Rarely used features
+          - Nice-to-have functionality
+          - Cosmetic issues
+          - Non-critical optimizations
+        examples:
+          - Advanced preferences
+          - Legacy feature support
+          - Experimental features
+          - Debug utilities
+        testing_requirements:
+          - Smoke tests only
+          - Can rely on manual testing
+          - Document known limitations
+        coverage_targets:
+          unit: "Best effort"
+          integration: "Best effort"
+          e2e: "Manual only"
+    risk_adjustments:
+      increase_priority:
+        - condition: High user impact
+          threshold: "affects >50% of users"
+        - condition: High financial impact
+          threshold: ">$10K potential loss"
+        - condition: Security vulnerability potential
+          threshold: null
+        - condition: Compliance/legal requirements
+          threshold: null
+        - condition: Customer-reported issues
+          threshold: null
+        - condition: Complex implementation
+          threshold: ">500 LOC"
+        - condition: Multiple system dependencies
+          threshold: null
+      decrease_priority:
+        - Feature flag protected
+        - Gradual rollout planned
+        - Strong monitoring in place
+        - Easy rollback capability
+        - Low usage metrics
+        - Simple implementation
+        - Well-isolated component
+    priority_assignment_rules:
+      - Start with business impact - What happens if this fails?
+      - Consider probability - How likely is failure?
+      - Factor in detectability - Would we know if it failed?
+      - Account for recoverability - Can we fix it quickly?
+    decision_tree:
+      root: Is it revenue-critical?
+      branches:
+        - condition: "YES"
+          result: P0
+        - condition: "NO"
+          next: Does it affect core user journey?
+          branches:
             - condition: "YES"
-              result: P0
-            - condition: "NO"
-              next: Does it affect core user journey?
+              next: Is it high-risk?
               branches:
-                 - condition: "YES"
-                   next: Is it high-risk?
-                   branches:
-                      - condition: "YES"
-                        result: P0
-                      - condition: "NO"
-                        result: P1
-                 - condition: "NO"
-                   next: Is it frequently used?
-                   branches:
-                      - condition: "YES"
-                        result: P1
-                      - condition: "NO"
-                        next: Is it customer-facing?
-                        branches:
-                           - condition: "YES"
-                             result: P2
-                           - condition: "NO"
-                             result: P3
-      execution_order:
-         - priority: P0
-           description: Execute first (fail fast on critical issues)
-         - priority: P1
-           description: Execute second (core functionality)
-         - priority: P2
-           description: Execute if time permits
-         - priority: P3
-           description: Only in full regression cycles
-      continuous_adjustment_criteria:
-         - Production incident patterns
-         - User feedback and complaints
-         - Usage analytics
-         - Test failure history
-         - Business priority changes
+                - condition: "YES"
+                  result: P0
+                - condition: "NO"
+                  result: P1
+            - condition: "NO"
+              next: Is it frequently used?
+              branches:
+                - condition: "YES"
+                  result: P1
+                - condition: "NO"
+                  next: Is it customer-facing?
+                  branches:
+                    - condition: "YES"
+                      result: P2
+                    - condition: "NO"
+                      result: P3
+    execution_order:
+      - priority: P0
+        description: Execute first (fail fast on critical issues)
+      - priority: P1
+        description: Execute second (core functionality)
+      - priority: P2
+        description: Execute if time permits
+      - priority: P3
+        description: Only in full regression cycles
+    continuous_adjustment_criteria:
+      - Production incident patterns
+      - User feedback and complaints
+      - Usage analytics
+      - Test failure history
+      - Business priority changes
 usage:
-   agents: ["qa", "dev", "pdm"]
-   phases: ["testing", "planning", "review"]
-   tasks: ["test-design", "test-priorities"]
-   load_when: on_demand
+  agents: ["qa", "dev", "pdm"]
+  phases: ["testing", "planning", "review"]
+  tasks: ["test-design", "test-priorities"]
+  load_when: on_demand
 
 
 
@@ -1145,181 +1235,184 @@ usage:
 $schema: ../../.internal/task.schema.json
 id: spec-outline-review
 title: Spec Outline Review
-version: 1.0.0
-purpose: Review a plain‑English outline of test cases for clarity, completeness, coverage, and traceability (when a story is provided). Produce an immediate, actionable improvement report without creating files or requiring full test implementations.
+version: 2.0.0
+purpose: Review a plain-English outline of test cases for clarity, completeness, coverage, and traceability (when a story is provided). Produce an immediate, actionable improvement report without creating files or requiring full test implementations.
 category: quality
 agent: qa
 
-inputs:
-   required:
-      - name: outline
-        type: string
-        examples:
-           - |
-              describe("SessionService.verifyToken", () => {
-                it("should call the 'verify' helper function from hono/jwt");
-                it("should return the verified token");
-                it("should return null if token is not verified");
-              });
-   optional:
-      - name: story_id
-        type: story_id
-        pattern: "^\\d+\\.\\d+$"
-        examples: ["1.3", "2.5"]
-      - name: story_path
-        type: path
-        pattern: "@{docs.subdirs.stories}/{story_id}-*.yaml"
+derived:
+  - name: outline_text
+    type: string
+    source: parameters
+    description: "Plain-English test outline input"
+    required: true
+  - name: story_path
+    type: path
+    source: parameters
+    pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
+    description: "Optional story file path for traceability"
+    required: false
 
-process:
-   mode: sequential
-   steps:
-      - id: LOAD-CONFIG
-        title: Load Configuration
-        description: Load core configuration for docs and path resolution.
-        action:
-           type: file_operation
-           operation: read
-           target: "@{baseDir}/config.json"
-        on_failure: halt
+prerequisites:
+  - field: "!{outline_text}"
+    value: ""
+    operator: "!="
+    on_violate: "halt_and_report"
 
-      - id: NORMALIZE-OUTLINE
-        title: Normalize Outline
-        description: Normalize the provided outline into a structured list of scenarios (e.g., describe/it pairs or bullet items) suitable for analysis.
-        action:
-           type: analysis
-           content: |
-              Normalize the outline by:
-              - Extracting scenario titles and intents from describe/it statements or bullets
-              - Removing code‑specific syntax; keep human‑readable expectations
-              - Producing a numbered list of scenarios for downstream analysis
+steps:
+  - id: LOAD-CONFIG
+    title: Load Configuration
+    description: Load core configuration for docs and path resolution.
+    action:
+      type: file_operation
+      operation: read
+      target: "@{baseDir}/config.json"
+    on_failure: halt
 
-      - id: LOAD-STORY
-        title: Load Story (Optional)
-        description: If story_path is provided, load the story file for AC traceability. If not provided or not found, continue without traceability.
-        action:
-           type: file_operation
-           operation: read
-           target: "{story_path}"
-        on_failure: continue
+  - id: NORMALIZE-OUTLINE
+    title: Normalize Outline
+    description: Normalize the provided outline into a structured list of scenarios suitable for analysis.
+    action:
+      type: analysis
+      target: "outline_scenarios"
+      template: |
+        Normalize !{outline_text} by:
+        - Extracting scenario titles and intents from describe/it statements or bullets
+        - Removing code-specific syntax; keep human-readable expectations
+        - Producing a numbered list of scenarios for downstream analysis
 
-      - id: TRACEABILITY
-        title: Traceability to Acceptance Criteria (If Story Provided)
-        description: Map each scenario from the outline to Acceptance Criteria; if no story provided, skip this step.
-        action:
-           type: analysis
-           content: |
-              For each scenario in the normalized outline:
-              - If a story is loaded, identify the AC number(s) or requirement it validates
-              - Mark "untraceable" if no AC/requirement can be linked
-              - Summarize a coverage table: scenario_id -> [ACs]
+  - id: LOAD-STORY
+    title: Load Story (Optional)
+    description: Load the story file for AC traceability when provided.
+    action:
+      type: file_operation
+      operation: read
+      target: "!{story_path}"
+    on_failure: continue
 
-      - id: WRITE-SPECS
-        title: Update Test Specs in Story (Optional)
-        description: If story_path is provided and loaded, write/update the story's Test Specs section with the normalized outline before reporting.
-        action:
-           type: file_operation
-           operation: update
-           target: "{story_path}"
-           content: |
-              Update the "Test Specs" section as follows:
-              - Under "Specifications", write a numbered list from the normalized outline. Each item should be a short, clear, test-intent sentence. Include AC references if available from traceability.
-              - Under "Artifacts", append any test file paths if provided by the user; otherwise leave unchanged.
-              - Do not modify any other story sections.
-        on_failure: halt
+  - id: TRACEABILITY
+    title: Traceability to Acceptance Criteria
+    description: Map normalized scenarios to acceptance criteria when the story is available.
+    action:
+      type: analysis
+      target: "traceability_notes"
+      template: |
+        For each normalized scenario:
+        - If a story is loaded, identify the AC number(s) or requirement it validates
+        - Mark "untraceable" if no AC/requirement can be linked
+        - Summarize a coverage table scenario_id -> [ACs]
+        If no story is available, document that traceability was skipped.
 
-      - id: COVERAGE
-        title: Coverage Assessment
-        description: Check breadth of coverage across functional dimensions.
-        action:
-           type: analysis
-           content: |
-              Assess whether the outline includes:
-              - Positive paths and happy flows
-              - Negative/error cases and validation failures
-              - Edge/boundary values
-              - State transitions and lifecycle
-              - Multi‑step flows and integration seams
-              - Concurrency/async considerations (where relevant)
-              Output gaps grouped by dimension.
+  - id: WRITE-SPECS
+    title: Update Test Specs in Story (Optional)
+    description: Write or refresh the story's Test Specs section using the normalized outline.
+    action:
+      type: file_operation
+      operation: update
+      target: "!{story_path}"
+      template: |
+        Update the "Test Specs" section as follows:
+        - Under "Specifications", write a numbered list from the normalized outline with concise test-intent sentences.
+        - Include AC references captured in traceability when available.
+        - Under "Artifacts", append any provided test file paths; otherwise leave unchanged.
+        - Do not modify other story sections.
+    on_failure: continue
 
-      - id: NFR-RELEVANCE
-        title: Non‑Functional Considerations
-        description: Evaluate whether relevant non‑functional aspects are addressed where applicable.
-        action:
-           type: analysis
-           content: |
-              Check for NFR‑focused outline items where appropriate:
-              - Performance (code‑level critical paths)
-              - Security/authz/authn, input validation
-              - Accessibility (a11y), i18n/l10n (for UI)
-              - Observability/logging, data integrity
-              Note missing or mis‑scoped NFRs; NFR depth should be risk‑based.
+  - id: COVERAGE
+    title: Coverage Assessment
+    description: Check breadth of coverage across functional dimensions.
+    action:
+      type: analysis
+      target: "coverage_notes"
+      template: |
+        Assess whether the outline includes:
+        - Positive paths and happy flows
+        - Negative/error cases and validation failures
+        - Edge/boundary values
+        - State transitions and lifecycle
+        - Multi-step flows and integration seams
+        - Concurrency/async considerations (where relevant)
+        Output gaps grouped by dimension.
 
-      - id: QUALITY
-        title: Outline Quality and Testability
-        description: Assess clarity and executability of the outline.
-        action:
-           type: analysis
-           content: |
-              Validate outline quality:
-              - Clear Given‑When‑Then intent (or equivalent) per scenario, unambiguous
-              - Single intent per scenario where practical
-              - Deterministic setup/teardown assumptions
-              - Test data needs are identified or referenced
-              - Mocks/stubs/fixtures needs specified where needed
-              - Avoid overlapping/over‑broad items
+  - id: NFR-RELEVANCE
+    title: Non-Functional Considerations
+    description: Evaluate whether relevant NFR aspects are addressed.
+    action:
+      type: analysis
+      target: "nfr_notes"
+      template: |
+        Check for NFR-focused outline items where appropriate:
+        - Performance-critical paths
+        - Security/authz/authn and input validation
+        - Accessibility (a11y), i18n/l10n for UI
+        - Observability/logging and data integrity
+        Note missing or mis-scoped NFRs with risk context.
 
-      - id: DEDUP-CONFLICTS
-        title: Redundancies and Contradictions
-        description: Identify duplicate, overlapping, or conflicting outline items and propose consolidation.
-        action:
-           type: analysis
-           content: |
-              - List redundant scenarios and propose de‑duplication
-              - Flag contradictions and suggest a single reliable source
+  - id: QUALITY
+    title: Outline Quality and Testability
+    description: Assess clarity and executability of the outline.
+    action:
+      type: analysis
+      target: "quality_notes"
+      template: |
+        Validate outline quality:
+        - Clear Given-When-Then intent (or equivalent) per scenario
+        - Single intent per scenario where practical
+        - Deterministic setup/teardown assumptions
+        - Test data needs identified or referenced
+        - Required mocks/stubs/fixtures noted
+        - Overlap avoided between outline items
 
-      - id: PRIORITIZE-GAPS
-        title: Prioritize Gaps by Risk
-        description: Classify gaps using P0/P1/P2 and propose focused additions.
-        action:
-           type: analysis
-           content: |
-              - Classify gaps: P0 (security/revenue‑critical), P1 (core flows), P2 (secondary)
-              - For each P0 gap, provide 1–2 example outline items to add (concise)
+  - id: DEDUP-CONFLICTS
+    title: Redundancies and Contradictions
+    description: Identify duplicate, overlapping, or conflicting outline items.
+    action:
+      type: analysis
+      target: "dedup_notes"
+      template: |
+        - List redundant scenarios and propose de-duplication
+        - Flag contradictions and recommend a single reliable source of truth
 
-      - id: REPORT
-        title: Produce Actionable Report (Direct Output)
-        description: Output a concise, structured report to the console only (no files).
-        action:
-           type: analysis
-           content: |
-              Output (numbered list sections):
-              1) What's good
-              2) Gaps (by dimension and risk)
-              3) Ambiguities
-              4) Redundancies/Conflicts
-              5) Actionable next steps (ordered by risk)
+  - id: PRIORITIZE-GAPS
+    title: Prioritize Gaps by Risk
+    description: Classify gaps using P0/P1/P2 and propose focused additions.
+    action:
+      type: analysis
+      target: "gap_priorities"
+      template: |
+        - Classify gaps: P0 (security/revenue-critical), P1 (core flows), P2 (secondary)
+        - For each P0 gap, provide 1–2 concise outline items to add
+        - Recommend sequencing for remediation work
 
-blocking_conditions:
-   - condition: "Outline not provided"
-     message: "Provide outline text with it‑statements or bullet points"
-     severity: error
-
-completion:
-   criteria:
-      - Outline normalized for analysis
-      - (If story provided) Traceability mapping created
-      - Coverage gaps identified
-      - NFR considerations evaluated (as applicable)
-      - Outline quality and redundancy analysis completed
-      - Actionable report produced (direct output)
+  - id: REPORT
+    title: Produce Actionable Report
+    description: Output a concise, structured report to the console only (no files).
+    action:
+      type: analysis
+      target: "console_output"
+      template: |
+        Output numbered sections:
+        1) What's working well
+        2) Gaps (by dimension and risk)
+        3) Ambiguities needing clarification
+        4) Redundancies or conflicts
+        5) Actionable next steps ordered by risk
 
 outputs:
-   updates:
-      - target: "{story_path}"
-        sections:
-           - "Test Specs"
-        restrictions: "QA agent may edit only the 'Test Specs' field; do not modify other sections"
+  updates:
+    - target: "!{story_path}"
+      sections:
+        - "Test Specs"
+      restrictions: "QA agent may edit only the 'Test Specs' field; do not modify other sections"
+
+completion:
+  criteria:
+    - Outline normalized for downstream analysis
+    - Traceability mapping captured when story provided
+    - Coverage gaps across dimensions identified
+    - Relevant NFR considerations evaluated
+    - Outline quality, redundancy, and conflicts documented
+    - Actionable console report delivered
 
 
 
@@ -1328,177 +1421,184 @@ outputs:
 $schema: ../../.internal/task.schema.json
 id: test-design
 title: Test Design
-version: 1.0.0
+version: 2.0.0
 purpose: Create comprehensive test scenarios with appropriate test level recommendations for story implementation.
 category: quality
 agent: qa
 
-inputs:
-   required:
-      - name: story_id
-        type: story_id
-        pattern: "^\\d+\\.\\d+$"
-        examples: ["1.3", "2.5"]
-      - name: story_path
-        type: path
-        pattern: "@{docs.subdirs.stories}/{story_id}-*.yaml"
+derived:
+  - name: story_path
+    type: path
+    source: parameters
+    pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
+    description: "Story file path used for AC extraction"
+    required: true
 
-process:
-   mode: sequential
-   steps:
-      - id: ANALYZE-REQ
-        title: Analyze Story Requirements
-        description: Break down each acceptance criterion into testable scenarios
-        action:
-           type: analysis
-           prompt: |
-              For each AC:
-              - Identify core functionality to test
-              - Determine data variations needed
-              - Consider error conditions
-              - Note edge cases
+prerequisites:
+  - field: "!{story_path}"
+    value: "found"
+    operator: "="
+    on_violate: "halt_and_report"
 
-      - id: APPLY-FRAMEWORK
-        title: Apply Test Level Framework
-        description: Determine appropriate test level for each scenario
-        action:
-           type: analysis
-           prompt: |
-              Apply test level criteria from test-levels-framework.yaml:
-              - Unit: Pure logic, algorithms, calculations
-              - Integration: Component interactions, DB operations
-              - E2E: Critical user journeys, compliance
+steps:
+  - id: LOAD-STORY
+    title: Load Story Context
+    description: Load the story file to gather ACs and metadata.
+    action:
+      type: file_operation
+      operation: read
+      target: "!{story_path}"
+    on_failure: halt
 
-      - id: ASSIGN-PRIORITY
-        title: Assign Test Priorities
-        description: Classify tests by priority using matrix
-        action:
-           type: analysis
-           prompt: |
-              Apply priorities from test-priorities-matrix.yaml:
-              - P0: Revenue-critical, security, compliance
-              - P1: Core user journeys, frequently used
-              - P2: Secondary features, admin functions
-              - P3: Nice-to-have, rarely used
+  - id: ANALYZE-REQ
+    title: Analyze Story Requirements
+    description: Break down each acceptance criterion into testable scenarios.
+    action:
+      type: analysis
+      target: "scenario_inputs"
+      template: |
+        For each AC:
+        - Identify core functionality to test
+        - Determine data variations needed
+        - Consider error conditions and sad paths
+        - Note edge cases and state transitions
 
-      - id: DESIGN-SCENARIOS
-        title: Design Test Scenarios
-        description: Create detailed test scenarios for each identified need
-        action:
-           type: analysis
-           prompt: |
-              For each test need, create:
-              - ID: {story_id}-{LEVEL}-{SEQ}
-              - Requirement: AC reference
-              - Priority: P0|P1|P2|P3
-              - Level: unit|integration|e2e
-              - Description: What is being tested
-              - Justification: Why this level was chosen
-              - Risk mitigation: Which risks are addressed
+  - id: APPLY-FRAMEWORK
+    title: Apply Test Level Framework
+    description: Determine appropriate test level for every scenario.
+    action:
+      type: analysis
+      target: "level_assignments"
+      template: |
+        Using data/test-levels-framework.yaml, select unit vs integration vs e2e per scenario.
+        Capture rationale referencing architecture constraints, dependencies, and observability needs.
 
-      - id: VALIDATE-COVERAGE
-        title: Validate Test Coverage
-        description: Ensure comprehensive coverage without redundancy
-        action:
-           type: validation
-           validation:
-              type: checklist
-              required: true
-           prompt: |
-              Ensure:
-              - Every AC has at least one test
-              - No duplicate coverage across levels
-              - Critical paths have multiple levels
-              - Risk mitigations are addressed
+  - id: ASSIGN-PRIORITY
+    title: Assign Test Priorities
+    description: Classify tests by priority using the matrix.
+    action:
+      type: analysis
+      target: "priority_assignments"
+      template: |
+        Apply data/test-priorities-matrix.yaml:
+        - P0: Revenue-critical, security, compliance
+        - P1: Core user journeys, frequently used paths
+        - P2: Secondary features or admin flows
+        - P3: Nice-to-have or low-risk
+        Document justification for each priority.
 
-      - id: CREATE-REPORT
-        title: Create Test Design Document
-        description: Generate comprehensive test design report
-        action:
-           type: file_operation
-           operation: create
-           target: "@{docs.subdirs.qa}/assessments/{story_id}-test-design-{YYYYMMDD}.md"
-           content: |
-              # Test Design: Story {story_id}
+  - id: DESIGN-SCENARIOS
+    title: Design Test Scenarios
+    description: Create detailed scenarios for each identified need.
+    action:
+      type: analysis
+      target: "scenario_catalog"
+      template: |
+        For each test need, define:
+        - ID: ${story}-{{LEVEL}}-{{SEQ}}
+        - Requirement: AC reference or requirement text
+        - Priority: P0|P1|P2|P3
+        - Level: unit|integration|e2e
+        - Description: What is being validated
+        - Justification: Why this level/priority combination
+        - Risk mitigation: Which risks are addressed
 
-              Date: {date}
-              Designer: Quinn (Test Architect)
+  - id: VALIDATE-COVERAGE
+    title: Validate Test Coverage
+    description: Ensure comprehensive coverage without redundancy.
+    action:
+      type: validation
+      target: "scenario_catalog"
+      template: |
+        Ensure:
+        - Every AC has at least one scenario
+        - No duplicate coverage across levels
+        - Critical paths have layered coverage where needed
+        - Risk mitigations are explicitly tied to scenarios
+    on_failure: halt
 
-              ## Test Strategy Overview
+  - id: CREATE-REPORT
+    title: Create Test Design Document
+    description: Generate comprehensive test design report.
+    action:
+      type: file_operation
+      operation: create
+      target: "@{docs.subdirs.qa}/assessments/${story}-test-design-{{YYYYMMDD}}.md"
+      template: |
+        # Test Design: Story ${story}
 
-              - Total test scenarios: X
-              - Unit tests: Y (A%)
-              - Integration tests: Z (B%)
-              - E2E tests: W (C%)
-              - Priority distribution: P0: X, P1: Y, P2: Z
+        Date: {{date}}
+        Designer: Quinn (Test Architect)
 
-              ## Test Scenarios by Acceptance Criteria
+        ## Test Strategy Overview
 
-              ### AC1: {description}
+        - Total test scenarios: {{scenario_totals.total}}
+        - Unit tests: {{scenario_totals.unit}} ({{scenario_totals.unit_pct}})
+        - Integration tests: {{scenario_totals.integration}} ({{scenario_totals.integration_pct}})
+        - E2E tests: {{scenario_totals.e2e}} ({{scenario_totals.e2e_pct}})
+        - Priority distribution: P0 {{priorities.p0}}, P1 {{priorities.p1}}, P2 {{priorities.p2}}, P3 {{priorities.p3}}
 
-              #### Scenarios
+        ## Test Scenarios by Acceptance Criteria
 
-              | ID | Level | Priority | Test | Justification |
-              |---|---|---|---|---|
-              | 1.3-UNIT-001 | Unit | P0 | Validate input format | Pure validation logic |
-              | 1.3-INT-001 | Integration | P0 | Service processes request | Multi-component flow |
-              | 1.3-E2E-001 | E2E | P1 | User completes journey | Critical path validation |
+        {{scenario_tables}}
 
-              ## Risk Coverage
+        ## Risk Coverage
 
-              [Map test scenarios to identified risks if risk profile exists]
+        {{risk_mapping}}
 
-              ## Recommended Execution Order
+        ## Recommended Execution Order
 
-              1. P0 Unit tests (fail fast)
-              2. P0 Integration tests
-              3. P0 E2E tests
-              4. P1 tests in order
-              5. P2+ as time permits
+        1. P0 Unit tests (fail fast)
+        2. P0 Integration tests
+        3. P0 E2E tests
+        4. Remaining P1 scenarios
+        5. P2+ as time permits
 
-      - id: CREATE-GATE-BLOCK
-        title: Generate Gate YAML Block
-        description: Create test_design block for quality gate
-        action:
-           type: file_operation
-           operation: create
-           target: "test_design_block.yaml"
-           content: |
-              test_design:
-                scenarios_total: X
-                by_level:
-                  unit: Y
-                  integration: Z
-                  e2e: W
-                by_priority:
-                  p0: A
-                  p1: B
-                  p2: C
-                coverage_gaps: []
+  - id: CREATE-GATE-BLOCK
+    title: Generate Gate YAML Block
+    description: Create `test_design` block for the quality gate artifact.
+    action:
+      type: file_operation
+      operation: create
+      target: "@{docs.subdirs.qa}/gates/${story}-test-design-block.yaml"
+      template: |
+        test_design:
+          scenarios_total: {{scenario_totals.total}}
+          by_level:
+            unit: {{scenario_totals.unit}}
+            integration: {{scenario_totals.integration}}
+            e2e: {{scenario_totals.e2e}}
+          by_priority:
+            p0: {{priorities.p0}}
+            p1: {{priorities.p1}}
+            p2: {{priorities.p2}}
+            p3: {{priorities.p3}}
+          coverage_gaps: {{coverage_gaps}}
 
 outputs:
-   artifacts:
-      - name: test_design_document
-        type: report
-        path: "@{docs.subdirs.qa}/assessments/{story_id}-test-design-{YYYYMMDD}.md"
-        format: markdown
-        description: Comprehensive test design document with scenarios
-      - name: gate_test_block
-        type: file
-        path: "test_design_block.yaml"
-        format: yaml
-        description: Test design block for gate file
+  artifacts:
+    - name: test_design_document
+      type: report
+      path: "@{docs.subdirs.qa}/assessments/${story}-test-design-{{YYYYMMDD}}.md"
+      format: markdown
+      description: Comprehensive test design document with scenarios
+    - name: gate_test_block
+      type: gate
+      path: "@{docs.subdirs.qa}/gates/${story}-test-design-block.yaml"
+      format: yaml
+      description: Test design block for inclusion in quality gate files
 
 completion:
-   criteria:
-      - Every AC has test coverage
-      - Test levels are appropriate
-      - No duplicate coverage across levels
-      - Priorities align with business risk
-      - Test IDs follow naming convention
-      - Scenarios are atomic and independent
-   validations:
-      - command: "test -f @{docs.subdirs.qa}/assessments/{story_id}-test-design-{YYYYMMDD}.md"
+  criteria:
+    - Every acceptance criterion mapped to at least one scenario
+    - Test levels selected per framework guidance
+    - Priorities align with business risk matrix
+    - Scenario IDs follow naming convention
+    - Test design report generated in QA assessments directory
+    - Gate test_design block created
+  validations:
+    - command: "test -f @{docs.subdirs.qa}/assessments/${story}-test-design-{{YYYYMMDD}}.md"
+      expected_output: "file exists"
 
 
 
@@ -1507,296 +1607,285 @@ completion:
 $schema: ../../.internal/task.schema.json
 id: nfr-assess
 title: Non-Functional Requirements Assessment
-version: 1.0.0
+version: 2.0.0
 purpose: Quick NFR validation focused on the core four (security, performance, reliability, maintainability). Assess non-functional requirements for a story and generate YAML blocks for gate files plus markdown assessment reports.
 category: quality
 agent: qa
 
-inputs:
-   required:
-      - name: story_id
-        type: story_id
-        pattern: "^\\d+\\.\\d+$"
-        examples: ["1.3", "2.5"]
-      - name: story_path
-        type: path
-        pattern: "@{docs.subdirs.stories}/{story_id}-*.yaml"
-   optional:
-      - name: architecture_refs
-        type: path
-        pattern: "@{docs.dir}/?(*-)architecture.md"
-      - name: coding_standards
-        type: path
-        location: "@{docs.files.codingStandards}"
-      - name: interaction_mode
-        type: string
-        default: "non-interactive"
-        examples: ["interactive", "non-interactive"]
+derived:
+  - name: story_file
+    type: path
+    source: parameters
+    pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
+    description: "Path to the story file"
+    required: true
+  - name: story_status
+    type: variable
+    source: file
+    pattern: "Draft|Spec Review|WIP|Blocked|Review|Done"
+    required: true
 
 prerequisites:
-   status:
-      - entity: story
-        field: status
-        value: "Review"
-        operator: includes
+  - field: "!{story_file}"
+    value: "found"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "!{story_status}"
+    value: "Review"
+    operator: "contains"
+    on_violate: "halt_and_report"
 
-process:
-   mode: sequential
-   steps:
-      - id: LOAD-CONFIG
-        title: Load Configuration and Story
-        description: Load core configuration and resolve story file path
-        action:
-           type: file_operation
-           operation: read
-           target: "@{baseDir}/config.json"
-           content: |
-              Extract config.docs.subdirs.qa and docs.subdirs.stories settings.
-              Resolve story_path if not provided.
-        on_failure: continue
+steps:
+  - id: LOAD-CONFIG
+    title: Load Configuration and Story
+    description: Load core configuration and resolve story file path
+    action:
+      type: file_operation
+      operation: read
+      target: "@{baseDir}/config.json"
+      template: |
+        Extract config.docs.subdirs.qa and docs.subdirs.stories settings.
+        Resolve !{story_file} if not provided.
+    on_failure: halt
 
-      - id: CHECK-REVIEW
-        title: Check Story Status
-        description: Verify story status includes the word "Review"
-        action:
-           type: validation
-           content: |
-              If status does not include the word "Review":
-              HALT and inform user why execution cannot proceed
-        on_failure: halt
+  - id: CHECK-INTERACTION-MODE
+    title: Check Interaction Mode
+    description: Skip elicitation if not in interactive mode
+    action:
+      type: decision
+      target: "${interaction_mode}"
+    conditions:
+      - when: "${interaction_mode} != 'interactive'"
+        move_to_step: "CHECK-THRESHOLDS"
 
-      - id: ELICIT-SCOPE
-        title: Elicit NFR Scope
-        description: Determine which NFRs to assess
-        action:
-           type: elicit
-           prompt: |
-              Which NFRs should I assess? (Enter numbers or press Enter for default)
-              [1] Security (default)
-              [2] Performance (default) 
-              [3] Reliability (default)
-              [4] Maintainability (default)
-              [5] Usability
-              [6] Compatibility
-              [7] Portability
-              [8] Functional Suitability
+  - id: ELICIT-SCOPE
+    title: Elicit NFR Scope
+    description: Determine which NFRs to assess
+    action:
+      type: elicit
+      target: "user_input"
+      prompt_user: |
+        Which NFRs should I assess? (Enter numbers or press Enter for default)
+        [1] Security (default)
+        [2] Performance (default) 
+        [3] Reliability (default)
+        [4] Maintainability (default)
+        [5] Usability
+        [6] Compatibility
+        [7] Portability
+        [8] Functional Suitability
 
-              > [Enter for 1-4]
-           options:
-              [
-                 "security",
-                 "performance",
-                 "reliability",
-                 "maintainability",
-                 "usability",
-                 "compatibility",
-                 "portability",
-                 "functional_suitability",
-              ]
-        condition:
-           if: "interaction_mode == 'interactive'"
-           else: "CHECK-THRESHOLDS"
-        elicit: true
+        > [Enter for 1-4]
+      options:
+        - "security"
+        - "performance"
+        - "reliability"
+        - "maintainability"
+        - "usability"
+        - "compatibility"
+        - "portability"
+        - "functional_suitability"
+    elicit: true
 
-      - id: CHECK-THRESHOLDS
-        title: Check for NFR Thresholds
-        description: Look for existing NFR requirements and thresholds
-        action:
-           type: analysis
-           content: |
-              Look for NFR requirements in:
-              - Story acceptance criteria
-              - @{docs.dir}/?(*-)architecture.md files  
-              - @{docs.files.codingStandards}
+  - id: CHECK-THRESHOLDS
+    title: Check for NFR Thresholds
+    description: Look for existing NFR requirements and thresholds
+    action:
+      type: analysis
+      target: "!{story_file}"
+      template: |
+        Look for NFR requirements in:
+        - Story acceptance criteria
+        - @{docs.dir}/?(*-)architecture.md files  
+        - @{docs.files.codingStandards}
 
-              If interactive mode and thresholds missing, ask user:
-              - Performance targets (response times, throughput)
-              - Security requirements (auth methods, validation)
-              - Reliability targets (uptime, error rates)
-              - Maintainability targets (test coverage, documentation)
+        If interactive mode and thresholds missing, ask user:
+        - Performance targets (response times, throughput)
+        - Security requirements (auth methods, validation)
+        - Reliability targets (uptime, error rates)
+        - Maintainability targets (test coverage, documentation)
 
-              Unknown targets policy: Mark as CONCERNS with "Target unknown"
+        Unknown targets policy: Mark as CONCERNS with "Target unknown"
 
-      - id: ASSESS-SECURITY
-        title: Assess Security NFR
-        description: Evaluate security implementation and requirements
-        action:
-           type: analysis
-           content: |
-              Check security implementation:
-              - Authentication mechanism present
-              - Authorization checks enforced
-              - Input validation implemented
-              - No hardcoded secrets
-              - Rate limiting configured
+  - id: ASSESS-SECURITY
+    title: Assess Security NFR
+    description: Evaluate security implementation and requirements
+    action:
+      type: analysis
+      target: "!{story_file}"
+      template: |
+        Check security implementation:
+        - Authentication mechanism present
+        - Authorization checks enforced
+        - Input validation implemented
+        - No hardcoded secrets
+        - Rate limiting configured
 
-              Status Rules:
-              - PASS: Auth implemented, validation present, no hardcoded secrets
-              - CONCERNS: Missing rate limiting, weak encryption, incomplete authorization
-              - FAIL: No authentication, hardcoded credentials, SQL injection vulnerabilities
+        Status Rules:
+        - PASS: Auth implemented, validation present, no hardcoded secrets
+        - CONCERNS: Missing rate limiting, weak encryption, incomplete authorization
+        - FAIL: No authentication, hardcoded credentials, SQL injection vulnerabilities
 
-      - id: ASSESS-PERFORMANCE
-        title: Assess Performance NFR
-        description: Evaluate performance characteristics and bottlenecks
-        action:
-           type: analysis
-           content: |
-              Check performance aspects:
-              - Response time targets met
-              - No obvious bottlenecks
-              - Reasonable resource usage
-              - Database query optimization
-              - Caching strategy present
+  - id: ASSESS-PERFORMANCE
+    title: Assess Performance NFR
+    description: Evaluate performance characteristics and bottlenecks
+    action:
+      type: analysis
+      target: "!{story_file}"
+      template: |
+        Check performance aspects:
+        - Response time targets met
+        - No obvious bottlenecks
+        - Reasonable resource usage
+        - Database query optimization
+        - Caching strategy present
 
-              Status Rules:
-              - PASS: Meets response time targets, no bottlenecks, reasonable usage
-              - CONCERNS: Close to limits, missing indexes, no caching strategy  
-              - FAIL: Exceeds response time limits, memory leaks, unoptimized queries
+        Status Rules:
+        - PASS: Meets response time targets, no bottlenecks, reasonable usage
+        - CONCERNS: Close to limits, missing indexes, no caching strategy  
+        - FAIL: Exceeds response time limits, memory leaks, unoptimized queries
 
-      - id: ASSESS-RELIABILITY
-        title: Assess Reliability NFR
-        description: Evaluate error handling and system resilience
-        action:
-           type: analysis
-           content: |
-              Check reliability mechanisms:
-              - Error handling present
-              - Graceful degradation implemented
-              - Retry logic where needed
-              - Circuit breakers configured
-              - Health checks available
+  - id: ASSESS-RELIABILITY
+    title: Assess Reliability NFR
+    description: Evaluate error handling and system resilience
+    action:
+      type: analysis
+      target: "!{story_file}"
+      template: |
+        Check reliability mechanisms:
+        - Error handling present
+        - Graceful degradation implemented
+        - Retry logic where needed
+        - Circuit breakers configured
+        - Health checks available
 
-              Status Rules:
-              - PASS: Error handling present, graceful degradation, retry logic
-              - CONCERNS: Some error cases unhandled, no circuit breakers, missing health checks
-              - FAIL: No error handling, crashes on errors, no recovery mechanisms
+        Status Rules:
+        - PASS: Error handling present, graceful degradation, retry logic
+        - CONCERNS: Some error cases unhandled, no circuit breakers, missing health checks
+        - FAIL: No error handling, crashes on errors, no recovery mechanisms
 
-      - id: ASSESS-MAINTAINABILITY
-        title: Assess Maintainability NFR
-        description: Evaluate code quality and maintainability aspects
-        action:
-           type: analysis
-           content: |
-              Check maintainability factors:
-              - Test coverage meets targets
-              - Code well-structured
-              - Documentation present
-              - Reasonable dependencies
-              - Low code duplication
+  - id: ASSESS-MAINTAINABILITY
+    title: Assess Maintainability NFR
+    description: Evaluate code quality and maintainability aspects
+    action:
+      type: analysis
+      target: "!{story_file}"
+      template: |
+        Check maintainability factors:
+        - Test coverage meets targets
+        - Code well-structured
+        - Documentation present
+        - Reasonable dependencies
+        - Low code duplication
 
-              Status Rules:
-              - PASS: Test coverage meets target, well-structured code, documentation present
-              - CONCERNS: Test coverage below target, some code duplication, missing documentation
-              - FAIL: No tests, highly coupled code, no documentation
+        Status Rules:
+        - PASS: Test coverage meets target, well-structured code, documentation present
+        - CONCERNS: Test coverage below target, some code duplication, missing documentation
+        - FAIL: No tests, highly coupled code, no documentation
 
-      - id: GENERATE-GATE-YAML
-        title: Generate Gate YAML Block
-        description: Create YAML block for quality gate file
-        action:
-           type: analysis
-           content: |
-              Generate YAML block for gate file (copy/paste format):
+  - id: GENERATE-GATE-YAML
+    title: Generate Gate YAML Block
+    description: Create YAML block for quality gate file
+    action:
+      type: analysis
+      target: "console_output"
+      template: |
+        Generate YAML block for gate file (copy/paste format):
 
-              nfr_validation:
-                 _assessed: [security, performance, reliability, maintainability]
-                 security:
-                    status: CONCERNS
-                    notes: "No rate limiting on auth endpoints"
-                 performance:
-                    status: PASS
-                    notes: "Response times < 200ms verified"
-                 reliability:
-                    status: PASS
-                    notes: "Error handling and retries implemented"
-                 maintainability:
-                    status: CONCERNS
-                    notes: "Test coverage at 65%, target is 80%"
+        nfr_validation:
+           _assessed: [security, performance, reliability, maintainability]
+           security:
+              status: CONCERNS
+              notes: "No rate limiting on auth endpoints"
+           performance:
+              status: PASS
+              notes: "Response times < 200ms verified"
+           reliability:
+              status: PASS
+              notes: "Error handling and retries implemented"
+           maintainability:
+              status: CONCERNS
+              notes: "Test coverage at 65%, target is 80%"
 
-              Generate ONLY for NFRs actually assessed (no placeholders).
+        Generate ONLY for NFRs actually assessed (no placeholders).
 
-      - id: CALCULATE-QUALITY-SCORE
-        title: Calculate Quality Score
-        description: Calculate overall quality score based on NFR assessments
-        action:
-           type: analysis
-           content: |
-              Calculate quality score:
-              Base Score = 100
-              - 20 for each FAIL attribute
-              - 10 for each CONCERNS attribute
-              Floor at 0, ceiling at 100
+  - id: CALCULATE-QUALITY-SCORE
+    title: Calculate Quality Score
+    description: Calculate overall quality score based on NFR assessments
+    action:
+      type: analysis
+      target: "score_calculation"
+      template: |
+        Calculate quality score:
+        Base Score = 100
+        - 20 for each FAIL attribute
+        - 10 for each CONCERNS attribute
+        Floor at 0, ceiling at 100
 
-              Use custom weights from @{docs.files.codingStandards} if available.
+        Use custom weights from @{docs.files.codingStandards} if available.
 
-      - id: CREATE-ASSESSMENT-REPORT
-        title: Create Assessment Report
-        description: Generate detailed NFR assessment markdown report
-        action:
-           type: file_operation
-           operation: create
-           target: "@{docs.subdirs.qa}/assessments/{story_id}-nfr-{YYYYMMDD}.md"
-           content: |
-              # NFR Assessment: {story_id}
+  - id: CREATE-ASSESSMENT-REPORT
+    title: Create Assessment Report
+    description: Generate detailed NFR assessment markdown report
+    action:
+      type: file_operation
+      operation: create
+      target: "@{docs.subdirs.qa}/assessments/${story}-nfr-{{YYYYMMDD}}.md"
+      template: |
+        # NFR Assessment: ${story}
 
-              Date: {date}
-              Reviewer: Quinn (Test Architect & Quality Advisor)
+        Date: {{date}}
+        Reviewer: Quinn (Test Architect & Quality Advisor)
 
-              <!-- Note: Source story not found (if applicable) -->
+        <!-- Note: Source story not found (if applicable) -->
 
-              ## Summary
+        ## Summary
 
-              - Security: {security_status} - {security_notes}
-              - Performance: {performance_status} - {performance_notes}
-              - Reliability: {reliability_status} - {reliability_notes}
-              - Maintainability: {maintainability_status} - {maintainability_notes}
+        - Security: {{security_status}} - {{security_notes}}
+        - Performance: {{performance_status}} - {{performance_notes}}
+        - Reliability: {{reliability_status}} - {{reliability_notes}}
+        - Maintainability: {{maintainability_status}} - {{maintainability_notes}}
 
-              ## Critical Issues
+        ## Critical Issues
 
-              {critical_issues_list}
+        {{critical_issues_list}}
 
-              ## Quick Wins
+        ## Quick Wins
 
-              {quick_wins_list}
+        {{quick_wins_list}}
 
-              ## Quality Score: {quality_score}/100
+        ## Quality Score: {{quality_score}}/100
 
-      - id: PROVIDE-INTEGRATION-INFO
-        title: Provide Integration Information
-        description: Present integration instructions and references
-        action:
-           type: analysis
-           content: |
-              Output integration information:
+  - id: PROVIDE-INTEGRATION-INFO
+    title: Provide Integration Information
+    description: Present integration instructions and references
+    action:
+      type: analysis
+      target: "console_output"
+      template: |
+        Output integration information:
 
-              1. NFR assessment: @{docs.subdirs.qa}/assessments/{story_id}-nfr-{YYYYMMDD}.md
-              2. Gate NFR block ready → paste into @{docs.subdirs.qa}/gates/{story_id}-*.yaml under nfr_validation
+        1. NFR assessment: @{docs.subdirs.qa}/assessments/${story}-nfr-{{YYYYMMDD}}.md
+        2. Gate NFR block ready → paste into @{docs.subdirs.qa}/gates/${story}-*.yaml under nfr_validation
 
 outputs:
-   artifacts:
-      - name: nfr_assessment_report
-        type: report
-        path: "@{docs.subdirs.qa}/assessments/{story_id}-nfr-{YYYYMMDD}.md"
-        format: markdown
-        description: Brief NFR assessment report with findings and recommendations
-      - name: gate_yaml_block
-        type: assessment
-        path: "console_output"
-        format: yaml
-        description: YAML block for quality gate file integration
-
-blocking_conditions:
-   - condition: "Core configuration not found"
-     message: "config.json is required for NFR assessment"
-     severity: error
-   - condition: "Story file not found and no fallback available"
-     message: "Story file must exist or assessment will use fallback mode"
-     severity: error
+  artifacts:
+    - name: nfr_assessment_report
+      type: report
+      path: "@{docs.subdirs.qa}/assessments/${story}-nfr-{{YYYYMMDD}}.md"
+      format: markdown
+      description: Brief NFR assessment report with findings and recommendations
+    - name: gate_yaml_block
+      type: assessment
+      path: "console_output"
+      format: yaml
+      description: YAML block for quality gate file integration
 
 completion:
-   criteria:
-      - NFR scope determined (interactive or default)
-      - All selected NFRs assessed with status
-      - Quality score calculated
-      - Assessment report created
-      - Gate YAML block generated
-      - Integration information provided
+  criteria:
+    - NFR scope determined (interactive or default)
+    - All selected NFRs assessed with status
+    - Quality score calculated
+    - Assessment report created
+    - Gate YAML block generated
+    - Integration information provided

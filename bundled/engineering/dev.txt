@@ -12,7 +12,7 @@
 
 ```json
 {
-	"version": "1.3.0",
+	"version": "1.4.0",
 	"precedence": [
 		"policy",
 		"rules.hard",
@@ -36,7 +36,7 @@
 			"name": "James",
 			"id": "dev",
 			"title": "Full Stack Developer",
-			"description": "Expert who implements stories by reading requirements and executing tasks sequentially with comprehensive testing. Minimize context overhead; update Dev Agent Record sections only.",
+			"description": "Expert who implements stories by reading requirements and executing tasks sequentially with comprehensive testing. Minimize context overhead.",
 			"icon": "💻"
 		},
 		"style": {
@@ -46,8 +46,7 @@
 		},
 		"corePrinciples": [
 			"Implementation-first with comprehensive testing",
-			"Minimal context overhead",
-			"Update Dev Agent Record sections only"
+			"Minimal context overhead"
 		]
 	},
 	"activation": {
@@ -87,6 +86,68 @@
 					"targets": ["tasks/develop-story.yaml"]
 				}
 			]
+		},
+		"references": {
+			"fileResolution": {
+				"pattern": "^@\\{[a-zA-Z0-9_-.]+\\}$",
+				"description": "Resolve reference to a property in config.json",
+				"examples": [
+					{
+						"input": "@{baseDir}",
+						"resolvedFrom": "config.json.baseDir"
+					},
+					{
+						"input": "@{docs.files.codingStandards}",
+						"resolvedFrom": "config.json.docs.files.codingStandards"
+					},
+					{
+						"input": "@{docs.subdirs.engineering}",
+						"resolvedFrom": "config.json.docs.subdirs.engineering"
+					}
+				]
+			},
+			"inputResolution": {
+				"pattern": "^\\$\\{[a-zA-Z0-9_-.]+\\}$",
+				"description": "Resolve reference to a command's input parameter or value for the current task being executed",
+				"examples": [
+					{
+						"input": "${story}",
+						"resolvedFrom": "currentCommand.parameters.story"
+					},
+					{
+						"input": "${test_command}",
+						"resolvedFrom": "currentCommand.optionalParameters.test_command"
+					}
+				]
+			},
+			"knowledgeResolution": {
+				"pattern": "^!\\{[a-zA-Z0-9_-.]+\\}$",
+				"description": "Resolve reference to knowledge loaded from the agent's context",
+				"examples": [
+					{
+						"input": "!{coding_standards}",
+						"resolvedFrom": "context.codingStandards"
+					},
+					{
+						"input": "!{tech_stack}",
+						"resolvedFrom": "context.architecture.tech_stack"
+					}
+				]
+			},
+			"templatePopulation": {
+				"pattern": "^\\{\\{[a-zA-Z0-9_-.]+\\}\\}$",
+				"description": "Resolve reference from any source when populating values into a template",
+				"examples": [
+					{
+						"input": "{{story_id}}",
+						"resolvedFrom": "anySource.story_id"
+					},
+					{
+						"input": "{{qa_results.summary}}",
+						"resolvedFrom": "anySource.qa_results.summary"
+					}
+				]
+			}
 		},
 		"elicitDefaults": {
 			"elicitRequired": true,
@@ -151,10 +212,10 @@
 			]
 		},
 		{
-			"name": "update-docs",
-			"description": "Update or create documentation (API docs via Swagger/OpenAPI for backend, component docs via Storybook for frontend). Prefers in-place documentation over generated artifacts. Supports custom documentation methods.",
+			"name": "update-project-docs",
+			"description": "Update or create project documentation (API docs via Swagger/OpenAPI for backend, component docs via Storybook for frontend) with an in-place-first philosophy.",
 			"optionalParameters": ["type", "method"],
-			"steps": ["tasks/update-docs.yaml"]
+			"steps": ["tasks/update-project-docs.yaml"]
 		}
 	],
 	"rules": [
@@ -171,35 +232,25 @@
 		},
 		{
 			"id": "CFG-R001",
-			"title": "Resolve @{*} references from core config",
-			"enforcements": [
-				"Locate config.json via terminal command or user input and load it",
-				"Expand @{docs.files.X} => @{docs.dir}/<file>, @{docs.subdirs.X} => @{docs.dir}/<subdir>"
-			],
-			"severity": "hard",
-			"actionOnViolation": "abort_and_report"
-		},
-		{
-			"id": "CFG-R002",
 			"title": "Non-padded numbering in epic/story/enhancement filenames",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},
 		{
-			"id": "CFG-R003",
+			"id": "CFG-R002",
 			"title": "Present choices as numbered lists",
 			"severity": "soft",
 			"actionOnViolation": "warn_and_reformat"
 		},
 		{
-			"id": "CFG-R004",
-			"title": "Execute dependency tasks literally",
+			"id": "CFG-R003",
+			"title": "Load and execute dependency files in commands' `steps` property literally",
 			"severity": "hard",
 			"actionOnViolation": "abort_and_report"
 		},
 		{
 			"id": "DEV-R001",
-			"title": "Dev Agent Record update restriction",
+			"title": "Update Dev Agent Record sections only",
 			"severity": "hard",
 			"actionOnViolation": "revert_changes_and_notify"
 		}
@@ -214,236 +265,208 @@
 $schema: ../../.internal/task.schema.json
 id: develop-story
 title: Develop Story Task
-version: 1.0.0
-purpose: Implement an WIP story end-to-end using an implementation-first workflow; testing and validation occur after implementation is complete, following the story's Tasks/Subtasks with formal workflow
+version: 2.0.0
+purpose: Implement a WIP story end-to-end using an implementation-first workflow; execute tasks/subtasks sequentially, then validate and document results.
 category: development
 agent: dev
 
-inputs:
-   required:
-      - name: story_id
-        type: story_id
-        pattern: "^\\d+\\.\\d+$"
-        examples: ["1.3", "2.1", "3.5"]
-      - name: story_path
-        type: path
-        pattern: "@{docs.subdirs.stories}/{{story}}-*.yaml"
-   optional:
-      - name: test_command
-        type: command
-        examples: ["npm run test", "go test"]
-      - name: build_command
-        type: command
-        examples: ["npm run build", "cargo build"]
-      - name: lint_command
-        type: command
-        examples: ["npm run lint"]
+derived:
+  - name: story_path_resolved
+    type: path
+    source: context
+    pattern: "@{docs.subdirs.stories}/${story}-*.yaml"
+    description: "Concrete story file path resolved from ${story}."
+    required: true
+  - name: story_status
+    type: string
+    source: file
+    description: "Status field read from the target story file."
+    required: true
 
 outputs:
-   updates:
-      - target: "{story_path}"
-        sections:
-           - "Tasks / Subtasks Checkboxes"
-           - "Dev Agent Record"
-           - "Dev Agent Record/Checkboxes"
-           - "Dev Agent Record/Debug Log References"
-           - "Dev Agent Record/Completion Notes List"
-           - "File List"
-           - "Change Log"
-           - "Status"
-           - "Agent Model Used"
-        restrictions: Only toggle checkboxes and add to allowed sections, do not rename or reorder tasks
-   artifacts:
-      - name: Test Files
-        type: file
-        path: "{project_root}/tests/**"
-        format: text
-        description: Test files created after implementation during validation phase
-      - name: Implementation Files
-        type: file
-        path: "{project_root}/**"
-        format: text
-        description: Production code implementing the story
+  updates:
+    - target: "!{story_path_resolved}"
+      sections:
+        - "Tasks / Subtasks Checkboxes"
+        - "Dev Agent Record"
+        - "Dev Agent Record/Checkboxes"
+        - "Dev Agent Record/Debug Log References"
+        - "Dev Agent Record/Completion Notes List"
+        - "File List"
+        - "Change Log"
+        - "Status"
+        - "Agent Model Used"
+      restrictions: Only toggle checkboxes and append to allowed sections; never rename or reorder tasks
+  artifacts:
+    - name: Test Files
+      type: file
+      path: "{project_root}/tests/**"
+      format: text
+      description: Tests written after implementation during validation
+    - name: Implementation Files
+      type: file
+      path: "{project_root}/**"
+      format: text
+      description: Production code implementing the story
 
 prerequisites:
-   status:
-      - entity: story
-        field: status
-        value: "WIP"
-        operator: equals
+  - field: "!{story_status}"
+    value: "WIP"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "dev.blocking.unapproved_dependencies"
+    value: "false"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "dev.blocking.ambiguous_requirements"
+    value: "false"
+    operator: "="
+    on_violate: "halt_and_report"
 
-process:
-   mode: sequential
-   steps:
-      - id: LOAD-1
-        title: Load Core Configuration and Inputs
-        description: Load config.json and resolve story file
-        action:
-           type: file_operation
-           operation: read
-           target: "@{baseDir}/config.json"
-           content: |
-              Extract key configurations:
-              - docs.subdirs.stories
-              - qa.* settings
-              - workflow.* settings
+steps:
+  - id: LOAD-CONFIG
+    title: Load Core Configuration and Inputs
+    description: Load config.json and gather settings required for development
+    action:
+      type: file_operation
+      operation: read
+      target: "@{baseDir}/config.json"
+      template: |
+        Extract:
+        - docs.subdirs.stories
+        - qa.* settings
+        - workflow.* settings
+        Resolve !{story_path_resolved} using ${story}.
 
-              Resolve and load target story file using {{story_id}} and {{story_path}}
+  - id: LOAD-STORY
+    title: Load Story File
+    description: Read the story file to access tasks, subtasks, and acceptance criteria
+    action:
+      type: file_operation
+      operation: read
+      target: "!{story_path_resolved}"
 
-      - id: CHECK-1
-        title: Check Story Status
-        description: Verify story status is WIP
-        action:
-           type: validation
-           content: |
-              If status is not WIP:
-              HALT and inform user why execution cannot proceed
-        on_failure: halt
+  - id: VERIFY-STATUS
+    title: Verify Story Status is WIP
+    description: Halt if the story is not ready for development
+    action:
+      type: validation
+      template: |
+        If !{story_status} != "WIP": halt, report to the user, and request status correction before proceeding.
+    on_failure: halt
 
-      - id: TASK-1
-        title: Read First or Next Task
-        description: Select next incomplete task/subtask
-        action:
-           type: analysis
-           target: "{story_path}#tasks-and-subtasks"
-           content: |
-              - Parse the story's "Tasks / Subtasks" list
-              - Select the first incomplete task/subtask in order
-              - Output: Selected task/subtask to work on
+  - id: SELECT-TASK
+    title: Read First or Next Task
+    description: Select the next incomplete task/subtask from the story
+    action:
+      type: analysis
+      target: "!{story_path_resolved}#tasks-and-subtasks"
+      template: |
+        - Parse the "Tasks / Subtasks" list in order
+        - Select the first incomplete task/subtask
+        - Record the selection for implementation
 
-      - id: IMPLEMENT-1
-        title: Implement Task and Subtasks
-        description: Write production code to satisfy acceptance criteria and task requirements
-        action:
-           type: file_operation
-           operation: create
-           content: |
-              - Write production code to satisfy the acceptance criteria for the selected task/subtask
-              - Keep changes scoped to the current task/subtask
-              - Update File List with files created/modified (paths relative to repo root)
-              - Output: Implementation ready for validation
+  - id: IMPLEMENT-TASK
+    title: Implement Task and Subtasks
+    description: Write production code to satisfy the selected task and its acceptance criteria
+    action:
+      type: file_operation
+      operation: update
+      template: |
+        - Implement only the current task/subtask scope
+        - Update the File List with created/modified files (relative paths)
+        - Document key decisions in Dev Agent Record/Completion Notes
 
-      - id: REPEAT-1
-        title: Check for Remaining Tasks
-        description: Determine if more tasks remain
-        action:
-           type: decision
-           prompt: Are there incomplete tasks/subtasks remaining?
-        condition:
-           if: "some tasks still remain"
-           then: "TASK-1"
-           else: "TESTS-1"
+  - id: CHECK-REMAINING
+    title: Check for Remaining Tasks
+    description: Determine if more tasks remain before moving to validation
+    action:
+      type: decision
+      prompt_user: |
+        Are there incomplete tasks/subtasks remaining? If yes, return to SELECT-TASK; otherwise continue to test creation.
 
-      - id: TESTS-1
-        title: Write Tests After Implementation
-        description: Create tests for implemented features based on acceptance criteria
-        action:
-           type: file_operation
-           operation: create
-           content: |
-              - Write unit/integration tests as appropriate
-              - Use mocks/stubs where appropriate
-              - Keep tests isolated and deterministic
-              - Output: Test files/cases added
+  - id: WRITE-TESTS
+    title: Write Tests After Implementation
+    description: Add unit/integration tests covering the implemented functionality
+    action:
+      type: file_operation
+      operation: update
+      template: |
+        - Write deterministic tests aligned with acceptance criteria
+        - Use mocks/stubs where appropriate
+        - Record new test files in the File List
 
-      - id: VALIDATE-1
-        title: Execute Validations
-        description: Run tests and validation tasks
-        action:
-           type: command
-           command: "{test_command}"
-           content: |
-              - Run test suite
-              - Execute checklist: story-dod-checklist
-        retry:
-           max_attempts: 3
-           delay_seconds: 0
-        on_failure: continue
+  - id: RUN-TESTS
+    title: Execute Validations
+    description: Run the test suite and execute the story-dod checklist
+    action:
+      type: command
+      command: "{test_command}"
+      template: |
+        - Run all relevant tests
+        - Execute story-dod-checklist items after the command
+      retry:
+        max_attempts: 3
+        delay_seconds: 0
 
-      - id: VALIDATE-2
-        title: Handle Validation Failures
-        description: Fix issues or mark as blocked
-        action:
-           type: decision
-           content: |
-              If failures occur and not due to incorrect tests:
-              - Fix the corresponding implementation
-              - Retry validation (max 3 attempts)
-              - On 3rd failure: Set Status = "Blocked" and HALT
-        condition:
-           if: "validation_failed && attempts >= 3"
-           then: "BLOCK-1"
+  - id: HANDLE-FAILURES
+    title: Handle Validation Failures
+    description: Address failures or mark the story as blocked when limits are reached
+    action:
+      type: decision
+      template: |
+        If tests fail (and failures are valid):
+        - Fix issues and rerun RUN-TESTS (max 3 attempts)
+        - After 3 failed attempts, branch to BLOCK-STORY
 
-      - id: UPDATE-1
-        title: Mark Checkboxes and Update Story
-        description: Update story file with completion status
-        action:
-           type: file_operation
-           operation: update
-           target: "{story_path}"
-           content: |
-              - Mark completed Tasks/Subtasks with [x]
-              - Update allowed sections (see outputs.updates.sections)
-              - Only toggle - [ ] → - [x]; do not rename, reorder, or edit task text
-              - Output: Updated story file saved
+  - id: UPDATE-STORY
+    title: Mark Checkboxes and Update Story Metadata
+    description: Update allowable sections in the story file after successful implementation
+    action:
+      type: file_operation
+      operation: update
+      target: "!{story_path_resolved}"
+      template: |
+        - Mark completed tasks/subtasks with [x] only (no renaming or reordering)
+        - Append entries to Debug Log References, Completion Notes, File List, and Change Log
+        - Update Status to "Review" when ready
 
-      - id: BLOCK-1
-        title: Handle Blocked Conditions
-        description: Set status to Blocked when conditions met
-        action:
-           type: file_operation
-           operation: update
-           target: "{story_path}"
-           content: |
-              Set Status to "Blocked" if any apply:
-              - Unapproved dependencies needed (confirm with user)
-              - Ambiguity remains after story check
-              - Three consecutive implementation/fix failures
-              - Missing configuration
-              - Failing regression
-        on_failure: halt
+  - id: BLOCK-STORY
+    title: Handle Blocked Conditions
+    description: Set the story status to Blocked when prerequisites cannot be satisfied
+    action:
+      type: file_operation
+      operation: update
+      target: "!{story_path_resolved}"
+      template: |
+        Set Status to "Blocked" if:
+        - Unapproved dependencies are required
+        - Requirements remain ambiguous
+        - Three consecutive implementation/validation failures occur
+        - Required configuration is missing
+        - Regression failures persist
 
-      - id: COMPLETE-1
-        title: Complete Story Implementation
-        description: Final validation and status update
-        action:
-           type: validation
-           content: |
-              Declare implementation complete only when all items below are true:
-              - All Tasks and Subtasks are marked [x] and have tests
-              - Validations and full regression pass
-              - File List is complete
-              - Validation has been run with story-dod-checklist
-              - Story Status is updated:
-                * "Blocked" if any blocking condition is met
-                * "Review" otherwise
-              - HALT
-
-blocking_conditions:
-   - condition: Unapproved dependencies needed
-     message: Story requires dependencies not approved by user
-     severity: error
-   - condition: Ambiguity in requirements
-     message: Story requirements are not clear enough to implement
-     severity: error
-   - condition: Three consecutive implementation failures
-     message: Failed to implement correctly after 3 attempts
-     severity: critical
-   - condition: Missing configuration
-     message: Required configuration not found in config.json
-     severity: critical
-   - condition: Failing regression
-     message: Implementation breaks existing functionality
-     severity: critical
+  - id: COMPLETE-STORY
+    title: Complete Story Implementation
+    description: Final validation and status update once all work is done
+    action:
+      type: validation
+      template: |
+        Declare implementation complete only when:
+        - All tasks/subtasks are checked and have corresponding tests
+        - Tests/regression pass
+        - File List and Dev Agent Record are complete
+        - story-dod-checklist executed successfully
+        - Status is "Review" (or "Blocked" when applicable)
 
 completion:
-   checklist: story-dod-checklist
-   criteria:
-      - All Tasks and Subtasks marked complete
-      - All tests written and passing
-      - Validations and regression pass
-      - File List is complete
-      - Status updated appropriately
+  checklist: story-dod-checklist
+  criteria:
+    - All tasks and subtasks marked complete
+    - Tests written and passing
+    - Validations/regression pass
+    - File List and Dev Agent Record updated
+    - Final status set appropriately (Review or Blocked)
 
 
 
@@ -558,166 +581,153 @@ Be honest - it's better to flag issues now than have them discovered later.]]
 $schema: ../../.internal/task.schema.json
 id: develop-story-test-first
 title: Develop Story (Test-First)
-version: 1.0.0
-purpose: Following the Test Driven Development (TDD) methodology, implement a WIP story using a test-first workflow. Read the author's Test Specs in the story, write failing tests from those specs, then implement until tests pass.
+version: 2.0.0
+purpose: "Follow a TDD workflow to implement a WIP story: read specs, write failing tests, implement to green, then update the story record."
 category: development
 agent: dev
 
-inputs:
-   required:
-      - name: story_id
-        type: story_id
-        pattern: "^\\d+\\.\\d+$"
-        examples: ["1.3", "2.1", "3.5"]
-      - name: story_path
-        type: path
-        pattern: "@{docs.subdirs.stories}/{{story}}-*.yaml"
-   optional:
-      - name: test_command
-        type: command
-        examples: ["npm run test", "go test"]
-      - name: build_command
-        type: command
-        examples: ["npm run build", "cargo build"]
-      - name: lint_command
-        type: command
-        examples: ["npm run lint"]
+derived:
+  - name: story_path_resolved
+    type: path
+    source: context
+    pattern: "@{docs.subdirs.stories}/${story}-*.yaml"
+    description: "Concrete path for the story under development."
+    required: true
+  - name: story_status
+    type: string
+    source: file
+    description: "Status read from the story file."
+    required: true
 
 outputs:
-   updates:
-      - target: "{story_path}"
-        sections:
-           - "Dev Agent Record"
-           - "Dev Agent Record/Checkboxes"
-           - "Dev Agent Record/Debug Log References"
-           - "Dev Agent Record/Completion Notes List"
-           - "File List"
-           - "Change Log"
-        restrictions: Only toggle checkboxes and append to allowed sections; do not rename or reorder tasks
-   artifacts:
-      - name: Test Files
-        type: file
-        path: "{project_root}/tests/**"
-        format: text
-        description: Test files created first from the author's specs
-      - name: Implementation Files
-        type: file
-        path: "{project_root}/**"
-        format: text
-        description: Production code implementing the story
+  updates:
+    - target: "!{story_path_resolved}"
+      sections:
+        - "Dev Agent Record"
+        - "Dev Agent Record/Checkboxes"
+        - "Dev Agent Record/Debug Log References"
+        - "Dev Agent Record/Completion Notes List"
+        - "File List"
+        - "Change Log"
+      restrictions: Only toggle checkboxes and append to allowed sections; never edit other story parts
+  artifacts:
+    - name: Test Files
+      type: file
+      path: "{project_root}/tests/**"
+      format: text
+      description: Tests authored from story specs (written first)
+    - name: Implementation Files
+      type: file
+      path: "{project_root}/**"
+      format: text
+      description: Production code implementing the story after tests are in place
 
 prerequisites:
-   status:
-      - entity: story
-        field: status
-        value: "WIP"
-        operator: equals
+  - field: "!{story_status}"
+    value: "WIP"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "dev.blocking.missing_specs"
+    value: "false"
+    operator: "="
+    on_violate: "halt_and_report"
 
-process:
-   mode: sequential
-   steps:
-      - id: LOAD-CONFIG
-        title: Load Core Configuration and Story
-        description: Load config.json; resolve and read story file
-        action:
-           type: file_operation
-           operation: read
-           target: "@{baseDir}/config.json"
+steps:
+  - id: LOAD-CONFIG
+    title: Load Core Configuration and Story
+    description: Load config.json and resolve the story file
+    action:
+      type: file_operation
+      operation: read
+      target: "@{baseDir}/config.json"
+      template: |
+        Resolve !{story_path_resolved} via ${story}; then read the story file to access specs and metadata.
 
-      - id: VERIFY-WIP
-        title: Verify Story Status is WIP
-        description: Halt if story status is not WIP
-        action:
-           type: validation
-           content: |
-              If status != WIP -> HALT and notify user
-        on_failure: halt
+  - id: VERIFY-WIP
+    title: Verify Story Status is WIP
+    description: Ensure the story is ready for implementation
+    action:
+      type: validation
+      template: |
+        If !{story_status} != "WIP": halt and instruct the user to move the story to WIP before running this task.
+    on_failure: halt
 
-      - id: EXTRACT-SPECS
-        title: Extract Test Specs
-        description: Find the Test Specs/Test Cases section in the story
-        action:
-           type: analysis
-           target: "{story_path}#test-specs"
-           content: |
-              - Locate a section named one of: "Test Specs", "Specs", "Test Cases", or similar
-              - If not found, HALT and ask the user to add specs or run *spec-review in QA
+  - id: EXTRACT-SPECS
+    title: Extract Test Specs
+    description: Locate the story's test specs before writing tests
+    action:
+      type: analysis
+      target: "!{story_path_resolved}#test-specs"
+      template: |
+        - Locate a section titled "Test Specs", "Specs", or "Test Cases"
+        - If missing, halt and request the user to add specs or run *spec-outline-review/
 
-      - id: WRITE-TESTS
-        title: Author Tests From Specs (Red)
-        description: Translate specs into runnable tests per project conventions
-        action:
-           type: file_operation
-           operation: create
-           content: |
-              - For each spec, create a focused test case using Given-When-Then intent
-              - Prefer existing frameworks from the repo; follow repo structure/naming
-              - Add necessary fixtures/mocks; keep tests deterministic
-              - Do not implement production code yet
+  - id: WRITE-TESTS
+    title: Author Tests From Specs (Red)
+    description: Translate specs into runnable tests before implementation
+    action:
+      type: file_operation
+      operation: update
+      template: |
+        - For each spec, write a failing test using Given/When/Then intent
+        - Follow repository test structure and naming conventions
+        - Add required fixtures/mocks; keep tests deterministic
 
-      - id: RUN-RED
-        title: Run Tests (Expect Failures)
-        description: Confirm tests fail before implementation
-        action:
-           type: command
-           command: "{test_command}"
-        on_success: continue
-        on_failure: continue
+  - id: RUN-RED
+    title: Run Tests (Expect Failures)
+    description: Confirm that the new tests fail before implementation
+    action:
+      type: command
+      command: "{test_command}"
+      template: "Expect failure; record results in Dev Agent Record/Debug Log References before proceeding."
 
-      - id: IMPLEMENT
-        title: Implement Minimal Code to Pass Tests (Green)
-        description: Implement production code iteratively until tests pass
-        action:
-           type: file_operation
-           operation: update
-           content: |
-              - Implement minimal code to satisfy failing tests
-              - Keep changes small; iterate until all spec-derived tests pass
-              - Update File List with created/modified files
+  - id: IMPLEMENT
+    title: Implement Minimal Code to Pass Tests (Green)
+    description: Implement production code iteratively until tests pass
+    action:
+      type: file_operation
+      operation: update
+      template: |
+        - Implement the minimum code to satisfy failing tests
+        - Keep changes small; rerun tests after each iteration
+        - Update File List with created/modified files
 
-      - id: RUN-GREEN
-        title: Run Tests to Green
-        description: Ensure the suite passes
-        action:
-           type: command
-           command: "{test_command}"
-        retry:
-           max_attempts: 3
-           delay_seconds: 0
+  - id: RUN-GREEN
+    title: Run Tests to Green
+    description: Execute the test suite until it passes
+    action:
+      type: command
+      command: "{test_command}"
+      retry:
+        max_attempts: 3
+        delay_seconds: 0
 
-      - id: REFACTOR
-        title: Refactor with Safety
-        description: Optional refactor while keeping tests green
-        action:
-           type: analysis
-           prompt: |
-              - Identify obvious refactors (naming, duplication, small extractions)
-              - Keep functional behavior; re-run tests after changes
+  - id: REFACTOR
+    title: Refactor with Safety
+    description: Perform optional refactors while keeping tests green
+    action:
+      type: analysis
+      template: |
+        - Identify small refactors (naming, duplication, extractions)
+        - Run tests after each change to ensure they remain green
 
-      - id: COMPLETE
-        title: Update Story and Notes
-        description: Update allowed Dev Agent Record sections only
-        action:
-           type: file_operation
-           operation: update
-           target: "{story_path}"
-           content: |
-              - Append to Debug Log, Completion Notes, Change Log with concise entries
-              - Do not edit non-Dev sections
-
-blocking_conditions:
-   - condition: No Test Specs found in story
-     message: Provide Test Specs in the story or run QA *spec-review
-     severity: error
-   - condition: Tests flaky or non-deterministic
-     message: Stabilize tests before proceeding
-     severity: error
+  - id: UPDATE-STORY
+    title: Update Story and Notes
+    description: Update allowed Dev Agent Record sections and logs
+    action:
+      type: file_operation
+      operation: update
+      target: "!{story_path_resolved}"
+      template: |
+        - Append to Debug Log References with test commands/results
+        - Document Completion Notes and File List entries
+        - Add Change Log entries summarizing changes
 
 completion:
-   criteria:
-      - Spec-derived tests added and passing
-      - Minimal implementation complete with tests green
-      - Dev Agent Record updated in allowed sections
+  criteria:
+    - Spec-derived tests added and passing
+    - Minimal implementation complete with tests green
+    - Dev Agent Record updated in allowed sections
 
 
 
@@ -732,175 +742,175 @@ type: matrix
 category: testing
 scope: project
 content:
-   matrix:
-      dimensions:
-         - name: priority_level
-           values: ["P0", "P1", "P2", "P3"]
-         - name: coverage_type
-           values: ["unit", "integration", "e2e"]
-      priority_levels:
-         - level: P0
-           name: Critical (Must Test)
-           criteria:
-              - Revenue-impacting functionality
-              - Security-critical paths
-              - Data integrity operations
-              - Regulatory compliance requirements
-              - Previously broken functionality (regression prevention)
-           examples:
-              - Payment processing
-              - Authentication/authorization
-              - User data creation/deletion
-              - Financial calculations
-              - GDPR/privacy compliance
-           testing_requirements:
-              - Comprehensive coverage at all levels
-              - Both happy and unhappy paths
-              - Edge cases and error scenarios
-           coverage_targets:
-              unit: ">90%"
-              integration: ">80%"
-              e2e: "All critical paths"
-         - level: P1
-           name: High (Should Test)
-           criteria:
-              - Core user journeys
-              - Frequently used features
-              - Features with complex logic
-              - Integration points between systems
-              - Features affecting user experience
-           examples:
-              - User registration flow
-              - Search functionality
-              - Data import/export
-              - Notification systems
-              - Dashboard displays
-           testing_requirements:
-              - Primary happy paths required
-              - Key error scenarios
-              - Critical edge cases
-           coverage_targets:
-              unit: ">80%"
-              integration: ">60%"
-              e2e: "Main happy paths"
-         - level: P2
-           name: Medium (Nice to Test)
-           criteria:
-              - Secondary features
-              - Admin functionality
-              - Reporting features
-              - Configuration options
-              - UI polish and aesthetics
-           examples:
-              - Admin settings panels
-              - Report generation
-              - Theme customization
-              - Help documentation
-              - Analytics tracking
-           testing_requirements:
-              - Happy path coverage
-              - Basic error handling
-              - Can defer edge cases
-           coverage_targets:
-              unit: ">60%"
-              integration: ">40%"
-              e2e: "Smoke tests"
-         - level: P3
-           name: Low (Test if Time Permits)
-           criteria:
-              - Rarely used features
-              - Nice-to-have functionality
-              - Cosmetic issues
-              - Non-critical optimizations
-           examples:
-              - Advanced preferences
-              - Legacy feature support
-              - Experimental features
-              - Debug utilities
-           testing_requirements:
-              - Smoke tests only
-              - Can rely on manual testing
-              - Document known limitations
-           coverage_targets:
-              unit: "Best effort"
-              integration: "Best effort"
-              e2e: "Manual only"
-      risk_adjustments:
-         increase_priority:
-            - condition: High user impact
-              threshold: "affects >50% of users"
-            - condition: High financial impact
-              threshold: ">$10K potential loss"
-            - condition: Security vulnerability potential
-              threshold: null
-            - condition: Compliance/legal requirements
-              threshold: null
-            - condition: Customer-reported issues
-              threshold: null
-            - condition: Complex implementation
-              threshold: ">500 LOC"
-            - condition: Multiple system dependencies
-              threshold: null
-         decrease_priority:
-            - Feature flag protected
-            - Gradual rollout planned
-            - Strong monitoring in place
-            - Easy rollback capability
-            - Low usage metrics
-            - Simple implementation
-            - Well-isolated component
-      priority_assignment_rules:
-         - Start with business impact - What happens if this fails?
-         - Consider probability - How likely is failure?
-         - Factor in detectability - Would we know if it failed?
-         - Account for recoverability - Can we fix it quickly?
-      decision_tree:
-         root: Is it revenue-critical?
-         branches:
+  matrix:
+    dimensions:
+      - name: priority_level
+        values: ["P0", "P1", "P2", "P3"]
+      - name: coverage_type
+        values: ["unit", "integration", "e2e"]
+    priority_levels:
+      - level: P0
+        name: Critical (Must Test)
+        criteria:
+          - Revenue-impacting functionality
+          - Security-critical paths
+          - Data integrity operations
+          - Regulatory compliance requirements
+          - Previously broken functionality (regression prevention)
+        examples:
+          - Payment processing
+          - Authentication/authorization
+          - User data creation/deletion
+          - Financial calculations
+          - GDPR/privacy compliance
+        testing_requirements:
+          - Comprehensive coverage at all levels
+          - Both happy and unhappy paths
+          - Edge cases and error scenarios
+        coverage_targets:
+          unit: ">90%"
+          integration: ">80%"
+          e2e: "All critical paths"
+      - level: P1
+        name: High (Should Test)
+        criteria:
+          - Core user journeys
+          - Frequently used features
+          - Features with complex logic
+          - Integration points between systems
+          - Features affecting user experience
+        examples:
+          - User registration flow
+          - Search functionality
+          - Data import/export
+          - Notification systems
+          - Dashboard displays
+        testing_requirements:
+          - Primary happy paths required
+          - Key error scenarios
+          - Critical edge cases
+        coverage_targets:
+          unit: ">80%"
+          integration: ">60%"
+          e2e: "Main happy paths"
+      - level: P2
+        name: Medium (Nice to Test)
+        criteria:
+          - Secondary features
+          - Admin functionality
+          - Reporting features
+          - Configuration options
+          - UI polish and aesthetics
+        examples:
+          - Admin settings panels
+          - Report generation
+          - Theme customization
+          - Help documentation
+          - Analytics tracking
+        testing_requirements:
+          - Happy path coverage
+          - Basic error handling
+          - Can defer edge cases
+        coverage_targets:
+          unit: ">60%"
+          integration: ">40%"
+          e2e: "Smoke tests"
+      - level: P3
+        name: Low (Test if Time Permits)
+        criteria:
+          - Rarely used features
+          - Nice-to-have functionality
+          - Cosmetic issues
+          - Non-critical optimizations
+        examples:
+          - Advanced preferences
+          - Legacy feature support
+          - Experimental features
+          - Debug utilities
+        testing_requirements:
+          - Smoke tests only
+          - Can rely on manual testing
+          - Document known limitations
+        coverage_targets:
+          unit: "Best effort"
+          integration: "Best effort"
+          e2e: "Manual only"
+    risk_adjustments:
+      increase_priority:
+        - condition: High user impact
+          threshold: "affects >50% of users"
+        - condition: High financial impact
+          threshold: ">$10K potential loss"
+        - condition: Security vulnerability potential
+          threshold: null
+        - condition: Compliance/legal requirements
+          threshold: null
+        - condition: Customer-reported issues
+          threshold: null
+        - condition: Complex implementation
+          threshold: ">500 LOC"
+        - condition: Multiple system dependencies
+          threshold: null
+      decrease_priority:
+        - Feature flag protected
+        - Gradual rollout planned
+        - Strong monitoring in place
+        - Easy rollback capability
+        - Low usage metrics
+        - Simple implementation
+        - Well-isolated component
+    priority_assignment_rules:
+      - Start with business impact - What happens if this fails?
+      - Consider probability - How likely is failure?
+      - Factor in detectability - Would we know if it failed?
+      - Account for recoverability - Can we fix it quickly?
+    decision_tree:
+      root: Is it revenue-critical?
+      branches:
+        - condition: "YES"
+          result: P0
+        - condition: "NO"
+          next: Does it affect core user journey?
+          branches:
             - condition: "YES"
-              result: P0
-            - condition: "NO"
-              next: Does it affect core user journey?
+              next: Is it high-risk?
               branches:
-                 - condition: "YES"
-                   next: Is it high-risk?
-                   branches:
-                      - condition: "YES"
-                        result: P0
-                      - condition: "NO"
-                        result: P1
-                 - condition: "NO"
-                   next: Is it frequently used?
-                   branches:
-                      - condition: "YES"
-                        result: P1
-                      - condition: "NO"
-                        next: Is it customer-facing?
-                        branches:
-                           - condition: "YES"
-                             result: P2
-                           - condition: "NO"
-                             result: P3
-      execution_order:
-         - priority: P0
-           description: Execute first (fail fast on critical issues)
-         - priority: P1
-           description: Execute second (core functionality)
-         - priority: P2
-           description: Execute if time permits
-         - priority: P3
-           description: Only in full regression cycles
-      continuous_adjustment_criteria:
-         - Production incident patterns
-         - User feedback and complaints
-         - Usage analytics
-         - Test failure history
-         - Business priority changes
+                - condition: "YES"
+                  result: P0
+                - condition: "NO"
+                  result: P1
+            - condition: "NO"
+              next: Is it frequently used?
+              branches:
+                - condition: "YES"
+                  result: P1
+                - condition: "NO"
+                  next: Is it customer-facing?
+                  branches:
+                    - condition: "YES"
+                      result: P2
+                    - condition: "NO"
+                      result: P3
+    execution_order:
+      - priority: P0
+        description: Execute first (fail fast on critical issues)
+      - priority: P1
+        description: Execute second (core functionality)
+      - priority: P2
+        description: Execute if time permits
+      - priority: P3
+        description: Only in full regression cycles
+    continuous_adjustment_criteria:
+      - Production incident patterns
+      - User feedback and complaints
+      - Usage analytics
+      - Test failure history
+      - Business priority changes
 usage:
-   agents: ["qa", "dev", "pdm"]
-   phases: ["testing", "planning", "review"]
-   tasks: ["test-design", "test-priorities"]
-   load_when: on_demand
+  agents: ["qa", "dev", "pdm"]
+  phases: ["testing", "planning", "review"]
+  tasks: ["test-design", "test-priorities"]
+  load_when: on_demand
 
 
 
@@ -915,107 +925,107 @@ type: framework
 category: testing
 scope: project
 content:
-   framework:
-      name: Test Levels Framework
-      version: "1.0"
-      levels:
-         - level: unit
-           description: Testing pure functions and business logic
-           criteria:
-              - Testing pure functions and business logic
-              - Algorithm correctness
-              - Input validation and data transformation
-              - Error handling in isolated components
-              - Complex calculations or state machines
-           characteristics:
-              - Fast execution (immediate feedback)
-              - No external dependencies (DB, API, file system)
-              - Highly maintainable and stable
-              - Easy to debug failures
-           favor_when:
-              - Logic can be isolated
-              - No side effects involved
-              - Fast feedback needed
-              - High cyclomatic complexity
-           example:
-              component: PriceCalculator
-              scenario: Calculate discount with multiple rules
-              justification: Complex business logic with multiple branches
-              mock_requirements: None - pure function
-           naming_convention: "test_{component}_{scenario}"
-         - level: integration
-           description: Component interaction verification
-           criteria:
-              - Component interaction verification
-              - Database operations and transactions
-              - API endpoint contracts
-              - Service-to-service communication
-              - Middleware and interceptor behavior
-           characteristics:
-              - Moderate execution time
-              - Tests component boundaries
-              - May use test databases or containers
-              - Validates system integration points
-           favor_when:
-              - Testing persistence layer
-              - Validating service contracts
-              - Testing middleware/interceptors
-              - Component boundaries critical
-           example:
-              components: ["UserService", "AuthRepository"]
-              scenario: Create user with role assignment
-              justification: Critical data flow between service and persistence
-              test_environment: In-memory database
-           naming_convention: "test_{flow}_{interaction}"
-         - level: e2e
-           description: Critical user journeys and cross-system workflows
-           criteria:
-              - Critical user journeys
-              - Cross-system workflows
-              - Visual regression testing
-              - Compliance and regulatory requirements
-              - Final validation before release
-           characteristics:
-              - Slower execution
-              - Tests complete workflows
-              - Requires full environment setup
-              - Most realistic but most brittle
-           favor_when:
-              - User-facing critical paths
-              - Multi-system interactions
-              - Regulatory compliance scenarios
-              - Visual regression important
-           example:
-              journey: Complete checkout process
-              scenario: User purchases with saved payment method
-              justification: Revenue-critical path requiring full validation
-              environment: Staging with test payment gateway
-           naming_convention: "test_{journey}_{outcome}"
-      anti_patterns:
-         - E2E testing for business logic validation
-         - Unit testing framework behavior
-         - Integration testing third-party libraries
-         - Duplicate coverage across levels
-      duplicate_coverage_guard:
-         check_before_adding:
-            - Is this already tested at a lower level?
-            - Can a unit test cover this instead of integration?
-            - Can an integration test cover this instead of E2E?
-         acceptable_overlap:
-            - Testing different aspects (unit logic, integration interaction, e2e user experience)
-            - Critical paths requiring defense in depth
-            - Regression prevention for previously broken functionality
-      test_id_format:
-         pattern: "{EPIC}.{STORY}-{LEVEL}-{SEQ}"
-         examples:
-            - "1.3-UNIT-001"
-            - "1.3-INT-002"
-            - "1.3-E2E-001"
+  framework:
+    name: Test Levels Framework
+    version: "1.0"
+    levels:
+      - level: unit
+        description: Testing pure functions and business logic
+        criteria:
+          - Testing pure functions and business logic
+          - Algorithm correctness
+          - Input validation and data transformation
+          - Error handling in isolated components
+          - Complex calculations or state machines
+        characteristics:
+          - Fast execution (immediate feedback)
+          - No external dependencies (DB, API, file system)
+          - Highly maintainable and stable
+          - Easy to debug failures
+        favor_when:
+          - Logic can be isolated
+          - No side effects involved
+          - Fast feedback needed
+          - High cyclomatic complexity
+        example:
+          component: PriceCalculator
+          scenario: Calculate discount with multiple rules
+          justification: Complex business logic with multiple branches
+          mock_requirements: None - pure function
+        naming_convention: "test_{component}_{scenario}"
+      - level: integration
+        description: Component interaction verification
+        criteria:
+          - Component interaction verification
+          - Database operations and transactions
+          - API endpoint contracts
+          - Service-to-service communication
+          - Middleware and interceptor behavior
+        characteristics:
+          - Moderate execution time
+          - Tests component boundaries
+          - May use test databases or containers
+          - Validates system integration points
+        favor_when:
+          - Testing persistence layer
+          - Validating service contracts
+          - Testing middleware/interceptors
+          - Component boundaries critical
+        example:
+          components: ["UserService", "AuthRepository"]
+          scenario: Create user with role assignment
+          justification: Critical data flow between service and persistence
+          test_environment: In-memory database
+        naming_convention: "test_{flow}_{interaction}"
+      - level: e2e
+        description: Critical user journeys and cross-system workflows
+        criteria:
+          - Critical user journeys
+          - Cross-system workflows
+          - Visual regression testing
+          - Compliance and regulatory requirements
+          - Final validation before release
+        characteristics:
+          - Slower execution
+          - Tests complete workflows
+          - Requires full environment setup
+          - Most realistic but most brittle
+        favor_when:
+          - User-facing critical paths
+          - Multi-system interactions
+          - Regulatory compliance scenarios
+          - Visual regression important
+        example:
+          journey: Complete checkout process
+          scenario: User purchases with saved payment method
+          justification: Revenue-critical path requiring full validation
+          environment: Staging with test payment gateway
+        naming_convention: "test_{journey}_{outcome}"
+    anti_patterns:
+      - E2E testing for business logic validation
+      - Unit testing framework behavior
+      - Integration testing third-party libraries
+      - Duplicate coverage across levels
+    duplicate_coverage_guard:
+      check_before_adding:
+        - Is this already tested at a lower level?
+        - Can a unit test cover this instead of integration?
+        - Can an integration test cover this instead of E2E?
+      acceptable_overlap:
+        - Testing different aspects (unit logic, integration interaction, e2e user experience)
+        - Critical paths requiring defense in depth
+        - Regression prevention for previously broken functionality
+    test_id_format:
+      pattern: "{EPIC}.{STORY}-{LEVEL}-{SEQ}"
+      examples:
+        - "1.3-UNIT-001"
+        - "1.3-INT-002"
+        - "1.3-E2E-001"
 usage:
-   agents: ["qa", "dev"]
-   phases: ["testing", "development", "review"]
-   tasks: ["test-design"]
-   load_when: on_demand
+  agents: ["qa", "dev"]
+  phases: ["testing", "development", "review"]
+  tasks: ["test-design"]
+  load_when: on_demand
 
 
 
@@ -1024,378 +1034,331 @@ usage:
 $schema: ../../.internal/task.schema.json
 id: apply-qa-fixes
 title: Apply QA Fixes
-version: 1.0.0
+version: 2.0.0
 purpose: Implement fixes based on QA results (gate and assessments) for a specific story while only updating allowed sections in the story file
 category: quality
 agent: dev
 
-inputs:
-   required:
-      - name: story_id
-        type: story_id
-        pattern: "^\\d+\\.\\d+$"
-        examples: ["1.3", "2.5"]
-      - name: qa_path
-        type: path
-        default: "@{docs.subdirs.qa}"
-      - name: story_path
-        type: path
-        default: "@{docs.subdirs.stories}"
-   optional:
-      - name: test_command
-        type: command
-        examples: ["npm run test", "go test"]
-      - name: lint_command
-        type: command
-        examples: ["npm run lint"]
+derived:
+  - name: story_file
+    type: path
+    source: parameters
+    pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
+    description: "Examples: 1.3, 2.5"
+    required: true
+  - name: story_status
+    type: variable
+    source: file
+    pattern: "Draft|Spec Review|WIP|Blocked|Review|Done"
+    required: true
 
 outputs:
-   updates:
-      - target: "{story_path}/{story}-*.yaml"
-        sections:
-           - "Tasks / Subtasks Checkboxes"
-           - "Dev Agent Record"
-           - "Change Log"
-           - "Status"
-        restrictions: Dev agent is ONLY authorized to update these sections
+  updates:
+    - target: "!{story_file}"
+      sections:
+        - "Tasks / Subtasks Checkboxes"
+        - "Dev Agent Record"
+        - "Change Log"
+        - "Status"
+      restrictions: Dev agent is ONLY authorized to update these sections
 
 prerequisites:
-   status:
-      - entity: story
-        field: status
-        value: "WIP"
-        operator: in
+  - field: "!{story_status}"
+    value: "WIP"
+    operator: "in"
+    on_violate: "halt_and_report"
+  - field: "!{story_file}"
+    value: "found"
+    operator: "="
+    on_violate: "halt_and_report"
+  - field: "@{docs.subdirs.qa}/{story}-gate.yaml"
+    value: "available"
+    operator: "="
+    on_violate: "continue_with_warning"
 
-process:
-   mode: sequential
-   steps:
-      - id: LOAD-CONFIG
-        title: Load Core Config & Locate Story
-        description: Read core config and resolve qa_path and story_path paths
-        action:
-           type: file_operation
-           operation: read
-           target: "@{baseDir}/config.json"
-        on_failure: halt
+steps:
+  - id: LOAD-CONFIG
+    title: Load Core Config & Locate Story
+    description: Read core config and resolve qa_path and story_path paths
+    action:
+      type: file_operation
+      operation: read
+      target: "@{baseDir}/config.json"
+    on_failure: halt
 
-      - id: LOCATE-STORY
-        title: Locate Story File
-        description: Find story file in {story_path}/{story_id}-*.yaml
-        action:
-           type: validation
-           validation:
-              type: string
-              pattern: ".*\\.yaml$"
-              required: true
-        on_failure: halt
+  - id: LOCATE-STORY
+    title: Locate Story File
+    description: Find story file in {story_path}/{story_id}-*.yaml
+    action:
+      type: validation
+      validation:
+        type: string
+        pattern: ".*\\.yaml$"
+        required: true
+    on_failure: halt
 
-      - id: COLLECT-QA
-        title: Collect QA Findings
-        description: Parse gate YAML and read assessment markdowns
-        action:
-           type: analysis
-           prompt: |
-              Parse the latest gate YAML:
-              - gate (PASS|CONCERNS|FAIL|WAIVED)
-              - top_issues[] with id, severity, finding, suggested_action
-              - nfr_validation.*.status and notes
-              - trace coverage summary/gaps
-              - test_design.coverage_gaps[]
-              - risk_summary.recommendations.must_fix[] (if present)
+  - id: COLLECT-QA
+    title: Collect QA Findings
+    description: Parse gate YAML and read assessment markdowns
+    action:
+      type: analysis
+      template: |
+        Parse the latest gate YAML:
+        - gate (PASS|CONCERNS|FAIL|WAIVED)
+        - top_issues[] with id, severity, finding, suggested_action
+        - nfr_validation.*.status and notes
+        - trace coverage summary/gaps
+        - test_design.coverage_gaps[]
+        - risk_summary.recommendations.must_fix[] (if present)
 
-              Read assessment markdowns and extract explicit gaps/recommendations
+        Read assessment markdowns and extract explicit gaps/recommendations
 
-      - id: BUILD-FIX-PLAN
-        title: Build Deterministic Fix Plan
-        description: Create prioritized fix plan based on QA findings
-        action:
-           type: analysis
-           prompt: |
-              Apply in order, highest priority first:
-              1. High severity items in top_issues (security/perf/reliability/maintainability)
-              2. NFR statuses: all FAIL must be fixed → then CONCERNS
-              3. Test Design coverage_gaps (prioritize P0 scenarios if specified)
-              4. Trace uncovered requirements (AC-level)
-              5. Risk must_fix recommendations
-              6. Medium severity issues, then low
+  - id: BUILD-FIX-PLAN
+    title: Build Deterministic Fix Plan
+    description: Create prioritized fix plan based on QA findings
+    action:
+      type: analysis
+      template: |
+        Apply in order, highest priority first:
+        1. High severity items in top_issues (security/perf/reliability/maintainability)
+        2. NFR statuses: all FAIL must be fixed → then CONCERNS
+        3. Test Design coverage_gaps (prioritize P0 scenarios if specified)
+        4. Trace uncovered requirements (AC-level)
+        5. Risk must_fix recommendations
+        6. Medium severity issues, then low
 
-              Guidance:
-              - Prefer tests closing coverage gaps before/with code changes
-              - Keep changes minimal and targeted; follow project architecture and TS/Deno rules
+        Guidance:
+        - Prefer tests closing coverage gaps before/with code changes
+        - Keep changes minimal and targeted; follow project architecture and TS/Deno rules
 
-      - id: APPLY-CHANGES
-        title: Apply Code and Test Changes
-        description: Implement fixes according to the prioritized plan
-        action:
-           type: file_operation
-           operation: update
-           content: |
-              - Implement code fixes per plan
-              - Add missing tests to close coverage gaps (unit first; integration where required by AC)
-              - Keep imports centralized via deps.ts
-              - Follow DI boundaries in src/core/di.ts and existing patterns
+  - id: APPLY-CHANGES
+    title: Apply Code and Test Changes
+    description: Implement fixes according to the prioritized plan
+    action:
+      type: file_operation
+      operation: update
+      template: |
+        - Implement code fixes per plan
+        - Add missing tests to close coverage gaps (unit first; integration where required by AC)
+        - Keep imports centralized via deps.ts
+        - Follow DI boundaries in src/core/di.ts and existing patterns
 
-      - id: VALIDATE-LINT
-        title: Validate with Linting
-        description: Run lint command and fix any issues
-        action:
-           type: command
-           command: "{lint_command}"
-        retry:
-           max_attempts: 3
-           delay_seconds: 1
+  - id: VALIDATE-LINT
+    title: Validate with Linting
+    description: Run lint command and fix any issues
+    action:
+      type: command
+      command: "{lint_command}"
+    retry:
+      max_attempts: 3
+      delay_seconds: 1
 
-      - id: VALIDATE-TESTS
-        title: Validate with Tests
-        description: Run all tests and ensure they pass
-        action:
-           type: command
-           command: "{test_command}"
-        retry:
-           max_attempts: 3
-           delay_seconds: 2
+  - id: VALIDATE-TESTS
+    title: Validate with Tests
+    description: Run all tests and ensure they pass
+    action:
+      type: command
+      command: "{test_command}"
+    retry:
+      max_attempts: 3
+      delay_seconds: 2
 
-      - id: UPDATE-STORY
-        title: Update Story File (Allowed Sections Only)
-        description: Update only the sections Dev agent is authorized to modify
-        action:
-           type: file_operation
-           operation: update
-           target: "{story_root}/{story}-*.yaml"
-           content: |
-              Update ONLY these sections:
-              - Tasks / Subtasks Checkboxes (mark any fix subtask as done)
-              - Dev Agent Record:
-                - Agent Model Used (if changed)
-                - Debug Log References (commands/results, e.g., lint/tests)
-                - Completion Notes List (what changed, why, how)
-                - File List (all added/modified/deleted files)
-              - Change Log (new dated entry describing applied fixes)
-              - Status (apply Status Rule)
+  - id: UPDATE-STORY
+    title: Update Story File (Allowed Sections Only)
+    description: Update only the sections Dev agent is authorized to modify
+    action:
+      type: file_operation
+      operation: update
+      target: "{story_root}/{story}-*.yaml"
+      template: |
+        Update ONLY these sections:
+        - Tasks / Subtasks Checkboxes (mark any fix subtask as done)
+        - Dev Agent Record:
+          - Agent Model Used (if changed)
+          - Debug Log References (commands/results, e.g., lint/tests)
+          - Completion Notes List (what changed, why, how)
+          - File List (all added/modified/deleted files)
+        - Change Log (new dated entry describing applied fixes)
+        - Status (apply Status Rule)
 
-              Status Rule:
-              - Set Status: Review and notify QA to re-run the review
+        Status Rule:
+        - Set Status: Review and notify QA to re-run the review
 
-      - id: COMPLETE
-        title: Complete Fix Application
-        description: Finalize the fix process - do not edit gate files
-        action:
-           type: validation
-           prompt: Dev does not modify gate YAML. If fixes address issues, request QA to re-run review-story to update the gate
-
-blocking_conditions:
-   - condition: "Missing @{baseDir}/config.json"
-     message: Core configuration file not found
-     severity: critical
-   - condition: "Story file not found for story"
-     message: Cannot locate story file in specified location
-     severity: critical
-   - condition: "No QA artifacts found"
-     message: Neither gate nor assessments found - request QA to generate at least a gate file
-     severity: error
+  - id: COMPLETE
+    title: Complete Fix Application
+    description: Finalize the fix process - do not edit gate files
+    action:
+      type: validation
+      template: |
+        Dev does not modify gate YAML. If fixes address issues, request QA to re-run review-story to update the gate
 
 completion:
-   criteria:
-      - "linting shows 0 problems"
-      - "all test cases pass"
-      - "All high severity top_issues addressed"
-      - "NFR FAIL issues resolved; CONCERNS minimized or documented"
-      - "Coverage gaps closed or explicitly documented with rationale"
-      - "Story updated (allowed sections only) including File List and Change Log"
-      - "Status set according to Status Rule"
-   validations:
-      - command: "{lint_command}"
-        expected_output: "Checked.*files.*problems"
-      - command: "{test_command}"
-        expected_output: "ok.*passed"
+  criteria:
+    - "linting shows 0 problems"
+    - "all test cases pass"
+    - "All high severity top_issues addressed"
+    - "NFR FAIL issues resolved; CONCERNS minimized or documented"
+    - "Coverage gaps closed or explicitly documented with rationale"
+    - "Story updated (allowed sections only) including File List and Change Log"
+    - "Status set according to Status Rule"
+  validations:
+    - command: "{lint_command}"
+      expected_output: "Checked.*files.*problems"
+    - command: "{test_command}"
+      expected_output: "ok.*passed"
 
 
 
-# Dependency: tasks/update-docs.yaml
+# Dependency: tasks/update-project-docs.yaml
 
-$schema: "../../.internal/task.schema.json"
-id: "update-docs"
-title: "Update Project Documentation"
-version: "1.0.0"
-purpose: "Update or create project documentation (API docs via Swagger/OpenAPI for backend, component docs via Storybook for frontend). Prefers in-place documentation over generated artifacts."
-category: "documentation"
-agent: "dev"
-
-inputs:
-   optional:
-      - name: "type"
-        type: "string"
-        default: "both"
-        examples: ["api", "components", "both"]
-      - name: "method"
-        type: "string"
-        examples: ["markdown", "docusaurus", "gitbook"]
-
-process:
-   mode: "sequential"
-   steps:
-      - id: "ASSESS-PROJECT"
-        title: "Analyze project structure"
-        description: "Identify backend and frontend frameworks, existing documentation, and package managers"
-        action:
-           type: "analysis"
-           content: |
-              Documentation Philosophy: In-place documentation is always preferred
-              Priority: 1) JSDoc/type hints/decorators 2) Framework integration 3) Generated artifacts
-
-              Analyze project for:
-              - Package files: package.json, requirements.txt, go.mod, Cargo.toml, composer.json
-              - Backend frameworks: Express.js, FastAPI, Flask, Django, NestJS, Gin, Echo, etc.
-              - Frontend frameworks: React, Vue, Angular, Svelte, Web Components
-              - Existing documentation tools (Swagger libs, Storybook)
-              - Package managers: npm, yarn, pnpm, pip, go mod, cargo, composer
-
-      - id: "STRATEGY-SELECTION"
-        title: "Select documentation strategy"
-        description: "Choose approach based on project analysis and user preferences"
-        elicit: true
-        action:
-           type: "elicit"
-           prompt: |
-              Based on project analysis:
-
-              Backend: {detected_backend}
-              Frontend: {detected_frontend} 
-              Package Manager: {detected_pm}
-              Existing Docs: {existing_docs}
-
-              Strategy options:
-              1. Framework-integrated (Recommended) - Use native Swagger/Storybook integration with in-place docs
-              2. Custom method ({method}) - Use specified method while preferring in-place documentation
-              3. Hybrid - Combine framework integration with custom documentation
-
-              Select approach (1-3):
-           options: ["Framework-integrated", "Custom method", "Hybrid"]
-           validation:
-              type: "string"
-              pattern: "^[1-3]$"
-              required: true
-
-      - id: "CREATE-DOC-STRUCTURE"
-        title: "Create documentation directories if not present"
-        description: "Create documentation directory structure using root path from config.json only if documentation doesn't already exist"
-        condition:
-           if: "!exists(api/) || !exists(components/)"
-        action:
-           type: "analysis"
-           content: |
-              Create documentation structure only if it doesn't exist:
-              - api/ - for API documentation (Swagger/OpenAPI) 
-              - components/ - for component documentation (Storybook)
-
-      - id: "SETUP-BACKEND-DOCS"
-        title: "Configure backend API documentation"
-        description: "Install and configure Swagger/OpenAPI documentation for backend, or update existing documentation"
-        condition:
-           if: "inputs.type == 'api' || inputs.type == 'both'"
-        action:
-           type: "analysis"
-           content: |
-              Check if API documentation already exists in api/
-
-              If updating existing documentation:
-              - Update existing API documentation with in-place approach
-
-              If creating new documentation:
-              - Framework-specific setup with in-place documentation emphasis:
-                * Express: swagger-jsdoc + JSDoc comments in routes
-                * FastAPI: Built-in docs with Pydantic models + type hints
-                * NestJS: @nestjs/swagger with decorators
-                * Flask: Flask-RESTX with decorators
-                * Go: gin-swagger with structured comments
-                * Generic: OpenAPI YAML template
-
-      - id: "SETUP-FRONTEND-DOCS"
-        title: "Configure frontend component documentation"
-        description: "Install and configure Storybook for component documentation, or update existing documentation"
-        condition:
-           if: "inputs.type == 'components' || inputs.type == 'both'"
-        action:
-           type: "analysis"
-           content: |
-              Check if component documentation already exists in components/
-
-              If updating existing documentation:
-              - Update existing component documentation with in-place approach
-
-              If creating new documentation:
-              - Framework-specific Storybook setup:
-                * React: Storybook with PropTypes/TypeScript + JSDoc
-                * Vue: Storybook for Vue with component props
-                * Angular: Storybook with Compodoc integration  
-                * Svelte: Storybook for Svelte/SvelteKit
-                * Generic: Basic Storybook setup
-
-      - id: "CUSTOM-METHOD-SETUP"
-        title: "Configure custom documentation method"
-        description: "Set up custom documentation method if specified"
-        condition:
-           if: "inputs.method != null && inputs.method != ''"
-        action:
-           type: "analysis"
-           content: |
-              Custom documentation setup for: {method}
-              Still emphasizing in-place documentation within chosen method
-
-              Set up {method} documentation structure
-
-      - id: "CREATE-EXAMPLES"
-        title: "Generate documentation examples"
-        description: "Create comprehensive examples showing in-place documentation best practices"
-        action:
-           type: "file_operation"
-           operation: "create"
-           target: "examples/"
-           content: |
-              Create in-place documentation examples:
-              - JSDoc comments for APIs
-              - PropTypes for React components
-              - Type hints for Python
-              - Structured comments for Go
-
-              Generate examples showing in-place documentation patterns
-
-      - id: "CONFIGURE-AUTOMATION"
-        title: "Set up documentation automation"
-        description: "Configure build scripts and automation for documentation"
-        action:
-           type: "file_operation"
-           operation: "update"
-           target: "package.json"
-           content: "Add documentation build scripts if package.json exists"
+$schema: ../../.internal/task.schema.json
+id: update-docs
+title: Update Project Documentation
+version: 2.0.0
+purpose: Update or create project documentation (API docs via Swagger/OpenAPI for backend, component docs via Storybook for frontend) with an in-place-first philosophy.
+category: documentation
+agent: dev
 
 outputs:
-   artifacts:
-      - name: "api-docs"
-        type: "directory"
-        path: "@{docs.dir}/api/"
-        format: "text"
-        description: "API documentation (Swagger/OpenAPI)"
-      - name: "component-docs"
-        type: "directory"
-        path: "@{docs.dir}/components/"
-        format: "text"
-        description: "Component documentation (Storybook)"
-      - name: "documentation-config"
-        type: "file"
-        path: "swagger.js|.storybook/main.js|@{docs.dir}/openapi.yaml"
-        format: "text"
-        description: "Framework-specific configuration files"
-      - name: "example-files"
-        type: "directory"
-        path: "@{docs.dir}/examples/"
-        format: "text"
-        description: "In-place documentation examples"
+  artifacts:
+    - name: api-docs
+      type: directory
+      path: "@{docs.dir}/api/"
+      format: text
+      description: API documentation (Swagger/OpenAPI)
+    - name: component-docs
+      type: directory
+      path: "@{docs.dir}/components/"
+      format: text
+      description: Component documentation (Storybook)
+    - name: documentation-config
+      type: file
+      path: "swagger.js|.storybook/main.js|@{docs.dir}/openapi.yaml"
+      format: text
+      description: Framework-specific configuration files
+    - name: example-files
+      type: directory
+      path: "@{docs.dir}/examples/"
+      format: text
+      description: In-place documentation examples
+
+prerequisites:
+  - field: "@{docs.dir}"
+    value: "writable"
+    operator: "="
+    on_violate: "halt_and_report"
+
+steps:
+  - id: ASSESS-PROJECT
+    title: Analyze project structure
+    description: Identify frameworks, package managers, and existing documentation assets
+    action:
+      type: analysis
+      template: |
+        Documentation philosophy: in-place documentation comes first (JSDoc/type hints/decorators > framework integrations > generated artifacts).
+        Analyze project for:
+        - Package files (package.json, requirements.txt, go.mod, etc.)
+        - Backend frameworks (Express, FastAPI, Django, NestJS, etc.)
+        - Frontend frameworks (React, Vue, Angular, Svelte, Web Components)
+        - Existing documentation tooling (Swagger libs, Storybook, custom portals)
+        - Package managers (npm, yarn, pnpm, pip, go mod, cargo, composer)
+
+  - id: STRATEGY-SELECTION
+    title: Select documentation strategy
+    description: Choose the documentation approach based on analysis and user preferences
+    action:
+      type: elicit
+      prompt_user: |
+        Based on project analysis:
+        Backend: {{detected_backend}}
+        Frontend: {{detected_frontend}}
+        Package Manager: {{detected_package_manager}}
+        Existing Docs: {{existing_docs_summary}}
+
+        Strategy options:
+        1. Framework-integrated (Swagger/Storybook with in-place docs)
+        2. Custom method (${method})
+        3. Hybrid (combine framework integration with custom method)
+
+        Select approach (1-3):
+      options: ["1", "2", "3"]
+      validation:
+        type: string
+        pattern: "^[1-3]$"
+        required: true
+    elicit: true
+
+  - id: CREATE-DOC-STRUCTURE
+    title: Create documentation directories if not present
+    description: Ensure api/ and components/ directories exist when required
+    action:
+      type: analysis
+      template: |
+        If documentation directories do not exist:
+        - Create @{docs.dir}/api/ for backend docs
+        - Create @{docs.dir}/components/ for component docs
+        Skip creation when directories already exist.
+
+  - id: SETUP-BACKEND-DOCS
+    title: Configure backend API documentation
+    description: Install or update Swagger/OpenAPI docs when backend docs are requested
+    action:
+      type: analysis
+      template: |
+        Execute when ${type} == "api" or "both":
+        - If api/ already contains docs, update them in-place.
+        - Otherwise, set up framework-specific tooling (swagger-jsdoc + JSDoc comments for Express, FastAPI built-ins, NestJS decorators, etc.).
+        - Emphasize in-code documentation (types/comments) before generating artifacts.
+
+  - id: SETUP-FRONTEND-DOCS
+    title: Configure frontend component documentation
+    description: Install or update Storybook (or equivalent) for component docs
+    action:
+      type: analysis
+      template: |
+        Execute when ${type} == "components" or "both":
+        - Update existing Storybook/component docs if present.
+        - Otherwise set up Storybook aligned to the detected frontend framework (React, Vue, Angular, Svelte, etc.).
+        - Prefer in-component documentation (PropTypes, doc blocks) feeding the Storybook catalog.
+
+  - id: CUSTOM-METHOD-SETUP
+    title: Configure custom documentation method
+    description: Apply a custom documentation solution when requested
+    action:
+      type: analysis
+      template: |
+        If ${method} is provided:
+        - Set up the specified method (e.g., markdown site, Docusaurus, GitBook) while keeping in-place docs authoritative.
+        - Document how the custom method ties back to source files.
+
+  - id: CREATE-EXAMPLES
+    title: Generate documentation examples
+    description: Provide in-place documentation samples for contributors
+    action:
+      type: file_operation
+      operation: create
+      target: "@{docs.dir}/examples/"
+      template: |
+        Include examples for:
+        - JSDoc comments for APIs
+        - PropTypes/TypeScript annotations for components
+        - Python type hints/docstrings
+        - Structured Go comments
+
+  - id: CONFIGURE-AUTOMATION
+    title: Set up documentation automation
+    description: Add scripts/pipelines that build or preview documentation
+    action:
+      type: file_operation
+      operation: update
+      target: "package.json"
+      template: |
+        Add or update documentation-related scripts (e.g., "docs:build", "docs:preview") so documentation can be generated consistently.
 
 completion:
-   criteria:
-      - "Documentation tools are installed and configured"
-      - "In-place documentation examples are provided"
-      - "Framework integration is working"
-      - "User can generate and view documentation"
-      - "Guidelines for maintenance are established"
+  criteria:
+    - Documentation tools installed/configured for requested scope
+    - In-place documentation examples provided
+    - Framework integrations validated (Swagger/Storybook or custom method)
+    - Users can build/view updated documentation
+    - Maintenance guidance recorded for future updates
