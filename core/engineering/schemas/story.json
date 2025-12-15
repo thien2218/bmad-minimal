@@ -18,14 +18,7 @@
 			"id": "status",
 			"title": "Status",
 			"type": "choice",
-			"choices": [
-				"Draft",
-				"Spec Review",
-				"WIP",
-				"Blocked",
-				"Review",
-				"Done"
-			],
+			"choices": ["Draft", "Spec Review", "WIP", "Blocked", "Review", "Done"],
 			"instruction": "Select the current status of the story",
 			"owner": "product-development-master",
 			"editors": [
@@ -64,18 +57,14 @@
 			"editors": ["product-development-master", "product-master"]
 		},
 		{
-			"id": "tasks-and-subtasks",
+			"id": "tasks",
 			"title": "Tasks / Subtasks",
 			"type": "bullet-list",
 			"instruction": "Break down the story into specific tasks and subtasks needed for implementation.\nReference applicable acceptance criteria numbers where relevant.\nAssign a Difficulty for each task and subtask (integer 1–10) capturing both complexity and uncertainty.",
 			"template": "- [ ] {{task_description}} (AC: # if applicable) [Diff: 1-10]\n  - [ ] {{optional_subtask_description}} [Diff: 1-10]\n- [ ] {{task_description}} (AC: # if applicable) [Diff: 1-10]\n  - [ ] {{optional_subtask_description}} [Diff: 1-10]\n- [ ] {{task_description}} (AC: # if applicable) [Diff: 1-10]\n  - [ ] {{optional_subtask_description}} [Diff: 1-10]",
 			"elicit": true,
 			"owner": "product-development-master",
-			"editors": [
-				"product-development-master",
-				"product-master",
-				"developer"
-			]
+			"editors": ["product-development-master", "product-master", "developer"]
 		},
 		{
 			"id": "dev-notes",

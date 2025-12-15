@@ -110,7 +110,7 @@ process:
           2. Rollback specific elements
           3. Re-scope features
           4. Defer to next sprint
-          5. Fundamental replan needed (handoff to PM/Architect)
+          5. Fundamental replan needed (handoff to Analyst/Architect)
       elicit: true
 
     - id: DRAFT-1
@@ -181,7 +181,7 @@ process:
           2. Engage product stakeholders for scope discussion
           3. Conduct impact assessment on current sprint commitments
 
-          Please coordinate with PM/Architect for next steps.
+          Please coordinate with Analyst/Architect for next steps.
       elicit: true
 
     - id: FINALIZE-1

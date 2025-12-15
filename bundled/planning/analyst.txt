@@ -266,35 +266,43 @@ This task defines a repeatable method to evaluate a proposed change/implementati
 ## Inputs
 
 Minimum to proceed:
+
 - Change/implementation summary (1–3 sentences)
 - Affected areas (e.g., frontend, backend, data, infra, docs)
 
 Helpful (optional):
+
 - Link(s) to relevant sections of PRD, frontend spec, architecture docs
 - Time/constraints, stakeholders impacted, any known risks/unknowns
 
 If information is incomplete, ask these five intake questions:
-1) What is the change or implementation you want to make, in 1–3 sentences?
-2) What outcome(s) does this change need to achieve (key success criteria)?
-3) Which areas are affected (frontend, backend, data, infra, operations, docs)?
-4) What is the expected blast radius (how many flows/components/services)?
-5) What unknowns or risks do you foresee?
+
+1. What is the change or implementation you want to make, in 1–3 sentences?
+2. What outcome(s) does this change need to achieve (key success criteria)?
+3. Which areas are affected (frontend, backend, data, infra, operations, docs)?
+4. What is the expected blast radius (how many flows/components/services)?
+5. What unknowns or risks do you foresee?
 
 ## Process
 
 ### Step 1: Context Intake
+
 - Collect/confirm the five intake answers above.
 - Identify whether the request is a new capability, an architectural adjustment, or a minor enhancement/fix.
 
 ### Step 2: Impact Mapping
+
 Evaluate which artifacts will likely need updates and how much:
+
 - PRD (product scope, epics/stories)
 - Frontend Specification (flows, UI behavior)
 - Architecture (frontend/back/backend/fullstack)
 - Operational/QA docs (if applicable)
 
 ### Step 3: Complexity & Risk Scoring (0–3 each)
+
 Score the change across six axes (0 = trivial, 3 = extensive):
+
 1. Documentation Impact
    - 0: No doc change
    - 1: Minor note/one section tweak
@@ -329,33 +337,40 @@ Score the change across six axes (0 = trivial, 3 = extensive):
 Compute total score: sum of all six axes (range 0–18).
 
 ### Step 4: Scope Recommendation
+
 Use thresholds as guidance (overrides may apply):
+
 - 0–3 → Scope 4 (Agent level)
 - 4–7 → Scope 3 (Story level)
 - 8–12 → Scope 2 (Epic level)
 - 13–18 → Scope 1 (Multi-experts level)
 
 Override rules (apply with judgement):
+
 - If substantial rewrite across high-level docs is evident → Scope 1
 - If only a micro-fix/internal refactor with no doc impact → Scope 4
 - If single new feature spanning multiple user flows/services → Scope 2
 - If bounded enhancement within an existing story’s domain → Scope 3
 
 ### Step 5: Output the Recommendation
+
 Produce a concise, structured summary (see Output Format below) including:
+
 - Scope level and one-sentence summary
 - Rationale tied to the scoring axes
 - Impacted artifacts and the expected type of update
 - Actionable next steps aligned with the chosen scope level
 
 ### Step 6: Offer Follow-ups
+
 Offer numbered options (user picks by number), for example:
-1) Proceed with this scope recommendation
-2) Provide more context to refine the assessment
-3) Generate a deep research prompt (if Scope 1–2 or major unknowns)
-4) Facilitate a brainstorming session (if early-stage ideation helpful)
-5) Create a Project Brief (if pivot/new direction forming)
-6) Exit
+
+1. Proceed with this scope recommendation
+2. Provide more context to refine the assessment
+3. Generate a deep research prompt (if Scope 1–2 or major unknowns)
+4. Facilitate a brainstorming session (if early-stage ideation helpful)
+5. Create a Project Brief (if pivot/new direction forming)
+6. Exit
 
 ## Output Format (Template)
 
@@ -366,6 +381,7 @@ Offer numbered options (user picks by number), for example:
 - Summary: [1–2 sentences]
 
 ### Rationale
+
 - Documentation Impact: [score 0–3] – [why]
 - Breadth of Change: [score 0–3] – [why]
 - Cross-Team/Dependency Load: [score 0–3] – [why]
@@ -375,12 +391,14 @@ Offer numbered options (user picks by number), for example:
 - Total Score: [0–18]
 
 ### Impacted Artifacts (and Expected Updates)
+
 - PRD: [none | minor | multiple sections | substantial rewrite]
 - Frontend Spec: [none | minor | multiple sections | substantial rewrite]
 - Architecture: [none | FE | BE | FS | multiple]
 - Other Docs: [ops, QA, runbooks, etc.]
 
 ### Suggested Next Actions
+
 - [Action 1]
 - [Action 2]
 - [Action 3]
@@ -389,17 +407,20 @@ Offer numbered options (user picks by number), for example:
 ## Next Actions by Scope
 
 - Scope 1 (Multi-experts level)
+
   - Consider: Brainstorming session → Deep Research Prompt → Project Brief
   - Expect: PRD and architecture substantial updates
-  - Coordinate: PM, Architect, UX, and PDM for alignment
+  - Coordinate: Analyst, Architect, UX, and PDM for alignment
   - Choose a Greenfield workflow (fullstack/ui/service/generic) if direction is shifting
 
 - Scope 2 (Epic level)
+
   - Update PRD (new/updated epics and stories)
   - Run targeted technical/user research if unknowns scored ≥2
   - Plan architectural updates where needed (FE/BE/FS)
 
 - Scope 3 (Story level)
+
   - Create/modify story with clear acceptance criteria
   - Minor updates to PRD/spec/architecture as needed (single-section touch)
 
@@ -408,6 +429,7 @@ Offer numbered options (user picks by number), for example:
   - Optionally add a brief note/changelog if helpful
 
 ## Example Mapping (Guidance)
+
 - New module affecting multiple user journeys and services → Scope 1
 - Replace auth provider or core data schema → Scope 1
 - Add a multi-step funnel across web and API → Scope 2
@@ -739,10 +761,10 @@ Before proceeding, understand:
 
 Required context:
 
--  The triggering story or issue
--  Current project state (completed stories, current epic)
--  Access to PRD, architecture, and other key documents
--  Understanding of remaining work planned
+- The triggering story or issue
+- Current project state (completed stories, current epic)
+- Access to PRD, architecture, and other key documents
+- Understanding of remaining work planned
 
 APPROACH:
 This is an interactive process with the user. Work through each section together, discussing implications and options. The user makes final decisions, but provide expert guidance on technical feasibility and impact.
@@ -755,22 +777,22 @@ REMEMBER: Changes are opportunities to improve, not failures. Handle them profes
 
 [[LLM: Start by fully understanding what went wrong and why. Don't jump to solutions yet. Ask probing questions:
 
--  What exactly happened that triggered this review?
--  Is this a one-time issue or symptomatic of a larger problem?
--  Could this have been anticipated earlier?
--  What assumptions were incorrect?
+- What exactly happened that triggered this review?
+- Is this a one-time issue or symptomatic of a larger problem?
+- Could this have been anticipated earlier?
+- What assumptions were incorrect?
 
 Be specific and factual, not blame-oriented.]]
 
--  [ ] **Identify Triggering Story:** Clearly identify the story (or stories) that revealed the issue.
--  [ ] **Define the Issue:** Articulate the core problem precisely.
-   -  [ ] Is it a technical limitation/dead-end?
-   -  [ ] Is it a newly discovered requirement?
-   -  [ ] Is it a fundamental misunderstanding of existing requirements?
-   -  [ ] Is it a necessary pivot based on feedback or new information?
-   -  [ ] Is it a failed/abandoned story needing a new approach?
--  [ ] **Assess Initial Impact:** Describe the immediate observed consequences (e.g., blocked progress, incorrect functionality, non-viable tech).
--  [ ] **Gather Evidence:** Note any specific logs, error messages, user feedback, or analysis that supports the issue definition.
+- [ ] **Identify Triggering Story:** Clearly identify the story (or stories) that revealed the issue.
+- [ ] **Define the Issue:** Articulate the core problem precisely.
+  - [ ] Is it a technical limitation/dead-end?
+  - [ ] Is it a newly discovered requirement?
+  - [ ] Is it a fundamental misunderstanding of existing requirements?
+  - [ ] Is it a necessary pivot based on feedback or new information?
+  - [ ] Is it a failed/abandoned story needing a new approach?
+- [ ] **Assess Initial Impact:** Describe the immediate observed consequences (e.g., blocked progress, incorrect functionality, non-viable tech).
+- [ ] **Gather Evidence:** Note any specific logs, error messages, user feedback, or analysis that supports the issue definition.
 
 ## 2. Epic Impact Assessment
 
@@ -783,17 +805,17 @@ Be specific and factual, not blame-oriented.]]
 
 Think about both immediate and downstream effects.]]
 
--  [ ] **Analyze Current Epic:**
-   -  [ ] Can the current epic containing the trigger story still be completed?
-   -  [ ] Does the current epic need modification (story changes, additions, removals)?
-   -  [ ] Should the current epic be abandoned or fundamentally redefined?
--  [ ] **Analyze Future Epics:**
-   -  [ ] Review all remaining planned epics.
-   -  [ ] Does the issue require changes to planned stories in future epics?
-   -  [ ] Does the issue invalidate any future epics?
-   -  [ ] Does the issue necessitate the creation of entirely new epics?
-   -  [ ] Should the order/priority of future epics be changed?
--  [ ] **Summarize Epic Impact:** Briefly document the overall effect on the project's epic structure and flow.
+- [ ] **Analyze Current Epic:**
+  - [ ] Can the current epic containing the trigger story still be completed?
+  - [ ] Does the current epic need modification (story changes, additions, removals)?
+  - [ ] Should the current epic be abandoned or fundamentally redefined?
+- [ ] **Analyze Future Epics:**
+  - [ ] Review all remaining planned epics.
+  - [ ] Does the issue require changes to planned stories in future epics?
+  - [ ] Does the issue invalidate any future epics?
+  - [ ] Does the issue necessitate the creation of entirely new epics?
+  - [ ] Should the order/priority of future epics be changed?
+- [ ] **Summarize Epic Impact:** Briefly document the overall effect on the project's epic structure and flow.
 
 ## 3. Artifact Conflict & Impact Analysis
 
@@ -806,21 +828,21 @@ Think about both immediate and downstream effects.]]
 
 Be thorough - missed conflicts cause future problems.]]
 
--  [ ] **Review PRD:**
-   -  [ ] Does the issue conflict with the core goals or requirements stated in the PRD?
-   -  [ ] Does the PRD need clarification or updates based on the new understanding?
--  [ ] **Review Architecture Document:**
-   -  [ ] Does the issue conflict with the documented architecture (components, patterns, tech choices)?
-   -  [ ] Are specific components/diagrams/sections impacted?
-   -  [ ] Does the technology list need updating?
-   -  [ ] Do data models or schemas need revision?
-   -  [ ] Are external API integrations affected?
--  [ ] **Review Frontend Spec (if applicable):**
-   -  [ ] Does the issue conflict with the FE architecture, component library choice, or UI/UX design?
-   -  [ ] Are specific FE components or user flows impacted?
--  [ ] **Review Other Artifacts (if applicable):**
-   -  [ ] Consider impact on deployment scripts, IaC, monitoring setup, etc.
--  [ ] **Summarize Artifact Impact:** List all artifacts requiring updates and the nature of the changes needed.
+- [ ] **Review PRD:**
+  - [ ] Does the issue conflict with the core goals or requirements stated in the PRD?
+  - [ ] Does the PRD need clarification or updates based on the new understanding?
+- [ ] **Review Architecture Document:**
+  - [ ] Does the issue conflict with the documented architecture (components, patterns, tech choices)?
+  - [ ] Are specific components/diagrams/sections impacted?
+  - [ ] Does the technology list need updating?
+  - [ ] Do data models or schemas need revision?
+  - [ ] Are external API integrations affected?
+- [ ] **Review Frontend Spec (if applicable):**
+  - [ ] Does the issue conflict with the FE architecture, component library choice, or UI/UX design?
+  - [ ] Are specific FE components or user flows impacted?
+- [ ] **Review Other Artifacts (if applicable):**
+  - [ ] Consider impact on deployment scripts, IaC, monitoring setup, etc.
+- [ ] **Summarize Artifact Impact:** List all artifacts requiring updates and the nature of the changes needed.
 
 ## 4. Path Forward Evaluation
 
@@ -834,23 +856,23 @@ Be thorough - missed conflicts cause future problems.]]
 
 Be honest about trade-offs. There's rarely a perfect solution.]]
 
--  [ ] **Option 1: Direct Adjustment / Integration:**
-   -  [ ] Can the issue be addressed by modifying/adding future stories within the existing plan?
-   -  [ ] Define the scope and nature of these adjustments.
-   -  [ ] Assess feasibility, effort, and risks of this path.
--  [ ] **Option 2: Potential Rollback:**
-   -  [ ] Would reverting completed stories significantly simplify addressing the issue?
-   -  [ ] Identify specific @{docs.subdirs.stories}/commits to consider for rollback.
-   -  [ ] Assess the effort required for rollback.
-   -  [ ] Assess the impact of rollback (lost work, data implications).
-   -  [ ] Compare the net benefit/cost vs. Direct Adjustment.
--  [ ] **Option 3: PRD MVP Review & Potential Re-scoping:**
-   -  [ ] Is the original PRD MVP still achievable given the issue and constraints?
-   -  [ ] Does the MVP scope need reduction (removing features/epics)?
-   -  [ ] Do the core MVP goals need modification?
-   -  [ ] Are alternative approaches needed to meet the original MVP intent?
-   -  [ ] **Extreme Case:** Does the issue necessitate a fundamental replan or potentially a new PRD V2 (to be handled by PM)?
--  [ ] **Select Recommended Path:** Based on the evaluation, agree on the most viable path forward.
+- [ ] **Option 1: Direct Adjustment / Integration:**
+  - [ ] Can the issue be addressed by modifying/adding future stories within the existing plan?
+  - [ ] Define the scope and nature of these adjustments.
+  - [ ] Assess feasibility, effort, and risks of this path.
+- [ ] **Option 2: Potential Rollback:**
+  - [ ] Would reverting completed stories significantly simplify addressing the issue?
+  - [ ] Identify specific @{docs.subdirs.stories}/commits to consider for rollback.
+  - [ ] Assess the effort required for rollback.
+  - [ ] Assess the impact of rollback (lost work, data implications).
+  - [ ] Compare the net benefit/cost vs. Direct Adjustment.
+- [ ] **Option 3: PRD MVP Review & Potential Re-scoping:**
+  - [ ] Is the original PRD MVP still achievable given the issue and constraints?
+  - [ ] Does the MVP scope need reduction (removing features/epics)?
+  - [ ] Do the core MVP goals need modification?
+  - [ ] Are alternative approaches needed to meet the original MVP intent?
+  - [ ] **Extreme Case:** Does the issue necessitate a fundamental replan or potentially a new PRD V2 (to be handled by the Analyst)?
+- [ ] **Select Recommended Path:** Based on the evaluation, agree on the most viable path forward.
 
 ## 5. Sprint Change Proposal Components
 
@@ -866,13 +888,13 @@ This proposal guides all subsequent work.]]
 
 (Ensure all agreed-upon points from previous sections are captured in the proposal)
 
--  [ ] **Identified Issue Summary:** Clear, concise problem statement.
--  [ ] **Epic Impact Summary:** How epics are affected.
--  [ ] **Artifact Adjustment Needs:** List of documents to change.
--  [ ] **Recommended Path Forward:** Chosen solution with rationale.
--  [ ] **PRD MVP Impact:** Changes to scope/goals (if any).
--  [ ] **High-Level Action Plan:** Next steps for @{docs.subdirs.stories}/updates.
--  [ ] **Agent Handoff Plan:** Identify roles needed (PM, Arch, Design Arch, PDM).
+- [ ] **Identified Issue Summary:** Clear, concise problem statement.
+- [ ] **Epic Impact Summary:** How epics are affected.
+- [ ] **Artifact Adjustment Needs:** List of documents to change.
+- [ ] **Recommended Path Forward:** Chosen solution with rationale.
+- [ ] **PRD MVP Impact:** Changes to scope/goals (if any).
+- [ ] **High-Level Action Plan:** Next steps for @{docs.subdirs.stories}/updates.
+- [ ] **Agent Handoff Plan:** Identify roles needed (Analyst, Arch, Design Arch, PDM).
 
 ## 6. Final Review & Handoff
 
@@ -889,17 +911,17 @@ Get explicit approval - implicit agreement causes problems.
 FINAL REPORT:
 After completing the checklist, provide a concise summary:
 
--  What changed and why
--  What we're doing about it
--  Who needs to do what
--  When we'll know if it worked
+- What changed and why
+- What we're doing about it
+- Who needs to do what
+- When we'll know if it worked
 
 Keep it action-oriented and forward-looking.]]
 
--  [ ] **Review Checklist:** Confirm all relevant items were discussed.
--  [ ] **Review Sprint Change Proposal:** Ensure it accurately reflects the discussion and decisions.
--  [ ] **User Approval:** Obtain explicit user approval for the proposal.
--  [ ] **Confirm Next Steps:** Reiterate the handoff plan and the next actions to be taken by specific agents.
+- [ ] **Review Checklist:** Confirm all relevant items were discussed.
+- [ ] **Review Sprint Change Proposal:** Ensure it accurately reflects the discussion and decisions.
+- [ ] **User Approval:** Obtain explicit user approval for the proposal.
+- [ ] **Confirm Next Steps:** Reiterate the handoff plan and the next actions to be taken by specific agents.
 
 ---
 
@@ -913,154 +935,154 @@ Keep it action-oriented and forward-looking.]]
 
 **Expand or Contract for Audience**
 
--  Ask whether to 'expand' (add detail, elaborate) or 'contract' (simplify, clarify)
--  Identify specific target audience if relevant
--  Tailor content complexity and depth accordingly
+- Ask whether to 'expand' (add detail, elaborate) or 'contract' (simplify, clarify)
+- Identify specific target audience if relevant
+- Tailor content complexity and depth accordingly
 
 **Explain Reasoning (CoT Step-by-Step)**
 
--  Walk through the step-by-step thinking process
--  Reveal underlying assumptions and decision points
--  Show how conclusions were reached from current role's perspective
+- Walk through the step-by-step thinking process
+- Reveal underlying assumptions and decision points
+- Show how conclusions were reached from current role's perspective
 
 **Critique and Refine**
 
--  Review output for flaws, inconsistencies, or improvement areas
--  Identify specific weaknesses from role's expertise
--  Suggest refined version reflecting domain knowledge
+- Review output for flaws, inconsistencies, or improvement areas
+- Identify specific weaknesses from role's expertise
+- Suggest refined version reflecting domain knowledge
 
 ## Structural Analysis Methods
 
 **Analyze Logical Flow and Dependencies**
 
--  Examine content structure for logical progression
--  Check internal consistency and coherence
--  Identify and validate dependencies between elements
--  Confirm effective ordering and sequencing
+- Examine content structure for logical progression
+- Check internal consistency and coherence
+- Identify and validate dependencies between elements
+- Confirm effective ordering and sequencing
 
 **Assess Alignment with Overall Goals**
 
--  Evaluate content contribution to stated objectives
--  Identify any misalignments or gaps
--  Interpret alignment from specific role's perspective
--  Suggest adjustments to better serve goals
+- Evaluate content contribution to stated objectives
+- Identify any misalignments or gaps
+- Interpret alignment from specific role's perspective
+- Suggest adjustments to better serve goals
 
 ## Risk and Challenge Methods
 
 **Identify Potential Risks and Unforeseen Issues**
 
--  Brainstorm potential risks from role's expertise
--  Identify overlooked edge cases or scenarios
--  Anticipate unintended consequences
--  Highlight implementation challenges
+- Brainstorm potential risks from role's expertise
+- Identify overlooked edge cases or scenarios
+- Anticipate unintended consequences
+- Highlight implementation challenges
 
 **Challenge from Critical Perspective**
 
--  Adopt critical stance on current content
--  Play devil's advocate from specified viewpoint
--  Argue against proposal highlighting weaknesses
--  Apply YAGNI principles when appropriate (scope trimming)
+- Adopt critical stance on current content
+- Play devil's advocate from specified viewpoint
+- Argue against proposal highlighting weaknesses
+- Apply YAGNI principles when appropriate (scope trimming)
 
 ## Creative Exploration Methods
 
 **Tree of Thoughts Deep Dive**
 
--  Break problem into discrete "thoughts" or intermediate steps
--  Explore multiple reasoning paths simultaneously
--  Use self-evaluation to classify each path as "sure", "likely", or "impossible"
--  Apply search algorithms (BFS/DFS) to find optimal solution paths
+- Break problem into discrete "thoughts" or intermediate steps
+- Explore multiple reasoning paths simultaneously
+- Use self-evaluation to classify each path as "sure", "likely", or "impossible"
+- Apply search algorithms (BFS/DFS) to find optimal solution paths
 
 **Hindsight is 20/20: The 'If Only...' Reflection**
 
--  Imagine retrospective scenario based on current content
--  Identify the one "if only we had known/done X..." insight
--  Describe imagined consequences humorously or dramatically
--  Extract actionable learnings for current context
+- Imagine retrospective scenario based on current content
+- Identify the one "if only we had known/done X..." insight
+- Describe imagined consequences humorously or dramatically
+- Extract actionable learnings for current context
 
 ## Multi-Persona Collaboration Methods
 
 **Agile Team Perspective Shift**
 
--  Rotate through different Scrum team member viewpoints
--  Product Development Master (PDM) - Value: Focus on user value and business impact
--  Product Development Master (PDM) - Process: Examine process flow and team dynamics
--  Developer: Assess technical implementation and complexity
--  QA: Identify testing scenarios and quality concerns
+- Rotate through different Scrum team member viewpoints
+- Product Development Master (PDM) - Value: Focus on user value and business impact
+- Product Development Master (PDM) - Process: Examine process flow and team dynamics
+- Developer: Assess technical implementation and complexity
+- QA: Identify testing scenarios and quality concerns
 
 **Stakeholder Round Table**
 
--  Convene virtual meeting with multiple personas
--  Each persona contributes unique perspective on content
--  Identify conflicts and synergies between viewpoints
--  Synthesize insights into actionable recommendations
+- Convene virtual meeting with multiple personas
+- Each persona contributes unique perspective on content
+- Identify conflicts and synergies between viewpoints
+- Synthesize insights into actionable recommendations
 
 **Meta-Prompting Analysis**
 
--  Step back to analyze the structure and logic of current approach
--  Question the format and methodology being used
--  Suggest alternative frameworks or mental models
--  Optimize the elicitation process itself
+- Step back to analyze the structure and logic of current approach
+- Question the format and methodology being used
+- Suggest alternative frameworks or mental models
+- Optimize the elicitation process itself
 
 ## Advanced 2025 Techniques
 
 **Self-Consistency Validation**
 
--  Generate multiple reasoning paths for same problem
--  Compare consistency across different approaches
--  Identify most reliable and robust solution
--  Highlight areas where approaches diverge and why
+- Generate multiple reasoning paths for same problem
+- Compare consistency across different approaches
+- Identify most reliable and robust solution
+- Highlight areas where approaches diverge and why
 
 **ReWOO (Reasoning Without Observation)**
 
--  Separate parametric reasoning from tool-based actions
--  Create reasoning plan without external dependencies
--  Identify what can be solved through pure reasoning
--  Optimize for efficiency and reduced token usage
+- Separate parametric reasoning from tool-based actions
+- Create reasoning plan without external dependencies
+- Identify what can be solved through pure reasoning
+- Optimize for efficiency and reduced token usage
 
 **Persona-Pattern Hybrid**
 
--  Combine specific role expertise with elicitation pattern
--  Architect + Risk Analysis: Deep technical risk assessment
--  UX Expert + User Journey: End-to-end experience critique
--  PM + Stakeholder Analysis: Multi-perspective impact review
+- Combine specific role expertise with elicitation pattern
+- Architect + Risk Analysis: Deep technical risk assessment
+- UX Expert + User Journey: End-to-end experience critique
+- Analyst + Stakeholder Analysis: Multi-perspective impact review
 
 **Emergent Collaboration Discovery**
 
--  Allow multiple perspectives to naturally emerge
--  Identify unexpected insights from persona interactions
--  Explore novel combinations of viewpoints
--  Capture serendipitous discoveries from multi-agent thinking
+- Allow multiple perspectives to naturally emerge
+- Identify unexpected insights from persona interactions
+- Explore novel combinations of viewpoints
+- Capture serendipitous discoveries from multi-agent thinking
 
 ## Game-Based Elicitation Methods
 
 **Red Team vs Blue Team**
 
--  Red Team: Attack the proposal, find vulnerabilities
--  Blue Team: Defend and strengthen the approach
--  Competitive analysis reveals blind spots
--  Results in more robust, battle-tested solutions
+- Red Team: Attack the proposal, find vulnerabilities
+- Blue Team: Defend and strengthen the approach
+- Competitive analysis reveals blind spots
+- Results in more robust, battle-tested solutions
 
 **Innovation Tournament**
 
--  Pit multiple alternative approaches against each other
--  Score each approach across different criteria
--  Crowd-source evaluation from different personas
--  Identify winning combination of features
+- Pit multiple alternative approaches against each other
+- Score each approach across different criteria
+- Crowd-source evaluation from different personas
+- Identify winning combination of features
 
 **Escape Room Challenge**
 
--  Present content as constraints to work within
--  Find creative solutions within tight limitations
--  Identify minimum viable approach
--  Discover innovative workarounds and optimizations
+- Present content as constraints to work within
+- Find creative solutions within tight limitations
+- Identify minimum viable approach
+- Discover innovative workarounds and optimizations
 
 ## Process Control
 
 **Proceed / No Further Actions**
 
--  Acknowledge choice to finalize current work
--  Accept output as-is or move to next step
--  Prepare to continue without additional elicitation
+- Acknowledge choice to finalize current work
+- Accept output as-is or move to next step
+- Prepare to continue without additional elicitation
 
 
 
@@ -1072,24 +1094,24 @@ This task defines a systematic workflow to analyze existing project artifacts an
 
 ## Purpose
 
--  Inventory and analyze existing project artifacts (README, package.json, code, docs)
--  Harvest project context, goals, and requirements through structured elicitation
--  Create a production-ready PRD following the established template
--  Ensure seamless integration with downstream PM/Architect/PDM workflows
+- Inventory and analyze existing project artifacts (README, package.json, code, docs)
+- Harvest project context, goals, and requirements through structured elicitation
+- Create a production-ready PRD following the established template
+- Ensure seamless integration with downstream Analyst/Architect/PDM workflows
 
 ## Inputs
 
 Minimum to proceed:
 
--  `project_identifier` - Project name or identifier for PRD title
--  `existing_artifact_paths` - List of paths to analyze (README, package.json, docs, code directories)
+- `project_identifier` - Project name or identifier for PRD title
+- `existing_artifact_paths` - List of paths to analyze (README, package.json, docs, code directories)
 
 Helpful (optional):
 
--  Known goals or success metrics
--  Target user personas or market context
--  Technical constraints or preferences
--  Timeline or resource constraints
+- Known goals or success metrics
+- Target user personas or market context
+- Technical constraints or preferences
+- Timeline or resource constraints
 
 ## Process
 
@@ -1099,9 +1121,9 @@ Load core configuration and resolve documentation paths.
 
 **Actions:**
 
--  Load `config.json` and verify docs directory structure
--  Resolve `@docs.dir`, `@docs.files.prd`, and related paths
--  Validate access to template and data files
+- Load `config.json` and verify docs directory structure
+- Resolve `@docs.dir`, `@docs.files.prd`, and related paths
+- Validate access to template and data files
 
 ### Step 2: DISCOVER-ARTIFACTS
 
@@ -1109,19 +1131,19 @@ Analyze existing project artifacts to understand current state.
 
 **Actions:**
 
--  Scan provided `existing_artifact_paths` for project artifacts
--  Analyze README.md for project description, setup instructions, and known issues
--  Examine package.json for dependencies, scripts, and project metadata
--  Review existing docs/ directory for any current specifications or architecture documents
--  Identify technology stack from dependencies and configuration files
--  Note any existing patterns, conventions, or architectural decisions
+- Scan provided `existing_artifact_paths` for project artifacts
+- Analyze README.md for project description, setup instructions, and known issues
+- Examine package.json for dependencies, scripts, and project metadata
+- Review existing docs/ directory for any current specifications or architecture documents
+- Identify technology stack from dependencies and configuration files
+- Note any existing patterns, conventions, or architectural decisions
 
 **Output Summary:**
 
--  Project type and primary technologies identified
--  Existing functionality and features discovered
--  Current documentation status and gaps
--  Notable patterns, conventions, or constraints
+- Project type and primary technologies identified
+- Existing functionality and features discovered
+- Current documentation status and gaps
+- Notable patterns, conventions, or constraints
 
 ### Step 3: CONTEXT-SUMMARY
 
@@ -1129,18 +1151,18 @@ Elicit comprehensive project context from user.
 
 **Elicitation Areas:**
 
--  Project goals and success metrics
--  Target users and market context
--  Key problems being solved
--  Business objectives and constraints
--  Timeline and resource considerations
+- Project goals and success metrics
+- Target users and market context
+- Key problems being solved
+- Business objectives and constraints
+- Timeline and resource considerations
 
 **Process:**
 
--  Present artifact analysis summary from Step 2
--  Use advanced elicitation (1-9 menu) for each context area
--  Capture user's vision and strategic objectives
--  Document assumptions and constraints
+- Present artifact analysis summary from Step 2
+- Use advanced elicitation (1-9 menu) for each context area
+- Capture user's vision and strategic objectives
+- Document assumptions and constraints
 
 ### Step 4: REQUIREMENTS-HARVEST
 
@@ -1148,18 +1170,18 @@ Extract and structure functional and non-functional requirements.
 
 **Actions:**
 
--  Derive functional requirements from project goals and existing functionality
--  Identify non-functional requirements (performance, security, usability)
--  Map dependencies and integration points
--  Assess risks and mitigation strategies
--  Define scope boundaries and success criteria
+- Derive functional requirements from project goals and existing functionality
+- Identify non-functional requirements (performance, security, usability)
+- Map dependencies and integration points
+- Assess risks and mitigation strategies
+- Define scope boundaries and success criteria
 
 **Elicitation Process:**
 
--  Present initial requirements harvested from artifacts
--  Use elicitation to refine, validate, and expand requirements
--  Prioritize requirements by importance and dependency
--  Identify any gaps or conflicts
+- Present initial requirements harvested from artifacts
+- Use elicitation to refine, validate, and expand requirements
+- Prioritize requirements by importance and dependency
+- Identify any gaps or conflicts
 
 ### Step 5: EPIC-LIST-INITIALIZE
 
@@ -1167,9 +1189,9 @@ Initialize the epic list with no items.
 
 **Actions:**
 
--  Set Epic List to an empty list in the PRD (do not invent placeholder epics)
--  Defer epic creation until deliberate planning is conducted
--  Note that epics will be added later via explicit user-driven planning
+- Set Epic List to an empty list in the PRD (do not invent placeholder epics)
+- Defer epic creation until deliberate planning is conducted
+- Note that epics will be added later via explicit user-driven planning
 
 ### Step 6: CREATE-PRD
 
@@ -1177,14 +1199,14 @@ Invoke template-driven PRD creation with pre-filled context.
 
 **Actions:**
 
--  Execute `create-doc.md` subtask with `template=prd-tmpl.yaml`
--  Pre-populate template sections with harvested context:
-   -  Project metadata and identifiers
-   -  Goals and background context
-   -  Functional and non-functional requirements
-   -  Success metrics and constraints
--  Use advanced elicitation for sections requiring user input
--  Ensure all template sections are addressed systematically
+- Execute `create-doc.md` subtask with `template=prd-tmpl.yaml`
+- Pre-populate template sections with harvested context:
+  - Project metadata and identifiers
+  - Goals and background context
+  - Functional and non-functional requirements
+  - Success metrics and constraints
+- Use advanced elicitation for sections requiring user input
+- Ensure all template sections are addressed systematically
 
 ### Step 7: UPDATE CHANGE LOG
 
@@ -1192,9 +1214,9 @@ Initialize Change Log for new PRD.
 
 **Change Log Update:**
 
--  Add initial entry to PRD Change Log section
--  Include date, version, description, and author
--  Document creation from existing project analysis
+- Add initial entry to PRD Change Log section
+- Include date, version, description, and author
+- Document creation from existing project analysis
 
 ### Step 8: HANDOFF
 
@@ -1202,30 +1224,30 @@ Provide completion summary and next-step guidance.
 
 **Handoff Contents:**
 
--  PRD creation confirmation with file location
--  Summary of key decisions and requirements captured
--  Artifact analysis summary and coverage metrics
--  Recommended next steps:
-   -  PM review and refinement
-   -  Architectural planning for technical gaps
-   -  Story creation and development planning
--  Integration points with existing workflows
+- PRD creation confirmation with file location
+- Summary of key decisions and requirements captured
+- Artifact analysis summary and coverage metrics
+- Recommended next steps:
+  - Analyst review and refinement
+  - Architectural planning for technical gaps
+  - Story creation and development planning
+- Integration points with existing workflows
 
 ## Integration Points
 
--  **PM Workflow:** PRD serves as foundation for epic and story creation
--  **Architect Workflow:** Technical requirements guide architecture document creation
--  **PDM Workflow:** PRD epics inform adhoc epic and story creation
--  **QA Workflow:** Requirements provide basis for test planning and validation
+- **Analyst Workflow:** PRD serves as foundation for epic and story creation
+- **Architect Workflow:** Technical requirements guide architecture document creation
+- **PDM Workflow:** PRD epics inform adhoc epic and story creation
+- **QA Workflow:** Requirements provide basis for test planning and validation
 
 ## Quality Criteria
 
--  All existing artifacts analyzed and key insights captured
--  PRD follows template structure
--  Requirements are complete, traceable, and prioritized
--  Epic list initialized (empty, no invented content)
--  Change Log properly initialized with creation entry
--  Clear handoff with actionable next steps
+- All existing artifacts analyzed and key insights captured
+- PRD follows template structure
+- Requirements are complete, traceable, and prioritized
+- Epic list initialized (empty, no invented content)
+- Change Log properly initialized with creation entry
+- Clear handoff with actionable next steps
 
 
 
@@ -2051,8 +2073,8 @@ sections:
         required: true
         type: numbered-list
         template: "{{action_item}}"
-      - id: pm-handoff
-        title: PM Handoff
+      - id: analyst-handoff
+        title: Analyst Handoff
         required: true
         content: |
           This Project Brief provides the full context for {{project_name}}. Please start in 'PRD Generation Mode', review the brief thoroughly to work with the user to create the PRD section by section as the template indicates, asking for any necessary clarification or suggesting improvements.

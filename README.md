@@ -2,10 +2,10 @@
 
 A lightweight, developer-centric implementation of the [BMAD Method](https://github.com/bmad-code-org/BMAD-METHOD), designed solely for software development workflow. This package aims to improve on a couple of aspects of the OG BMAD Method and delivers them as our core philosophy:
 
--  **Context efficiency**: Keeps related logic and files closely coupled, reducing the overhead of context switching.
--  **Developer-focused**: An intuitive design and guids are prioritized for a seamless DX.
--  **Flexibility**: The workflows are designed to adapt to different project scales and architectures.
--  **Simplified workflows**: Reduces boilerplate and streamlines common tasks so you can get productive in minutes.
+- **Context efficiency**: Keeps related logic and files closely coupled, reducing the overhead of context switching.
+- **Developer-focused**: An intuitive design and guides are prioritized for a seamless DX.
+- **Flexibility**: The workflows are designed to adapt to different project scales and architectures.
+- **Simplified workflows**: Reduces boilerplate and streamlines common tasks so you can get productive in minutes.
 
 > _"Foundations in Agentic Agile Driven Development, known as the Breakthrough Method of Agile AI-Driven Development, yet so much more. Transform any domain with specialized AI expertise: software development, entertainment, creative writing, business strategy to personal wellness just to name a few."_
 
@@ -22,9 +22,9 @@ If you find this project helpful, consider giving it a ⭐ to support us!
 
 ### What would you like to do?
 
--  See [default configurations](core/config.json) setup.
--  See available [planning agents](core/engineering/agents).
--  See available [engineering agents](core/planning/agents).
+- See [default configurations](core/config.json) setup.
+- See available [planning agents](core/engineering/agents).
+- See available [engineering agents](core/planning/agents).
 
 ## Overview
 
@@ -50,18 +50,18 @@ We treat developers as our first-class citizens. And at the same time, we assume
 
 But at the same time, we don't want to shoo away any non-coder who would like to give our package a shot or apply the workflows to their own projects. Thus, we assumes our audience are either:
 
--  Developers who want to actively shape and iterate on their projects.
--  Builders who are eager to:
-   -  Understand _how the code works_ (with guidance from our agents)
-   -  And have a clear grasp of their project’s specifications and requirements.
+- Developers who want to actively shape and iterate on their projects.
+- Builders who are eager to:
+  - Understand _how the code works_ (with guidance from our agents)
+  - And have a clear grasp of their project’s specifications and requirements.
 
 ### Flexible at all scales
 
 The set of workflows we offer can be switch in between flexibily depending on your need.
 
--  You need to start a new project? Kickstart immediately with the Greenfield Worflow.
--  You have a change of plan for the direction of your existing project? Shift the rail with the Brownfield workflow.
--  You have a small change to implement as improvement? Ask the PM agent directly.
+- You need to start a new project? Kickstart immediately with the Greenfield Worflow.
+- You have a change of plan for the direction of your existing project? Shift the rail with the Brownfield workflow.
+- You have a small change to implement as improvement? Ask the analyst agent directly.
 
 Ultimately, the tool can only work well in the right hands of the right user. Your decisions are what drive these workflows forward.
 
@@ -81,8 +81,8 @@ Further more, the command list is also modified to be as minimal, but enough to 
 
 ### Prerequisites
 
--  Node.js 16+ and npm installed
--  Run the CLI from the root of the target repository
+- Node.js 16+ and npm installed
+- Run the CLI from the root of the target repository
 
 ### Installation
 
@@ -92,13 +92,13 @@ npx -y bmad-minimal install
 
 During installation, you will be prompted for:
 
--  Project name
--  Whether your app is singular or split into backend/frontend
--  App directory (or backend/frontend directories)
--  Base directory for BMAD files
--  Whether to include planning templates
--  Documentation directory
--  Whether to generate a prompt for your local agent to fill out your own set of coding standards
+- Project name
+- Whether your app is singular or split into backend/frontend
+- App directory (or backend/frontend directories)
+- Base directory for BMAD files
+- Whether to include planning templates
+- Documentation directory
+- Whether to generate a prompt for your local agent to fill out your own set of coding standards
 
 ### Update
 
@@ -114,13 +114,13 @@ BMAD Minimal is inspired by the original BMAD-METHOD, but is purposefully refine
 
 ### 1. Minifying the Workflows and Documents
 
--  **Reduced Agents:**
-   -  We cut down from **10 agents to 6**, removing layers that add overhead.
-   -  _Analyst, BMAD Master, and Orchestrator_ are fully removed from the workflows.
-   -  The **SM (Scrum Master)** and **PO (Project Owner)** roles are now streamlined into a single, approachable **Project Development Master (PDM)**—your all-in-one bridge between high-level plans and engineering.
--  **Simplified Documents:**
-   -  Fewer agents mean **fewer documents** to manage—keeping your workflow clean and focused.
-   -  The result? Less paperwork, less confusion, more time for the work that matters most.
+- **Reduced Agents:**
+  - We cut down from **10 agents to 6**, removing layers that add overhead.
+  - _Analyst, BMAD Master, and Orchestrator_ are fully removed from the workflows.
+  - The **SM (Scrum Master)** and **PO (Project Owner)** roles are now streamlined into a single, approachable **Project Development Master (PDM)**—your all-in-one bridge between high-level plans and engineering.
+- **Simplified Documents:**
+  - Fewer agents mean **fewer documents** to manage—keeping your workflow clean and focused.
+  - The result? Less paperwork, less confusion, more time for the work that matters most.
 
 ### 2. Structured Formats & Readibility
 

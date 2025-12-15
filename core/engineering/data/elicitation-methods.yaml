@@ -230,7 +230,7 @@ methods:
     instructions:
       - "Architect + Risk Analysis: Deep technical risk assessment"
       - "UX Expert + User Journey: End-to-end experience critique"
-      - "PM + Stakeholder Analysis: Multi-perspective impact review"
+      - "Analyst + Stakeholder Analysis: Multi-perspective impact review"
     priority: optional
 
   # Game-Based Elicitation Methods

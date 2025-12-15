@@ -360,7 +360,7 @@ steps:
     description: Select the next incomplete task/subtask from the story
     action:
       type: analysis
-      target: "!{story_path_resolved}#tasks-and-subtasks"
+      target: "!{story_path_resolved}#tasks"
       template: |
         - Parse the "Tasks / Subtasks" list in order
         - Select the first incomplete task/subtask
