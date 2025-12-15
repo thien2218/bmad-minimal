@@ -3,12 +3,6 @@ const path = require("path");
 const chalk = require("chalk");
 const { getPath } = require("../utils/fileOperations");
 
-const coreDir = getPath("core");
-const AGENTS_DIRS = [
-	path.join(coreDir, "engineering", "agents"),
-	path.join(coreDir, "planning", "agents"),
-];
-
 /**
  * Compress the JSON configuration block in a single agent markdown file.
  *
@@ -20,9 +14,7 @@ async function compressAgentConfigInFile(filePath) {
 		const content = await fs.readFile(filePath, "utf-8");
 
 		// Find the marker comment
-		const markerIndex = content.indexOf(
-			"<!-- INSTRUCTIONS_AND_RULES:JSON -->"
-		);
+		const markerIndex = content.indexOf("<!-- INSTRUCTIONS_AND_RULES:JSON -->");
 		if (markerIndex === -1) {
 			return { changed: false, error: null };
 		}

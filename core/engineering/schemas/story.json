@@ -15,20 +15,6 @@
 	},
 	"sections": [
 		{
-			"id": "status",
-			"title": "Status",
-			"type": "choice",
-			"choices": ["Draft", "Spec Review", "WIP", "Blocked", "Review", "Done"],
-			"instruction": "Select the current status of the story",
-			"owner": "product-development-master",
-			"editors": [
-				"product-development-master",
-				"product-master",
-				"developer",
-				"qa-agent"
-			]
-		},
-		{
 			"id": "priority",
 			"title": "Priority",
 			"type": "choice",
@@ -136,20 +122,6 @@
 					"instruction": "Outline how to quickly revert changes if needed, including preconditions and steps.",
 					"elicit": true
 				}
-			]
-		},
-		{
-			"id": "change-log",
-			"title": "Change Log",
-			"type": "table",
-			"columns": ["Date", "Version", "Description", "Author"],
-			"instruction": "Track changes made to this story document",
-			"owner": "product-development-master",
-			"editors": [
-				"product-development-master",
-				"product-master",
-				"developer",
-				"qa-agent"
 			]
 		},
 		{

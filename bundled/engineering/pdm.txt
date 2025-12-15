@@ -488,7 +488,6 @@ Keep it action-oriented and forward-looking.]]
 $schema: ../../.internal/task.schema.json
 id: correct-course
 title: Correct Course Task
-version: 2.0.0
 purpose: Guide structured response to change triggers using change-checklist to analyze impacts, explore solutions, and produce a Sprint Change Proposal document
 category: planning
 agent: pdm
@@ -1308,7 +1307,6 @@ After presenting the report, ask if the user wants:
 $schema: ../../.internal/task.schema.json
 id: create-epic
 title: Create Epic Task
-version: 2.0.0
 purpose: Create a single epic for an initiative listed in the PRD, aligned with architecture constraints and ready for downstream story creation
 category: planning
 agent: pdm
@@ -1476,7 +1474,6 @@ completion:
 $schema: ../../.internal/task.schema.json
 id: create-story
 title: Create Next Story Task
-version: 2.0.0
 purpose: Identify the next logical story based on project progress and epic definitions, then prepare a comprehensive, self-contained story file ready for implementation
 category: planning
 agent: pdm
@@ -1508,11 +1505,6 @@ derived:
     source: context
     description: "Highest numbered existing story file under @{docs.subdirs.stories} for the epic."
     required: false
-  - name: previous_story_status
-    type: string
-    source: context
-    description: "Status of the previous story if it exists."
-    required: false
 
 outputs:
   artifacts:
@@ -1523,7 +1515,6 @@ outputs:
   updates:
     - target: "!{story_file_target}"
       sections:
-        - "Status"
         - "Dev Notes"
         - "Tasks / Subtasks"
       restrictions: Only create new story files; do not modify existing stories
@@ -1577,20 +1568,6 @@ steps:
         - If @{docs.subdirs.stories} already has files for epic !{epic_resolved}, load the highest `{epic}.{story}-*.yaml` to determine !{previous_story_file} and compute !{story_resolved}.
         - If ${story} is supplied, set !{story_resolved} accordingly.
         - Resolve !{story_file_target} for downstream steps.
-
-  - id: VERIFY-PREVIOUS
-    title: Verify Previous Story Status
-    description: If a previous story exists and is not Done, warn the user and allow override
-    action:
-      type: validation
-      template: |
-        If !{previous_story_file} exists and !{previous_story_status} != "Done":
-        ALERT: Found incomplete story!
-        File: !{previous_story_file}
-        Status: !{previous_story_status}
-
-        Ask the user whether to accept risk and override to create the next story in draft.
-    elicit: true
 
   - id: HANDLE-EPIC-COMPLETE
     title: Handle Epic Completion Scenario
@@ -1749,7 +1726,7 @@ steps:
         - Review all sections for completeness and accuracy
         - Verify every technical detail has a source reference
         - Ensure tasks align with epic requirements and architecture constraints
-        - Confirm the story status is "Draft" and save the file
+        - Confirm the story draft is saved and accessible
 
   - id: HANDOFF-SUMMARY
     title: Provide Summary and Next Steps
@@ -1758,7 +1735,6 @@ steps:
       type: elicit
       prompt_user: |
         Story created: !{story_file_target}
-        Status: Draft
 
         Key technical components included from architecture docs:
         {{component_summary}}
@@ -1775,7 +1751,7 @@ steps:
 completion:
   checklist: story-draft-checklist
   criteria:
-    - Story file created with status Draft
+    - Story file created in draft form
     - All technical context extracted from architecture
     - Source references included for every technical detail
     - Tasks align with requirements and architecture constraints
@@ -1801,20 +1777,6 @@ completion:
 		"elicitation": "advanced-elicitation"
 	},
 	"sections": [
-		{
-			"id": "status",
-			"title": "Status",
-			"type": "choice",
-			"choices": ["Draft", "Spec Review", "WIP", "Blocked", "Review", "Done"],
-			"instruction": "Select the current status of the story",
-			"owner": "product-development-master",
-			"editors": [
-				"product-development-master",
-				"product-master",
-				"developer",
-				"qa-agent"
-			]
-		},
 		{
 			"id": "priority",
 			"title": "Priority",
@@ -1923,20 +1885,6 @@ completion:
 					"instruction": "Outline how to quickly revert changes if needed, including preconditions and steps.",
 					"elicit": true
 				}
-			]
-		},
-		{
-			"id": "change-log",
-			"title": "Change Log",
-			"type": "table",
-			"columns": ["Date", "Version", "Description", "Author"],
-			"instruction": "Track changes made to this story document",
-			"owner": "product-development-master",
-			"editors": [
-				"product-development-master",
-				"product-master",
-				"developer",
-				"qa-agent"
 			]
 		},
 		{
@@ -2155,7 +2103,6 @@ Be pragmatic - perfect documentation doesn't exist, but it must be enough to pro
 $schema: ../../.internal/task.schema.json
 id: create-adhoc-epic
 title: Create Enhancement Epic from Brownfield Docs
-version: 2.0.0
 purpose: Create a single epic for the highest-order enhancement using PRD and Architecture docs in @{docs.subdirs.epics} as authoritative references. Output YAML strictly follows the epic schema.
 category: planning
 agent: pdm
@@ -2336,7 +2283,7 @@ steps:
         Otherwise, update the affected documents:
         - PRD: revise relevant sections when scope, requirements, or constraints change.
         - Architecture: update affected files/sections when component responsibilities, data models, APIs, or patterns change.
-        - Record a brief note in the epic YAML summarizing documentation updates and add any necessary change-log entries.
+        - Record a brief note in the epic YAML summarizing documentation updates.
 
   - id: HANDOFF-1
     title: Provide Summary
@@ -2365,7 +2312,6 @@ completion:
 $schema: ../../.internal/task.schema.json
 id: create-adhoc-story
 title: Create Enhancement Story from Enhancement Epic
-version: 2.0.0
 purpose: Create one story for the highest-order enhancement epic, referencing its epic YAML and PRD/Architecture docs. Output YAML strictly follows the story schema.
 category: planning
 agent: pdm
@@ -2396,11 +2342,6 @@ derived:
     source: context
     description: "Highest existing adhoc story file for the enhancement."
     required: false
-  - name: previous_story_status
-    type: string
-    source: context
-    description: "Status of the previous adhoc story if it exists."
-    required: false
   - name: impact_assessment
     type: string
     source: context
@@ -2420,7 +2361,6 @@ outputs:
   updates:
     - target: "!{story_file_target}"
       sections:
-        - "Status"
         - "Dev Notes"
         - "Tasks / Subtasks"
       restrictions: Only create a new story; do not modify existing stories
@@ -2468,21 +2408,7 @@ steps:
         Scan @{docs.subdirs.stories} for adhoc-!{epic_enhancement_number_resolved}.*-*.yaml.
         - Compute the next sequential story number (start at 1 if none exist).
         - If ${story_enhancement_number} is provided, honor it instead.
-        - Record !{previous_story_file}, !{previous_story_status}, and resolve !{story_file_target}.
-
-  - id: VERIFY-PREVIOUS
-    title: Check Previous Story Completion
-    description: Warn when a previous adhoc story remains incomplete
-    action:
-      type: validation
-      template: |
-        If !{previous_story_file} exists and !{previous_story_status} != "Done":
-        ALERT: Found incomplete story.
-        File: !{previous_story_file}
-        Status: !{previous_story_status}
-
-        Ask if the user wants to accept risk and create the next story anyway.
-    elicit: true
+        - Record !{previous_story_file} and resolve !{story_file_target}.
 
   - id: READ-EPIC
     title: Read Epic YAML
@@ -2561,7 +2487,7 @@ steps:
         Otherwise:
         - Update PRD sections for scope, requirements, or constraints changes.
         - Update Architecture docs when components, data models, APIs, or patterns change.
-        - Summarize updates in the story dev_notes (doc_impact_summary) and add change-log entries.
+        - Summarize updates in the story dev_notes (doc_impact_summary).
 
   - id: HANDOFF-1
     title: Provide Summary and Next Steps
@@ -2570,7 +2496,6 @@ steps:
       type: elicit
       prompt_user: |
         Story created: !{story_file_target}
-        Status: Draft
 
         Checklist results: {{checklist_results}}
 
@@ -2581,7 +2506,7 @@ steps:
 
 completion:
   criteria:
-    - Story YAML created with status Draft
+    - Story YAML created in draft form
     - Story content aligned with epic and PRD
     - Checklist executed
     - Documentation impact assessed and updates recorded when needed
@@ -2593,7 +2518,6 @@ completion:
 $schema: ../../.internal/task.schema.json
 id: create-standalone-story
 title: Create Standalone Story
-version: 2.0.0
 purpose: Create a single user story for very small standalone enhancements that can be completed in one focused development session while following existing system patterns.
 category: planning
 agent: pdm
@@ -2731,7 +2655,7 @@ steps:
         Otherwise:
         - Update PRD sections for scope/requirement changes
         - Update architecture docs for component/data/API changes
-        - Summarize updates in the story dev notes and change log
+        - Summarize updates in the story dev notes
 
   - id: VALIDATE-COMPLETION
     title: Validate story creation completion

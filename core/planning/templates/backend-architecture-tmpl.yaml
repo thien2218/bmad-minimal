@@ -61,12 +61,6 @@ sections:
 
           Document the decision here before proceeding with the architecture design. If none, just say N/A
         elicit: true
-      - id: changelog
-        title: Change Log
-        required: true
-        type: table
-        columns: [Date, Version, Description, Author]
-        instruction: Track document versions and changes
 
   - id: high-level-architecture
     title: High Level Architecture

@@ -1,7 +1,6 @@
 $schema: ../../.internal/task.schema.json
 id: create-story
 title: Create Next Story Task
-version: 2.0.0
 purpose: Identify the next logical story based on project progress and epic definitions, then prepare a comprehensive, self-contained story file ready for implementation
 category: planning
 agent: pdm
@@ -33,11 +32,6 @@ derived:
     source: context
     description: "Highest numbered existing story file under @{docs.subdirs.stories} for the epic."
     required: false
-  - name: previous_story_status
-    type: string
-    source: context
-    description: "Status of the previous story if it exists."
-    required: false
 
 outputs:
   artifacts:
@@ -48,7 +42,6 @@ outputs:
   updates:
     - target: "!{story_file_target}"
       sections:
-        - "Status"
         - "Dev Notes"
         - "Tasks / Subtasks"
       restrictions: Only create new story files; do not modify existing stories
@@ -102,20 +95,6 @@ steps:
         - If @{docs.subdirs.stories} already has files for epic !{epic_resolved}, load the highest `{epic}.{story}-*.yaml` to determine !{previous_story_file} and compute !{story_resolved}.
         - If ${story} is supplied, set !{story_resolved} accordingly.
         - Resolve !{story_file_target} for downstream steps.
-
-  - id: VERIFY-PREVIOUS
-    title: Verify Previous Story Status
-    description: If a previous story exists and is not Done, warn the user and allow override
-    action:
-      type: validation
-      template: |
-        If !{previous_story_file} exists and !{previous_story_status} != "Done":
-        ALERT: Found incomplete story!
-        File: !{previous_story_file}
-        Status: !{previous_story_status}
-
-        Ask the user whether to accept risk and override to create the next story in draft.
-    elicit: true
 
   - id: HANDLE-EPIC-COMPLETE
     title: Handle Epic Completion Scenario
@@ -274,7 +253,7 @@ steps:
         - Review all sections for completeness and accuracy
         - Verify every technical detail has a source reference
         - Ensure tasks align with epic requirements and architecture constraints
-        - Confirm the story status is "Draft" and save the file
+        - Confirm the story draft is saved and accessible
 
   - id: HANDOFF-SUMMARY
     title: Provide Summary and Next Steps
@@ -283,7 +262,6 @@ steps:
       type: elicit
       prompt_user: |
         Story created: !{story_file_target}
-        Status: Draft
 
         Key technical components included from architecture docs:
         {{component_summary}}
@@ -300,7 +278,7 @@ steps:
 completion:
   checklist: story-draft-checklist
   criteria:
-    - Story file created with status Draft
+    - Story file created in draft form
     - All technical context extracted from architecture
     - Source references included for every technical detail
     - Tasks align with requirements and architecture constraints

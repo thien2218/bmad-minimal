@@ -16,7 +16,7 @@ sections:
     title: Goals and Background Context
     required: true
     instruction: |
-      Ask if Project Brief document is available. If NO Project Brief exists, STRONGLY recommend creating one first using project-brief-tmpl (it provides essential foundation: problem statement, target users, success metrics, MVP scope, constraints). If user insists on PRD without brief, gather this information during Goals section. If Project Brief exists, review and use it to populate Goals (bullet list of desired outcomes) and Background Context (1-2 paragraphs on what this solves and why) so we can determine what is and is not in scope for PRD mvp. Either way this is critical to determine the requirements. Include Change Log table.
+      Ask if Project Brief document is available. If NO Project Brief exists, STRONGLY recommend creating one first using project-brief-tmpl (it provides essential foundation: problem statement, target users, success metrics, MVP scope, constraints). If user insists on PRD without brief, gather this information during Goals section. If Project Brief exists, review and use it to populate Goals (bullet list of desired outcomes) and Background Context (1-2 paragraphs on what this solves and why) so we can determine what is and is not in scope for PRD mvp. Either way this is critical to determine the requirements.
     sections:
       - id: goals
         title: Goals
@@ -33,12 +33,6 @@ sections:
         required: true
         type: paragraphs
         instruction: 1-2 short paragraphs summarizing the background context, such as what we learned in the brief without being redundant with the goals, what and why this solves a problem, what the current landscape or need is
-      - id: changelog
-        title: Change Log
-        required: true
-        type: table
-        columns: [Date, Version, Description, Author]
-        instruction: Track document versions and changes
       - id: user-journeys
         title: Key User Journeys / Use Cases
         required: true

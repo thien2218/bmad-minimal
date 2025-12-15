@@ -204,7 +204,7 @@
 		},
 		{
 			"name": "update-architecture",
-			"description": "Update an existing architecture document based on user's change request (add feature, extend functionality, change of library, etc.). Ensure the Change Log section is updated.",
+			"description": "Update an existing architecture document based on user's change request (add feature, extend functionality, change of library, etc.).",
 			"parameters": ["doc_type", "change_request"],
 			"steps": [
 				"templates/architecture-tmpl.yaml",

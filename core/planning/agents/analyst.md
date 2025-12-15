@@ -168,7 +168,7 @@
 		},
 		{
 			"name": "update-prd",
-			"description": "Update an existing PRD based on user's change request (add feature, extend functionality, change of library, etc.). Ensure Change Log is updated.",
+			"description": "Update an existing PRD based on user's change request (add feature, extend functionality, change of library, etc.).",
 			"parameters": ["change_request"],
 			"steps": ["templates/prd-tmpl.yaml", "checklists/change-checklist.md"]
 		},

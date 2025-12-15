@@ -224,9 +224,7 @@ async function shouldGenerateCSPrompt(configData) {
 				frontendDir: configData.project.frontendDir,
 			});
 
-			console.log(
-				"\n" + chalk.cyan("Prompt for your LLM/agent (copy/paste):")
-			);
+			console.log("\n" + chalk.cyan("Prompt for your LLM/agent (copy/paste):"));
 			console.log(llmPrompt + "\n");
 		}
 	}

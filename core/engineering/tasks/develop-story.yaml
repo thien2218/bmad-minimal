@@ -1,8 +1,7 @@
 $schema: ../../.internal/task.schema.json
 id: develop-story
 title: Develop Story Task
-version: 2.0.0
-purpose: Implement a WIP story end-to-end using an implementation-first workflow; execute tasks/subtasks sequentially, then validate and document results.
+purpose: Implement a story end-to-end using an implementation-first workflow; execute tasks/subtasks sequentially, then validate and document results.
 category: development
 agent: dev
 
@@ -12,11 +11,6 @@ derived:
     source: context
     pattern: "@{docs.subdirs.stories}/${story}-*.yaml"
     description: "Concrete story file path resolved from ${story}."
-    required: true
-  - name: story_status
-    type: string
-    source: file
-    description: "Status field read from the target story file."
     required: true
 
 outputs:
@@ -29,8 +23,6 @@ outputs:
         - "Dev Agent Record/Debug Log References"
         - "Dev Agent Record/Completion Notes List"
         - "File List"
-        - "Change Log"
-        - "Status"
         - "Agent Model Used"
       restrictions: Only toggle checkboxes and append to allowed sections; never rename or reorder tasks
   artifacts:
@@ -46,10 +38,6 @@ outputs:
       description: Production code implementing the story
 
 prerequisites:
-  - field: "!{story_status}"
-    value: "WIP"
-    operator: "="
-    on_violate: "halt_and_report"
   - field: "dev.blocking.unapproved_dependencies"
     value: "false"
     operator: "="
@@ -81,15 +69,6 @@ steps:
       type: file_operation
       operation: read
       target: "!{story_path_resolved}"
-
-  - id: VERIFY-STATUS
-    title: Verify Story Status is WIP
-    description: Halt if the story is not ready for development
-    action:
-      type: validation
-      template: |
-        If !{story_status} != "WIP": halt, report to the user, and request status correction before proceeding.
-    on_failure: halt
 
   - id: SELECT-TASK
     title: Read First or Next Task
@@ -147,13 +126,13 @@ steps:
 
   - id: HANDLE-FAILURES
     title: Handle Validation Failures
-    description: Address failures or mark the story as blocked when limits are reached
+    description: Address test failures and escalate when limits are reached
     action:
       type: decision
       template: |
         If tests fail (and failures are valid):
         - Fix issues and rerun RUN-TESTS (max 3 attempts)
-        - After 3 failed attempts, branch to BLOCK-STORY
+        - After 3 failed attempts, pause execution and report blockers to the user for guidance
 
   - id: UPDATE-STORY
     title: Mark Checkboxes and Update Story Metadata
@@ -164,27 +143,11 @@ steps:
       target: "!{story_path_resolved}"
       template: |
         - Mark completed tasks/subtasks with [x] only (no renaming or reordering)
-        - Append entries to Debug Log References, Completion Notes, File List, and Change Log
-        - Update Status to "Review" when ready
-
-  - id: BLOCK-STORY
-    title: Handle Blocked Conditions
-    description: Set the story status to Blocked when prerequisites cannot be satisfied
-    action:
-      type: file_operation
-      operation: update
-      target: "!{story_path_resolved}"
-      template: |
-        Set Status to "Blocked" if:
-        - Unapproved dependencies are required
-        - Requirements remain ambiguous
-        - Three consecutive implementation/validation failures occur
-        - Required configuration is missing
-        - Regression failures persist
+        - Append entries to Debug Log References, Completion Notes, and File List
 
   - id: COMPLETE-STORY
     title: Complete Story Implementation
-    description: Final validation and status update once all work is done
+    description: Final validation and wrap-up once all work is done
     action:
       type: validation
       template: |
@@ -193,7 +156,6 @@ steps:
         - Tests/regression pass
         - File List and Dev Agent Record are complete
         - story-dod-checklist executed successfully
-        - Status is "Review" (or "Blocked" when applicable)
 
 completion:
   checklist: story-dod-checklist
@@ -202,4 +164,3 @@ completion:
     - Tests written and passing
     - Validations/regression pass
     - File List and Dev Agent Record updated
-    - Final status set appropriately (Review or Blocked)

@@ -1,7 +1,6 @@
 $schema: ../../.internal/task.schema.json
 id: spec-outline-review
 title: Spec Outline Review
-version: 2.0.0
 purpose: Review a plain-English outline of test cases for clarity, completeness, coverage, and traceability (when a story is provided). Produce an immediate, actionable improvement report without creating files or requiring full test implementations.
 category: quality
 agent: qa

@@ -57,12 +57,6 @@ sections:
 
       Document the starter template decision and any constraints it imposes before proceeding.
     sections:
-      - id: changelog
-        title: Change Log
-        required: true
-        type: table
-        columns: [Date, Version, Description, Author]
-        instruction: Track document versions and changes
 
   - id: frontend-tech-stack
     title: Frontend Tech Stack

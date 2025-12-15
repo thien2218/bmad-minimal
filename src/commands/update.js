@@ -135,16 +135,14 @@ async function update(options) {
 		try {
 			await copyCheatSheetToWorkspace(cwd, config);
 			console.log(
-				chalk.gray(
-					`  Copied cheat sheet to ${config.docs.dir}/cheat-sheet.md`
-				)
+				chalk.gray(`  Copied cheat sheet to ${config.docs.dir}/cheat-sheet.md`)
 			);
 		} catch (e) {
 			console.log(
 				chalk.yellow(`  Warning: failed to copy cheat sheet: ${e.message}`)
 			);
 		}
-	
+
 		// Ensure all doc directories still exist
 		await ensureDocsStructure(cwd, config);
 

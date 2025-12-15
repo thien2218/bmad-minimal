@@ -155,8 +155,7 @@ async function updateCheatSheetWithAgent() {
 					? persona.title.trim()
 					: "";
 			const description =
-				typeof persona.description === "string" &&
-				persona.description.trim()
+				typeof persona.description === "string" && persona.description.trim()
 					? persona.description.trim()
 					: "";
 
@@ -180,11 +179,9 @@ async function updateCheatSheetWithAgent() {
 				for (const cmd of commands) {
 					if (!cmd || typeof cmd.name !== "string") continue;
 					const name = cmd.name.trim();
-							if (!name) continue;
+					if (!name) continue;
 
-					const params = Array.isArray(cmd.parameters)
-						? cmd.parameters
-						: [];
+					const params = Array.isArray(cmd.parameters) ? cmd.parameters : [];
 					const optionalParams = Array.isArray(cmd.optionalParameters)
 						? cmd.optionalParameters
 						: [];
@@ -207,9 +204,7 @@ async function updateCheatSheetWithAgent() {
 					}
 
 					if (optionalParams.length > 0) {
-						sectionLines.push(
-							`  - optional: ${optionalParams.join(", ")}`
-						);
+						sectionLines.push(`  - optional: ${optionalParams.join(", ")}`);
 					}
 
 					sectionLines.push("");

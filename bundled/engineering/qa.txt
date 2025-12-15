@@ -274,20 +274,6 @@
 	},
 	"sections": [
 		{
-			"id": "status",
-			"title": "Status",
-			"type": "choice",
-			"choices": ["Draft", "Spec Review", "WIP", "Blocked", "Review", "Done"],
-			"instruction": "Select the current status of the story",
-			"owner": "product-development-master",
-			"editors": [
-				"product-development-master",
-				"product-master",
-				"developer",
-				"qa-agent"
-			]
-		},
-		{
 			"id": "priority",
 			"title": "Priority",
 			"type": "choice",
@@ -395,20 +381,6 @@
 					"instruction": "Outline how to quickly revert changes if needed, including preconditions and steps.",
 					"elicit": true
 				}
-			]
-		},
-		{
-			"id": "change-log",
-			"title": "Change Log",
-			"type": "table",
-			"columns": ["Date", "Version", "Description", "Author"],
-			"instruction": "Track changes made to this story document",
-			"owner": "product-development-master",
-			"editors": [
-				"product-development-master",
-				"product-master",
-				"developer",
-				"qa-agent"
 			]
 		},
 		{
@@ -632,7 +604,6 @@
 $schema: ../../.internal/task.schema.json
 id: review-story
 title: Review Story
-version: 2.0.0
 purpose: Perform a comprehensive test architecture review with quality gate decision. This adaptive, risk-aware review creates both a story update and a detailed gate file.
 category: quality
 agent: qa
@@ -643,12 +614,6 @@ derived:
     source: parameters
     pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
     description: "Story file path resolved from provided story identifier"
-    required: true
-  - name: story_status
-    type: string
-    source: file
-    pattern: "Draft|Spec Review|WIP|Blocked|Review|Done"
-    description: "Status value read from the story file"
     required: true
   - name: story_file_ready
     type: boolean
@@ -680,10 +645,6 @@ prerequisites:
   - field: "!{story_path}"
     value: "found"
     operator: "="
-    on_violate: "halt_and_report"
-  - field: "!{story_status}"
-    value: "Review"
-    operator: "contains"
     on_violate: "halt_and_report"
   - field: "!{story_file_ready}"
     value: "true"
@@ -718,16 +679,6 @@ steps:
         Extract docs.subdirs.qa and docs.subdirs.stories settings.
         Resolve !{story_path} if not provided.
     on_failure: continue
-
-  - id: CHECK-REVIEW
-    title: Check Story Status
-    description: Verify story status includes the word "Review"
-    action:
-      type: validation
-      target: "!{story_status}"
-      template: |
-        If status does not include "Review", halt execution and notify the user to transition the story first.
-    on_failure: halt
 
   - id: RISK-ASSESSMENT
     title: Risk Assessment (Determines Review Depth)
@@ -834,7 +785,7 @@ steps:
         - Actionable recommendations and prioritized fix list
         - Example diffs or pseudocode only if needed (do not apply)
         - Instructions to update only QA Results section of the story
-        - Reminder not to alter story Status or File List
+        - Reminder not to alter the story File List
 
   - id: STANDARDS
     title: Standards Compliance Check
@@ -912,7 +863,6 @@ completion:
   criteria:
     - Story QA Results section updated
     - Quality gate file created
-    - Status recommendation provided
     - All findings documented
     - Actionable recommendations provided
   validations:
@@ -1224,7 +1174,6 @@ usage:
 $schema: ../../.internal/task.schema.json
 id: spec-outline-review
 title: Spec Outline Review
-version: 2.0.0
 purpose: Review a plain-English outline of test cases for clarity, completeness, coverage, and traceability (when a story is provided). Produce an immediate, actionable improvement report without creating files or requiring full test implementations.
 category: quality
 agent: qa
@@ -1410,7 +1359,6 @@ completion:
 $schema: ../../.internal/task.schema.json
 id: test-design
 title: Test Design
-version: 2.0.0
 purpose: Create comprehensive test scenarios with appropriate test level recommendations for story implementation.
 category: quality
 agent: qa
@@ -1596,7 +1544,6 @@ completion:
 $schema: ../../.internal/task.schema.json
 id: nfr-assess
 title: Non-Functional Requirements Assessment
-version: 2.0.0
 purpose: Quick NFR validation focused on the core four (security, performance, reliability, maintainability). Assess non-functional requirements for a story and generate YAML blocks for gate files plus markdown assessment reports.
 category: quality
 agent: qa
@@ -1608,20 +1555,11 @@ derived:
     pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
     description: "Path to the story file"
     required: true
-  - name: story_status
-    type: variable
-    source: file
-    pattern: "Draft|Spec Review|WIP|Blocked|Review|Done"
-    required: true
 
 prerequisites:
   - field: "!{story_file}"
     value: "found"
     operator: "="
-    on_violate: "halt_and_report"
-  - field: "!{story_status}"
-    value: "Review"
-    operator: "contains"
     on_violate: "halt_and_report"
 
 steps:

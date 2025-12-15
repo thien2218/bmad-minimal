@@ -1,7 +1,6 @@
 $schema: ../../.internal/task.schema.json
 id: update-docs
 title: Update Project Documentation
-version: 2.0.0
 purpose: Update or create project documentation (API docs via Swagger/OpenAPI for backend, component docs via Storybook for frontend) with an in-place-first philosophy.
 category: documentation
 agent: dev

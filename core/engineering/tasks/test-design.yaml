@@ -1,7 +1,6 @@
 $schema: ../../.internal/task.schema.json
 id: test-design
 title: Test Design
-version: 2.0.0
 purpose: Create comprehensive test scenarios with appropriate test level recommendations for story implementation.
 category: quality
 agent: qa

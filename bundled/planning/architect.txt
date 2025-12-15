@@ -206,7 +206,7 @@
 		},
 		{
 			"name": "update-architecture",
-			"description": "Update an existing architecture document based on user's change request (add feature, extend functionality, change of library, etc.). Ensure the Change Log section is updated.",
+			"description": "Update an existing architecture document based on user's change request (add feature, extend functionality, change of library, etc.).",
 			"parameters": ["doc_type", "change_request"],
 			"steps": [
 				"templates/architecture-tmpl.yaml",
@@ -300,12 +300,6 @@ sections:
           - If extending an existing project, analyze its structure, patterns, and technology choices.
           - If none, proceed as greenfield and document implications.
         elicit: true
-      - id: changelog
-        title: Change Log
-        required: true
-        type: table
-        columns: [Date, Version, Description, Author]
-        instruction: Track document versions and changes
 
   - id: high-level-architecture
     title: High Level Architecture
@@ -915,12 +909,6 @@ sections:
           4. Document the decision and any constraints it imposes
 
           If none, state "N/A - Greenfield project"
-      - id: changelog
-        title: Change Log
-        required: true
-        type: table
-        columns: [Date, Version, Description, Author]
-        instruction: Track document versions and changes
 
   - id: high-level-architecture
     title: High Level Architecture
@@ -2003,12 +1991,6 @@ sections:
 
           Document the decision here before proceeding with the architecture design. If none, just say N/A
         elicit: true
-      - id: changelog
-        title: Change Log
-        required: true
-        type: table
-        columns: [Date, Version, Description, Author]
-        instruction: Track document versions and changes
 
   - id: high-level-architecture
     title: High Level Architecture
@@ -2747,12 +2729,6 @@ sections:
 
       Document the starter template decision and any constraints it imposes before proceeding.
     sections:
-      - id: changelog
-        title: Change Log
-        required: true
-        type: table
-        columns: [Date, Version, Description, Author]
-        instruction: Track document versions and changes
 
   - id: frontend-tech-stack
     title: Frontend Tech Stack

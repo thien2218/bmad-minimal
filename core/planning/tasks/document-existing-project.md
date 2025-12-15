@@ -118,17 +118,7 @@ Invoke template-driven PRD creation with pre-filled context.
 - Use advanced elicitation for sections requiring user input
 - Ensure all template sections are addressed systematically
 
-### Step 7: UPDATE CHANGE LOG
-
-Initialize Change Log for new PRD.
-
-**Change Log Update:**
-
-- Add initial entry to PRD Change Log section
-- Include date, version, description, and author
-- Document creation from existing project analysis
-
-### Step 8: HANDOFF
+### Step 7: HANDOFF
 
 Provide completion summary and next-step guidance.
 
@@ -156,5 +146,4 @@ Provide completion summary and next-step guidance.
 - PRD follows template structure
 - Requirements are complete, traceable, and prioritized
 - Epic list initialized (empty, no invented content)
-- Change Log properly initialized with creation entry
 - Clear handoff with actionable next steps

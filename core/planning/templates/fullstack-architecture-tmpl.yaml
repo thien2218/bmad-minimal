@@ -49,12 +49,6 @@ sections:
           4. Document the decision and any constraints it imposes
 
           If none, state "N/A - Greenfield project"
-      - id: changelog
-        title: Change Log
-        required: true
-        type: table
-        columns: [Date, Version, Description, Author]
-        instruction: Track document versions and changes
 
   - id: high-level-architecture
     title: High Level Architecture

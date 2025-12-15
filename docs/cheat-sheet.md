@@ -11,11 +11,11 @@ Expert who implements stories by reading requirements and executing tasks sequen
 
 - `explain`: Explain recent actions and rationale as if you are training a junior engineer
 
-- `develop-story`: Execute develop-story (implementation-first flow; write tests at the end during validation) on the highest ordered WIP story or story specified by user
+- `develop-story`: Execute develop-story (implementation-first flow; write tests at the end during validation) on the highest ordered story ready for development or the story specified by the user
   - required: story
   - optional: test_command, build_command, lint_command
 
-- `develop-story-test-first`: Execute develop-story with a test-first flow (TDD approach): after confirming WIP status, implement test cases from story's Test Specs section first, then implement the feature until tests pass.
+- `develop-story-test-first`: Execute develop-story with a test-first flow (TDD approach): implement test cases from the story's Test Specs section first, then implement the feature until tests pass.
   - required: story
   - optional: test_command, build_command, lint_command
 
@@ -114,7 +114,7 @@ Analyst specialized in scope triage, research framing, and planning artifacts
 
 - `create-prd`: Create PRD
 
-- `update-prd`: Update an existing PRD based on user's change request (add feature, extend functionality, change of library, etc.). Ensure Change Log is updated.
+- `update-prd`: Update an existing PRD based on user's change request (add feature, extend functionality, change of library, etc.).
   - required: change_request
 
 - `document-project`: Analyze existing project artifacts and create comprehensive PRD using template-driven process
@@ -153,7 +153,7 @@ Master of holistic application design bridging frontend, backend, and infrastruc
 - `execute-checklist`: Run checklist
   - required: checklist
 
-- `update-architecture`: Update an existing architecture document based on user's change request (add feature, extend functionality, change of library, etc.). Ensure the Change Log section is updated.
+- `update-architecture`: Update an existing architecture document based on user's change request (add feature, extend functionality, change of library, etc.).
   - required: doc_type, change_request
 
 - `document-out`: Output full document in markdown format to current destination file

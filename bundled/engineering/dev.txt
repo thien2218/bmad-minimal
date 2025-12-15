@@ -174,27 +174,16 @@
 		},
 		{
 			"name": "develop-story",
-			"description": "Execute develop-story (implementation-first flow; write tests at the end during validation) on the highest ordered WIP story or story specified by user",
+			"description": "Execute develop-story (implementation-first flow; write tests at the end during validation) on the highest ordered story ready for development or the story specified by the user",
 			"parameters": ["story"],
-			"optionalParameters": [
-				"test_command",
-				"build_command",
-				"lint_command"
-			],
-			"steps": [
-				"tasks/develop-story.yaml",
-				"checklists/story-dod-checklist.md"
-			]
+			"optionalParameters": ["test_command", "build_command", "lint_command"],
+			"steps": ["tasks/develop-story.yaml", "checklists/story-dod-checklist.md"]
 		},
 		{
 			"name": "develop-story-test-first",
-			"description": "Execute develop-story with a test-first flow (TDD approach): after confirming WIP status, implement test cases from story's Test Specs section first, then implement the feature until tests pass.",
+			"description": "Execute develop-story with a test-first flow (TDD approach): implement test cases from the story's Test Specs section first, then implement the feature until tests pass.",
 			"parameters": ["story"],
-			"optionalParameters": [
-				"test_command",
-				"build_command",
-				"lint_command"
-			],
+			"optionalParameters": ["test_command", "build_command", "lint_command"],
 			"steps": [
 				"tasks/develop-story-test-first.yaml",
 				"checklists/story-dod-checklist.md"
@@ -265,8 +254,7 @@
 $schema: ../../.internal/task.schema.json
 id: develop-story
 title: Develop Story Task
-version: 2.0.0
-purpose: Implement a WIP story end-to-end using an implementation-first workflow; execute tasks/subtasks sequentially, then validate and document results.
+purpose: Implement a story end-to-end using an implementation-first workflow; execute tasks/subtasks sequentially, then validate and document results.
 category: development
 agent: dev
 
@@ -276,11 +264,6 @@ derived:
     source: context
     pattern: "@{docs.subdirs.stories}/${story}-*.yaml"
     description: "Concrete story file path resolved from ${story}."
-    required: true
-  - name: story_status
-    type: string
-    source: file
-    description: "Status field read from the target story file."
     required: true
 
 outputs:
@@ -293,8 +276,6 @@ outputs:
         - "Dev Agent Record/Debug Log References"
         - "Dev Agent Record/Completion Notes List"
         - "File List"
-        - "Change Log"
-        - "Status"
         - "Agent Model Used"
       restrictions: Only toggle checkboxes and append to allowed sections; never rename or reorder tasks
   artifacts:
@@ -310,10 +291,6 @@ outputs:
       description: Production code implementing the story
 
 prerequisites:
-  - field: "!{story_status}"
-    value: "WIP"
-    operator: "="
-    on_violate: "halt_and_report"
   - field: "dev.blocking.unapproved_dependencies"
     value: "false"
     operator: "="
@@ -345,15 +322,6 @@ steps:
       type: file_operation
       operation: read
       target: "!{story_path_resolved}"
-
-  - id: VERIFY-STATUS
-    title: Verify Story Status is WIP
-    description: Halt if the story is not ready for development
-    action:
-      type: validation
-      template: |
-        If !{story_status} != "WIP": halt, report to the user, and request status correction before proceeding.
-    on_failure: halt
 
   - id: SELECT-TASK
     title: Read First or Next Task
@@ -411,13 +379,13 @@ steps:
 
   - id: HANDLE-FAILURES
     title: Handle Validation Failures
-    description: Address failures or mark the story as blocked when limits are reached
+    description: Address test failures and escalate when limits are reached
     action:
       type: decision
       template: |
         If tests fail (and failures are valid):
         - Fix issues and rerun RUN-TESTS (max 3 attempts)
-        - After 3 failed attempts, branch to BLOCK-STORY
+        - After 3 failed attempts, pause execution and report blockers to the user for guidance
 
   - id: UPDATE-STORY
     title: Mark Checkboxes and Update Story Metadata
@@ -428,27 +396,11 @@ steps:
       target: "!{story_path_resolved}"
       template: |
         - Mark completed tasks/subtasks with [x] only (no renaming or reordering)
-        - Append entries to Debug Log References, Completion Notes, File List, and Change Log
-        - Update Status to "Review" when ready
-
-  - id: BLOCK-STORY
-    title: Handle Blocked Conditions
-    description: Set the story status to Blocked when prerequisites cannot be satisfied
-    action:
-      type: file_operation
-      operation: update
-      target: "!{story_path_resolved}"
-      template: |
-        Set Status to "Blocked" if:
-        - Unapproved dependencies are required
-        - Requirements remain ambiguous
-        - Three consecutive implementation/validation failures occur
-        - Required configuration is missing
-        - Regression failures persist
+        - Append entries to Debug Log References, Completion Notes, and File List
 
   - id: COMPLETE-STORY
     title: Complete Story Implementation
-    description: Final validation and status update once all work is done
+    description: Final validation and wrap-up once all work is done
     action:
       type: validation
       template: |
@@ -457,7 +409,6 @@ steps:
         - Tests/regression pass
         - File List and Dev Agent Record are complete
         - story-dod-checklist executed successfully
-        - Status is "Review" (or "Blocked" when applicable)
 
 completion:
   checklist: story-dod-checklist
@@ -466,7 +417,6 @@ completion:
     - Tests written and passing
     - Validations/regression pass
     - File List and Dev Agent Record updated
-    - Final status set appropriately (Review or Blocked)
 
 
 
@@ -476,7 +426,7 @@ completion:
 
 ## Instructions for Developer Agent
 
-Before marking a story as 'Review', please go through each item in this checklist. Report the status of each item (e.g., [x] Done, [ ] Not Done, [N/A] Not Applicable) and provide brief comments if necessary.
+Before handing off a story for QA review, go through each item in this checklist. Report the status of each item (e.g., [x] Done, [ ] Not Done, [N/A] Not Applicable) and provide brief comments if necessary.
 
 [[LLM: INITIALIZATION INSTRUCTIONS - STORY DOD VALIDATION
 
@@ -500,63 +450,63 @@ The goal is quality delivery, not just checking boxes.]]
 
    [[LLM: Be specific - list each requirement and whether it's complete]]
 
-   -  [ ] All functional requirements specified in the story are implemented.
-   -  [ ] All acceptance criteria defined in the story are met.
+   - [ ] All functional requirements specified in the story are implemented.
+   - [ ] All acceptance criteria defined in the story are met.
 
 2. **Coding Standards & Project Structure:**
 
    [[LLM: Code quality matters for maintainability. Check each item carefully]]
 
-   -  [ ] All new/modified code strictly adheres to `Operational Guidelines`.
-   -  [ ] All new/modified code aligns with `Project Structure` (file locations, naming, etc.).
-   -  [ ] Adherence to `Tech Stack` for technologies/versions used (if story introduces or modifies tech usage).
-   -  [ ] Adherence to `Api Reference` and `Data Models` (if story involves API or data model changes).
-   -  [ ] Basic security best practices (e.g., input validation, proper error handling, no hardcoded secrets) applied for new/modified code.
-   -  [ ] No new linter errors or warnings introduced.
-   -  [ ] Code is well-commented where necessary (clarifying complex logic, not obvious statements).
+   - [ ] All new/modified code strictly adheres to `Operational Guidelines`.
+   - [ ] All new/modified code aligns with `Project Structure` (file locations, naming, etc.).
+   - [ ] Adherence to `Tech Stack` for technologies/versions used (if story introduces or modifies tech usage).
+   - [ ] Adherence to `Api Reference` and `Data Models` (if story involves API or data model changes).
+   - [ ] Basic security best practices (e.g., input validation, proper error handling, no hardcoded secrets) applied for new/modified code.
+   - [ ] No new linter errors or warnings introduced.
+   - [ ] Code is well-commented where necessary (clarifying complex logic, not obvious statements).
 
 3. **Testing:**
 
    [[LLM: Testing proves your code works. Be honest about test coverage]]
 
-   -  [ ] All required unit tests as per the story and `Operational Guidelines` Testing Strategy are implemented.
-   -  [ ] All required integration tests (if applicable) as per the story and `Operational Guidelines` Testing Strategy are implemented.
-   -  [ ] All tests (unit, integration, E2E if applicable) pass successfully.
-   -  [ ] Test coverage meets project standards (if defined).
+   - [ ] All required unit tests as per the story and `Operational Guidelines` Testing Strategy are implemented.
+   - [ ] All required integration tests (if applicable) as per the story and `Operational Guidelines` Testing Strategy are implemented.
+   - [ ] All tests (unit, integration, E2E if applicable) pass successfully.
+   - [ ] Test coverage meets project standards (if defined).
 
 4. **Functionality & Verification:**
 
    [[LLM: Did you actually run and test your code? Be specific about what you tested]]
 
-   -  [ ] Functionality has been manually verified by the developer (e.g., running the app locally, checking UI, testing API endpoints).
-   -  [ ] Edge cases and potential error conditions considered and handled gracefully.
+   - [ ] Functionality has been manually verified by the developer (e.g., running the app locally, checking UI, testing API endpoints).
+   - [ ] Edge cases and potential error conditions considered and handled gracefully.
 
 5. **Story Administration:**
 
    [[LLM: Documentation helps the next developer. What should they know?]]
 
-   -  [ ] All tasks within the story file are marked as complete.
-   -  [ ] Any clarifications or decisions made during development are documented in the story file or linked appropriately.
-   -  [ ] The story wrap up section has been completed with notes of changes or information relevant to the next story or overall project, the agent model that was primarily used during development, and the changelog of any changes is properly updated.
+   - [ ] All tasks within the story file are marked as complete.
+   - [ ] Any clarifications or decisions made during development are documented in the story file or linked appropriately.
+   - [ ] The story wrap up section has been completed with notes of changes or information relevant to the next story or overall project, and the agent model that was primarily used during development is recorded.
 
 6. **Dependencies, Build & Configuration:**
 
    [[LLM: Build issues block everyone. Ensure everything compiles and runs cleanly]]
 
-   -  [ ] Project builds successfully without errors.
-   -  [ ] Project linting passes
-   -  [ ] Any new dependencies added were either pre-approved in the story requirements OR explicitly approved by the user during development (approval documented in story file).
-   -  [ ] If new dependencies were added, they are recorded in the appropriate project files (e.g., `package.json`, `requirements.txt`) with justification.
-   -  [ ] No known security vulnerabilities introduced by newly added and approved dependencies.
-   -  [ ] If new environment variables or configurations were introduced by the story, they are documented and handled securely.
+   - [ ] Project builds successfully without errors.
+   - [ ] Project linting passes
+   - [ ] Any new dependencies added were either pre-approved in the story requirements OR explicitly approved by the user during development (approval documented in story file).
+   - [ ] If new dependencies were added, they are recorded in the appropriate project files (e.g., `package.json`, `requirements.txt`) with justification.
+   - [ ] No known security vulnerabilities introduced by newly added and approved dependencies.
+   - [ ] If new environment variables or configurations were introduced by the story, they are documented and handled securely.
 
 7. **Documentation (If Applicable):**
 
    [[LLM: Good documentation prevents future confusion. What needs explaining?]]
 
-   -  [ ] Relevant inline code documentation (e.g., JSDoc, TSDoc, Python docstrings) for new public APIs or complex logic is complete.
-   -  [ ] User-facing documentation updated, if changes impact users.
-   -  [ ] Technical documentation (e.g., READMEs, system diagrams) updated if significant architectural changes were made.
+   - [ ] Relevant inline code documentation (e.g., JSDoc, TSDoc, Python docstrings) for new public APIs or complex logic is complete.
+   - [ ] User-facing documentation updated, if changes impact users.
+   - [ ] Technical documentation (e.g., READMEs, system diagrams) updated if significant architectural changes were made.
 
 ## Final Confirmation
 
@@ -572,7 +522,7 @@ After completing the checklist:
 
 Be honest - it's better to flag issues now than have them discovered later.]]
 
--  [ ] I, the Developer Agent, confirm that all applicable items above have been addressed.
+- [ ] I, the Developer Agent, confirm that all applicable items above have been addressed.
 
 
 
@@ -581,8 +531,7 @@ Be honest - it's better to flag issues now than have them discovered later.]]
 $schema: ../../.internal/task.schema.json
 id: develop-story-test-first
 title: Develop Story (Test-First)
-version: 2.0.0
-purpose: "Follow a TDD workflow to implement a WIP story: read specs, write failing tests, implement to green, then update the story record."
+purpose: "Follow a TDD workflow to implement a story: read specs, write failing tests, implement to green, then update the story record."
 category: development
 agent: dev
 
@@ -592,11 +541,6 @@ derived:
     source: context
     pattern: "@{docs.subdirs.stories}/${story}-*.yaml"
     description: "Concrete path for the story under development."
-    required: true
-  - name: story_status
-    type: string
-    source: file
-    description: "Status read from the story file."
     required: true
 
 outputs:
@@ -608,7 +552,6 @@ outputs:
         - "Dev Agent Record/Debug Log References"
         - "Dev Agent Record/Completion Notes List"
         - "File List"
-        - "Change Log"
       restrictions: Only toggle checkboxes and append to allowed sections; never edit other story parts
   artifacts:
     - name: Test Files
@@ -623,10 +566,6 @@ outputs:
       description: Production code implementing the story after tests are in place
 
 prerequisites:
-  - field: "!{story_status}"
-    value: "WIP"
-    operator: "="
-    on_violate: "halt_and_report"
   - field: "dev.blocking.missing_specs"
     value: "false"
     operator: "="
@@ -642,15 +581,6 @@ steps:
       target: "@{baseDir}/config.json"
       template: |
         Resolve !{story_path_resolved} via ${story}; then read the story file to access specs and metadata.
-
-  - id: VERIFY-WIP
-    title: Verify Story Status is WIP
-    description: Ensure the story is ready for implementation
-    action:
-      type: validation
-      template: |
-        If !{story_status} != "WIP": halt and instruct the user to move the story to WIP before running this task.
-    on_failure: halt
 
   - id: EXTRACT-SPECS
     title: Extract Test Specs
@@ -721,7 +651,7 @@ steps:
       template: |
         - Append to Debug Log References with test commands/results
         - Document Completion Notes and File List entries
-        - Add Change Log entries summarizing changes
+        - Summarize changes directly within Completion Notes
 
 completion:
   criteria:
@@ -1034,7 +964,6 @@ usage:
 $schema: ../../.internal/task.schema.json
 id: apply-qa-fixes
 title: Apply QA Fixes
-version: 2.0.0
 purpose: Implement fixes based on QA results (gate and assessments) for a specific story while only updating allowed sections in the story file
 category: quality
 agent: dev
@@ -1046,11 +975,6 @@ derived:
     pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
     description: "Examples: 1.3, 2.5"
     required: true
-  - name: story_status
-    type: variable
-    source: file
-    pattern: "Draft|Spec Review|WIP|Blocked|Review|Done"
-    required: true
 
 outputs:
   updates:
@@ -1058,15 +982,9 @@ outputs:
       sections:
         - "Tasks / Subtasks Checkboxes"
         - "Dev Agent Record"
-        - "Change Log"
-        - "Status"
       restrictions: Dev agent is ONLY authorized to update these sections
 
 prerequisites:
-  - field: "!{story_status}"
-    value: "WIP"
-    operator: "in"
-    on_violate: "halt_and_report"
   - field: "!{story_file}"
     value: "found"
     operator: "="
@@ -1178,11 +1096,6 @@ steps:
           - Debug Log References (commands/results, e.g., lint/tests)
           - Completion Notes List (what changed, why, how)
           - File List (all added/modified/deleted files)
-        - Change Log (new dated entry describing applied fixes)
-        - Status (apply Status Rule)
-
-        Status Rule:
-        - Set Status: Review and notify QA to re-run the review
 
   - id: COMPLETE
     title: Complete Fix Application
@@ -1199,8 +1112,7 @@ completion:
     - "All high severity top_issues addressed"
     - "NFR FAIL issues resolved; CONCERNS minimized or documented"
     - "Coverage gaps closed or explicitly documented with rationale"
-    - "Story updated (allowed sections only) including File List and Change Log"
-    - "Status set according to Status Rule"
+    - "Story updated (allowed sections only) including File List"
   validations:
     - command: "{lint_command}"
       expected_output: "Checked.*files.*problems"
@@ -1214,7 +1126,6 @@ completion:
 $schema: ../../.internal/task.schema.json
 id: update-docs
 title: Update Project Documentation
-version: 2.0.0
 purpose: Update or create project documentation (API docs via Swagger/OpenAPI for backend, component docs via Storybook for frontend) with an in-place-first philosophy.
 category: documentation
 agent: dev

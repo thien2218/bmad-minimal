@@ -170,7 +170,7 @@
 		},
 		{
 			"name": "update-prd",
-			"description": "Update an existing PRD based on user's change request (add feature, extend functionality, change of library, etc.). Ensure Change Log is updated.",
+			"description": "Update an existing PRD based on user's change request (add feature, extend functionality, change of library, etc.).",
 			"parameters": ["change_request"],
 			"steps": ["templates/prd-tmpl.yaml", "checklists/change-checklist.md"]
 		},
@@ -459,7 +459,7 @@ sections:
     title: Goals and Background Context
     required: true
     instruction: |
-      Ask if Project Brief document is available. If NO Project Brief exists, STRONGLY recommend creating one first using project-brief-tmpl (it provides essential foundation: problem statement, target users, success metrics, MVP scope, constraints). If user insists on PRD without brief, gather this information during Goals section. If Project Brief exists, review and use it to populate Goals (bullet list of desired outcomes) and Background Context (1-2 paragraphs on what this solves and why) so we can determine what is and is not in scope for PRD mvp. Either way this is critical to determine the requirements. Include Change Log table.
+      Ask if Project Brief document is available. If NO Project Brief exists, STRONGLY recommend creating one first using project-brief-tmpl (it provides essential foundation: problem statement, target users, success metrics, MVP scope, constraints). If user insists on PRD without brief, gather this information during Goals section. If Project Brief exists, review and use it to populate Goals (bullet list of desired outcomes) and Background Context (1-2 paragraphs on what this solves and why) so we can determine what is and is not in scope for PRD mvp. Either way this is critical to determine the requirements.
     sections:
       - id: goals
         title: Goals
@@ -476,12 +476,6 @@ sections:
         required: true
         type: paragraphs
         instruction: 1-2 short paragraphs summarizing the background context, such as what we learned in the brief without being redundant with the goals, what and why this solves a problem, what the current landscape or need is
-      - id: changelog
-        title: Change Log
-        required: true
-        type: table
-        columns: [Date, Version, Description, Author]
-        instruction: Track document versions and changes
       - id: user-journeys
         title: Key User Journeys / Use Cases
         required: true
@@ -1208,17 +1202,7 @@ Invoke template-driven PRD creation with pre-filled context.
 - Use advanced elicitation for sections requiring user input
 - Ensure all template sections are addressed systematically
 
-### Step 7: UPDATE CHANGE LOG
-
-Initialize Change Log for new PRD.
-
-**Change Log Update:**
-
-- Add initial entry to PRD Change Log section
-- Include date, version, description, and author
-- Document creation from existing project analysis
-
-### Step 8: HANDOFF
+### Step 7: HANDOFF
 
 Provide completion summary and next-step guidance.
 
@@ -1246,7 +1230,6 @@ Provide completion summary and next-step guidance.
 - PRD follows template structure
 - Requirements are complete, traceable, and prioritized
 - Epic list initialized (empty, no invented content)
-- Change Log properly initialized with creation entry
 - Clear handoff with actionable next steps
 
 

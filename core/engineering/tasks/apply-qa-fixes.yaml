@@ -1,7 +1,6 @@
 $schema: ../../.internal/task.schema.json
 id: apply-qa-fixes
 title: Apply QA Fixes
-version: 2.0.0
 purpose: Implement fixes based on QA results (gate and assessments) for a specific story while only updating allowed sections in the story file
 category: quality
 agent: dev
@@ -13,11 +12,6 @@ derived:
     pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
     description: "Examples: 1.3, 2.5"
     required: true
-  - name: story_status
-    type: variable
-    source: file
-    pattern: "Draft|Spec Review|WIP|Blocked|Review|Done"
-    required: true
 
 outputs:
   updates:
@@ -25,15 +19,9 @@ outputs:
       sections:
         - "Tasks / Subtasks Checkboxes"
         - "Dev Agent Record"
-        - "Change Log"
-        - "Status"
       restrictions: Dev agent is ONLY authorized to update these sections
 
 prerequisites:
-  - field: "!{story_status}"
-    value: "WIP"
-    operator: "in"
-    on_violate: "halt_and_report"
   - field: "!{story_file}"
     value: "found"
     operator: "="
@@ -145,11 +133,6 @@ steps:
           - Debug Log References (commands/results, e.g., lint/tests)
           - Completion Notes List (what changed, why, how)
           - File List (all added/modified/deleted files)
-        - Change Log (new dated entry describing applied fixes)
-        - Status (apply Status Rule)
-
-        Status Rule:
-        - Set Status: Review and notify QA to re-run the review
 
   - id: COMPLETE
     title: Complete Fix Application
@@ -166,8 +149,7 @@ completion:
     - "All high severity top_issues addressed"
     - "NFR FAIL issues resolved; CONCERNS minimized or documented"
     - "Coverage gaps closed or explicitly documented with rationale"
-    - "Story updated (allowed sections only) including File List and Change Log"
-    - "Status set according to Status Rule"
+    - "Story updated (allowed sections only) including File List"
   validations:
     - command: "{lint_command}"
       expected_output: "Checked.*files.*problems"

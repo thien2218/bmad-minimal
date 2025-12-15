@@ -36,9 +36,7 @@ async function install(options) {
 	// Check if already installed
 	const existingConfigs = await findExistingConfigs(cwd);
 	if (existingConfigs.length > 0) {
-		console.log(
-			chalk.yellow("⚠️ BMad Minimal configuration already exists:")
-		);
+		console.log(chalk.yellow("⚠️ BMad Minimal configuration already exists:"));
 		existingConfigs.forEach((config) => console.log(`   - ${config}`));
 
 		const { proceed } = await inquirer.prompt([
@@ -163,8 +161,7 @@ async function gatherConfiguration(options, cwd) {
 				name: "projectName",
 				message: "Project name:",
 				default: path.basename(cwd),
-				validate: (input) =>
-					input.trim() !== "" || "Project name is required",
+				validate: (input) => input.trim() !== "" || "Project name is required",
 			},
 		]);
 		answers.projectName = projectName;

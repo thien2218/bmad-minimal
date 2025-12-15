@@ -1,8 +1,7 @@
 $schema: ../../.internal/task.schema.json
 id: develop-story-test-first
 title: Develop Story (Test-First)
-version: 2.0.0
-purpose: "Follow a TDD workflow to implement a WIP story: read specs, write failing tests, implement to green, then update the story record."
+purpose: "Follow a TDD workflow to implement a story: read specs, write failing tests, implement to green, then update the story record."
 category: development
 agent: dev
 
@@ -12,11 +11,6 @@ derived:
     source: context
     pattern: "@{docs.subdirs.stories}/${story}-*.yaml"
     description: "Concrete path for the story under development."
-    required: true
-  - name: story_status
-    type: string
-    source: file
-    description: "Status read from the story file."
     required: true
 
 outputs:
@@ -28,7 +22,6 @@ outputs:
         - "Dev Agent Record/Debug Log References"
         - "Dev Agent Record/Completion Notes List"
         - "File List"
-        - "Change Log"
       restrictions: Only toggle checkboxes and append to allowed sections; never edit other story parts
   artifacts:
     - name: Test Files
@@ -43,10 +36,6 @@ outputs:
       description: Production code implementing the story after tests are in place
 
 prerequisites:
-  - field: "!{story_status}"
-    value: "WIP"
-    operator: "="
-    on_violate: "halt_and_report"
   - field: "dev.blocking.missing_specs"
     value: "false"
     operator: "="
@@ -62,15 +51,6 @@ steps:
       target: "@{baseDir}/config.json"
       template: |
         Resolve !{story_path_resolved} via ${story}; then read the story file to access specs and metadata.
-
-  - id: VERIFY-WIP
-    title: Verify Story Status is WIP
-    description: Ensure the story is ready for implementation
-    action:
-      type: validation
-      template: |
-        If !{story_status} != "WIP": halt and instruct the user to move the story to WIP before running this task.
-    on_failure: halt
 
   - id: EXTRACT-SPECS
     title: Extract Test Specs
@@ -141,7 +121,7 @@ steps:
       template: |
         - Append to Debug Log References with test commands/results
         - Document Completion Notes and File List entries
-        - Add Change Log entries summarizing changes
+        - Summarize changes directly within Completion Notes
 
 completion:
   criteria:

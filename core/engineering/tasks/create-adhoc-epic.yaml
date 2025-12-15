@@ -1,7 +1,6 @@
 $schema: ../../.internal/task.schema.json
 id: create-adhoc-epic
 title: Create Enhancement Epic from Brownfield Docs
-version: 2.0.0
 purpose: Create a single epic for the highest-order enhancement using PRD and Architecture docs in @{docs.subdirs.epics} as authoritative references. Output YAML strictly follows the epic schema.
 category: planning
 agent: pdm
@@ -182,7 +181,7 @@ steps:
         Otherwise, update the affected documents:
         - PRD: revise relevant sections when scope, requirements, or constraints change.
         - Architecture: update affected files/sections when component responsibilities, data models, APIs, or patterns change.
-        - Record a brief note in the epic YAML summarizing documentation updates and add any necessary change-log entries.
+        - Record a brief note in the epic YAML summarizing documentation updates.
 
   - id: HANDOFF-1
     title: Provide Summary

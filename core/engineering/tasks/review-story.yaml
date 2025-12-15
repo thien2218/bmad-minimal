@@ -1,7 +1,6 @@
 $schema: ../../.internal/task.schema.json
 id: review-story
 title: Review Story
-version: 2.0.0
 purpose: Perform a comprehensive test architecture review with quality gate decision. This adaptive, risk-aware review creates both a story update and a detailed gate file.
 category: quality
 agent: qa
@@ -12,12 +11,6 @@ derived:
     source: parameters
     pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
     description: "Story file path resolved from provided story identifier"
-    required: true
-  - name: story_status
-    type: string
-    source: file
-    pattern: "Draft|Spec Review|WIP|Blocked|Review|Done"
-    description: "Status value read from the story file"
     required: true
   - name: story_file_ready
     type: boolean
@@ -49,10 +42,6 @@ prerequisites:
   - field: "!{story_path}"
     value: "found"
     operator: "="
-    on_violate: "halt_and_report"
-  - field: "!{story_status}"
-    value: "Review"
-    operator: "contains"
     on_violate: "halt_and_report"
   - field: "!{story_file_ready}"
     value: "true"
@@ -87,16 +76,6 @@ steps:
         Extract docs.subdirs.qa and docs.subdirs.stories settings.
         Resolve !{story_path} if not provided.
     on_failure: continue
-
-  - id: CHECK-REVIEW
-    title: Check Story Status
-    description: Verify story status includes the word "Review"
-    action:
-      type: validation
-      target: "!{story_status}"
-      template: |
-        If status does not include "Review", halt execution and notify the user to transition the story first.
-    on_failure: halt
 
   - id: RISK-ASSESSMENT
     title: Risk Assessment (Determines Review Depth)
@@ -203,7 +182,7 @@ steps:
         - Actionable recommendations and prioritized fix list
         - Example diffs or pseudocode only if needed (do not apply)
         - Instructions to update only QA Results section of the story
-        - Reminder not to alter story Status or File List
+        - Reminder not to alter the story File List
 
   - id: STANDARDS
     title: Standards Compliance Check
@@ -281,7 +260,6 @@ completion:
   criteria:
     - Story QA Results section updated
     - Quality gate file created
-    - Status recommendation provided
     - All findings documented
     - Actionable recommendations provided
   validations:

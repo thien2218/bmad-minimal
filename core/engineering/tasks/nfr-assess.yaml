@@ -1,7 +1,6 @@
 $schema: ../../.internal/task.schema.json
 id: nfr-assess
 title: Non-Functional Requirements Assessment
-version: 2.0.0
 purpose: Quick NFR validation focused on the core four (security, performance, reliability, maintainability). Assess non-functional requirements for a story and generate YAML blocks for gate files plus markdown assessment reports.
 category: quality
 agent: qa
@@ -13,20 +12,11 @@ derived:
     pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
     description: "Path to the story file"
     required: true
-  - name: story_status
-    type: variable
-    source: file
-    pattern: "Draft|Spec Review|WIP|Blocked|Review|Done"
-    required: true
 
 prerequisites:
   - field: "!{story_file}"
     value: "found"
     operator: "="
-    on_violate: "halt_and_report"
-  - field: "!{story_status}"
-    value: "Review"
-    operator: "contains"
     on_violate: "halt_and_report"
 
 steps:

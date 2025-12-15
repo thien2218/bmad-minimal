@@ -39,12 +39,6 @@ sections:
           - If extending an existing project, analyze its structure, patterns, and technology choices.
           - If none, proceed as greenfield and document implications.
         elicit: true
-      - id: changelog
-        title: Change Log
-        required: true
-        type: table
-        columns: [Date, Version, Description, Author]
-        instruction: Track document versions and changes
 
   - id: high-level-architecture
     title: High Level Architecture

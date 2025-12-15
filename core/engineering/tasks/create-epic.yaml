@@ -1,7 +1,6 @@
 $schema: ../../.internal/task.schema.json
 id: create-epic
 title: Create Epic Task
-version: 2.0.0
 purpose: Create a single epic for an initiative listed in the PRD, aligned with architecture constraints and ready for downstream story creation
 category: planning
 agent: pdm

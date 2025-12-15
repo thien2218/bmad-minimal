@@ -1,7 +1,6 @@
 $schema: ../../.internal/task.schema.json
 id: create-standalone-story
 title: Create Standalone Story
-version: 2.0.0
 purpose: Create a single user story for very small standalone enhancements that can be completed in one focused development session while following existing system patterns.
 category: planning
 agent: pdm
@@ -139,7 +138,7 @@ steps:
         Otherwise:
         - Update PRD sections for scope/requirement changes
         - Update architecture docs for component/data/API changes
-        - Summarize updates in the story dev notes and change log
+        - Summarize updates in the story dev notes
 
   - id: VALIDATE-COMPLETION
     title: Validate story creation completion

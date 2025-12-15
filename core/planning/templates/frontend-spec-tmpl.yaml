@@ -61,12 +61,6 @@ sections:
               - "**Consistent patterns** - Use familiar UI patterns throughout the application"
               - "**Immediate feedback** - Every action should have a clear, immediate response"
               - "**Accessible by default** - Design for all users from the start"
-      - id: changelog
-        title: Change Log
-        required: true
-        type: table
-        columns: [Date, Version, Description, Author]
-        instruction: Track document versions and changes
 
   - id: information-architecture
     title: Information Architecture (IA)

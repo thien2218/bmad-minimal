@@ -1,7 +1,6 @@
 $schema: ../../.internal/task.schema.json
 id: create-adhoc-story
 title: Create Enhancement Story from Enhancement Epic
-version: 2.0.0
 purpose: Create one story for the highest-order enhancement epic, referencing its epic YAML and PRD/Architecture docs. Output YAML strictly follows the story schema.
 category: planning
 agent: pdm
@@ -32,11 +31,6 @@ derived:
     source: context
     description: "Highest existing adhoc story file for the enhancement."
     required: false
-  - name: previous_story_status
-    type: string
-    source: context
-    description: "Status of the previous adhoc story if it exists."
-    required: false
   - name: impact_assessment
     type: string
     source: context
@@ -56,7 +50,6 @@ outputs:
   updates:
     - target: "!{story_file_target}"
       sections:
-        - "Status"
         - "Dev Notes"
         - "Tasks / Subtasks"
       restrictions: Only create a new story; do not modify existing stories
@@ -104,21 +97,7 @@ steps:
         Scan @{docs.subdirs.stories} for adhoc-!{epic_enhancement_number_resolved}.*-*.yaml.
         - Compute the next sequential story number (start at 1 if none exist).
         - If ${story_enhancement_number} is provided, honor it instead.
-        - Record !{previous_story_file}, !{previous_story_status}, and resolve !{story_file_target}.
-
-  - id: VERIFY-PREVIOUS
-    title: Check Previous Story Completion
-    description: Warn when a previous adhoc story remains incomplete
-    action:
-      type: validation
-      template: |
-        If !{previous_story_file} exists and !{previous_story_status} != "Done":
-        ALERT: Found incomplete story.
-        File: !{previous_story_file}
-        Status: !{previous_story_status}
-
-        Ask if the user wants to accept risk and create the next story anyway.
-    elicit: true
+        - Record !{previous_story_file} and resolve !{story_file_target}.
 
   - id: READ-EPIC
     title: Read Epic YAML
@@ -197,7 +176,7 @@ steps:
         Otherwise:
         - Update PRD sections for scope, requirements, or constraints changes.
         - Update Architecture docs when components, data models, APIs, or patterns change.
-        - Summarize updates in the story dev_notes (doc_impact_summary) and add change-log entries.
+        - Summarize updates in the story dev_notes (doc_impact_summary).
 
   - id: HANDOFF-1
     title: Provide Summary and Next Steps
@@ -206,7 +185,6 @@ steps:
       type: elicit
       prompt_user: |
         Story created: !{story_file_target}
-        Status: Draft
 
         Checklist results: {{checklist_results}}
 
@@ -217,7 +195,7 @@ steps:
 
 completion:
   criteria:
-    - Story YAML created with status Draft
+    - Story YAML created in draft form
     - Story content aligned with epic and PRD
     - Checklist executed
     - Documentation impact assessed and updates recorded when needed
