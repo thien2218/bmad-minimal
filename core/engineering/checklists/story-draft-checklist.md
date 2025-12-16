@@ -23,10 +23,10 @@ VALIDATION PRINCIPLES:
 
 REMEMBER: We assume competent developer agents who can:
 
--  Research documentation and codebases
--  Make reasonable technical decisions
--  Follow established patterns
--  Ask for clarification when truly stuck
+- Research documentation and codebases
+- Make reasonable technical decisions
+- Follow established patterns
+- Ask for clarification when truly stuck
 
 We're checking for SUFFICIENT guidance, not exhaustive detail.]]
 
@@ -40,11 +40,11 @@ We're checking for SUFFICIENT guidance, not exhaustive detail.]]
 4. Dependencies are explicit ("requires Story X to be complete")
 5. Success looks like something specific, not vague]]
 
--  [ ] Story goal/purpose is clearly stated
--  [ ] Relationship to epic goals is evident
--  [ ] How the story fits into overall system flow is explained
--  [ ] Dependencies on previous stories are identified (if applicable)
--  [ ] Business context and value are clear
+- [ ] Story goal/purpose is clearly stated
+- [ ] Relationship to epic goals is evident
+- [ ] How the story fits into overall system flow is explained
+- [ ] Dependencies on previous stories are identified (if applicable)
+- [ ] Business context and value are clear
 
 ## 2. TECHNICAL IMPLEMENTATION GUIDANCE
 
@@ -58,12 +58,12 @@ We're checking for SUFFICIENT guidance, not exhaustive detail.]]
 
 Note: We don't need every file listed - just the important ones.]]
 
--  [ ] Key files to create/modify are identified (not necessarily exhaustive)
--  [ ] Technologies specifically needed for this story are mentioned
--  [ ] Critical APIs or interfaces are sufficiently described
--  [ ] Necessary data models or structures are referenced
--  [ ] Required environment variables are listed (if applicable)
--  [ ] Any exceptions to standard coding patterns are noted
+- [ ] Key files to create/modify are identified (not necessarily exhaustive)
+- [ ] Technologies specifically needed for this story are mentioned
+- [ ] Critical APIs or interfaces are sufficiently described
+- [ ] Necessary data models or structures are referenced
+- [ ] Required environment variables are listed (if applicable)
+- [ ] Any exceptions to standard coding patterns are noted
 
 ## 3. REFERENCE EFFECTIVENESS
 
@@ -75,10 +75,10 @@ Note: We don't need every file listed - just the important ones.]]
 4. References are accessible (not broken links)
 5. Previous story context is summarized if needed]]
 
--  [ ] References to external documents point to specific relevant sections
--  [ ] Critical information from previous stories is summarized (not just referenced)
--  [ ] Context is provided for why references are relevant
--  [ ] References use consistent format (e.g., `docs/filename.md#section`)
+- [ ] References to external documents point to specific relevant sections
+- [ ] Critical information from previous stories is summarized (not just referenced)
+- [ ] Context is provided for why references are relevant
+- [ ] References use consistent format (e.g., `docs/filename.md#section`)
 
 ## 4. SELF-CONTAINMENT ASSESSMENT
 
@@ -90,10 +90,10 @@ Note: We don't need every file listed - just the important ones.]]
 4. Edge cases are mentioned (even if deferred)
 5. The story could be understood without reading 10 other documents]]
 
--  [ ] Core information needed is included (not overly reliant on external docs)
--  [ ] Implicit assumptions are made explicit
--  [ ] Domain-specific terms or concepts are explained
--  [ ] Edge cases or error scenarios are addressed
+- [ ] Core information needed is included (not overly reliant on external docs)
+- [ ] Implicit assumptions are made explicit
+- [ ] Domain-specific terms or concepts are explained
+- [ ] Edge cases or error scenarios are addressed
 
 ## 5. TESTING GUIDANCE
 
@@ -105,10 +105,18 @@ Note: We don't need every file listed - just the important ones.]]
 4. Special test considerations are noted
 5. Acceptance criteria in the story are testable]]
 
--  [ ] Required testing approach is outlined
--  [ ] Key test scenarios are identified
--  [ ] Success criteria are defined
--  [ ] Special testing considerations are noted (if applicable)
+- [ ] Required testing approach is outlined
+- [ ] Key test scenarios are identified
+- [ ] Success criteria are defined
+- [ ] Special testing considerations are noted (if applicable)
+
+## 6. LLM CONTEXT EFFICIENCY
+
+[[LLM: Stories must wrap precisely the context downstream LLM agents need without extra narrative weight.]]
+
+- [ ] Story text focuses only on necessary context so the downstream agent stays under tight budget
+- [ ] Key constraints, dependencies, and assumptions are highlighted up front with explicit labels
+- [ ] Redundant prose or unrelated background is minimized while preserving comprehension
 
 ## VALIDATION RESULT
 
@@ -118,26 +126,26 @@ Generate a concise validation report:
 
 1. Quick Summary
 
-   -  Story readiness: READY / NEEDS REVISION / BLOCKED
-   -  Clarity score (1-10)
-   -  Major gaps identified
+   - Story readiness: READY / NEEDS REVISION / BLOCKED
+   - Clarity score (1-10)
+   - Major gaps identified
 
 2. Fill in the validation table with:
 
-   -  PASS: Requirements clearly met
-   -  PARTIAL: Some gaps but workable
-   -  FAIL: Critical information missing
+   - PASS: Requirements clearly met
+   - PARTIAL: Some gaps but workable
+   - FAIL: Critical information missing
 
 3. Specific Issues (if any)
 
-   -  List concrete problems to fix
-   -  Suggest specific improvements
-   -  Identify any blocking dependencies
+   - List concrete problems to fix
+   - Suggest specific improvements
+   - Identify any blocking dependencies
 
 4. Developer Perspective
-   -  Could YOU implement this story as written?
-   -  What questions would you have?
-   -  What might cause delays or rework?
+   - Could YOU implement this story as written?
+   - What questions would you have?
+   - What might cause delays or rework?
 
 Be pragmatic - perfect documentation doesn't exist, but it must be enough to provide the extreme context a dev agent needs to get the work down and not create a mess.]]
 
@@ -151,6 +159,6 @@ Be pragmatic - perfect documentation doesn't exist, but it must be enough to pro
 
 **Final Assessment:**
 
--  READY: The story provides sufficient context for implementation
--  NEEDS REVISION: The story requires updates (see issues)
--  BLOCKED: External information required (specify what information)
+- READY: The story provides sufficient context for implementation
+- NEEDS REVISION: The story requires updates (see issues)
+- BLOCKED: External information required (specify what information)

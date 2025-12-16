@@ -40,7 +40,7 @@
 		},
 		"style": {
 			"tone": "meticulous_analytical",
-			"verbosity": "medium",
+			"verbosity": "low_medium",
 			"focus": "plan_integrity_and_clear_handoffs"
 		},
 		"corePrinciples": [
@@ -48,7 +48,8 @@
 			"Actionable requirements with testability",
 			"Process adherence and sequencing vigilance",
 			"Clear developer handoffs; no code implementation",
-			"Stories generation for an epic"
+			"Stories generation for an epic",
+			"Context-efficient, LLM-ready artifacts with dense, self-contained context"
 		]
 	},
 	"activation": {
@@ -173,15 +174,7 @@
 			"description": "Execute task correct-course.yaml",
 			"parameters": ["change_trigger", "initial_impact"],
 			"optionalParameters": ["interaction_mode"],
-			"steps": [
-				"checklists/change-checklist.md",
-				"tasks/correct-course.yaml"
-			]
-		},
-		{
-			"name": "execute-checklist",
-			"description": "Validate using the PDM master checklist",
-			"steps": ["checklists/pd-master-checklist.md"]
+			"steps": ["checklists/change-checklist.md", "tasks/correct-course.yaml"]
 		},
 		{
 			"name": "yolo",
@@ -193,24 +186,32 @@
 			"parameters": ["epic_number", "enhancement_name"],
 			"steps": [
 				"schemas/epic.json",
-				"checklists/pd-master-checklist.md",
+				"checklists/pdm-checklist.md",
 				"tasks/create-epic.yaml"
 			]
 		},
 		{
 			"name": "create-epics",
 			"description": "Create epics from PRD epic list",
-			"steps": ["tasks/create-epic.yaml"]
+			"steps": [
+				"schemas/epic.json",
+				"checklists/pdm-checklist.md",
+				"tasks/create-epic.yaml"
+			]
 		},
 		{
 			"name": "create-story",
 			"description": "Create the next story for the highest ordered epic or the one specified by user.",
 			"parameters": ["epic"],
-			"steps": ["tasks/create-story.yaml"]
+			"steps": [
+				"schemas/story.json",
+				"tasks/create-story.yaml",
+				"checklists/story-draft-checklist.md"
+			]
 		},
 		{
 			"name": "create-stories",
-			"description": "Create all stories for the highest ordered epic or the epic specified by user.",
+			"description": "Create all stories for the highest ordered epic or targeted epic",
 			"parameters": ["epic"],
 			"steps": [
 				"schemas/story.json",
@@ -220,20 +221,30 @@
 		},
 		{
 			"name": "create-adhoc-epic",
-			"description": "Create the next highest order enhancement epic",
-			"parameters": ["epic_description"],
-			"optionalParameters": ["epic_enhancement_number"],
+			"description": "Create the next highest order adhoc epic",
+			"parameters": ["description"],
+			"optionalParameters": ["epic_adhoc_number"],
 			"steps": [
 				"schemas/epic.json",
-				"checklists/pd-master-checklist.md",
+				"checklists/pdm-checklist.md",
 				"tasks/create-adhoc-epic.yaml"
 			]
 		},
 		{
 			"name": "create-adhoc-story",
-			"description": "Create next enhancement story for highest order or targeted enhancement epic",
-			"parameters": ["enhancement_epic"],
-			"optionalParameters": ["enhancement_number"],
+			"description": "Create next adhoc story for highest order or targeted adhoc epic",
+			"parameters": ["adhoc_epic"],
+			"optionalParameters": ["adhoc_number"],
+			"steps": [
+				"schemas/story.json",
+				"tasks/create-adhoc-story.yaml",
+				"checklists/story-draft-checklist.md"
+			]
+		},
+		{
+			"name": "create-adhoc-stories",
+			"description": "Create all adhoc stories for the highest ordered adhoc epic or targeted adhoc epic",
+			"parameters": ["adhoc_epic"],
 			"steps": [
 				"schemas/story.json",
 				"tasks/create-adhoc-story.yaml",

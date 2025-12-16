@@ -42,7 +42,7 @@
 		},
 		"style": {
 			"tone": "meticulous_analytical",
-			"verbosity": "medium",
+			"verbosity": "low_medium",
 			"focus": "plan_integrity_and_clear_handoffs"
 		},
 		"corePrinciples": [
@@ -50,7 +50,8 @@
 			"Actionable requirements with testability",
 			"Process adherence and sequencing vigilance",
 			"Clear developer handoffs; no code implementation",
-			"Stories generation for an epic"
+			"Stories generation for an epic",
+			"Context-efficient, LLM-ready artifacts with dense, self-contained context"
 		]
 	},
 	"activation": {
@@ -175,15 +176,7 @@
 			"description": "Execute task correct-course.yaml",
 			"parameters": ["change_trigger", "initial_impact"],
 			"optionalParameters": ["interaction_mode"],
-			"steps": [
-				"checklists/change-checklist.md",
-				"tasks/correct-course.yaml"
-			]
-		},
-		{
-			"name": "execute-checklist",
-			"description": "Validate using the PDM master checklist",
-			"steps": ["checklists/pd-master-checklist.md"]
+			"steps": ["checklists/change-checklist.md", "tasks/correct-course.yaml"]
 		},
 		{
 			"name": "yolo",
@@ -195,24 +188,32 @@
 			"parameters": ["epic_number", "enhancement_name"],
 			"steps": [
 				"schemas/epic.json",
-				"checklists/pd-master-checklist.md",
+				"checklists/pdm-checklist.md",
 				"tasks/create-epic.yaml"
 			]
 		},
 		{
 			"name": "create-epics",
 			"description": "Create epics from PRD epic list",
-			"steps": ["tasks/create-epic.yaml"]
+			"steps": [
+				"schemas/epic.json",
+				"checklists/pdm-checklist.md",
+				"tasks/create-epic.yaml"
+			]
 		},
 		{
 			"name": "create-story",
 			"description": "Create the next story for the highest ordered epic or the one specified by user.",
 			"parameters": ["epic"],
-			"steps": ["tasks/create-story.yaml"]
+			"steps": [
+				"schemas/story.json",
+				"tasks/create-story.yaml",
+				"checklists/story-draft-checklist.md"
+			]
 		},
 		{
 			"name": "create-stories",
-			"description": "Create all stories for the highest ordered epic or the epic specified by user.",
+			"description": "Create all stories for the highest ordered epic or targeted epic",
 			"parameters": ["epic"],
 			"steps": [
 				"schemas/story.json",
@@ -222,20 +223,30 @@
 		},
 		{
 			"name": "create-adhoc-epic",
-			"description": "Create the next highest order enhancement epic",
-			"parameters": ["epic_description"],
-			"optionalParameters": ["epic_enhancement_number"],
+			"description": "Create the next highest order adhoc epic",
+			"parameters": ["description"],
+			"optionalParameters": ["epic_adhoc_number"],
 			"steps": [
 				"schemas/epic.json",
-				"checklists/pd-master-checklist.md",
+				"checklists/pdm-checklist.md",
 				"tasks/create-adhoc-epic.yaml"
 			]
 		},
 		{
 			"name": "create-adhoc-story",
-			"description": "Create next enhancement story for highest order or targeted enhancement epic",
-			"parameters": ["enhancement_epic"],
-			"optionalParameters": ["enhancement_number"],
+			"description": "Create next adhoc story for highest order or targeted adhoc epic",
+			"parameters": ["adhoc_epic"],
+			"optionalParameters": ["adhoc_number"],
+			"steps": [
+				"schemas/story.json",
+				"tasks/create-adhoc-story.yaml",
+				"checklists/story-draft-checklist.md"
+			]
+		},
+		{
+			"name": "create-adhoc-stories",
+			"description": "Create all adhoc stories for the highest ordered adhoc epic or targeted adhoc epic",
+			"parameters": ["adhoc_epic"],
 			"steps": [
 				"schemas/story.json",
 				"tasks/create-adhoc-story.yaml",
@@ -695,452 +706,6 @@ completion:
 
 
 
-# Dependency: checklists/pd-master-checklist.md
-
-# Product Owner (PO) Master Validation Checklist
-
-This checklist serves as a comprehensive framework for the Product Owner to validate project plans before development execution. It adapts intelligently based on project type (greenfield vs brownfield) and includes UI/UX considerations when applicable.
-
-[[LLM: INITIALIZATION INSTRUCTIONS - PO MASTER CHECKLIST
-
-PROJECT TYPE DETECTION:
-First, determine the project type by checking:
-
-1. Is this a GREENFIELD project (new from scratch)?
-
-   -  Look for: New project initialization, no existing codebase references
-   -  Check for: prd.md, architecture.md, new project setup stories
-
-2. Is this a BROWNFIELD project (enhancing existing system)?
-
-   -  Look for: References to existing codebase, enhancement/modification language
-   -  Check for: brownfield-prd.md, brownfield-architecture.md, existing system analysis
-
-3. Does the project include UI/UX components?
-   -  Check for: frontend-architecture.md, UI/UX specifications, design files
-   -  Look for: Frontend stories, component specifications, user interface mentions
-
-DOCUMENT REQUIREMENTS:
-Based on project type, ensure you have access to:
-
-For GREENFIELD projects:
-
--  prd.md - The Product Requirements Document
--  architecture.md - The system architecture
--  frontend-architecture.md - If UI/UX is involved
--  All epic and story definitions
-
-For BROWNFIELD projects:
-
--  brownfield-prd.md - The brownfield enhancement requirements
--  brownfield-architecture.md - The enhancement architecture
--  Existing project codebase access (CRITICAL - cannot proceed without this)
--  Current deployment configuration and infrastructure details
--  Database schemas, API documentation, monitoring setup
-
-SKIP INSTRUCTIONS:
-
--  Skip sections marked [[BROWNFIELD ONLY]] for greenfield projects
--  Skip sections marked [[GREENFIELD ONLY]] for brownfield projects
--  Skip sections marked [[UI/UX ONLY]] for backend-only projects
--  Note all skipped sections in your final report
-
-VALIDATION APPROACH:
-
-1. Deep Analysis - Thoroughly analyze each item against documentation
-2. Evidence-Based - Cite specific sections or code when validating
-3. Critical Thinking - Question assumptions and identify gaps
-4. Risk Assessment - Consider what could go wrong with each decision
-
-EXECUTION MODE:
-Ask the user if they want to work through the checklist:
-
--  Section by section (interactive mode) - Review each section, get confirmation before proceeding
--  All at once (comprehensive mode) - Complete full analysis and present report at end]]
-
-## 1. PROJECT SETUP & INITIALIZATION
-
-[[LLM: Project setup is the foundation. For greenfield, ensure clean start. For brownfield, ensure safe integration with existing system. Verify setup matches project type.]]
-
-### 1.1 Project Scaffolding [[GREENFIELD ONLY]]
-
--  [ ] Epic 1 includes explicit steps for project creation/initialization
--  [ ] If using a starter template, steps for cloning/setup are included
--  [ ] If building from scratch, all necessary scaffolding steps are defined
--  [ ] Initial README or documentation setup is included
--  [ ] Repository setup and initial commit processes are defined
-
-### 1.2 Existing System Integration [[BROWNFIELD ONLY]]
-
--  [ ] Existing project analysis has been completed and documented
--  [ ] Integration points with current system are identified
--  [ ] Development environment preserves existing functionality
--  [ ] Local testing approach validated for existing features
--  [ ] Rollback procedures defined for each integration point
-
-### 1.3 Development Environment
-
--  [ ] Local development environment setup is clearly defined
--  [ ] Required tools and versions are specified
--  [ ] Steps for installing dependencies are included
--  [ ] Configuration files are addressed appropriately
--  [ ] Development server setup is included
-
-### 1.4 Core Dependencies
-
--  [ ] All critical packages/libraries are installed early
--  [ ] Package management is properly addressed
--  [ ] Version specifications are appropriately defined
--  [ ] Dependency conflicts or special requirements are noted
--  [ ] [[BROWNFIELD ONLY]] Version compatibility with existing stack verified
-
-## 2. INFRASTRUCTURE & DEPLOYMENT
-
-[[LLM: Infrastructure must exist before use. For brownfield, must integrate with existing infrastructure without breaking it.]]
-
-### 2.1 Database & Data Store Setup
-
--  [ ] Database selection/setup occurs before any operations
--  [ ] Schema definitions are created before data operations
--  [ ] Migration strategies are defined if applicable
--  [ ] Seed data or initial data setup is included if needed
--  [ ] [[BROWNFIELD ONLY]] Database migration risks identified and mitigated
--  [ ] [[BROWNFIELD ONLY]] Backward compatibility ensured
-
-### 2.2 API & Service Configuration
-
--  [ ] API frameworks are set up before implementing endpoints
--  [ ] Service architecture is established before implementing services
--  [ ] Authentication framework is set up before protected routes
--  [ ] Middleware and common utilities are created before use
--  [ ] [[BROWNFIELD ONLY]] API compatibility with existing system maintained
--  [ ] [[BROWNFIELD ONLY]] Integration with existing authentication preserved
-
-### 2.3 Deployment Pipeline
-
--  [ ] CI/CD pipeline is established before deployment actions
--  [ ] Infrastructure as Code (IaC) is set up before use
--  [ ] Environment configurations are defined early
--  [ ] Deployment strategies are defined before implementation
--  [ ] [[BROWNFIELD ONLY]] Deployment minimizes downtime
--  [ ] [[BROWNFIELD ONLY]] Blue-green or canary deployment implemented
-
-### 2.4 Testing Infrastructure
-
--  [ ] Testing frameworks are installed before writing tests
--  [ ] Test environment setup precedes test implementation
--  [ ] Mock services or data are defined before testing
--  [ ] [[BROWNFIELD ONLY]] Regression testing covers existing functionality
--  [ ] [[BROWNFIELD ONLY]] Integration testing validates new-to-existing connections
-
-## 3. EXTERNAL DEPENDENCIES & INTEGRATIONS
-
-[[LLM: External dependencies often block progress. For brownfield, ensure new dependencies don't conflict with existing ones.]]
-
-### 3.1 Third-Party Services
-
--  [ ] Account creation steps are identified for required services
--  [ ] API key acquisition processes are defined
--  [ ] Steps for securely storing credentials are included
--  [ ] Fallback or offline development options are considered
--  [ ] [[BROWNFIELD ONLY]] Compatibility with existing services verified
--  [ ] [[BROWNFIELD ONLY]] Impact on existing integrations assessed
-
-### 3.2 External APIs
-
--  [ ] Integration points with external APIs are clearly identified
--  [ ] Authentication with external services is properly sequenced
--  [ ] API limits or constraints are acknowledged
--  [ ] Backup strategies for API failures are considered
--  [ ] [[BROWNFIELD ONLY]] Existing API dependencies maintained
-
-### 3.3 Infrastructure Services
-
--  [ ] Cloud resource provisioning is properly sequenced
--  [ ] DNS or domain registration needs are identified
--  [ ] Email or messaging service setup is included if needed
--  [ ] CDN or static asset hosting setup precedes their use
--  [ ] [[BROWNFIELD ONLY]] Existing infrastructure services preserved
-
-## 4. UI/UX CONSIDERATIONS [[UI/UX ONLY]]
-
-[[LLM: Only evaluate this section if the project includes user interface components. Skip entirely for backend-only projects.]]
-
-### 4.1 Design System Setup
-
--  [ ] UI framework and libraries are selected and installed early
--  [ ] Design system or component library is established
--  [ ] Styling approach (CSS modules, styled-components, etc.) is defined
--  [ ] Responsive design strategy is established
--  [ ] Accessibility requirements are defined upfront
-
-### 4.2 Frontend Infrastructure
-
--  [ ] Frontend build pipeline is configured before development
--  [ ] Asset optimization strategy is defined
--  [ ] Frontend testing framework is set up
--  [ ] Component development workflow is established
--  [ ] [[BROWNFIELD ONLY]] UI consistency with existing system maintained
-
-### 4.3 User Experience Flow
-
--  [ ] User journeys are mapped before implementation
--  [ ] Navigation patterns are defined early
--  [ ] Error states and loading states are planned
--  [ ] Form validation patterns are established
--  [ ] [[BROWNFIELD ONLY]] Existing user workflows preserved or migrated
-
-## 5. USER/AGENT RESPONSIBILITY
-
-[[LLM: Clear ownership prevents confusion. Ensure tasks are assigned appropriately based on what only humans can do.]]
-
-### 5.1 User Actions
-
--  [ ] User responsibilities limited to human-only tasks
--  [ ] Account creation on external services assigned to users
--  [ ] Purchasing or payment actions assigned to users
--  [ ] Credential provision appropriately assigned to users
-
-### 5.2 Developer Agent Actions
-
--  [ ] All code-related tasks assigned to developer agents
--  [ ] Automated processes identified as agent responsibilities
--  [ ] Configuration management properly assigned
--  [ ] Testing and validation assigned to appropriate agents
-
-## 6. FEATURE SEQUENCING & DEPENDENCIES
-
-[[LLM: Dependencies create the critical path. For brownfield, ensure new features don't break existing ones.]]
-
-### 6.1 Functional Dependencies
-
--  [ ] Features depending on others are sequenced correctly
--  [ ] Shared components are built before their use
--  [ ] User flows follow logical progression
--  [ ] Authentication features precede protected features
--  [ ] [[BROWNFIELD ONLY]] Existing functionality preserved throughout
-
-### 6.2 Technical Dependencies
-
--  [ ] Lower-level services built before higher-level ones
--  [ ] Libraries and utilities created before their use
--  [ ] Data models defined before operations on them
--  [ ] API endpoints defined before client consumption
--  [ ] [[BROWNFIELD ONLY]] Integration points tested at each step
-
-### 6.3 Cross-Epic Dependencies
-
--  [ ] Later epics build upon earlier epic functionality
--  [ ] No epic requires functionality from later epics
--  [ ] Infrastructure from early epics utilized consistently
--  [ ] Incremental value delivery maintained
--  [ ] [[BROWNFIELD ONLY]] Each epic maintains system integrity
-
-## 7. RISK MANAGEMENT [[BROWNFIELD ONLY]]
-
-[[LLM: This section is CRITICAL for brownfield projects. Think pessimistically about what could break.]]
-
-### 7.1 Breaking Change Risks
-
--  [ ] Risk of breaking existing functionality assessed
--  [ ] Database migration risks identified and mitigated
--  [ ] API breaking change risks evaluated
--  [ ] Performance degradation risks identified
--  [ ] Security vulnerability risks evaluated
-
-### 7.2 Rollback Strategy
-
--  [ ] Rollback procedures clearly defined per story
--  [ ] Feature flag strategy implemented
--  [ ] Backup and recovery procedures updated
--  [ ] Monitoring enhanced for new components
--  [ ] Rollback triggers and thresholds defined
-
-### 7.3 User Impact Mitigation
-
--  [ ] Existing user workflows analyzed for impact
--  [ ] User communication plan developed
--  [ ] Training materials updated
--  [ ] Support documentation comprehensive
--  [ ] Migration path for user data validated
-
-## 8. MVP SCOPE ALIGNMENT
-
-[[LLM: MVP means MINIMUM viable product. For brownfield, ensure enhancements are truly necessary.]]
-
-### 8.1 Core Goals Alignment
-
--  [ ] All core goals from PRD are addressed
--  [ ] Features directly support MVP goals
--  [ ] No extraneous features beyond MVP scope
--  [ ] Critical features prioritized appropriately
--  [ ] [[BROWNFIELD ONLY]] Enhancement complexity justified
-
-### 8.2 User Journey Completeness
-
--  [ ] All critical user journeys fully implemented
--  [ ] Edge cases and error scenarios addressed
--  [ ] User experience considerations included
--  [ ] [[UI/UX ONLY]] Accessibility requirements incorporated
--  [ ] [[BROWNFIELD ONLY]] Existing workflows preserved or improved
-
-### 8.3 Technical Requirements
-
--  [ ] All technical constraints from PRD addressed
--  [ ] Non-functional requirements incorporated
--  [ ] Architecture decisions align with constraints
--  [ ] Performance considerations addressed
--  [ ] [[BROWNFIELD ONLY]] Compatibility requirements met
-
-## 9. DOCUMENTATION & HANDOFF
-
-[[LLM: Good documentation enables smooth development. For brownfield, documentation of integration points is critical.]]
-
-### 9.1 Developer Documentation
-
--  [ ] API documentation created alongside implementation
--  [ ] Setup instructions are comprehensive
--  [ ] Architecture decisions documented
--  [ ] Patterns and conventions documented
--  [ ] [[BROWNFIELD ONLY]] Integration points documented in detail
-
-### 9.2 User Documentation
-
--  [ ] User guides or help documentation included if required
--  [ ] Error messages and user feedback considered
--  [ ] Onboarding flows fully specified
--  [ ] [[BROWNFIELD ONLY]] Changes to existing features documented
-
-### 9.3 Knowledge Transfer
-
--  [ ] [[BROWNFIELD ONLY]] Existing system knowledge captured
--  [ ] [[BROWNFIELD ONLY]] Integration knowledge documented
--  [ ] Code review knowledge sharing planned
--  [ ] Deployment knowledge transferred to operations
--  [ ] Historical context preserved
-
-## 10. POST-MVP CONSIDERATIONS
-
-[[LLM: Planning for success prevents technical debt. For brownfield, ensure enhancements don't limit future growth.]]
-
-### 10.1 Future Enhancements
-
--  [ ] Clear separation between MVP and future features
--  [ ] Architecture supports planned enhancements
--  [ ] Technical debt considerations documented
--  [ ] Extensibility points identified
--  [ ] [[BROWNFIELD ONLY]] Integration patterns reusable
-
-### 10.2 Monitoring & Feedback
-
--  [ ] Analytics or usage tracking included if required
--  [ ] User feedback collection considered
--  [ ] Monitoring and alerting addressed
--  [ ] Performance measurement incorporated
--  [ ] [[BROWNFIELD ONLY]] Existing monitoring preserved/enhanced
-
-## VALIDATION SUMMARY
-
-[[LLM: FINAL PO VALIDATION REPORT GENERATION
-
-Generate a comprehensive validation report that adapts to project type:
-
-1. Executive Summary
-
-   -  Project type: [Greenfield/Brownfield] with [UI/No UI]
-   -  Overall readiness (percentage)
-   -  Go/No-Go recommendation
-   -  Critical blocking issues count
-   -  Sections skipped due to project type
-
-2. Project-Specific Analysis
-
-   FOR GREENFIELD:
-
-   -  Setup completeness
-   -  Dependency sequencing
-   -  MVP scope appropriateness
-   -  Development timeline feasibility
-
-   FOR BROWNFIELD:
-
-   -  Integration risk level (High/Medium/Low)
-   -  Existing system impact assessment
-   -  Rollback readiness
-   -  User disruption potential
-
-3. Risk Assessment
-
-   -  Top 5 risks by severity
-   -  Mitigation recommendations
-   -  Timeline impact of addressing issues
-   -  [BROWNFIELD] Specific integration risks
-
-4. MVP Completeness
-
-   -  Core features coverage
-   -  Missing essential functionality
-   -  Scope creep identified
-   -  True MVP vs over-engineering
-
-5. Implementation Readiness
-
-   -  Developer clarity score (1-10)
-   -  Ambiguous requirements count
-   -  Missing technical details
-   -  [BROWNFIELD] Integration point clarity
-
-6. Recommendations
-
-   -  Must-fix before development
-   -  Should-fix for quality
-   -  Consider for improvement
-   -  Post-MVP deferrals
-
-7. [BROWNFIELD ONLY] Integration Confidence
-   -  Confidence in preserving existing functionality
-   -  Rollback procedure completeness
-   -  Monitoring coverage for integration points
-   -  Support team readiness
-
-After presenting the report, ask if the user wants:
-
--  Detailed analysis of any failed sections
--  Specific story reordering suggestions
--  Risk mitigation strategies
--  [BROWNFIELD] Integration risk deep-dive]]
-
-### Category Statuses
-
-| Category                                | Status | Critical Issues |
-| --------------------------------------- | ------ | --------------- |
-| 1. Project Setup & Initialization       | _TBD_  |                 |
-| 2. Infrastructure & Deployment          | _TBD_  |                 |
-| 3. External Dependencies & Integrations | _TBD_  |                 |
-| 4. UI/UX Considerations                 | _TBD_  |                 |
-| 5. User/Agent Responsibility            | _TBD_  |                 |
-| 6. Feature Sequencing & Dependencies    | _TBD_  |                 |
-| 7. Risk Management (Brownfield)         | _TBD_  |                 |
-| 8. MVP Scope Alignment                  | _TBD_  |                 |
-| 9. Documentation & Handoff              | _TBD_  |                 |
-| 10. Post-MVP Considerations             | _TBD_  |                 |
-
-### Critical Deficiencies
-
-(To be populated during validation)
-
-### Recommendations
-
-(To be populated during validation)
-
-### Final Decision
-
--  **APPROVED**: The plan is comprehensive, properly sequenced, and ready for implementation.
--  **CONDITIONAL**: The plan requires specific adjustments before proceeding.
--  **REJECTED**: The plan requires significant revision to address critical deficiencies.
-
-
-
 # Dependency: schemas/epic.json
 
 {
@@ -1299,6 +864,460 @@ After presenting the report, ask if the user wants:
 		}
 	]
 }
+
+
+
+# Dependency: checklists/pdm-checklist.md
+
+# Product Development Master Validation Checklist
+
+This checklist serves as a comprehensive framework for the Product Development Master to validate project plans before development execution. It adapts intelligently based on project type (greenfield vs brownfield) and includes UI/UX considerations when applicable.
+
+[[LLM: INITIALIZATION INSTRUCTIONS - PDM CHECKLIST
+
+PROJECT TYPE DETECTION:
+First, determine the project type by checking:
+
+1. Is this a GREENFIELD project (new from scratch)?
+
+   - Look for: New project initialization, no existing codebase references
+   - Check for: prd.md, architecture.md, new project setup stories
+
+2. Is this a BROWNFIELD project (enhancing existing system)?
+
+   - Look for: References to existing codebase, enhancement/modification language
+   - Check for: brownfield-prd.md, brownfield-architecture.md, existing system analysis
+
+3. Does the project include UI/UX components?
+   - Check for: frontend-architecture.md, UI/UX specifications, design files
+   - Look for: Frontend stories, component specifications, user interface mentions
+
+DOCUMENT REQUIREMENTS:
+Based on project type, ensure you have access to:
+
+For GREENFIELD projects:
+
+- prd.md - The Product Requirements Document
+- architecture.md - The system architecture
+- frontend-architecture.md - If UI/UX is involved
+- All epic and story definitions
+
+For BROWNFIELD projects:
+
+- brownfield-prd.md - The brownfield enhancement requirements
+- brownfield-architecture.md - The enhancement architecture
+- Existing project codebase access (CRITICAL - cannot proceed without this)
+- Current deployment configuration and infrastructure details
+- Database schemas, API documentation, monitoring setup
+
+SKIP INSTRUCTIONS:
+
+- Skip sections marked [[BROWNFIELD ONLY]] for greenfield projects
+- Skip sections marked [[GREENFIELD ONLY]] for brownfield projects
+- Skip sections marked [[UI/UX ONLY]] for backend-only projects
+- Note all skipped sections in your final report
+
+VALIDATION APPROACH:
+
+1. Deep Analysis - Thoroughly analyze each item against documentation
+2. Evidence-Based - Cite specific sections or code when validating
+3. Critical Thinking - Question assumptions and identify gaps
+4. Risk Assessment - Consider what could go wrong with each decision
+
+EXECUTION MODE:
+Ask the user if they want to work through the checklist:
+
+- Section by section (interactive mode) - Review each section, get confirmation before proceeding
+- All at once (comprehensive mode) - Complete full analysis and present report at end]]
+
+## 1. PROJECT SETUP & INITIALIZATION
+
+[[LLM: Project setup is the foundation. For greenfield, ensure clean start. For brownfield, ensure safe integration with existing system. Verify setup matches project type.]]
+
+### 1.1 Project Scaffolding [[GREENFIELD ONLY]]
+
+- [ ] Epic 1 includes explicit steps for project creation/initialization
+- [ ] If using a starter template, steps for cloning/setup are included
+- [ ] If building from scratch, all necessary scaffolding steps are defined
+- [ ] Initial README or documentation setup is included
+- [ ] Repository setup and initial commit processes are defined
+
+### 1.2 Existing System Integration [[BROWNFIELD ONLY]]
+
+- [ ] Existing project analysis has been completed and documented
+- [ ] Integration points with current system are identified
+- [ ] Development environment preserves existing functionality
+- [ ] Local testing approach validated for existing features
+- [ ] Rollback procedures defined for each integration point
+
+### 1.3 Development Environment
+
+- [ ] Local development environment setup is clearly defined
+- [ ] Required tools and versions are specified
+- [ ] Steps for installing dependencies are included
+- [ ] Configuration files are addressed appropriately
+- [ ] Development server setup is included
+
+### 1.4 Core Dependencies
+
+- [ ] All critical packages/libraries are installed early
+- [ ] Package management is properly addressed
+- [ ] Version specifications are appropriately defined
+- [ ] Dependency conflicts or special requirements are noted
+- [ ] [[BROWNFIELD ONLY]] Version compatibility with existing stack verified
+
+## 2. INFRASTRUCTURE & DEPLOYMENT
+
+[[LLM: Infrastructure must exist before use. For brownfield, must integrate with existing infrastructure without breaking it.]]
+
+### 2.1 Database & Data Store Setup
+
+- [ ] Database selection/setup occurs before any operations
+- [ ] Schema definitions are created before data operations
+- [ ] Migration strategies are defined if applicable
+- [ ] Seed data or initial data setup is included if needed
+- [ ] [[BROWNFIELD ONLY]] Database migration risks identified and mitigated
+- [ ] [[BROWNFIELD ONLY]] Backward compatibility ensured
+
+### 2.2 API & Service Configuration
+
+- [ ] API frameworks are set up before implementing endpoints
+- [ ] Service architecture is established before implementing services
+- [ ] Authentication framework is set up before protected routes
+- [ ] Middleware and common utilities are created before use
+- [ ] [[BROWNFIELD ONLY]] API compatibility with existing system maintained
+- [ ] [[BROWNFIELD ONLY]] Integration with existing authentication preserved
+
+### 2.3 Deployment Pipeline
+
+- [ ] CI/CD pipeline is established before deployment actions
+- [ ] Infrastructure as Code (IaC) is set up before use
+- [ ] Environment configurations are defined early
+- [ ] Deployment strategies are defined before implementation
+- [ ] [[BROWNFIELD ONLY]] Deployment minimizes downtime
+- [ ] [[BROWNFIELD ONLY]] Blue-green or canary deployment implemented
+
+### 2.4 Testing Infrastructure
+
+- [ ] Testing frameworks are installed before writing tests
+- [ ] Test environment setup precedes test implementation
+- [ ] Mock services or data are defined before testing
+- [ ] [[BROWNFIELD ONLY]] Regression testing covers existing functionality
+- [ ] [[BROWNFIELD ONLY]] Integration testing validates new-to-existing connections
+
+## 3. EXTERNAL DEPENDENCIES & INTEGRATIONS
+
+[[LLM: External dependencies often block progress. For brownfield, ensure new dependencies don't conflict with existing ones.]]
+
+### 3.1 Third-Party Services
+
+- [ ] Account creation steps are identified for required services
+- [ ] API key acquisition processes are defined
+- [ ] Steps for securely storing credentials are included
+- [ ] Fallback or offline development options are considered
+- [ ] [[BROWNFIELD ONLY]] Compatibility with existing services verified
+- [ ] [[BROWNFIELD ONLY]] Impact on existing integrations assessed
+
+### 3.2 External APIs
+
+- [ ] Integration points with external APIs are clearly identified
+- [ ] Authentication with external services is properly sequenced
+- [ ] API limits or constraints are acknowledged
+- [ ] Backup strategies for API failures are considered
+- [ ] [[BROWNFIELD ONLY]] Existing API dependencies maintained
+
+### 3.3 Infrastructure Services
+
+- [ ] Cloud resource provisioning is properly sequenced
+- [ ] DNS or domain registration needs are identified
+- [ ] Email or messaging service setup is included if needed
+- [ ] CDN or static asset hosting setup precedes their use
+- [ ] [[BROWNFIELD ONLY]] Existing infrastructure services preserved
+
+## 4. UI/UX CONSIDERATIONS [[UI/UX ONLY]]
+
+[[LLM: Only evaluate this section if the project includes user interface components. Skip entirely for backend-only projects.]]
+
+### 4.1 Design System Setup
+
+- [ ] UI framework and libraries are selected and installed early
+- [ ] Design system or component library is established
+- [ ] Styling approach (CSS modules, styled-components, etc.) is defined
+- [ ] Responsive design strategy is established
+- [ ] Accessibility requirements are defined upfront
+
+### 4.2 Frontend Infrastructure
+
+- [ ] Frontend build pipeline is configured before development
+- [ ] Asset optimization strategy is defined
+- [ ] Frontend testing framework is set up
+- [ ] Component development workflow is established
+- [ ] [[BROWNFIELD ONLY]] UI consistency with existing system maintained
+
+### 4.3 User Experience Flow
+
+- [ ] User journeys are mapped before implementation
+- [ ] Navigation patterns are defined early
+- [ ] Error states and loading states are planned
+- [ ] Form validation patterns are established
+- [ ] [[BROWNFIELD ONLY]] Existing user workflows preserved or migrated
+
+## 5. USER/AGENT RESPONSIBILITY
+
+[[LLM: Clear ownership prevents confusion. Ensure tasks are assigned appropriately based on what only humans can do.]]
+
+### 5.1 User Actions
+
+- [ ] User responsibilities limited to human-only tasks
+- [ ] Account creation on external services assigned to users
+- [ ] Purchasing or payment actions assigned to users
+- [ ] Credential provision appropriately assigned to users
+
+### 5.2 Developer Agent Actions
+
+- [ ] All code-related tasks assigned to developer agents
+- [ ] Automated processes identified as agent responsibilities
+- [ ] Configuration management properly assigned
+- [ ] Testing and validation assigned to appropriate agents
+
+## 6. FEATURE SEQUENCING & DEPENDENCIES
+
+[[LLM: Dependencies create the critical path. For brownfield, ensure new features don't break existing ones.]]
+
+### 6.1 Functional Dependencies
+
+- [ ] Features depending on others are sequenced correctly
+- [ ] Shared components are built before their use
+- [ ] User flows follow logical progression
+- [ ] Authentication features precede protected features
+- [ ] [[BROWNFIELD ONLY]] Existing functionality preserved throughout
+
+### 6.2 Technical Dependencies
+
+- [ ] Lower-level services built before higher-level ones
+- [ ] Libraries and utilities created before their use
+- [ ] Data models defined before operations on them
+- [ ] API endpoints defined before client consumption
+- [ ] [[BROWNFIELD ONLY]] Integration points tested at each step
+
+### 6.3 Cross-Epic Dependencies
+
+- [ ] Later epics build upon earlier epic functionality
+- [ ] No epic requires functionality from later epics
+- [ ] Infrastructure from early epics utilized consistently
+- [ ] Incremental value delivery maintained
+- [ ] [[BROWNFIELD ONLY]] Each epic maintains system integrity
+
+## 7. RISK MANAGEMENT [[BROWNFIELD ONLY]]
+
+[[LLM: This section is CRITICAL for brownfield projects. Think pessimistically about what could break.]]
+
+### 7.1 Breaking Change Risks
+
+- [ ] Risk of breaking existing functionality assessed
+- [ ] Database migration risks identified and mitigated
+- [ ] API breaking change risks evaluated
+- [ ] Performance degradation risks identified
+- [ ] Security vulnerability risks evaluated
+
+### 7.2 Rollback Strategy
+
+- [ ] Rollback procedures clearly defined per story
+- [ ] Feature flag strategy implemented
+- [ ] Backup and recovery procedures updated
+- [ ] Monitoring enhanced for new components
+- [ ] Rollback triggers and thresholds defined
+
+### 7.3 User Impact Mitigation
+
+- [ ] Existing user workflows analyzed for impact
+- [ ] User communication plan developed
+- [ ] Training materials updated
+- [ ] Support documentation comprehensive
+- [ ] Migration path for user data validated
+
+## 8. MVP SCOPE ALIGNMENT
+
+[[LLM: MVP means MINIMUM viable product. For brownfield, ensure enhancements are truly necessary.]]
+
+### 8.1 Core Goals Alignment
+
+- [ ] All core goals from PRD are addressed
+- [ ] Features directly support MVP goals
+- [ ] No extraneous features beyond MVP scope
+- [ ] Critical features prioritized appropriately
+- [ ] [[BROWNFIELD ONLY]] Enhancement complexity justified
+
+### 8.2 User Journey Completeness
+
+- [ ] All critical user journeys fully implemented
+- [ ] Edge cases and error scenarios addressed
+- [ ] User experience considerations included
+- [ ] [[UI/UX ONLY]] Accessibility requirements incorporated
+- [ ] [[BROWNFIELD ONLY]] Existing workflows preserved or improved
+
+### 8.3 Technical Requirements
+
+- [ ] All technical constraints from PRD addressed
+- [ ] Non-functional requirements incorporated
+- [ ] Architecture decisions align with constraints
+- [ ] Performance considerations addressed
+- [ ] [[BROWNFIELD ONLY]] Compatibility requirements met
+
+## 9. DOCUMENTATION & HANDOFF
+
+[[LLM: Good documentation enables smooth development. For brownfield, documentation of integration points is critical.]]
+
+### 9.1 Developer Documentation
+
+- [ ] API documentation created alongside implementation
+- [ ] Setup instructions are comprehensive
+- [ ] Architecture decisions documented
+- [ ] Patterns and conventions documented
+- [ ] [[BROWNFIELD ONLY]] Integration points documented in detail
+
+### 9.2 User Documentation
+
+- [ ] User guides or help documentation included if required
+- [ ] Error messages and user feedback considered
+- [ ] Onboarding flows fully specified
+- [ ] [[BROWNFIELD ONLY]] Changes to existing features documented
+
+### 9.3 Knowledge Transfer
+
+- [ ] [[BROWNFIELD ONLY]] Existing system knowledge captured
+- [ ] [[BROWNFIELD ONLY]] Integration knowledge documented
+- [ ] Code review knowledge sharing planned
+- [ ] Deployment knowledge transferred to operations
+- [ ] Historical context preserved
+
+## 9.4 LLM CONTEXT EFFICIENCY
+
+[[LLM: Deliverables must prioritize compact, self-contained context packages so downstream LLM agents can act without extra clarification.]]
+
+- [ ] Handoff docs are structured for LLM agents, containing only required context while remaining complete
+- [ ] Key constraints, dependencies, and assumptions are stated up front with clear labels for parsing
+- [ ] Unnecessary narrative is removed so each artifact stays within tight context budgets
+
+## 10. POST-MVP CONSIDERATIONS
+
+[[LLM: Planning for success prevents technical debt. For brownfield, ensure enhancements don't limit future growth.]]
+
+### 10.1 Future Enhancements
+
+- [ ] Clear separation between MVP and future features
+- [ ] Architecture supports planned enhancements
+- [ ] Technical debt considerations documented
+- [ ] Extensibility points identified
+- [ ] [[BROWNFIELD ONLY]] Integration patterns reusable
+
+### 10.2 Monitoring & Feedback
+
+- [ ] Analytics or usage tracking included if required
+- [ ] User feedback collection considered
+- [ ] Monitoring and alerting addressed
+- [ ] Performance measurement incorporated
+- [ ] [[BROWNFIELD ONLY]] Existing monitoring preserved/enhanced
+
+## VALIDATION SUMMARY
+
+[[LLM: FINAL PDM VALIDATION REPORT GENERATION
+
+Generate a comprehensive validation report that adapts to project type:
+
+1. Executive Summary
+
+   - Project type: [Greenfield/Brownfield] with [UI/No UI]
+   - Overall readiness (percentage)
+   - Go/No-Go recommendation
+   - Critical blocking issues count
+   - Sections skipped due to project type
+
+2. Project-Specific Analysis
+
+   FOR GREENFIELD:
+
+   - Setup completeness
+   - Dependency sequencing
+   - MVP scope appropriateness
+   - Development timeline feasibility
+
+   FOR BROWNFIELD:
+
+   - Integration risk level (High/Medium/Low)
+   - Existing system impact assessment
+   - Rollback readiness
+   - User disruption potential
+
+3. Risk Assessment
+
+   - Top 5 risks by severity
+   - Mitigation recommendations
+   - Timeline impact of addressing issues
+   - [BROWNFIELD] Specific integration risks
+
+4. MVP Completeness
+
+   - Core features coverage
+   - Missing essential functionality
+   - Scope creep identified
+   - True MVP vs over-engineering
+
+5. Implementation Readiness
+
+   - Developer clarity score (1-10)
+   - Ambiguous requirements count
+   - Missing technical details
+   - [BROWNFIELD] Integration point clarity
+
+6. Recommendations
+
+   - Must-fix before development
+   - Should-fix for quality
+   - Consider for improvement
+   - Post-MVP deferrals
+
+7. [BROWNFIELD ONLY] Integration Confidence
+   - Confidence in preserving existing functionality
+   - Rollback procedure completeness
+   - Monitoring coverage for integration points
+   - Support team readiness
+
+After presenting the report, ask if the user wants:
+
+- Detailed analysis of any failed sections
+- Specific story reordering suggestions
+- Risk mitigation strategies
+- [BROWNFIELD] Integration risk deep-dive]]
+
+### Category Statuses
+
+| Category                                | Status | Critical Issues |
+| --------------------------------------- | ------ | --------------- |
+| 1. Project Setup & Initialization       | _TBD_  |                 |
+| 2. Infrastructure & Deployment          | _TBD_  |                 |
+| 3. External Dependencies & Integrations | _TBD_  |                 |
+| 4. UI/UX Considerations                 | _TBD_  |                 |
+| 5. User/Agent Responsibility            | _TBD_  |                 |
+| 6. Feature Sequencing & Dependencies    | _TBD_  |                 |
+| 7. Risk Management (Brownfield)         | _TBD_  |                 |
+| 8. MVP Scope Alignment                  | _TBD_  |                 |
+| 9. Documentation & Handoff              | _TBD_  |                 |
+| 10. Post-MVP Considerations             | _TBD_  |                 |
+
+### Critical Deficiencies
+
+(To be populated during validation)
+
+### Recommendations
+
+(To be populated during validation)
+
+### Final Decision
+
+- **APPROVED**: The plan is comprehensive, properly sequenced, and ready for implementation.
+- **CONDITIONAL**: The plan requires specific adjustments before proceeding.
+- **REJECTED**: The plan requires significant revision to address critical deficiencies.
 
 
 
@@ -1466,6 +1485,184 @@ completion:
     - Dependencies and constraints are understood
     - Stories are sequenced logically for implementation
     - Acceptance criteria are clearly defined
+
+
+
+# Dependency: schemas/story.json
+
+{
+	"template": {
+		"id": "story-template-v2",
+		"name": "Story Document",
+		"version": "2.0",
+		"output": {
+			"format": "yaml",
+			"filename": "@{docs.subdirs.stories}/{{epic_num}}.{{story_num}}.{{story_title_short}}.yaml",
+			"title": "Story {{epic_num}}.{{story_num}}: {{story_title_short}}"
+		}
+	},
+	"workflow": {
+		"mode": "interactive",
+		"elicitation": "advanced-elicitation"
+	},
+	"sections": [
+		{
+			"id": "priority",
+			"title": "Priority",
+			"type": "choice",
+			"choices": ["1", "2", "3", "4", "5"],
+			"instruction": "Story priority (1 = highest). Used by PDM for sequencing.",
+			"owner": "product-development-master",
+			"editors": ["product-development-master", "product-master"]
+		},
+		{
+			"id": "story",
+			"title": "Story",
+			"type": "template-text",
+			"template": "**As a** {{role}},\n**I want** {{action}},\n**so that** {{benefit}}",
+			"instruction": "Define the user story using the standard format with role, action, and benefit",
+			"elicit": true,
+			"owner": "product-development-master",
+			"editors": ["product-development-master", "product-master"]
+		},
+		{
+			"id": "acceptance-criteria",
+			"title": "Acceptance Criteria",
+			"type": "numbered-list",
+			"instruction": "Copy the acceptance criteria numbered list from the epic file",
+			"elicit": true,
+			"owner": "product-development-master",
+			"editors": ["product-development-master", "product-master"]
+		},
+		{
+			"id": "tasks",
+			"title": "Tasks / Subtasks",
+			"type": "bullet-list",
+			"instruction": "Break down the story into specific tasks and subtasks needed for implementation.\nReference applicable acceptance criteria numbers where relevant.\nAssign a Difficulty for each task and subtask (integer 1–10) capturing both complexity and uncertainty.",
+			"template": "- [ ] {{task_description}} (AC: # if applicable) [Diff: 1-10]\n  - [ ] {{optional_subtask_description}} [Diff: 1-10]\n- [ ] {{task_description}} (AC: # if applicable) [Diff: 1-10]\n  - [ ] {{optional_subtask_description}} [Diff: 1-10]\n- [ ] {{task_description}} (AC: # if applicable) [Diff: 1-10]\n  - [ ] {{optional_subtask_description}} [Diff: 1-10]",
+			"elicit": true,
+			"owner": "product-development-master",
+			"editors": ["product-development-master", "product-master", "developer"]
+		},
+		{
+			"id": "dev-notes",
+			"title": "Dev Notes",
+			"instruction": "Leave this section empty at first on initialization as it will be populated later on.\nPopulate relevant information, only what was pulled from actual artifacts from docs folder, relevant to this story:\n- Do not invent information\n- If known add Relevant Source Tree info that relates to this story\n- If there were important notes from previous story that are relevant to this one, include them here\n- Put enough information in this section so that the dev agent should NEVER need to read the architecture documents, these notes along with the tasks and subtasks must give the Dev Agent the complete context it needs to comprehend with the least amount of overhead the information to complete the story, meeting all AC and completing all tasks+subtasks",
+			"elicit": true,
+			"owner": "product-development-master",
+			"editors": ["product-development-master", "product-master"]
+		},
+		{
+			"id": "testing-standards",
+			"title": "Testing",
+			"instruction": "List Relevant Testing Standards from Architecture the Developer needs to conform to:\n- Test file location\n- Test standards\n- Testing frameworks and patterns to use\n- Any specific testing requirements for this story",
+			"elicit": true,
+			"owner": "product-development-master",
+			"editors": ["product-development-master", "product-master"]
+		},
+		{
+			"id": "test-specs",
+			"title": "Test Specs",
+			"instruction": "Maintain both test specifications and a list of relevant test files for this story.",
+			"owner": "qa-agent",
+			"editors": ["qa-agent", "developer"],
+			"sections": [
+				{
+					"id": "specs",
+					"title": "Specifications",
+					"type": "numbered-list",
+					"instruction": "List concise Given-When-Then (or equivalent) specs. Include AC references.",
+					"template": "{{spec_number}}: [AC {{ac_numbers}}] {{short_description}} — Given {{given}}, When {{when}}, Then {{then}}",
+					"elicit": true
+				},
+				{
+					"id": "artifacts",
+					"title": "Artifacts",
+					"type": "bullet-list",
+					"instruction": "List existing or planned test files relevant to this story (paths with brief purpose).",
+					"template": "- {{path}} — {{purpose}}",
+					"elicit": false
+				}
+			]
+		},
+		{
+			"id": "risk-mitigation",
+			"title": "Risk Mitigation",
+			"instruction": "Document risks and mitigation strategies for this story implementation.",
+			"owner": "product-development-master",
+			"editors": ["product-development-master", "product-master"],
+			"sections": [
+				{
+					"id": "primary-risk",
+					"title": "Primary Risk",
+					"type": "paragraph",
+					"instruction": "Describe the main risk this story poses to the existing system and users.",
+					"elicit": true
+				},
+				{
+					"id": "mitigation-strategies",
+					"title": "Mitigation Strategies",
+					"type": "bullet-list",
+					"instruction": "List concrete mitigation actions to reduce likelihood/impact of the risk.",
+					"template": "- {{mitigation_action}}",
+					"elicit": true
+				},
+				{
+					"id": "rollback-plan",
+					"title": "Rollback Plan",
+					"type": "paragraph",
+					"instruction": "Outline how to quickly revert changes if needed, including preconditions and steps.",
+					"elicit": true
+				}
+			]
+		},
+		{
+			"id": "developer-record",
+			"title": "Dev Agent Record",
+			"instruction": "This section is populated by the development agent during implementation",
+			"owner": "developer",
+			"editors": ["developer"],
+			"sections": [
+				{
+					"id": "agent-model",
+					"title": "Agent Model Used",
+					"template": "{{agent_model_name_version}}",
+					"instruction": "Record the specific AI agent model and version used for development",
+					"owner": "developer",
+					"editors": ["developer"]
+				},
+				{
+					"id": "debug-log-references",
+					"title": "Debug Log References",
+					"instruction": "Reference any debug logs or traces generated during development",
+					"owner": "developer",
+					"editors": ["developer"]
+				},
+				{
+					"id": "completion-notes",
+					"title": "Completion Notes List",
+					"instruction": "Notes about the completion of tasks and any issues encountered",
+					"owner": "developer",
+					"editors": ["developer"]
+				},
+				{
+					"id": "file-list",
+					"title": "File List",
+					"instruction": "List all files created, modified, or affected during story implementation",
+					"owner": "developer",
+					"editors": ["developer"]
+				}
+			]
+		},
+		{
+			"id": "qa-results",
+			"title": "QA Results",
+			"instruction": "Results from QA Agent QA review of the completed story implementation",
+			"owner": "qa-agent",
+			"editors": ["qa-agent"]
+		}
+	]
+}
 
 
 
@@ -1759,184 +1956,6 @@ completion:
 
 
 
-# Dependency: schemas/story.json
-
-{
-	"template": {
-		"id": "story-template-v2",
-		"name": "Story Document",
-		"version": "2.0",
-		"output": {
-			"format": "yaml",
-			"filename": "@{docs.subdirs.stories}/{{epic_num}}.{{story_num}}.{{story_title_short}}.yaml",
-			"title": "Story {{epic_num}}.{{story_num}}: {{story_title_short}}"
-		}
-	},
-	"workflow": {
-		"mode": "interactive",
-		"elicitation": "advanced-elicitation"
-	},
-	"sections": [
-		{
-			"id": "priority",
-			"title": "Priority",
-			"type": "choice",
-			"choices": ["1", "2", "3", "4", "5"],
-			"instruction": "Story priority (1 = highest). Used by PDM for sequencing.",
-			"owner": "product-development-master",
-			"editors": ["product-development-master", "product-master"]
-		},
-		{
-			"id": "story",
-			"title": "Story",
-			"type": "template-text",
-			"template": "**As a** {{role}},\n**I want** {{action}},\n**so that** {{benefit}}",
-			"instruction": "Define the user story using the standard format with role, action, and benefit",
-			"elicit": true,
-			"owner": "product-development-master",
-			"editors": ["product-development-master", "product-master"]
-		},
-		{
-			"id": "acceptance-criteria",
-			"title": "Acceptance Criteria",
-			"type": "numbered-list",
-			"instruction": "Copy the acceptance criteria numbered list from the epic file",
-			"elicit": true,
-			"owner": "product-development-master",
-			"editors": ["product-development-master", "product-master"]
-		},
-		{
-			"id": "tasks",
-			"title": "Tasks / Subtasks",
-			"type": "bullet-list",
-			"instruction": "Break down the story into specific tasks and subtasks needed for implementation.\nReference applicable acceptance criteria numbers where relevant.\nAssign a Difficulty for each task and subtask (integer 1–10) capturing both complexity and uncertainty.",
-			"template": "- [ ] {{task_description}} (AC: # if applicable) [Diff: 1-10]\n  - [ ] {{optional_subtask_description}} [Diff: 1-10]\n- [ ] {{task_description}} (AC: # if applicable) [Diff: 1-10]\n  - [ ] {{optional_subtask_description}} [Diff: 1-10]\n- [ ] {{task_description}} (AC: # if applicable) [Diff: 1-10]\n  - [ ] {{optional_subtask_description}} [Diff: 1-10]",
-			"elicit": true,
-			"owner": "product-development-master",
-			"editors": ["product-development-master", "product-master", "developer"]
-		},
-		{
-			"id": "dev-notes",
-			"title": "Dev Notes",
-			"instruction": "Leave this section empty at first on initialization as it will be populated later on.\nPopulate relevant information, only what was pulled from actual artifacts from docs folder, relevant to this story:\n- Do not invent information\n- If known add Relevant Source Tree info that relates to this story\n- If there were important notes from previous story that are relevant to this one, include them here\n- Put enough information in this section so that the dev agent should NEVER need to read the architecture documents, these notes along with the tasks and subtasks must give the Dev Agent the complete context it needs to comprehend with the least amount of overhead the information to complete the story, meeting all AC and completing all tasks+subtasks",
-			"elicit": true,
-			"owner": "product-development-master",
-			"editors": ["product-development-master", "product-master"]
-		},
-		{
-			"id": "testing-standards",
-			"title": "Testing",
-			"instruction": "List Relevant Testing Standards from Architecture the Developer needs to conform to:\n- Test file location\n- Test standards\n- Testing frameworks and patterns to use\n- Any specific testing requirements for this story",
-			"elicit": true,
-			"owner": "product-development-master",
-			"editors": ["product-development-master", "product-master"]
-		},
-		{
-			"id": "test-specs",
-			"title": "Test Specs",
-			"instruction": "Maintain both test specifications and a list of relevant test files for this story.",
-			"owner": "qa-agent",
-			"editors": ["qa-agent", "developer"],
-			"sections": [
-				{
-					"id": "specs",
-					"title": "Specifications",
-					"type": "numbered-list",
-					"instruction": "List concise Given-When-Then (or equivalent) specs. Include AC references.",
-					"template": "{{spec_number}}: [AC {{ac_numbers}}] {{short_description}} — Given {{given}}, When {{when}}, Then {{then}}",
-					"elicit": true
-				},
-				{
-					"id": "artifacts",
-					"title": "Artifacts",
-					"type": "bullet-list",
-					"instruction": "List existing or planned test files relevant to this story (paths with brief purpose).",
-					"template": "- {{path}} — {{purpose}}",
-					"elicit": false
-				}
-			]
-		},
-		{
-			"id": "risk-mitigation",
-			"title": "Risk Mitigation",
-			"instruction": "Document risks and mitigation strategies for this story implementation.",
-			"owner": "product-development-master",
-			"editors": ["product-development-master", "product-master"],
-			"sections": [
-				{
-					"id": "primary-risk",
-					"title": "Primary Risk",
-					"type": "paragraph",
-					"instruction": "Describe the main risk this story poses to the existing system and users.",
-					"elicit": true
-				},
-				{
-					"id": "mitigation-strategies",
-					"title": "Mitigation Strategies",
-					"type": "bullet-list",
-					"instruction": "List concrete mitigation actions to reduce likelihood/impact of the risk.",
-					"template": "- {{mitigation_action}}",
-					"elicit": true
-				},
-				{
-					"id": "rollback-plan",
-					"title": "Rollback Plan",
-					"type": "paragraph",
-					"instruction": "Outline how to quickly revert changes if needed, including preconditions and steps.",
-					"elicit": true
-				}
-			]
-		},
-		{
-			"id": "developer-record",
-			"title": "Dev Agent Record",
-			"instruction": "This section is populated by the development agent during implementation",
-			"owner": "developer",
-			"editors": ["developer"],
-			"sections": [
-				{
-					"id": "agent-model",
-					"title": "Agent Model Used",
-					"template": "{{agent_model_name_version}}",
-					"instruction": "Record the specific AI agent model and version used for development",
-					"owner": "developer",
-					"editors": ["developer"]
-				},
-				{
-					"id": "debug-log-references",
-					"title": "Debug Log References",
-					"instruction": "Reference any debug logs or traces generated during development",
-					"owner": "developer",
-					"editors": ["developer"]
-				},
-				{
-					"id": "completion-notes",
-					"title": "Completion Notes List",
-					"instruction": "Notes about the completion of tasks and any issues encountered",
-					"owner": "developer",
-					"editors": ["developer"]
-				},
-				{
-					"id": "file-list",
-					"title": "File List",
-					"instruction": "List all files created, modified, or affected during story implementation",
-					"owner": "developer",
-					"editors": ["developer"]
-				}
-			]
-		},
-		{
-			"id": "qa-results",
-			"title": "QA Results",
-			"instruction": "Results from QA Agent QA review of the completed story implementation",
-			"owner": "qa-agent",
-			"editors": ["qa-agent"]
-		}
-	]
-}
-
-
-
 # Dependency: checklists/story-draft-checklist.md
 
 # Story Draft Checklist
@@ -1964,10 +1983,10 @@ VALIDATION PRINCIPLES:
 
 REMEMBER: We assume competent developer agents who can:
 
--  Research documentation and codebases
--  Make reasonable technical decisions
--  Follow established patterns
--  Ask for clarification when truly stuck
+- Research documentation and codebases
+- Make reasonable technical decisions
+- Follow established patterns
+- Ask for clarification when truly stuck
 
 We're checking for SUFFICIENT guidance, not exhaustive detail.]]
 
@@ -1981,11 +2000,11 @@ We're checking for SUFFICIENT guidance, not exhaustive detail.]]
 4. Dependencies are explicit ("requires Story X to be complete")
 5. Success looks like something specific, not vague]]
 
--  [ ] Story goal/purpose is clearly stated
--  [ ] Relationship to epic goals is evident
--  [ ] How the story fits into overall system flow is explained
--  [ ] Dependencies on previous stories are identified (if applicable)
--  [ ] Business context and value are clear
+- [ ] Story goal/purpose is clearly stated
+- [ ] Relationship to epic goals is evident
+- [ ] How the story fits into overall system flow is explained
+- [ ] Dependencies on previous stories are identified (if applicable)
+- [ ] Business context and value are clear
 
 ## 2. TECHNICAL IMPLEMENTATION GUIDANCE
 
@@ -1999,12 +2018,12 @@ We're checking for SUFFICIENT guidance, not exhaustive detail.]]
 
 Note: We don't need every file listed - just the important ones.]]
 
--  [ ] Key files to create/modify are identified (not necessarily exhaustive)
--  [ ] Technologies specifically needed for this story are mentioned
--  [ ] Critical APIs or interfaces are sufficiently described
--  [ ] Necessary data models or structures are referenced
--  [ ] Required environment variables are listed (if applicable)
--  [ ] Any exceptions to standard coding patterns are noted
+- [ ] Key files to create/modify are identified (not necessarily exhaustive)
+- [ ] Technologies specifically needed for this story are mentioned
+- [ ] Critical APIs or interfaces are sufficiently described
+- [ ] Necessary data models or structures are referenced
+- [ ] Required environment variables are listed (if applicable)
+- [ ] Any exceptions to standard coding patterns are noted
 
 ## 3. REFERENCE EFFECTIVENESS
 
@@ -2016,10 +2035,10 @@ Note: We don't need every file listed - just the important ones.]]
 4. References are accessible (not broken links)
 5. Previous story context is summarized if needed]]
 
--  [ ] References to external documents point to specific relevant sections
--  [ ] Critical information from previous stories is summarized (not just referenced)
--  [ ] Context is provided for why references are relevant
--  [ ] References use consistent format (e.g., `docs/filename.md#section`)
+- [ ] References to external documents point to specific relevant sections
+- [ ] Critical information from previous stories is summarized (not just referenced)
+- [ ] Context is provided for why references are relevant
+- [ ] References use consistent format (e.g., `docs/filename.md#section`)
 
 ## 4. SELF-CONTAINMENT ASSESSMENT
 
@@ -2031,10 +2050,10 @@ Note: We don't need every file listed - just the important ones.]]
 4. Edge cases are mentioned (even if deferred)
 5. The story could be understood without reading 10 other documents]]
 
--  [ ] Core information needed is included (not overly reliant on external docs)
--  [ ] Implicit assumptions are made explicit
--  [ ] Domain-specific terms or concepts are explained
--  [ ] Edge cases or error scenarios are addressed
+- [ ] Core information needed is included (not overly reliant on external docs)
+- [ ] Implicit assumptions are made explicit
+- [ ] Domain-specific terms or concepts are explained
+- [ ] Edge cases or error scenarios are addressed
 
 ## 5. TESTING GUIDANCE
 
@@ -2046,10 +2065,18 @@ Note: We don't need every file listed - just the important ones.]]
 4. Special test considerations are noted
 5. Acceptance criteria in the story are testable]]
 
--  [ ] Required testing approach is outlined
--  [ ] Key test scenarios are identified
--  [ ] Success criteria are defined
--  [ ] Special testing considerations are noted (if applicable)
+- [ ] Required testing approach is outlined
+- [ ] Key test scenarios are identified
+- [ ] Success criteria are defined
+- [ ] Special testing considerations are noted (if applicable)
+
+## 6. LLM CONTEXT EFFICIENCY
+
+[[LLM: Stories must wrap precisely the context downstream LLM agents need without extra narrative weight.]]
+
+- [ ] Story text focuses only on necessary context so the downstream agent stays under tight budget
+- [ ] Key constraints, dependencies, and assumptions are highlighted up front with explicit labels
+- [ ] Redundant prose or unrelated background is minimized while preserving comprehension
 
 ## VALIDATION RESULT
 
@@ -2059,26 +2086,26 @@ Generate a concise validation report:
 
 1. Quick Summary
 
-   -  Story readiness: READY / NEEDS REVISION / BLOCKED
-   -  Clarity score (1-10)
-   -  Major gaps identified
+   - Story readiness: READY / NEEDS REVISION / BLOCKED
+   - Clarity score (1-10)
+   - Major gaps identified
 
 2. Fill in the validation table with:
 
-   -  PASS: Requirements clearly met
-   -  PARTIAL: Some gaps but workable
-   -  FAIL: Critical information missing
+   - PASS: Requirements clearly met
+   - PARTIAL: Some gaps but workable
+   - FAIL: Critical information missing
 
 3. Specific Issues (if any)
 
-   -  List concrete problems to fix
-   -  Suggest specific improvements
-   -  Identify any blocking dependencies
+   - List concrete problems to fix
+   - Suggest specific improvements
+   - Identify any blocking dependencies
 
 4. Developer Perspective
-   -  Could YOU implement this story as written?
-   -  What questions would you have?
-   -  What might cause delays or rework?
+   - Could YOU implement this story as written?
+   - What questions would you have?
+   - What might cause delays or rework?
 
 Be pragmatic - perfect documentation doesn't exist, but it must be enough to provide the extreme context a dev agent needs to get the work down and not create a mess.]]
 
@@ -2092,9 +2119,9 @@ Be pragmatic - perfect documentation doesn't exist, but it must be enough to pro
 
 **Final Assessment:**
 
--  READY: The story provides sufficient context for implementation
--  NEEDS REVISION: The story requires updates (see issues)
--  BLOCKED: External information required (specify what information)
+- READY: The story provides sufficient context for implementation
+- NEEDS REVISION: The story requires updates (see issues)
+- BLOCKED: External information required (specify what information)
 
 
 
