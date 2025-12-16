@@ -69,7 +69,6 @@ steps:
         - "compatibility"
         - "portability"
         - "functional_suitability"
-    elicit: true
 
   - id: CHECK-THRESHOLDS
     title: Check for NFR Thresholds

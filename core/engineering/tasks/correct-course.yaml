@@ -59,7 +59,6 @@ process:
         validation:
           type: string
           pattern: "^(incremental|yolo)$"
-      elicit: true
 
     - id: SETUP-2
       title: Verify Access to Artifacts
@@ -78,7 +77,6 @@ process:
         type: analysis
         target: checklists/change-checklist.md#section-1
         prompt: Analyze change context including trigger, timing, and initial assessment
-      elicit: true
 
     - id: ANALYSIS-2
       title: Epic/Story Impact Analysis
@@ -87,7 +85,6 @@ process:
         type: analysis
         target: checklists/change-checklist.md#section-2
         prompt: Assess impact on current epics, stories, and sprint work
-      elicit: true
 
     - id: ANALYSIS-3
       title: Artifact Conflict Resolution
@@ -96,7 +93,6 @@ process:
         type: analysis
         target: checklists/change-checklist.md#section-3
         prompt: Identify and resolve conflicts in project artifacts
-      elicit: true
 
     - id: ANALYSIS-4
       title: Path Evaluation & Recommendation
@@ -110,7 +106,6 @@ process:
           3. Re-scope features
           4. Defer to next sprint
           5. Fundamental replan needed (handoff to Analyst/Architect)
-      elicit: true
 
     - id: DRAFT-1
       title: Draft Proposed Changes
@@ -131,7 +126,6 @@ process:
         if: "path != 'fundamental_replan'"
         then: "DRAFT-2"
         else: "HANDOFF-1"
-      elicit: true
 
     - id: DRAFT-2
       title: Review and Refine Proposed Changes
@@ -144,7 +138,6 @@ process:
           required: true
       condition:
         if: "interaction_mode == 'incremental'"
-      elicit: true
 
     - id: REVIEW-1
       title: Present Sprint Change Proposal for Review
@@ -160,7 +153,6 @@ process:
           1. Approve as-is
           2. Request specific adjustments
           3. Reject and restart analysis
-      elicit: true
 
     - id: HANDOFF-1
       title: Handoff for Fundamental Replan
@@ -181,7 +173,6 @@ process:
           3. Conduct impact assessment on current sprint commitments
 
           Please coordinate with Analyst/Architect for next steps.
-      elicit: true
 
     - id: FINALIZE-1
       title: Finalize and Determine Next Steps

@@ -224,7 +224,7 @@
 		{
 			"name": "create-adhoc-epic",
 			"description": "Create the next highest order adhoc epic",
-			"parameters": ["description"],
+			"parameters": ["change_description"],
 			"optionalParameters": ["epic_adhoc_number"],
 			"steps": [
 				"schemas/epic.json",
@@ -256,7 +256,7 @@
 		{
 			"name": "create-standalone-story",
 			"description": "Create a single standalone story for very small enhancements that can be completed in one focused development session",
-			"parameters": ["description"],
+			"parameters": ["change_description"],
 			"optionalParameters": ["enhancement_number"],
 			"steps": [
 				"schemas/story.json",
@@ -557,7 +557,6 @@ process:
         validation:
           type: string
           pattern: "^(incremental|yolo)$"
-      elicit: true
 
     - id: SETUP-2
       title: Verify Access to Artifacts
@@ -576,7 +575,6 @@ process:
         type: analysis
         target: checklists/change-checklist.md#section-1
         prompt: Analyze change context including trigger, timing, and initial assessment
-      elicit: true
 
     - id: ANALYSIS-2
       title: Epic/Story Impact Analysis
@@ -585,7 +583,6 @@ process:
         type: analysis
         target: checklists/change-checklist.md#section-2
         prompt: Assess impact on current epics, stories, and sprint work
-      elicit: true
 
     - id: ANALYSIS-3
       title: Artifact Conflict Resolution
@@ -594,7 +591,6 @@ process:
         type: analysis
         target: checklists/change-checklist.md#section-3
         prompt: Identify and resolve conflicts in project artifacts
-      elicit: true
 
     - id: ANALYSIS-4
       title: Path Evaluation & Recommendation
@@ -608,7 +604,6 @@ process:
           3. Re-scope features
           4. Defer to next sprint
           5. Fundamental replan needed (handoff to Analyst/Architect)
-      elicit: true
 
     - id: DRAFT-1
       title: Draft Proposed Changes
@@ -629,7 +624,6 @@ process:
         if: "path != 'fundamental_replan'"
         then: "DRAFT-2"
         else: "HANDOFF-1"
-      elicit: true
 
     - id: DRAFT-2
       title: Review and Refine Proposed Changes
@@ -642,7 +636,6 @@ process:
           required: true
       condition:
         if: "interaction_mode == 'incremental'"
-      elicit: true
 
     - id: REVIEW-1
       title: Present Sprint Change Proposal for Review
@@ -658,7 +651,6 @@ process:
           1. Approve as-is
           2. Request specific adjustments
           3. Reject and restart analysis
-      elicit: true
 
     - id: HANDOFF-1
       title: Handoff for Fundamental Replan
@@ -679,7 +671,6 @@ process:
           3. Conduct impact assessment on current sprint commitments
 
           Please coordinate with Analyst/Architect for next steps.
-      elicit: true
 
     - id: FINALIZE-1
       title: Finalize and Determine Next Steps
@@ -1419,7 +1410,6 @@ steps:
       validation:
         type: array
         required: true
-    elicit: true
 
   - id: ADD-STORIES
     title: Add Stories to Epic
@@ -1785,7 +1775,6 @@ steps:
         type: string
         pattern: "^[1-3]$"
         required: true
-    elicit: true
 
   - id: ANNOUNCE-STORY
     title: Announce Identified Story
@@ -1794,7 +1783,6 @@ steps:
       type: elicit
       prompt_user: |
         Identified next story for preparation: {{epic_resolved}}.{{story_resolved}} - {{story_title}}
-    elicit: true
 
   - id: GATHER-EPIC
     title: Gather Story Requirements from Epic
@@ -1943,7 +1931,6 @@ steps:
         {{checklist_results}}
 
         Next steps: Review the story draft (especially for complex stories) before handing off to development.
-    elicit: true
 
 completion:
   checklist: story-draft-checklist
@@ -2218,7 +2205,6 @@ steps:
         type: string
         pattern: "^[1-3]$"
         required: true
-    elicit: true
 
   - id: READ-1
     title: Read PRD for Enhancement
@@ -2256,6 +2242,22 @@ steps:
         From Architecture (!{architecture_file}):
         - Capture integration points and compatibility constraints.
         - Gather boundaries for in-scope vs out-of-scope lists.
+
+  - id: SANITY-1
+    title: Confirm enhancement understanding with user
+    description: Sanity-check the interpreted change description and resolve ambiguities before drafting the epic
+    action:
+      type: elicit
+      prompt_user: |
+        Summarize the enhancement goal, key constraints, and proposed scope based on the provided change description and extracted context.
+        Confirm there are no misunderstandings or missing details:
+        1) Summary matches intent — proceed
+        2) Something is unclear or incorrect — provide clarifications
+      options: ["1", "2"]
+      validation:
+        type: string
+        pattern: "^[1-2]$"
+        required: true
 
   - id: CREATE-1
     title: Create Epic YAML (schema-aligned)
@@ -2298,7 +2300,6 @@ steps:
         type: string
         pattern: "^[1-4]$"
         required: true
-    elicit: true
 
   - id: UPDATE-DOCUMENTS
     title: Update affected documentation if needed
@@ -2323,7 +2324,6 @@ steps:
         Stories proposed: {{story_count}}
 
         Next: Review the story list and priorities, then proceed to story creation.
-    elicit: true
 
 completion:
   criteria:
@@ -2502,7 +2502,6 @@ steps:
         type: string
         pattern: "^[1-4]$"
         required: true
-    elicit: true
 
   - id: UPDATE-DOCUMENTS
     title: Update affected documentation if needed
@@ -2529,7 +2528,6 @@ steps:
         Next steps:
         - Review the draft story and approve
         - Proceed to implementation when ready
-    elicit: true
 
 completion:
   criteria:
@@ -2623,7 +2621,6 @@ steps:
         type: string
         pattern: "^[1-3]$"
         required: true
-    elicit: true
 
   - id: GATHER-CONTEXT
     title: Gather minimal project context
@@ -2642,6 +2639,22 @@ steps:
         - Specific change definition
         - Impact boundaries
         - Success criteria
+
+  - id: SANITY-CHECK
+    title: Validate standalone change understanding with user
+    description: Ensure the interpreted enhancement description matches user intent before writing the story
+    action:
+      type: elicit
+      prompt_user: |
+        Provide a concise summary covering the standalone change goal, scope boundaries, dependencies, and any open questions.
+        Confirm whether this summary aligns with the original change description:
+        1) Yes, it is accurate — continue
+        2) No, corrections are needed — describe adjustments
+      options: ["1", "2"]
+      validation:
+        type: string
+        pattern: "^[1-2]$"
+        required: true
 
   - id: CREATE-STORY-FILE
     title: Create standalone story YAML file
@@ -2670,7 +2683,6 @@ steps:
         type: string
         pattern: "^[1-4]$"
         required: true
-    elicit: true
 
   - id: UPDATE-DOCUMENTS
     title: Update affected documentation if needed

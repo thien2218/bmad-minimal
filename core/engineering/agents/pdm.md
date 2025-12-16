@@ -222,7 +222,7 @@
 		{
 			"name": "create-adhoc-epic",
 			"description": "Create the next highest order adhoc epic",
-			"parameters": ["description"],
+			"parameters": ["change_description"],
 			"optionalParameters": ["epic_adhoc_number"],
 			"steps": [
 				"schemas/epic.json",
@@ -254,7 +254,7 @@
 		{
 			"name": "create-standalone-story",
 			"description": "Create a single standalone story for very small enhancements that can be completed in one focused development session",
-			"parameters": ["description"],
+			"parameters": ["change_description"],
 			"optionalParameters": ["enhancement_number"],
 			"steps": [
 				"schemas/story.json",

@@ -57,7 +57,7 @@ Use for epic management, backlog prioritization, sprint planning, and orchestrat
   - required: epic
 
 - `create-adhoc-epic`: Create the next highest order adhoc epic
-  - required: description
+  - required: change_description
   - optional: epic_adhoc_number
 
 - `create-adhoc-story`: Create next adhoc story for highest order or targeted adhoc epic
@@ -68,7 +68,7 @@ Use for epic management, backlog prioritization, sprint planning, and orchestrat
   - required: adhoc_epic
 
 - `create-standalone-story`: Create a single standalone story for very small enhancements that can be completed in one focused development session
-  - required: description
+  - required: change_description
   - optional: enhancement_number
 
 ---

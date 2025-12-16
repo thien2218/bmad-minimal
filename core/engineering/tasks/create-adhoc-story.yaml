@@ -164,7 +164,6 @@ steps:
         type: string
         pattern: "^[1-4]$"
         required: true
-    elicit: true
 
   - id: UPDATE-DOCUMENTS
     title: Update affected documentation if needed
@@ -191,7 +190,6 @@ steps:
         Next steps:
         - Review the draft story and approve
         - Proceed to implementation when ready
-    elicit: true
 
 completion:
   criteria:

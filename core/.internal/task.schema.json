@@ -319,11 +319,6 @@
 						"type": "string",
 						"description": "Action on success",
 						"enum": ["halt", "continue", "skip", "rollback"]
-					},
-					"elicit": {
-						"type": "boolean",
-						"description": "Whether this step requires user interaction",
-						"default": false
 					}
 				}
 			}

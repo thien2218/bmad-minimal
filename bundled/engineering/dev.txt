@@ -1197,7 +1197,6 @@ steps:
         type: string
         pattern: "^[1-3]$"
         required: true
-    elicit: true
 
   - id: CREATE-DOC-STRUCTURE
     title: Create documentation directories if not present

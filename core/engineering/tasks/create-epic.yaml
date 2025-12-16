@@ -94,7 +94,6 @@ steps:
       validation:
         type: array
         required: true
-    elicit: true
 
   - id: ADD-STORIES
     title: Add Stories to Epic
