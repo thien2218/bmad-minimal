@@ -243,7 +243,8 @@
 									"decision",
 									"subtask",
 									"elicit",
-									"analysis"
+									"analysis",
+									"tool-call"
 								]
 							},
 							"command": {
@@ -262,6 +263,10 @@
 							"template": {
 								"type": "string",
 								"description": "Template to use to fill out content of some file/report"
+							},
+							"instruction": {
+								"type": "string",
+								"description": "Instruct the agent on how to perform the action"
 							},
 							"schema": {
 								"type": "string",

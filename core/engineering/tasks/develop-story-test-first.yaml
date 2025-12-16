@@ -42,14 +42,14 @@ prerequisites:
     on_violate: "halt_and_report"
 
 steps:
-  - id: LOAD-CONFIG
+  - id: GATHER-INPUTS
     title: Load Core Configuration and Story
     description: Load config.json and resolve the story file
     action:
       type: file_operation
       operation: read
       target: "@{baseDir}/config.json"
-      template: |
+      instruction: |
         Resolve !{story_path_resolved} via ${story}; then read the story file to access specs and metadata.
 
   - id: EXTRACT-SPECS
@@ -58,7 +58,7 @@ steps:
     action:
       type: analysis
       target: "!{story_path_resolved}#test-specs"
-      template: |
+      instruction: |
         - Locate a section titled "Test Specs", "Specs", or "Test Cases"
         - If missing, halt and request the user to add specs or run *spec-outline-review/
 
@@ -68,7 +68,7 @@ steps:
     action:
       type: file_operation
       operation: update
-      template: |
+      instruction: |
         - For each spec, write a failing test using Given/When/Then intent
         - Follow repository test structure and naming conventions
         - Add required fixtures/mocks; keep tests deterministic
@@ -79,7 +79,7 @@ steps:
     action:
       type: command
       command: "{test_command}"
-      template: "Expect failure; record results in Dev Agent Record/Debug Log References before proceeding."
+      instruction: "Expect failure; record results in Dev Agent Record/Debug Log References before proceeding."
 
   - id: IMPLEMENT
     title: Implement Minimal Code to Pass Tests (Green)
@@ -87,7 +87,7 @@ steps:
     action:
       type: file_operation
       operation: update
-      template: |
+      instruction: |
         - Implement the minimum code to satisfy failing tests
         - Keep changes small; rerun tests after each iteration
         - Update File List with created/modified files
@@ -107,7 +107,7 @@ steps:
     description: Perform optional refactors while keeping tests green
     action:
       type: analysis
-      template: |
+      instruction: |
         - Identify small refactors (naming, duplication, extractions)
         - Run tests after each change to ensure they remain green
 
@@ -118,7 +118,7 @@ steps:
       type: file_operation
       operation: update
       target: "!{story_path_resolved}"
-      template: |
+      instruction: |
         - Append to Debug Log References with test commands/results
         - Document Completion Notes and File List entries
         - Summarize changes directly within Completion Notes

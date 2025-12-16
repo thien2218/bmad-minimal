@@ -301,14 +301,14 @@ prerequisites:
     on_violate: "halt_and_report"
 
 steps:
-  - id: LOAD-CONFIG
+  - id: GATHER-INPUTS
     title: Load Core Configuration and Inputs
     description: Load config.json and gather settings required for development
     action:
       type: file_operation
       operation: read
       target: "@{baseDir}/config.json"
-      template: |
+      instruction: |
         Extract:
         - docs.subdirs.stories
         - qa.* settings
@@ -323,35 +323,16 @@ steps:
       operation: read
       target: "!{story_path_resolved}"
 
-  - id: SELECT-TASK
-    title: Read First or Next Task
-    description: Select the next incomplete task/subtask from the story
+  - id: ADD-TASKS
+    title: Add Tasks to Story
+    description: Add listed task/subtask items into the story's Tasks / Subtasks section
     action:
-      type: analysis
+      type: tool-call
       target: "!{story_path_resolved}#tasks"
-      template: |
-        - Parse the "Tasks / Subtasks" list in order
-        - Select the first incomplete task/subtask
-        - Record the selection for implementation
-
-  - id: IMPLEMENT-TASK
-    title: Implement Task and Subtasks
-    description: Write production code to satisfy the selected task and its acceptance criteria
-    action:
-      type: file_operation
-      operation: update
-      template: |
-        - Implement only the current task/subtask scope
-        - Update the File List with created/modified files (relative paths)
-        - Document key decisions in Dev Agent Record/Completion Notes
-
-  - id: CHECK-REMAINING
-    title: Check for Remaining Tasks
-    description: Determine if more tasks remain before moving to validation
-    action:
-      type: decision
-      prompt_user: |
-        Are there incomplete tasks/subtasks remaining? If yes, return to SELECT-TASK; otherwise continue to test creation.
+      instruction: |
+        - Add the listed items into the story's "Tasks / Subtasks" section
+        - Append only; never rename or reorder existing tasks
+        - Use the checkbox list format already used in the story
 
   - id: WRITE-TESTS
     title: Write Tests After Implementation
@@ -359,7 +340,7 @@ steps:
     action:
       type: file_operation
       operation: update
-      template: |
+      instruction: |
         - Write deterministic tests aligned with acceptance criteria
         - Use mocks/stubs where appropriate
         - Record new test files in the File List
@@ -370,7 +351,7 @@ steps:
     action:
       type: command
       command: "{test_command}"
-      template: |
+      instruction: |
         - Run all relevant tests
         - Execute story-dod-checklist items after the command
       retry:
@@ -382,33 +363,22 @@ steps:
     description: Address test failures and escalate when limits are reached
     action:
       type: decision
-      template: |
+      instruction: |
         If tests fail (and failures are valid):
         - Fix issues and rerun RUN-TESTS (max 3 attempts)
         - After 3 failed attempts, pause execution and report blockers to the user for guidance
 
   - id: UPDATE-STORY
-    title: Mark Checkboxes and Update Story Metadata
-    description: Update allowable sections in the story file after successful implementation
+    title: Update Story Notes
+    description: Update allowed Dev Agent Record sections and logs
     action:
       type: file_operation
       operation: update
       target: "!{story_path_resolved}"
-      template: |
-        - Mark completed tasks/subtasks with [x] only (no renaming or reordering)
-        - Append entries to Debug Log References, Completion Notes, and File List
-
-  - id: COMPLETE-STORY
-    title: Complete Story Implementation
-    description: Final validation and wrap-up once all work is done
-    action:
-      type: validation
-      template: |
-        Declare implementation complete only when:
-        - All tasks/subtasks are checked and have corresponding tests
-        - Tests/regression pass
-        - File List and Dev Agent Record are complete
-        - story-dod-checklist executed successfully
+      instruction: |
+        - Append to Debug Log References with test commands/results
+        - Document Completion Notes and File List entries
+        - Summarize changes directly within Completion Notes
 
 completion:
   checklist: story-dod-checklist
@@ -572,14 +542,14 @@ prerequisites:
     on_violate: "halt_and_report"
 
 steps:
-  - id: LOAD-CONFIG
+  - id: GATHER-INPUTS
     title: Load Core Configuration and Story
     description: Load config.json and resolve the story file
     action:
       type: file_operation
       operation: read
       target: "@{baseDir}/config.json"
-      template: |
+      instruction: |
         Resolve !{story_path_resolved} via ${story}; then read the story file to access specs and metadata.
 
   - id: EXTRACT-SPECS
@@ -588,7 +558,7 @@ steps:
     action:
       type: analysis
       target: "!{story_path_resolved}#test-specs"
-      template: |
+      instruction: |
         - Locate a section titled "Test Specs", "Specs", or "Test Cases"
         - If missing, halt and request the user to add specs or run *spec-outline-review/
 
@@ -598,7 +568,7 @@ steps:
     action:
       type: file_operation
       operation: update
-      template: |
+      instruction: |
         - For each spec, write a failing test using Given/When/Then intent
         - Follow repository test structure and naming conventions
         - Add required fixtures/mocks; keep tests deterministic
@@ -609,7 +579,7 @@ steps:
     action:
       type: command
       command: "{test_command}"
-      template: "Expect failure; record results in Dev Agent Record/Debug Log References before proceeding."
+      instruction: "Expect failure; record results in Dev Agent Record/Debug Log References before proceeding."
 
   - id: IMPLEMENT
     title: Implement Minimal Code to Pass Tests (Green)
@@ -617,7 +587,7 @@ steps:
     action:
       type: file_operation
       operation: update
-      template: |
+      instruction: |
         - Implement the minimum code to satisfy failing tests
         - Keep changes small; rerun tests after each iteration
         - Update File List with created/modified files
@@ -637,7 +607,7 @@ steps:
     description: Perform optional refactors while keeping tests green
     action:
       type: analysis
-      template: |
+      instruction: |
         - Identify small refactors (naming, duplication, extractions)
         - Run tests after each change to ensure they remain green
 
@@ -648,7 +618,7 @@ steps:
       type: file_operation
       operation: update
       target: "!{story_path_resolved}"
-      template: |
+      instruction: |
         - Append to Debug Log References with test commands/results
         - Document Completion Notes and File List entries
         - Summarize changes directly within Completion Notes
