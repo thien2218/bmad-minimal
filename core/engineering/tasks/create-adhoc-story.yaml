@@ -82,7 +82,7 @@ steps:
     description: Determine the target enhancement epic number and file
     action:
       type: analysis
-      template: |
+      instruction: |
         Scan @{docs.subdirs.epics} for files named adhoc-*.yaml.
         - If ${enhancement_epic} is provided, set !{epic_enhancement_number_resolved} to that value.
         - Otherwise choose the maximum enhancement number and set !{epic_enhancement_number_resolved} accordingly.
@@ -93,7 +93,7 @@ steps:
     description: Select the next adhoc story number within the enhancement
     action:
       type: analysis
-      template: |
+      instruction: |
         Scan @{docs.subdirs.stories} for adhoc-!{epic_enhancement_number_resolved}.*-*.yaml.
         - Compute the next sequential story number (start at 1 if none exist).
         - If ${story_enhancement_number} is provided, honor it instead.
@@ -106,7 +106,7 @@ steps:
       type: file_operation
       operation: read
       target: "!{epic_file_path}"
-      template: |
+      instruction: |
         Extract from story-breakdown:
         - Candidate titles/goals
         - Acceptance criteria references and priorities
@@ -119,7 +119,7 @@ steps:
       type: file_operation
       operation: read
       target: "@{docs.files.prd}"
-      template: |
+      instruction: |
         Load @{docs.files.prd} plus relevant architecture documents (@{docs.dir}/?(*-)architecture.md) before extracting technical details for the story.
 
   - id: EXTRACT-TECH
@@ -127,7 +127,7 @@ steps:
     description: Capture only doc-sourced technical context to guide implementation
     action:
       type: analysis
-      template: |
+      instruction: |
         Extract strictly from PRD/architecture (never invent):
         - Data models or schemas relevant to the story
         - API endpoints and contracts
@@ -170,7 +170,7 @@ steps:
     description: Apply PRD/architecture updates based on the selected impact assessment
     action:
       type: analysis
-      template: |
+      instruction: |
         If !{impact_assessment} == "1": record "No PRD/Architecture changes" in dev notes.
         Otherwise:
         - Update PRD sections for scope, requirements, or constraints changes.

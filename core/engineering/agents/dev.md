@@ -174,14 +174,14 @@
 			"name": "develop-story",
 			"description": "Execute develop-story (implementation-first flow; write tests at the end during validation) on the highest ordered story ready for development or the story specified by the user",
 			"parameters": ["story"],
-			"optionalParameters": ["test_command", "build_command", "lint_command"],
+			"optionalParameters": ["test_command", "lint_command", "other_commands"],
 			"steps": ["tasks/develop-story.yaml", "checklists/story-dod-checklist.md"]
 		},
 		{
 			"name": "develop-story-test-first",
 			"description": "Execute develop-story with a test-first flow (TDD approach): implement test cases from the story's Test Specs section first, then implement the feature until tests pass.",
 			"parameters": ["story"],
-			"optionalParameters": ["test_command", "build_command", "lint_command"],
+			"optionalParameters": ["test_command", "lint_command", "other_commands"],
 			"steps": [
 				"tasks/develop-story-test-first.yaml",
 				"checklists/story-dod-checklist.md"

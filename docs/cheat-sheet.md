@@ -13,11 +13,11 @@ Expert who implements stories by reading requirements and executing tasks sequen
 
 - `develop-story`: Execute develop-story (implementation-first flow; write tests at the end during validation) on the highest ordered story ready for development or the story specified by the user
   - required: story
-  - optional: test_command, build_command, lint_command
+  - optional: test_command, lint_command, other_commands
 
 - `develop-story-test-first`: Execute develop-story with a test-first flow (TDD approach): implement test cases from the story's Test Specs section first, then implement the feature until tests pass.
   - required: story
-  - optional: test_command, build_command, lint_command
+  - optional: test_command, lint_command, other_commands
 
 - `apply-qa-fixes`: Apply code/test fixes based on QA outputs (gate + assessments) for a specified story.
   - required: story

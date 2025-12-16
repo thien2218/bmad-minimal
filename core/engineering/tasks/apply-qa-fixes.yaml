@@ -57,7 +57,7 @@ steps:
     description: Parse gate YAML and read assessment markdowns
     action:
       type: analysis
-      template: |
+      instruction: |
         Parse the latest gate YAML:
         - gate (PASS|CONCERNS|FAIL|WAIVED)
         - top_issues[] with id, severity, finding, suggested_action
@@ -73,7 +73,7 @@ steps:
     description: Create prioritized fix plan based on QA findings
     action:
       type: analysis
-      template: |
+      instruction: |
         Apply in order, highest priority first:
         1. High severity items in top_issues (security/perf/reliability/maintainability)
         2. NFR statuses: all FAIL must be fixed → then CONCERNS
@@ -92,7 +92,7 @@ steps:
     action:
       type: file_operation
       operation: update
-      template: |
+      instruction: |
         - Implement code fixes per plan
         - Add missing tests to close coverage gaps (unit first; integration where required by AC)
         - Keep imports centralized via deps.ts
@@ -125,7 +125,7 @@ steps:
       type: file_operation
       operation: update
       target: "{story_root}/{story}-*.yaml"
-      template: |
+      instruction: |
         Update ONLY these sections:
         - Tasks / Subtasks Checkboxes (mark any fix subtask as done)
         - Dev Agent Record:
@@ -139,7 +139,7 @@ steps:
     description: Finalize the fix process - do not edit gate files
     action:
       type: validation
-      template: |
+      instruction: |
         Dev does not modify gate YAML. If fixes address issues, request QA to re-run review-story to update the gate
 
 completion:

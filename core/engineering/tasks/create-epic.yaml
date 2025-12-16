@@ -42,7 +42,7 @@ steps:
     description: Gather essential information about the existing project before drafting the epic
     action:
       type: analysis
-      template: |
+      instruction: |
         Analyze:
         - PRD epic list and goals (from @{docs.files.prd})
         - Initiative scope and requirements
@@ -54,7 +54,7 @@ steps:
     description: Ensure the enhancement is appropriate for a single epic
     action:
       type: validation
-      template: |
+      instruction: |
         Confirm:
         - Enhancement appears in the PRD epic list
         - Scope aligns with PRD goals
@@ -144,7 +144,7 @@ steps:
     description: Ensure the epic includes every required section
     action:
       type: validation
-      template: |
+      instruction: |
         Confirm the epic includes:
         - Clear goal/description aligned with PRD
         - Stories supporting PRD objectives

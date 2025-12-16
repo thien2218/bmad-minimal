@@ -1358,7 +1358,7 @@ steps:
     description: Gather essential information about the existing project before drafting the epic
     action:
       type: analysis
-      template: |
+      instruction: |
         Analyze:
         - PRD epic list and goals (from @{docs.files.prd})
         - Initiative scope and requirements
@@ -1370,7 +1370,7 @@ steps:
     description: Ensure the enhancement is appropriate for a single epic
     action:
       type: validation
-      template: |
+      instruction: |
         Confirm:
         - Enhancement appears in the PRD epic list
         - Scope aligns with PRD goals
@@ -1460,7 +1460,7 @@ steps:
     description: Ensure the epic includes every required section
     action:
       type: validation
-      template: |
+      instruction: |
         Confirm the epic includes:
         - Clear goal/description aligned with PRD
         - Stories supporting PRD objectives
@@ -1734,7 +1734,7 @@ steps:
     description: Ensure docs, PRD, architecture, and workflow settings exist before proceeding
     action:
       type: validation
-      template: |
+      instruction: |
         Extract and validate:
         - docs.subdirs.stories
         - docs.subdirs.epics
@@ -1749,7 +1749,7 @@ steps:
     description: Locate the epic file and identify the next sequential story number (or use the supplied ${story})
     action:
       type: analysis
-      template: |
+      instruction: |
         Based on configured PRD/epic locations:
         - Locate epic files (either dedicated epics path or sections in PRD).
         - If @{docs.subdirs.stories} already has files for epic !{epic_resolved}, load the highest `{epic}.{story}-*.yaml` to determine !{previous_story_file} and compute !{story_resolved}.
@@ -1791,7 +1791,7 @@ steps:
       type: file_operation
       operation: read
       target: "!{epic_file_path}"
-      template: |
+      instruction: |
         Extract:
         - Story title and description
         - Acceptance criteria
@@ -1804,7 +1804,7 @@ steps:
     action:
       type: analysis
       target: "!{previous_story_file}"
-      template: |
+      instruction: |
         Review Dev Agent Record sections for:
         - Completion notes and debug log references
         - Implementation deviations and technical decisions
@@ -1817,7 +1817,7 @@ steps:
     description: Select the architecture documents needed for this story
     action:
       type: decision
-      template: |
+      instruction: |
         Determine which architecture documents to read based on story type:
         - Always read tech-stack, unified-project-structure, coding-standards, testing-strategy.
         - Backend/API stories: include data-models, database-schema, @{docs.files.beArchitecture}, rest-api-spec, external-apis.
@@ -1831,7 +1831,7 @@ steps:
       type: file_operation
       operation: read
       target: "@{docs.dir}/?(*-)architecture.md"
-      template: |
+      instruction: |
         Follow the reading strategy from ARCH-STRATEGY and load each required section before extracting technical details.
 
   - id: ARCH-EXTRACT
@@ -1839,7 +1839,7 @@ steps:
     description: Capture only the technical context required to implement the story
     action:
       type: analysis
-      template: |
+      instruction: |
         Extract ONLY information directly relevant to the story:
         - Data models, schemas, or structures
         - API endpoints to implement or consume
@@ -1856,7 +1856,7 @@ steps:
     action:
       type: validation
       target: "@{docs.dir}/?(*-)architecture.md#unified-project-structure"
-      template: |
+      instruction: |
         - Ensure file paths, component locations, and module names align with the unified structure.
         - Document any structural conflicts under "Project Structure Notes" in the story.
 
@@ -1874,7 +1874,7 @@ steps:
     description: Evaluate risks specific to the story implementation
     action:
       type: analysis
-      template: |
+      instruction: |
         Assess:
         - Impact on existing functionality
         - Technical complexity and unknowns
@@ -1890,7 +1890,7 @@ steps:
     description: Produce detailed technical tasks aligned with the story requirements
     action:
       type: analysis
-      template: |
+      instruction: |
         Generate a sequential task list based ONLY on:
         - Epic requirements
         - Story acceptance criteria
@@ -1907,7 +1907,7 @@ steps:
     description: Perform a final review and ensure the story is marked Draft
     action:
       type: validation
-      template: |
+      instruction: |
         - Review all sections for completeness and accuracy
         - Verify every technical detail has a source reference
         - Ensure tasks align with epic requirements and architecture constraints
@@ -2183,7 +2183,7 @@ steps:
     description: Determine the highest enhancement number from existing adhoc epic files
     action:
       type: analysis
-      template: |
+      instruction: |
         Inspect @{docs.subdirs.epics} for files named adhoc-*.yaml.
         If ${epic_enhancement_number} is supplied, set !{epic_enhancement_number_resolved} to that value.
         Otherwise compute the maximum enhancement number from the existing files and increment it to populate !{epic_enhancement_number_resolved}.
@@ -2233,7 +2233,7 @@ steps:
     description: Extract goal, description, DOD, scope boundaries, FR/NFR mappings, and initial story list
     action:
       type: analysis
-      template: |
+      instruction: |
         From PRD (!{prd_file}):
         - Identify epic goal and high-level description.
         - Map Functional Requirements (FRs) and Non-Functional Requirements (NFRs) applicable to the enhancement.
@@ -2273,7 +2273,7 @@ steps:
     description: Ensure required sections are present and consistent
     action:
       type: validation
-      template: |
+      instruction: |
         Confirm presence and basic completeness of:
         - epic-overview (goal, description, definition_of_done)
         - scope-boundaries (in-scope, out-of-scope)
@@ -2306,7 +2306,7 @@ steps:
     description: Update PRD and/or architecture documents based on impact assessment
     action:
       type: analysis
-      template: |
+      instruction: |
         If !{impact_assessment} == "1", document that no documentation updates are required.
         Otherwise, update the affected documents:
         - PRD: revise relevant sections when scope, requirements, or constraints change.
@@ -2420,7 +2420,7 @@ steps:
     description: Determine the target enhancement epic number and file
     action:
       type: analysis
-      template: |
+      instruction: |
         Scan @{docs.subdirs.epics} for files named adhoc-*.yaml.
         - If ${enhancement_epic} is provided, set !{epic_enhancement_number_resolved} to that value.
         - Otherwise choose the maximum enhancement number and set !{epic_enhancement_number_resolved} accordingly.
@@ -2431,7 +2431,7 @@ steps:
     description: Select the next adhoc story number within the enhancement
     action:
       type: analysis
-      template: |
+      instruction: |
         Scan @{docs.subdirs.stories} for adhoc-!{epic_enhancement_number_resolved}.*-*.yaml.
         - Compute the next sequential story number (start at 1 if none exist).
         - If ${story_enhancement_number} is provided, honor it instead.
@@ -2444,7 +2444,7 @@ steps:
       type: file_operation
       operation: read
       target: "!{epic_file_path}"
-      template: |
+      instruction: |
         Extract from story-breakdown:
         - Candidate titles/goals
         - Acceptance criteria references and priorities
@@ -2457,7 +2457,7 @@ steps:
       type: file_operation
       operation: read
       target: "@{docs.files.prd}"
-      template: |
+      instruction: |
         Load @{docs.files.prd} plus relevant architecture documents (@{docs.dir}/?(*-)architecture.md) before extracting technical details for the story.
 
   - id: EXTRACT-TECH
@@ -2465,7 +2465,7 @@ steps:
     description: Capture only doc-sourced technical context to guide implementation
     action:
       type: analysis
-      template: |
+      instruction: |
         Extract strictly from PRD/architecture (never invent):
         - Data models or schemas relevant to the story
         - API endpoints and contracts
@@ -2508,7 +2508,7 @@ steps:
     description: Apply PRD/architecture updates based on the selected impact assessment
     action:
       type: analysis
-      template: |
+      instruction: |
         If !{impact_assessment} == "1": record "No PRD/Architecture changes" in dev notes.
         Otherwise:
         - Update PRD sections for scope, requirements, or constraints changes.
@@ -2627,7 +2627,7 @@ steps:
     description: Collect essential context about the existing system and change scope
     action:
       type: analysis
-      template: |
+      instruction: |
         Capture:
         **Current System Context**
         - Relevant existing functionality
@@ -2689,7 +2689,7 @@ steps:
     description: Apply PRD/architecture updates when the impact assessment requires it
     action:
       type: analysis
-      template: |
+      instruction: |
         If !{impact_assessment} == "1": document "No documentation updates required."
         Otherwise:
         - Update PRD sections for scope/requirement changes
@@ -2701,7 +2701,7 @@ steps:
     description: Confirm all success criteria are met for the standalone story
     action:
       type: validation
-      template: |
+      instruction: |
         Confirm:
         - Enhancement is clearly defined and scoped for a single session
         - Integration approach is straightforward and low-risk

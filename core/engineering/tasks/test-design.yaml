@@ -35,7 +35,7 @@ steps:
     action:
       type: analysis
       target: "scenario_inputs"
-      template: |
+      instruction: |
         For each AC:
         - Identify core functionality to test
         - Determine data variations needed
@@ -48,7 +48,7 @@ steps:
     action:
       type: analysis
       target: "level_assignments"
-      template: |
+      instruction: |
         Using data/test-levels-framework.yaml, select unit vs integration vs e2e per scenario.
         Capture rationale referencing architecture constraints, dependencies, and observability needs.
 
@@ -58,7 +58,7 @@ steps:
     action:
       type: analysis
       target: "priority_assignments"
-      template: |
+      instruction: |
         Apply data/test-priorities-matrix.yaml:
         - P0: Revenue-critical, security, compliance
         - P1: Core user journeys, frequently used paths
@@ -72,7 +72,7 @@ steps:
     action:
       type: analysis
       target: "scenario_catalog"
-      template: |
+      instruction: |
         For each test need, define:
         - ID: ${story}-{{LEVEL}}-{{SEQ}}
         - Requirement: AC reference or requirement text
@@ -88,7 +88,7 @@ steps:
     action:
       type: validation
       target: "scenario_catalog"
-      template: |
+      instruction: |
         Ensure:
         - Every AC has at least one scenario
         - No duplicate coverage across levels

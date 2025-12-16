@@ -102,14 +102,17 @@ steps:
         max_attempts: 3
         delay_seconds: 0
 
-  - id: REFACTOR
-    title: Refactor with Safety
-    description: Perform optional refactors while keeping tests green
+  - id: RUN-OTHER-COMMANDS
+    title: Execute Lint and Additional Commands
+    description: Run lint checks and any other provided commands
     action:
-      type: analysis
+      type: command
+      command: "{lint_command} && {other_commands}"
       instruction: |
-        - Identify small refactors (naming, duplication, extractions)
-        - Run tests after each change to ensure they remain green
+        - Run linting and additional commands configured for this story
+      retry:
+        max_attempts: 3
+        delay_seconds: 0
 
   - id: UPDATE-STORY
     title: Update Story and Notes
@@ -124,6 +127,7 @@ steps:
         - Summarize changes directly within Completion Notes
 
 completion:
+  checklist: story-dod-checklist
   criteria:
     - Spec-derived tests added and passing
     - Minimal implementation complete with tests green

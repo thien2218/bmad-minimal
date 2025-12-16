@@ -92,15 +92,14 @@ steps:
         - Use mocks/stubs where appropriate
         - Record new test files in the File List
 
-  - id: RUN-TESTS
-    title: Execute Validations
-    description: Run the test suite and execute the story-dod checklist
+  - id: RUN-COMMANDS
+    title: Execute Validations and Checks
+    description: Run the test suite, lint checks, and any other provided commands
     action:
       type: command
-      command: "{test_command}"
+      command: "{test_command} && {lint_command} && {other_commands}"
       instruction: |
-        - Run all relevant tests
-        - Execute story-dod-checklist items after the command
+        - Run tests, linting, and additional commands provided for this story
       retry:
         max_attempts: 3
         delay_seconds: 0
@@ -111,8 +110,8 @@ steps:
     action:
       type: decision
       instruction: |
-        If tests fail (and failures are valid):
-        - Fix issues and rerun RUN-TESTS (max 3 attempts)
+        If validations fail (and failures are valid):
+        - Fix issues and rerun RUN-COMMANDS (max 3 attempts)
         - After 3 failed attempts, pause execution and report blockers to the user for guidance
 
   - id: UPDATE-STORY

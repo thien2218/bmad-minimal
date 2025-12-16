@@ -40,7 +40,7 @@ steps:
     action:
       type: analysis
       target: "outline_scenarios"
-      template: |
+      instruction: |
         Normalize !{outline_text} by:
         - Extracting scenario titles and intents from describe/it statements or bullets
         - Removing code-specific syntax; keep human-readable expectations
@@ -61,7 +61,7 @@ steps:
     action:
       type: analysis
       target: "traceability_notes"
-      template: |
+      instruction: |
         For each normalized scenario:
         - If a story is loaded, identify the AC number(s) or requirement it validates
         - Mark "untraceable" if no AC/requirement can be linked
@@ -75,7 +75,7 @@ steps:
       type: file_operation
       operation: update
       target: "!{story_path}"
-      template: |
+      instruction: |
         Update the "Test Specs" section as follows:
         - Under "Specifications", write a numbered list from the normalized outline with concise test-intent sentences.
         - Include AC references captured in traceability when available.
@@ -89,7 +89,7 @@ steps:
     action:
       type: analysis
       target: "coverage_notes"
-      template: |
+      instruction: |
         Assess whether the outline includes:
         - Positive paths and happy flows
         - Negative/error cases and validation failures
@@ -105,7 +105,7 @@ steps:
     action:
       type: analysis
       target: "nfr_notes"
-      template: |
+      instruction: |
         Check for NFR-focused outline items where appropriate:
         - Performance-critical paths
         - Security/authz/authn and input validation
@@ -119,7 +119,7 @@ steps:
     action:
       type: analysis
       target: "quality_notes"
-      template: |
+      instruction: |
         Validate outline quality:
         - Clear Given-When-Then intent (or equivalent) per scenario
         - Single intent per scenario where practical
@@ -134,7 +134,7 @@ steps:
     action:
       type: analysis
       target: "dedup_notes"
-      template: |
+      instruction: |
         - List redundant scenarios and propose de-duplication
         - Flag contradictions and recommend a single reliable source of truth
 
@@ -144,7 +144,7 @@ steps:
     action:
       type: analysis
       target: "gap_priorities"
-      template: |
+      instruction: |
         - Classify gaps: P0 (security/revenue-critical), P1 (core flows), P2 (secondary)
         - For each P0 gap, provide 1–2 concise outline items to add
         - Recommend sequencing for remediation work
@@ -155,7 +155,7 @@ steps:
     action:
       type: analysis
       target: "console_output"
-      template: |
+      instruction: |
         Output numbered sections:
         1) What's working well
         2) Gaps (by dimension and risk)

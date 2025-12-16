@@ -74,7 +74,7 @@ steps:
     description: Ensure docs, PRD, architecture, and workflow settings exist before proceeding
     action:
       type: validation
-      template: |
+      instruction: |
         Extract and validate:
         - docs.subdirs.stories
         - docs.subdirs.epics
@@ -89,7 +89,7 @@ steps:
     description: Locate the epic file and identify the next sequential story number (or use the supplied ${story})
     action:
       type: analysis
-      template: |
+      instruction: |
         Based on configured PRD/epic locations:
         - Locate epic files (either dedicated epics path or sections in PRD).
         - If @{docs.subdirs.stories} already has files for epic !{epic_resolved}, load the highest `{epic}.{story}-*.yaml` to determine !{previous_story_file} and compute !{story_resolved}.
@@ -131,7 +131,7 @@ steps:
       type: file_operation
       operation: read
       target: "!{epic_file_path}"
-      template: |
+      instruction: |
         Extract:
         - Story title and description
         - Acceptance criteria
@@ -144,7 +144,7 @@ steps:
     action:
       type: analysis
       target: "!{previous_story_file}"
-      template: |
+      instruction: |
         Review Dev Agent Record sections for:
         - Completion notes and debug log references
         - Implementation deviations and technical decisions
@@ -157,7 +157,7 @@ steps:
     description: Select the architecture documents needed for this story
     action:
       type: decision
-      template: |
+      instruction: |
         Determine which architecture documents to read based on story type:
         - Always read tech-stack, unified-project-structure, coding-standards, testing-strategy.
         - Backend/API stories: include data-models, database-schema, @{docs.files.beArchitecture}, rest-api-spec, external-apis.
@@ -171,7 +171,7 @@ steps:
       type: file_operation
       operation: read
       target: "@{docs.dir}/?(*-)architecture.md"
-      template: |
+      instruction: |
         Follow the reading strategy from ARCH-STRATEGY and load each required section before extracting technical details.
 
   - id: ARCH-EXTRACT
@@ -179,7 +179,7 @@ steps:
     description: Capture only the technical context required to implement the story
     action:
       type: analysis
-      template: |
+      instruction: |
         Extract ONLY information directly relevant to the story:
         - Data models, schemas, or structures
         - API endpoints to implement or consume
@@ -196,7 +196,7 @@ steps:
     action:
       type: validation
       target: "@{docs.dir}/?(*-)architecture.md#unified-project-structure"
-      template: |
+      instruction: |
         - Ensure file paths, component locations, and module names align with the unified structure.
         - Document any structural conflicts under "Project Structure Notes" in the story.
 
@@ -214,7 +214,7 @@ steps:
     description: Evaluate risks specific to the story implementation
     action:
       type: analysis
-      template: |
+      instruction: |
         Assess:
         - Impact on existing functionality
         - Technical complexity and unknowns
@@ -230,7 +230,7 @@ steps:
     description: Produce detailed technical tasks aligned with the story requirements
     action:
       type: analysis
-      template: |
+      instruction: |
         Generate a sequential task list based ONLY on:
         - Epic requirements
         - Story acceptance criteria
@@ -247,7 +247,7 @@ steps:
     description: Perform a final review and ensure the story is marked Draft
     action:
       type: validation
-      template: |
+      instruction: |
         - Review all sections for completeness and accuracy
         - Verify every technical detail has a source reference
         - Ensure tasks align with epic requirements and architecture constraints

@@ -675,7 +675,7 @@ steps:
       type: file_operation
       operation: read
       target: "@{baseDir}/config.json"
-      template: |
+      instruction: |
         Extract docs.subdirs.qa and docs.subdirs.stories settings.
         Resolve !{story_path} if not provided.
     on_failure: continue
@@ -686,7 +686,7 @@ steps:
     action:
       type: analysis
       target: "console_output"
-      template: |
+      instruction: |
         Evaluate if deep review is needed when:
         - Auth/payment/security files touched
         - No tests added to story
@@ -701,7 +701,7 @@ steps:
     action:
       type: analysis
       target: "traceability_notes"
-      template: |
+      instruction: |
         - Map each acceptance criteria to tests using Given-When-Then narratives.
         - Identify coverage gaps and suspected missing tests.
         - Verify all requirements have corresponding validation evidence.
@@ -712,7 +712,7 @@ steps:
     action:
       type: analysis
       target: "code_quality_notes"
-      template: |
+      instruction: |
         Review (advisory only):
         - Architecture and design patterns
         - Refactoring opportunities (recommend, do not implement)
@@ -727,7 +727,7 @@ steps:
     action:
       type: analysis
       target: "test_arch_notes"
-      template: |
+      instruction: |
         Assess:
         - Coverage adequacy by level (unit/integration/e2e)
         - Test design quality and maintainability
@@ -742,7 +742,7 @@ steps:
     action:
       type: analysis
       target: "nfr_notes"
-      template: |
+      instruction: |
         Check NFRs:
         - Security: Authentication, authorization, data protection
         - Performance: Code-level hotspots, query optimization, resource usage
@@ -755,7 +755,7 @@ steps:
     action:
       type: analysis
       target: "testability_notes"
-      template: |
+      instruction: |
         Evaluate:
         - Controllability: Ability to control inputs and state
         - Observability: Signals, logs, and telemetry available
@@ -767,7 +767,7 @@ steps:
     action:
       type: analysis
       target: "tech_debt_notes"
-      template: |
+      instruction: |
         Identify:
         - Accumulated shortcuts and TODOs
         - Missing or flaky tests
@@ -780,7 +780,7 @@ steps:
     action:
       type: analysis
       target: "console_output"
-      template: |
+      instruction: |
         Provide:
         - Actionable recommendations and prioritized fix list
         - Example diffs or pseudocode only if needed (do not apply)
@@ -793,7 +793,7 @@ steps:
     action:
       type: validation
       target: "@{docs.files.codingStandards}"
-      template: |
+      instruction: |
         Run checklist validation against coding standards references.
         Confirm required conventions, lint expectations, and documentation guidelines are met.
     on_failure: halt
@@ -804,7 +804,7 @@ steps:
     action:
       type: validation
       target: "!{story_path}"
-      template: |
+      instruction: |
         Confirm every acceptance criterion has traceable implementation evidence.
         Mark gaps that must be addressed before PASS is possible.
     on_failure: halt
@@ -840,7 +840,7 @@ steps:
       type: file_operation
       operation: create
       target: "@{docs.subdirs.qa}/gates/${story}-*.yaml"
-      template: |
+      instruction: |
         Load schemas/qa-gate.json as the contract.
         Populate decision, evidence, risks, test design, and NFR sections based on prior steps.
         Serialize as YAML and write to @{docs.subdirs.qa}/gates/${story}-{story_slug}.yaml (match existing slug convention).
@@ -1213,7 +1213,7 @@ steps:
     action:
       type: analysis
       target: "outline_scenarios"
-      template: |
+      instruction: |
         Normalize !{outline_text} by:
         - Extracting scenario titles and intents from describe/it statements or bullets
         - Removing code-specific syntax; keep human-readable expectations
@@ -1234,7 +1234,7 @@ steps:
     action:
       type: analysis
       target: "traceability_notes"
-      template: |
+      instruction: |
         For each normalized scenario:
         - If a story is loaded, identify the AC number(s) or requirement it validates
         - Mark "untraceable" if no AC/requirement can be linked
@@ -1248,7 +1248,7 @@ steps:
       type: file_operation
       operation: update
       target: "!{story_path}"
-      template: |
+      instruction: |
         Update the "Test Specs" section as follows:
         - Under "Specifications", write a numbered list from the normalized outline with concise test-intent sentences.
         - Include AC references captured in traceability when available.
@@ -1262,7 +1262,7 @@ steps:
     action:
       type: analysis
       target: "coverage_notes"
-      template: |
+      instruction: |
         Assess whether the outline includes:
         - Positive paths and happy flows
         - Negative/error cases and validation failures
@@ -1278,7 +1278,7 @@ steps:
     action:
       type: analysis
       target: "nfr_notes"
-      template: |
+      instruction: |
         Check for NFR-focused outline items where appropriate:
         - Performance-critical paths
         - Security/authz/authn and input validation
@@ -1292,7 +1292,7 @@ steps:
     action:
       type: analysis
       target: "quality_notes"
-      template: |
+      instruction: |
         Validate outline quality:
         - Clear Given-When-Then intent (or equivalent) per scenario
         - Single intent per scenario where practical
@@ -1307,7 +1307,7 @@ steps:
     action:
       type: analysis
       target: "dedup_notes"
-      template: |
+      instruction: |
         - List redundant scenarios and propose de-duplication
         - Flag contradictions and recommend a single reliable source of truth
 
@@ -1317,7 +1317,7 @@ steps:
     action:
       type: analysis
       target: "gap_priorities"
-      template: |
+      instruction: |
         - Classify gaps: P0 (security/revenue-critical), P1 (core flows), P2 (secondary)
         - For each P0 gap, provide 1–2 concise outline items to add
         - Recommend sequencing for remediation work
@@ -1328,7 +1328,7 @@ steps:
     action:
       type: analysis
       target: "console_output"
-      template: |
+      instruction: |
         Output numbered sections:
         1) What's working well
         2) Gaps (by dimension and risk)
@@ -1393,7 +1393,7 @@ steps:
     action:
       type: analysis
       target: "scenario_inputs"
-      template: |
+      instruction: |
         For each AC:
         - Identify core functionality to test
         - Determine data variations needed
@@ -1406,7 +1406,7 @@ steps:
     action:
       type: analysis
       target: "level_assignments"
-      template: |
+      instruction: |
         Using data/test-levels-framework.yaml, select unit vs integration vs e2e per scenario.
         Capture rationale referencing architecture constraints, dependencies, and observability needs.
 
@@ -1416,7 +1416,7 @@ steps:
     action:
       type: analysis
       target: "priority_assignments"
-      template: |
+      instruction: |
         Apply data/test-priorities-matrix.yaml:
         - P0: Revenue-critical, security, compliance
         - P1: Core user journeys, frequently used paths
@@ -1430,7 +1430,7 @@ steps:
     action:
       type: analysis
       target: "scenario_catalog"
-      template: |
+      instruction: |
         For each test need, define:
         - ID: ${story}-{{LEVEL}}-{{SEQ}}
         - Requirement: AC reference or requirement text
@@ -1446,7 +1446,7 @@ steps:
     action:
       type: validation
       target: "scenario_catalog"
-      template: |
+      instruction: |
         Ensure:
         - Every AC has at least one scenario
         - No duplicate coverage across levels
@@ -1570,7 +1570,7 @@ steps:
       type: file_operation
       operation: read
       target: "@{baseDir}/config.json"
-      template: |
+      instruction: |
         Extract config.docs.subdirs.qa and docs.subdirs.stories settings.
         Resolve !{story_file} if not provided.
     on_failure: halt
@@ -1619,7 +1619,7 @@ steps:
     action:
       type: analysis
       target: "!{story_file}"
-      template: |
+      instruction: |
         Look for NFR requirements in:
         - Story acceptance criteria
         - @{docs.dir}/?(*-)architecture.md files  
@@ -1639,7 +1639,7 @@ steps:
     action:
       type: analysis
       target: "!{story_file}"
-      template: |
+      instruction: |
         Check security implementation:
         - Authentication mechanism present
         - Authorization checks enforced
@@ -1658,7 +1658,7 @@ steps:
     action:
       type: analysis
       target: "!{story_file}"
-      template: |
+      instruction: |
         Check performance aspects:
         - Response time targets met
         - No obvious bottlenecks
@@ -1677,7 +1677,7 @@ steps:
     action:
       type: analysis
       target: "!{story_file}"
-      template: |
+      instruction: |
         Check reliability mechanisms:
         - Error handling present
         - Graceful degradation implemented
@@ -1696,7 +1696,7 @@ steps:
     action:
       type: analysis
       target: "!{story_file}"
-      template: |
+      instruction: |
         Check maintainability factors:
         - Test coverage meets targets
         - Code well-structured
@@ -1715,7 +1715,7 @@ steps:
     action:
       type: analysis
       target: "console_output"
-      template: |
+      instruction: |
         Generate YAML block for gate file (copy/paste format):
 
         nfr_validation:
@@ -1741,7 +1741,7 @@ steps:
     action:
       type: analysis
       target: "score_calculation"
-      template: |
+      instruction: |
         Calculate quality score:
         Base Score = 100
         - 20 for each FAIL attribute
@@ -1788,7 +1788,7 @@ steps:
     action:
       type: analysis
       target: "console_output"
-      template: |
+      instruction: |
         Output integration information:
 
         1. NFR assessment: @{docs.subdirs.qa}/assessments/${story}-nfr-{{YYYYMMDD}}.md

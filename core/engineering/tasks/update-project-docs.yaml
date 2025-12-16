@@ -40,7 +40,7 @@ steps:
     description: Identify frameworks, package managers, and existing documentation assets
     action:
       type: analysis
-      template: |
+      instruction: |
         Documentation philosophy: in-place documentation comes first (JSDoc/type hints/decorators > framework integrations > generated artifacts).
         Analyze project for:
         - Package files (package.json, requirements.txt, go.mod, etc.)
@@ -78,7 +78,7 @@ steps:
     description: Ensure api/ and components/ directories exist when required
     action:
       type: analysis
-      template: |
+      instruction: |
         If documentation directories do not exist:
         - Create @{docs.dir}/api/ for backend docs
         - Create @{docs.dir}/components/ for component docs
@@ -89,7 +89,7 @@ steps:
     description: Install or update Swagger/OpenAPI docs when backend docs are requested
     action:
       type: analysis
-      template: |
+      instruction: |
         Execute when ${type} == "api" or "both":
         - If api/ already contains docs, update them in-place.
         - Otherwise, set up framework-specific tooling (swagger-jsdoc + JSDoc comments for Express, FastAPI built-ins, NestJS decorators, etc.).
@@ -100,7 +100,7 @@ steps:
     description: Install or update Storybook (or equivalent) for component docs
     action:
       type: analysis
-      template: |
+      instruction: |
         Execute when ${type} == "components" or "both":
         - Update existing Storybook/component docs if present.
         - Otherwise set up Storybook aligned to the detected frontend framework (React, Vue, Angular, Svelte, etc.).
@@ -111,7 +111,7 @@ steps:
     description: Apply a custom documentation solution when requested
     action:
       type: analysis
-      template: |
+      instruction: |
         If ${method} is provided:
         - Set up the specified method (e.g., markdown site, Docusaurus, GitBook) while keeping in-place docs authoritative.
         - Document how the custom method ties back to source files.
@@ -123,7 +123,7 @@ steps:
       type: file_operation
       operation: create
       target: "@{docs.dir}/examples/"
-      template: |
+      instruction: |
         Include examples for:
         - JSDoc comments for APIs
         - PropTypes/TypeScript annotations for components
@@ -137,7 +137,7 @@ steps:
       type: file_operation
       operation: update
       target: "package.json"
-      template: |
+      instruction: |
         Add or update documentation-related scripts (e.g., "docs:build", "docs:preview") so documentation can be generated consistently.
 
 completion:

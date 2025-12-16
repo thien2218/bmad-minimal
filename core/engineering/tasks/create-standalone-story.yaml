@@ -85,7 +85,7 @@ steps:
     description: Collect essential context about the existing system and change scope
     action:
       type: analysis
-      template: |
+      instruction: |
         Capture:
         **Current System Context**
         - Relevant existing functionality
@@ -147,7 +147,7 @@ steps:
     description: Apply PRD/architecture updates when the impact assessment requires it
     action:
       type: analysis
-      template: |
+      instruction: |
         If !{impact_assessment} == "1": document "No documentation updates required."
         Otherwise:
         - Update PRD sections for scope/requirement changes
@@ -159,7 +159,7 @@ steps:
     description: Confirm all success criteria are met for the standalone story
     action:
       type: validation
-      template: |
+      instruction: |
         Confirm:
         - Enhancement is clearly defined and scoped for a single session
         - Integration approach is straightforward and low-risk

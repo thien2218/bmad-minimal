@@ -67,7 +67,7 @@ steps:
     description: Determine the highest enhancement number from existing adhoc epic files
     action:
       type: analysis
-      template: |
+      instruction: |
         Inspect @{docs.subdirs.epics} for files named adhoc-*.yaml.
         If ${epic_enhancement_number} is supplied, set !{epic_enhancement_number_resolved} to that value.
         Otherwise compute the maximum enhancement number from the existing files and increment it to populate !{epic_enhancement_number_resolved}.
@@ -117,7 +117,7 @@ steps:
     description: Extract goal, description, DOD, scope boundaries, FR/NFR mappings, and initial story list
     action:
       type: analysis
-      template: |
+      instruction: |
         From PRD (!{prd_file}):
         - Identify epic goal and high-level description.
         - Map Functional Requirements (FRs) and Non-Functional Requirements (NFRs) applicable to the enhancement.
@@ -157,7 +157,7 @@ steps:
     description: Ensure required sections are present and consistent
     action:
       type: validation
-      template: |
+      instruction: |
         Confirm presence and basic completeness of:
         - epic-overview (goal, description, definition_of_done)
         - scope-boundaries (in-scope, out-of-scope)
@@ -190,7 +190,7 @@ steps:
     description: Update PRD and/or architecture documents based on impact assessment
     action:
       type: analysis
-      template: |
+      instruction: |
         If !{impact_assessment} == "1", document that no documentation updates are required.
         Otherwise, update the affected documents:
         - PRD: revise relevant sections when scope, requirements, or constraints change.

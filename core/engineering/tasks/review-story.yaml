@@ -72,7 +72,7 @@ steps:
       type: file_operation
       operation: read
       target: "@{baseDir}/config.json"
-      template: |
+      instruction: |
         Extract docs.subdirs.qa and docs.subdirs.stories settings.
         Resolve !{story_path} if not provided.
     on_failure: continue
@@ -83,7 +83,7 @@ steps:
     action:
       type: analysis
       target: "console_output"
-      template: |
+      instruction: |
         Evaluate if deep review is needed when:
         - Auth/payment/security files touched
         - No tests added to story
@@ -98,7 +98,7 @@ steps:
     action:
       type: analysis
       target: "traceability_notes"
-      template: |
+      instruction: |
         - Map each acceptance criteria to tests using Given-When-Then narratives.
         - Identify coverage gaps and suspected missing tests.
         - Verify all requirements have corresponding validation evidence.
@@ -109,7 +109,7 @@ steps:
     action:
       type: analysis
       target: "code_quality_notes"
-      template: |
+      instruction: |
         Review (advisory only):
         - Architecture and design patterns
         - Refactoring opportunities (recommend, do not implement)
@@ -124,7 +124,7 @@ steps:
     action:
       type: analysis
       target: "test_arch_notes"
-      template: |
+      instruction: |
         Assess:
         - Coverage adequacy by level (unit/integration/e2e)
         - Test design quality and maintainability
@@ -139,7 +139,7 @@ steps:
     action:
       type: analysis
       target: "nfr_notes"
-      template: |
+      instruction: |
         Check NFRs:
         - Security: Authentication, authorization, data protection
         - Performance: Code-level hotspots, query optimization, resource usage
@@ -152,7 +152,7 @@ steps:
     action:
       type: analysis
       target: "testability_notes"
-      template: |
+      instruction: |
         Evaluate:
         - Controllability: Ability to control inputs and state
         - Observability: Signals, logs, and telemetry available
@@ -164,7 +164,7 @@ steps:
     action:
       type: analysis
       target: "tech_debt_notes"
-      template: |
+      instruction: |
         Identify:
         - Accumulated shortcuts and TODOs
         - Missing or flaky tests
@@ -177,7 +177,7 @@ steps:
     action:
       type: analysis
       target: "console_output"
-      template: |
+      instruction: |
         Provide:
         - Actionable recommendations and prioritized fix list
         - Example diffs or pseudocode only if needed (do not apply)
@@ -190,7 +190,7 @@ steps:
     action:
       type: validation
       target: "@{docs.files.codingStandards}"
-      template: |
+      instruction: |
         Run checklist validation against coding standards references.
         Confirm required conventions, lint expectations, and documentation guidelines are met.
     on_failure: halt
@@ -201,7 +201,7 @@ steps:
     action:
       type: validation
       target: "!{story_path}"
-      template: |
+      instruction: |
         Confirm every acceptance criterion has traceable implementation evidence.
         Mark gaps that must be addressed before PASS is possible.
     on_failure: halt
@@ -237,7 +237,7 @@ steps:
       type: file_operation
       operation: create
       target: "@{docs.subdirs.qa}/gates/${story}-*.yaml"
-      template: |
+      instruction: |
         Load schemas/qa-gate.json as the contract.
         Populate decision, evidence, risks, test design, and NFR sections based on prior steps.
         Serialize as YAML and write to @{docs.subdirs.qa}/gates/${story}-{story_slug}.yaml (match existing slug convention).
