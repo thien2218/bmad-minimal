@@ -12,17 +12,18 @@ derived:
     pattern: "@{docs.subdirs.stories}/${story}-*.yaml"
     description: "Concrete path for the story under development."
     required: true
+  - name: story_status
+    type: string
+    source: file
+    description: "Status field read from the target story file."
+    required: true
 
 outputs:
   updates:
     - target: "!{story_path_resolved}"
       sections:
         - "Dev Agent Record"
-        - "Dev Agent Record/Checkboxes"
-        - "Dev Agent Record/Debug Log References"
-        - "Dev Agent Record/Completion Notes List"
-        - "File List"
-      restrictions: Only toggle checkboxes and append to allowed sections; never edit other story parts
+      restrictions: DO NOT edit other story parts
   artifacts:
     - name: Test Files
       type: file
@@ -36,6 +37,10 @@ outputs:
       description: Production code implementing the story after tests are in place
 
 prerequisites:
+  - field: "!{story_status}"
+    value: "WIP"
+    operator: "="
+    on_violate: "halt_and_report"
   - field: "dev.blocking.missing_specs"
     value: "false"
     operator: "="
@@ -81,16 +86,17 @@ steps:
       command: "{test_command}"
       instruction: "Expect failure; record results in Dev Agent Record/Debug Log References before proceeding."
 
-  - id: IMPLEMENT
-    title: Implement Minimal Code to Pass Tests (Green)
-    description: Implement production code iteratively until tests pass
+  - id: EXECUTE-TASKS
+    title: Execute tasks of Story
+    description: Implement tasks and subtasks listed in the story file
     action:
-      type: file_operation
-      operation: update
+      type: tool-call
+      target: "!{story_path_resolved}#tasks"
       instruction: |
-        - Implement the minimum code to satisfy failing tests
-        - Keep changes small; rerun tests after each iteration
-        - Update File List with created/modified files
+        - Add the listed items into the story's `tasks` section to your todo list using tool call
+        - Append only; never rename or reorder existing tasks
+        - Ensure the final appended task is ALWAYS "Update the status to 'Review' and 'Dev Agent Record' section of the story file" after all other tasks are added
+        - Implement each task/subtask sequentially to pass the tests
 
   - id: RUN-GREEN
     title: Run Tests to Green
@@ -113,18 +119,6 @@ steps:
       retry:
         max_attempts: 3
         delay_seconds: 0
-
-  - id: UPDATE-STORY
-    title: Update Story and Notes
-    description: Update allowed Dev Agent Record sections and logs
-    action:
-      type: file_operation
-      operation: update
-      target: "!{story_path_resolved}"
-      instruction: |
-        - Append to Debug Log References with test commands/results
-        - Document Completion Notes and File List entries
-        - Summarize changes directly within Completion Notes
 
 completion:
   checklist: story-dod-checklist

@@ -1497,6 +1497,16 @@ completion:
 	},
 	"sections": [
 		{
+			"id": "status",
+			"title": "Status",
+			"type": "choice",
+			"choices": ["WIP", "Review", "Done"],
+			"instruction": "Select the current status of the story",
+			"owner": "product-development-master",
+			"default": "WIP",
+			"editors": ["product-development-master", "developer"]
+		},
+		{
 			"id": "priority",
 			"title": "Priority",
 			"type": "choice",
