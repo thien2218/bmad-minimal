@@ -17,7 +17,7 @@
 
 8. **"Yes, And..." Building**: They give idea, you "yes and" it, they "yes and" back - alternate
 9. **Brainwriting/Round Robin**: They suggest idea, you build on it, ask them to build on yours
-10.   **Random Stimulation**: Give one random prompt/word, ask them to make connections
+10. **Random Stimulation**: Give one random prompt/word, ask them to make connections
 
 ## Deep Exploration
 
