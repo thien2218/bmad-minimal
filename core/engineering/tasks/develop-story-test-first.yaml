@@ -90,7 +90,7 @@ steps:
     title: Execute tasks of Story
     description: Implement tasks and subtasks listed in the story file
     action:
-      type: tool-call
+      type: tool_call
       target: "!{story_path_resolved}#tasks"
       instruction: |
         - Add the listed items into the story's `tasks` section to your todo list using tool call

@@ -549,18 +549,15 @@ process:
         options:
           - "Incremental - section by section with detailed refinement"
           - "YOLO - batched analysis for quick assessment"
-        validation:
-          type: string
-          pattern: "^(incremental|yolo)$"
 
     - id: SETUP-2
       title: Verify Access to Artifacts
+      conditions:
+        - move_to_step: ANALYSIS-1
+          when: "project artifacts are accessible"
       action:
         type: validation
         target: "project artifacts"
-        validation:
-          type: string
-          required: true
       description: Confirm access to PRD, Epics/Stories, Architecture Documents, and change-checklist
 
     - id: ANALYSIS-1
@@ -626,9 +623,6 @@ process:
       action:
         type: elicit
         prompt: Review proposed changes and refine as needed
-        validation:
-          type: string
-          required: true
       condition:
         if: "interaction_mode == 'incremental'"
 
@@ -651,7 +645,7 @@ process:
       title: Handoff for Fundamental Replan
       description: Provide handoff guidance when fundamental replanning is needed
       action:
-        type: elicit
+        type: hand_off
         prompt: |
           Change analysis indicates fundamental replanning is required.
 
@@ -1383,15 +1377,12 @@ steps:
     title: Define Stories
     description: Capture focused stories that complete the epic
     action:
-      type: elicit
-      prompt_user: |
-        Define focused stories with priorities (1-5, 1 = highest):
+      type: analysis
+      instruction: |
+        Define minimal number of focused stories (at least 2) with priorities (1-5, 1 = highest):
         - Follow the PRD story breakdown
         - Sequence by dependencies first, then priority
         - Ensure each story can complete within one sprint
-      validation:
-        type: array
-        required: true
 
   - id: ADD-STORIES
     title: Add Stories to Epic
@@ -1705,9 +1696,6 @@ steps:
       type: file_operation
       operation: read
       target: "@{baseDir}/config.json"
-      validation:
-        type: string
-        required: true
     on_failure: halt
 
   - id: VALIDATE-CONFIG
@@ -1752,10 +1740,6 @@ steps:
 
         CRITICAL: Never switch epics without explicit user instruction.
       options: ["1", "2", "3"]
-      validation:
-        type: string
-        pattern: "^[1-3]$"
-        required: true
 
   - id: GATHER-EPIC
     title: Gather Story Requirements from Epic
@@ -1890,7 +1874,7 @@ steps:
     title: Provide Summary and Next Steps
     description: Communicate story creation results to the user
     action:
-      type: elicit
+      type: hand_off
       prompt_user: |
         Story created: !{story_file_target}
 
@@ -2146,9 +2130,6 @@ steps:
       type: file_operation
       operation: read
       target: "@{baseDir}/config.json"
-      validation:
-        type: string
-        required: true
     on_failure: halt
 
   - id: DISCOVER-1
@@ -2174,10 +2155,6 @@ steps:
         2) Overwrite (replace content)
         3) Create new variant with different slug
       options: ["1", "2", "3"]
-      validation:
-        type: string
-        pattern: "^[1-3]$"
-        required: true
 
   - id: READ-1
     title: Read PRD for Enhancement
@@ -2186,9 +2163,6 @@ steps:
       type: file_operation
       operation: read
       target: "!{prd_file}"
-      validation:
-        type: string
-        required: true
 
   - id: READ-2
     title: Read Architecture for Enhancement
@@ -2197,9 +2171,6 @@ steps:
       type: file_operation
       operation: read
       target: "!{architecture_file}"
-      validation:
-        type: string
-        required: true
 
   - id: EXTRACT-1
     title: Extract Epic Inputs from PRD/Architecture
@@ -2227,10 +2198,6 @@ steps:
         1) Summary matches intent — proceed
         2) Something is unclear or incorrect — provide clarifications
       options: ["1", "2"]
-      validation:
-        type: string
-        pattern: "^[1-2]$"
-        required: true
 
   - id: CREATE-1
     title: Create Epic YAML (schema-aligned)
@@ -2269,10 +2236,6 @@ steps:
 
         Select the impact assessment (1-4).
       options: ["1", "2", "3", "4"]
-      validation:
-        type: string
-        pattern: "^[1-4]$"
-        required: true
 
   - id: UPDATE-DOCUMENTS
     title: Update affected documentation if needed
@@ -2290,7 +2253,7 @@ steps:
     title: Provide Summary
     description: Summarize created epic file and next steps
     action:
-      type: elicit
+      type: hand_off
       prompt_user: |
         Epic created: !{epic_file_candidate}
         Status: Draft
@@ -2383,9 +2346,6 @@ steps:
       type: file_operation
       operation: read
       target: "@{baseDir}/config.json"
-      validation:
-        type: string
-        required: true
     on_failure: halt
 
   - id: IDENTIFY-EPIC
@@ -2471,10 +2431,6 @@ steps:
 
         Select the impact assessment (1-4).
       options: ["1", "2", "3", "4"]
-      validation:
-        type: string
-        pattern: "^[1-4]$"
-        required: true
 
   - id: UPDATE-DOCUMENTS
     title: Update affected documentation if needed
@@ -2492,7 +2448,7 @@ steps:
     title: Provide Summary and Next Steps
     description: Communicate story creation results and follow-ups
     action:
-      type: elicit
+      type: hand_off
       prompt_user: |
         Story created: !{story_file_target}
 
@@ -2590,10 +2546,6 @@ steps:
         2 = No, escalate to epic
         3 = No, escalate to PRD
       options: ["1", "2", "3"]
-      validation:
-        type: string
-        pattern: "^[1-3]$"
-        required: true
 
   - id: GATHER-CONTEXT
     title: Gather minimal project context
@@ -2624,10 +2576,6 @@ steps:
         1) Yes, it is accurate — continue
         2) No, corrections are needed — describe adjustments
       options: ["1", "2"]
-      validation:
-        type: string
-        pattern: "^[1-2]$"
-        required: true
 
   - id: CREATE-STORY-FILE
     title: Create standalone story YAML file
@@ -2652,10 +2600,6 @@ steps:
 
         Select the impact assessment (1-4).
       options: ["1", "2", "3", "4"]
-      validation:
-        type: string
-        pattern: "^[1-4]$"
-        required: true
 
   - id: UPDATE-DOCUMENTS
     title: Update affected documentation if needed

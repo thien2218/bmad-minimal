@@ -41,15 +41,13 @@ steps:
       target: "@{baseDir}/config.json"
     on_failure: halt
 
-  - id: LOCATE-STORY
-    title: Locate Story File
+  - id: READ-STORY
+    title: Locate and Read Story File
     description: Find story file in {story_path}/{story_id}-*.yaml
     action:
-      type: validation
-      validation:
-        type: string
-        pattern: ".*\\.yaml$"
-        required: true
+      type: file_operation
+      operation: read
+      target: "!{story_file}"
     on_failure: halt
 
   - id: COLLECT-QA

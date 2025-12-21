@@ -85,15 +85,12 @@ steps:
     title: Define Stories
     description: Capture focused stories that complete the epic
     action:
-      type: elicit
-      prompt_user: |
-        Define focused stories with priorities (1-5, 1 = highest):
+      type: analysis
+      instruction: |
+        Define minimal number of focused stories (at least 2) with priorities (1-5, 1 = highest):
         - Follow the PRD story breakdown
         - Sequence by dependencies first, then priority
         - Ensure each story can complete within one sprint
-      validation:
-        type: array
-        required: true
 
   - id: ADD-STORIES
     title: Add Stories to Epic

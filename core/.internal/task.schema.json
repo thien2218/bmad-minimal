@@ -243,8 +243,9 @@
 									"decision",
 									"subtask",
 									"elicit",
+									"hand_off",
 									"analysis",
-									"tool-call"
+									"tool_call"
 								]
 							},
 							"command": {
@@ -274,28 +275,13 @@
 							},
 							"prompt_user": {
 								"type": "string",
-								"description": "Prompt for user elicitation"
+								"description": "Prompt for user elicitation (an interactive mode that allows user to select how to proceed)"
 							},
 							"options": {
 								"type": "array",
 								"description": "Options for user selection",
 								"items": {
 									"type": "string"
-								}
-							},
-							"validation": {
-								"type": "object",
-								"description": "Validation rules",
-								"properties": {
-									"type": {
-										"type": "string"
-									},
-									"pattern": {
-										"type": "string"
-									},
-									"required": {
-										"type": "boolean"
-									}
 								}
 							}
 						}

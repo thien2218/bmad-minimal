@@ -64,9 +64,6 @@ steps:
       type: file_operation
       operation: read
       target: "@{baseDir}/config.json"
-      validation:
-        type: string
-        required: true
     on_failure: halt
 
   - id: VALIDATE-CONFIG
@@ -111,10 +108,6 @@ steps:
 
         CRITICAL: Never switch epics without explicit user instruction.
       options: ["1", "2", "3"]
-      validation:
-        type: string
-        pattern: "^[1-3]$"
-        required: true
 
   - id: GATHER-EPIC
     title: Gather Story Requirements from Epic
@@ -249,7 +242,7 @@ steps:
     title: Provide Summary and Next Steps
     description: Communicate story creation results to the user
     action:
-      type: elicit
+      type: hand_off
       prompt_user: |
         Story created: !{story_file_target}
 

@@ -72,9 +72,6 @@ steps:
       type: file_operation
       operation: read
       target: "@{baseDir}/config.json"
-      validation:
-        type: string
-        required: true
     on_failure: halt
 
   - id: IDENTIFY-EPIC
@@ -160,10 +157,6 @@ steps:
 
         Select the impact assessment (1-4).
       options: ["1", "2", "3", "4"]
-      validation:
-        type: string
-        pattern: "^[1-4]$"
-        required: true
 
   - id: UPDATE-DOCUMENTS
     title: Update affected documentation if needed
@@ -181,7 +174,7 @@ steps:
     title: Provide Summary and Next Steps
     description: Communicate story creation results and follow-ups
     action:
-      type: elicit
+      type: hand_off
       prompt_user: |
         Story created: !{story_file_target}
 

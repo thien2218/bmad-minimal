@@ -325,7 +325,7 @@ steps:
     title: Execute tasks of Story
     description: Implement tasks and subtasks listed in the story file
     action:
-      type: tool-call
+      type: tool_call
       target: "!{story_path_resolved}#tasks"
       instruction: |
         - Add the listed items into the story's `tasks` section to your todo list using tool call
@@ -576,7 +576,7 @@ steps:
     title: Execute tasks of Story
     description: Implement tasks and subtasks listed in the story file
     action:
-      type: tool-call
+      type: tool_call
       target: "!{story_path_resolved}#tasks"
       instruction: |
         - Add the listed items into the story's `tasks` section to your todo list using tool call
@@ -958,15 +958,13 @@ steps:
       target: "@{baseDir}/config.json"
     on_failure: halt
 
-  - id: LOCATE-STORY
-    title: Locate Story File
+  - id: READ-STORY
+    title: Locate and Read Story File
     description: Find story file in {story_path}/{story_id}-*.yaml
     action:
-      type: validation
-      validation:
-        type: string
-        pattern: ".*\\.yaml$"
-        required: true
+      type: file_operation
+      operation: read
+      target: "!{story_file}"
     on_failure: halt
 
   - id: COLLECT-QA
@@ -1147,10 +1145,6 @@ steps:
 
         Select approach (1-3):
       options: ["1", "2", "3"]
-      validation:
-        type: string
-        pattern: "^[1-3]$"
-        required: true
 
   - id: CREATE-DOC-STRUCTURE
     title: Create documentation directories if not present

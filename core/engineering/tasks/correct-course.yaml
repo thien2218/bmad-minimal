@@ -56,18 +56,15 @@ process:
         options:
           - "Incremental - section by section with detailed refinement"
           - "YOLO - batched analysis for quick assessment"
-        validation:
-          type: string
-          pattern: "^(incremental|yolo)$"
 
     - id: SETUP-2
       title: Verify Access to Artifacts
+      conditions:
+        - move_to_step: ANALYSIS-1
+          when: "project artifacts are accessible"
       action:
         type: validation
         target: "project artifacts"
-        validation:
-          type: string
-          required: true
       description: Confirm access to PRD, Epics/Stories, Architecture Documents, and change-checklist
 
     - id: ANALYSIS-1
@@ -133,9 +130,6 @@ process:
       action:
         type: elicit
         prompt: Review proposed changes and refine as needed
-        validation:
-          type: string
-          required: true
       condition:
         if: "interaction_mode == 'incremental'"
 
@@ -158,7 +152,7 @@ process:
       title: Handoff for Fundamental Replan
       description: Provide handoff guidance when fundamental replanning is needed
       action:
-        type: elicit
+        type: hand_off
         prompt: |
           Change analysis indicates fundamental replanning is required.
 
