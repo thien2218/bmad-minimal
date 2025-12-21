@@ -118,11 +118,6 @@
 				]
 			}
 		},
-		"elicitDefaults": {
-			"elicitRequired": true,
-			"responseFormat": "choice",
-			"allowedResponseFormats": ["choice", "plain", "json"]
-		},
 		"onMissingDependency": "ask_user"
 	},
 	"persona": {

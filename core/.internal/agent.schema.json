@@ -144,12 +144,7 @@
 		"workflow": {
 			"type": "object",
 			"additionalProperties": false,
-			"required": [
-				"resolvePaths",
-				"references",
-				"elicitDefaults",
-				"onMissingDependency"
-			],
+			"required": ["resolvePaths", "references", "onMissingDependency"],
 			"properties": {
 				"resolvePaths": {
 					"type": "object",
@@ -207,29 +202,6 @@
 										}
 									}
 								}
-							}
-						}
-					}
-				},
-				"elicitDefaults": {
-					"type": "object",
-					"additionalProperties": false,
-					"required": [
-						"elicitRequired",
-						"responseFormat",
-						"allowedResponseFormats"
-					],
-					"properties": {
-						"elicitRequired": {
-							"type": "boolean"
-						},
-						"responseFormat": {
-							"type": "string"
-						},
-						"allowedResponseFormats": {
-							"type": "array",
-							"items": {
-								"type": "string"
 							}
 						}
 					}

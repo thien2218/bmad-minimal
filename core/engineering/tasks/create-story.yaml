@@ -116,14 +116,6 @@ steps:
         pattern: "^[1-3]$"
         required: true
 
-  - id: ANNOUNCE-STORY
-    title: Announce Identified Story
-    description: Inform the user of the story that will be drafted
-    action:
-      type: elicit
-      prompt_user: |
-        Identified next story for preparation: {{epic_resolved}}.{{story_resolved}} - {{story_title}}
-
   - id: GATHER-EPIC
     title: Gather Story Requirements from Epic
     description: Read the epic YAML to extract requirements for the story

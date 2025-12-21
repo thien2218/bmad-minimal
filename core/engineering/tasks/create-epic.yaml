@@ -83,7 +83,7 @@ steps:
 
   - id: DEFINE-STORIES
     title: Define Stories
-    description: Capture 1–3 focused stories that complete the epic
+    description: Capture focused stories that complete the epic
     action:
       type: elicit
       prompt_user: |

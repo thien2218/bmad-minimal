@@ -101,7 +101,7 @@ Choose a number (1-5) or 6 to proceed:
 
 **Execution Process:**
 
-1. **Retrieve Method**: Access the specific elicitation method from the elicitation-methods data file
+1. **Retrieve Method**: Access the specific elicitation method from ./elicitation-methods data file
 2. **Apply Context**: Execute the method from your current role's perspective
 3. **Provide Results**: Deliver insights, critiques, or alternatives relevant to the content
 4. **Re-offer Choice**: Present the same 6 options again until user selects 6 or gives direct feedback

@@ -152,11 +152,6 @@
 				]
 			}
 		},
-		"elicitDefaults": {
-			"elicitRequired": true,
-			"responseFormat": "choice",
-			"allowedResponseFormats": ["choice", "plain", "json"]
-		},
 		"onMissingDependency": "ask_user"
 	},
 	"commandPrefix": "*",
@@ -710,10 +705,6 @@ completion:
 			"title": "Epic {{epic_number}}: {{epic_title}}"
 		}
 	},
-	"workflow": {
-		"mode": "interactive",
-		"elicitation": "advanced-elicitation"
-	},
 	"sections": [
 		{
 			"id": "status",
@@ -736,23 +727,20 @@ completion:
 					"title": "Goal",
 					"type": "paragraph",
 					"instruction": "Write a clear goal statement (2-3 sentences) explaining:\n- What this epic accomplishes\n- Why it's valuable to users/business\n- How it supports PRD goals",
-					"template": "This epic delivers {{epic_objective}} by implementing {{solution_approach}}, enabling {{user_value}} and advancing the product goal of {{product_alignment}}.",
-					"elicit": true
+					"template": "This epic delivers {{epic_objective}} by implementing {{solution_approach}}, enabling {{user_value}} and advancing the product goal of {{product_alignment}}."
 				},
 				{
 					"id": "description",
 					"title": "Description",
 					"type": "paragraphs",
-					"instruction": "Provide detailed context (2-3 paragraphs):\n- Current state and problem being solved\n- Solution approach and key capabilities delivered\n- User scenarios enabled by this epic\n- Expected outcomes and success criteria",
-					"elicit": true
+					"instruction": "Provide detailed context (2-3 paragraphs):\n- Current state and problem being solved\n- Solution approach and key capabilities delivered\n- User scenarios enabled by this epic\n- Expected outcomes and success criteria"
 				},
 				{
 					"id": "definition_of_done",
 					"title": "Definition of Done",
 					"type": "numbered-list",
 					"instruction": "Define measurable criteria for epic completion:\n- End-to-end functionality requirements\n- Quality and performance thresholds\n- Integration completion requirements\n- Reference specific PRD requirements being fulfilled",
-					"template": "{{criterion_number}}: {{acceptance_criterion}}",
-					"elicit": true
+					"template": "{{criterion_number}}: {{acceptance_criterion}}"
 				}
 			]
 		},
@@ -760,7 +748,6 @@ completion:
 			"id": "scope-boundaries",
 			"title": "Scope and Boundaries",
 			"instruction": "Clearly define epic boundaries to guide story creation and prevent scope creep.",
-			"elicit": true,
 			"owner": "product-development-master",
 			"editors": ["product-development-master"],
 			"sections": [
@@ -792,16 +779,14 @@ completion:
 					"title": "Functional Requirements Addressed",
 					"type": "bullet-list",
 					"instruction": "List PRD functional requirements this epic implements:\n- Reference exact FR numbers from PRD\n- Note full vs partial implementation\n- Provide brief context for story generation",
-					"template": "- **{{fr_id}}:** {{requirement_summary}} - {{implementation_scope}}",
-					"elicit": true
+					"template": "- **{{fr_id}}:** {{requirement_summary}} - {{implementation_scope}}"
 				},
 				{
 					"id": "non-functional-requirements",
 					"title": "Non-Functional Requirements",
 					"type": "bullet-list",
 					"instruction": "List applicable PRD non-functional requirements:\n- Reference exact NFR numbers from PRD\n- Include performance, security, quality requirements\n- Note acceptance thresholds for testing",
-					"template": "- **{{nfr_id}}:** {{requirement_summary}} - {{acceptance_threshold}}",
-					"elicit": true
+					"template": "- **{{nfr_id}}:** {{requirement_summary}} - {{acceptance_threshold}}"
 				}
 			]
 		},
@@ -817,15 +802,13 @@ completion:
 					"title": "Story List",
 					"type": "numbered-list",
 					"instruction": "List all stories in logical sequence:\n- Each story delivers complete vertical functionality\n- Stories build upon previous stories\n- Include story title and brief goal\n- Note any direct dependencies\n- Include Priority (1–5, 1 = highest)\n- Size appropriately for AI agent execution (2-4 hours of work)",
-					"template": "{{story_number}}: **{{story_title}}** - {{story_goal}} {{dependency_note}} [Priority: {{priority}}]",
-					"elicit": true
+					"template": "{{story_number}}: **{{story_title}}** - {{story_goal}} {{dependency_note}} [Priority: {{priority}}]"
 				},
 				{
 					"id": "story-sequencing-rationale",
 					"title": "Story Sequencing Rationale",
 					"type": "paragraph",
-					"instruction": "Explain the logical flow of stories:\n- Why stories are ordered as presented\n- Which stories enable subsequent stories\n- Any parallel development opportunities\n- Critical path considerations",
-					"elicit": true
+					"instruction": "Explain the logical flow of stories:\n- Why stories are ordered as presented\n- Which stories enable subsequent stories\n- Any parallel development opportunities\n- Critical path considerations"
 				}
 			]
 		},
@@ -833,7 +816,6 @@ completion:
 			"id": "dependencies",
 			"title": "Dependencies",
 			"instruction": "Document dependencies that impact story creation and sequencing.",
-			"elicit": true,
 			"owner": "product-development-master",
 			"editors": ["product-development-master"],
 			"sections": [
@@ -1399,7 +1381,7 @@ steps:
 
   - id: DEFINE-STORIES
     title: Define Stories
-    description: Capture 1–3 focused stories that complete the epic
+    description: Capture focused stories that complete the epic
     action:
       type: elicit
       prompt_user: |
@@ -1492,8 +1474,7 @@ completion:
 		}
 	},
 	"workflow": {
-		"mode": "interactive",
-		"elicitation": "advanced-elicitation"
+		"mode": "interactive"
 	},
 	"sections": [
 		{
@@ -1521,7 +1502,6 @@ completion:
 			"type": "template-text",
 			"template": "**As a** {{role}},\n**I want** {{action}},\n**so that** {{benefit}}",
 			"instruction": "Define the user story using the standard format with role, action, and benefit",
-			"elicit": true,
 			"owner": "product-development-master",
 			"editors": ["product-development-master", "product-master"]
 		},
@@ -1530,7 +1510,6 @@ completion:
 			"title": "Acceptance Criteria",
 			"type": "numbered-list",
 			"instruction": "Copy the acceptance criteria numbered list from the epic file",
-			"elicit": true,
 			"owner": "product-development-master",
 			"editors": ["product-development-master", "product-master"]
 		},
@@ -1540,7 +1519,6 @@ completion:
 			"type": "bullet-list",
 			"instruction": "Break down the story into specific tasks and subtasks needed for implementation.\nReference applicable acceptance criteria numbers where relevant.\nAssign a Difficulty for each task and subtask (integer 1–10) capturing both complexity and uncertainty.",
 			"template": "- [ ] {{task_description}} (AC: # if applicable) [Diff: 1-10]\n  - [ ] {{optional_subtask_description}} [Diff: 1-10]\n- [ ] {{task_description}} (AC: # if applicable) [Diff: 1-10]\n  - [ ] {{optional_subtask_description}} [Diff: 1-10]\n- [ ] {{task_description}} (AC: # if applicable) [Diff: 1-10]\n  - [ ] {{optional_subtask_description}} [Diff: 1-10]",
-			"elicit": true,
 			"owner": "product-development-master",
 			"editors": ["product-development-master", "product-master", "developer"]
 		},
@@ -1548,7 +1526,6 @@ completion:
 			"id": "dev-notes",
 			"title": "Dev Notes",
 			"instruction": "Leave this section empty at first on initialization as it will be populated later on.\nPopulate relevant information, only what was pulled from actual artifacts from docs folder, relevant to this story:\n- Do not invent information\n- If known add Relevant Source Tree info that relates to this story\n- If there were important notes from previous story that are relevant to this one, include them here\n- Put enough information in this section so that the dev agent should NEVER need to read the architecture documents, these notes along with the tasks and subtasks must give the Dev Agent the complete context it needs to comprehend with the least amount of overhead the information to complete the story, meeting all AC and completing all tasks+subtasks",
-			"elicit": true,
 			"owner": "product-development-master",
 			"editors": ["product-development-master", "product-master"]
 		},
@@ -1556,7 +1533,6 @@ completion:
 			"id": "testing-standards",
 			"title": "Testing",
 			"instruction": "List Relevant Testing Standards from Architecture the Developer needs to conform to:\n- Test file location\n- Test standards\n- Testing frameworks and patterns to use\n- Any specific testing requirements for this story",
-			"elicit": true,
 			"owner": "product-development-master",
 			"editors": ["product-development-master", "product-master"]
 		},
@@ -1572,16 +1548,14 @@ completion:
 					"title": "Specifications",
 					"type": "numbered-list",
 					"instruction": "List concise Given-When-Then (or equivalent) specs. Include AC references.",
-					"template": "{{spec_number}}: [AC {{ac_numbers}}] {{short_description}} — Given {{given}}, When {{when}}, Then {{then}}",
-					"elicit": true
+					"template": "{{spec_number}}: [AC {{ac_numbers}}] {{short_description}} — Given {{given}}, When {{when}}, Then {{then}}"
 				},
 				{
 					"id": "artifacts",
 					"title": "Artifacts",
 					"type": "bullet-list",
 					"instruction": "List existing or planned test files relevant to this story (paths with brief purpose).",
-					"template": "- {{path}} — {{purpose}}",
-					"elicit": false
+					"template": "- {{path}} — {{purpose}}"
 				}
 			]
 		},
@@ -1596,23 +1570,20 @@ completion:
 					"id": "primary-risk",
 					"title": "Primary Risk",
 					"type": "paragraph",
-					"instruction": "Describe the main risk this story poses to the existing system and users.",
-					"elicit": true
+					"instruction": "Describe the main risk this story poses to the existing system and users."
 				},
 				{
 					"id": "mitigation-strategies",
 					"title": "Mitigation Strategies",
 					"type": "bullet-list",
 					"instruction": "List concrete mitigation actions to reduce likelihood/impact of the risk.",
-					"template": "- {{mitigation_action}}",
-					"elicit": true
+					"template": "- {{mitigation_action}}"
 				},
 				{
 					"id": "rollback-plan",
 					"title": "Rollback Plan",
 					"type": "paragraph",
-					"instruction": "Outline how to quickly revert changes if needed, including preconditions and steps.",
-					"elicit": true
+					"instruction": "Outline how to quickly revert changes if needed, including preconditions and steps."
 				}
 			]
 		},
@@ -1785,14 +1756,6 @@ steps:
         type: string
         pattern: "^[1-3]$"
         required: true
-
-  - id: ANNOUNCE-STORY
-    title: Announce Identified Story
-    description: Inform the user of the story that will be drafted
-    action:
-      type: elicit
-      prompt_user: |
-        Identified next story for preparation: {{epic_resolved}}.{{story_resolved}} - {{story_title}}
 
   - id: GATHER-EPIC
     title: Gather Story Requirements from Epic
