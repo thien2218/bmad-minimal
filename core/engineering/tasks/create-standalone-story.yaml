@@ -157,6 +157,23 @@ steps:
         - Story file created at @{docs.subdirs.stories}/standln-{{story_enhancement_number_resolved}}-*.yaml
         - Documentation updates recorded or explicitly not required
 
+  - id: HANDOFF-STANDALONE
+    title: Provide Story Summary
+    description: Communicate story creation outcome and next steps
+    action:
+      type: hand_off
+      prompt_user: |
+        Story created: !{story_file_target}
+
+        Summary of key details:
+        - Enhancement goal and scope boundaries are documented
+        - Pattern alignment and integration constraints captured
+        - Documentation impact: !{impact_assessment}
+
+        Next steps:
+        - Review the story for completeness
+        - Move to implementation or schedule validation as needed
+
 completion:
   criteria:
     - Story enhancement meets standalone criteria

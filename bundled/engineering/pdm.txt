@@ -167,13 +167,6 @@
 			"optionalParameters": ["agent"]
 		},
 		{
-			"name": "correct-course",
-			"description": "Execute task correct-course.yaml",
-			"parameters": ["change_trigger", "initial_impact"],
-			"optionalParameters": ["interaction_mode"],
-			"steps": ["checklists/change-checklist.md", "tasks/correct-course.yaml"]
-		},
-		{
 			"name": "yolo",
 			"description": "Toggle YOLO Mode (when ON will skip doc section confirmations)"
 		},
@@ -299,390 +292,6 @@
 	]
 }
 ```
-
-
-
-# Dependency: checklists/change-checklist.md
-
-# Change Navigation Checklist
-
-**Purpose:** To systematically guide the selected Agent and user through the analysis and planning required when a significant change (pivot, tech issue, missing requirement, failed story) is identified during the BMad workflow.
-
-**Instructions:** Review each item with the user. Mark `[x]` for completed/confirmed, `[N/A]` if not applicable, or add notes for discussion points.
-
-[[LLM: INITIALIZATION INSTRUCTIONS - CHANGE NAVIGATION
-
-Changes during development are inevitable, but how we handle them determines project success or failure.
-
-Before proceeding, understand:
-
-1. This checklist is for SIGNIFICANT changes that affect the project direction
-2. Minor adjustments within a story don't require this process
-3. The goal is to minimize wasted work while adapting to new realities
-4. User buy-in is critical - they must understand and approve changes
-
-Required context:
-
-- The triggering story or issue
-- Current project state (completed stories, current epic)
-- Access to PRD, architecture, and other key documents
-- Understanding of remaining work planned
-
-APPROACH:
-This is an interactive process with the user. Work through each section together, discussing implications and options. The user makes final decisions, but provide expert guidance on technical feasibility and impact.
-
-REMEMBER: Changes are opportunities to improve, not failures. Handle them professionally and constructively.]]
-
----
-
-## 1. Understand the Trigger & Context
-
-[[LLM: Start by fully understanding what went wrong and why. Don't jump to solutions yet. Ask probing questions:
-
-- What exactly happened that triggered this review?
-- Is this a one-time issue or symptomatic of a larger problem?
-- Could this have been anticipated earlier?
-- What assumptions were incorrect?
-
-Be specific and factual, not blame-oriented.]]
-
-- [ ] **Identify Triggering Story:** Clearly identify the story (or stories) that revealed the issue.
-- [ ] **Define the Issue:** Articulate the core problem precisely.
-  - [ ] Is it a technical limitation/dead-end?
-  - [ ] Is it a newly discovered requirement?
-  - [ ] Is it a fundamental misunderstanding of existing requirements?
-  - [ ] Is it a necessary pivot based on feedback or new information?
-  - [ ] Is it a failed/abandoned story needing a new approach?
-- [ ] **Assess Initial Impact:** Describe the immediate observed consequences (e.g., blocked progress, incorrect functionality, non-viable tech).
-- [ ] **Gather Evidence:** Note any specific logs, error messages, user feedback, or analysis that supports the issue definition.
-
-## 2. Epic Impact Assessment
-
-[[LLM: Changes ripple through the project structure. Systematically evaluate:
-
-1. Can we salvage the current epic with modifications?
-2. Do future epics still make sense given this change?
-3. Are we creating or eliminating dependencies?
-4. Does the epic sequence need reordering?
-
-Think about both immediate and downstream effects.]]
-
-- [ ] **Analyze Current Epic:**
-  - [ ] Can the current epic containing the trigger story still be completed?
-  - [ ] Does the current epic need modification (story changes, additions, removals)?
-  - [ ] Should the current epic be abandoned or fundamentally redefined?
-- [ ] **Analyze Future Epics:**
-  - [ ] Review all remaining planned epics.
-  - [ ] Does the issue require changes to planned stories in future epics?
-  - [ ] Does the issue invalidate any future epics?
-  - [ ] Does the issue necessitate the creation of entirely new epics?
-  - [ ] Should the order/priority of future epics be changed?
-- [ ] **Summarize Epic Impact:** Briefly document the overall effect on the project's epic structure and flow.
-
-## 3. Artifact Conflict & Impact Analysis
-
-[[LLM: Documentation drives development in BMad. Check each artifact:
-
-1. Does this change invalidate documented decisions?
-2. Are architectural assumptions still valid?
-3. Do user flows need rethinking?
-4. Are technical constraints different than documented?
-
-Be thorough - missed conflicts cause future problems.]]
-
-- [ ] **Review PRD:**
-  - [ ] Does the issue conflict with the core goals or requirements stated in the PRD?
-  - [ ] Does the PRD need clarification or updates based on the new understanding?
-- [ ] **Review Architecture Document:**
-  - [ ] Does the issue conflict with the documented architecture (components, patterns, tech choices)?
-  - [ ] Are specific components/diagrams/sections impacted?
-  - [ ] Does the technology list need updating?
-  - [ ] Do data models or schemas need revision?
-  - [ ] Are external API integrations affected?
-- [ ] **Review Frontend Spec (if applicable):**
-  - [ ] Does the issue conflict with the FE architecture, component library choice, or UI/UX design?
-  - [ ] Are specific FE components or user flows impacted?
-- [ ] **Review Other Artifacts (if applicable):**
-  - [ ] Consider impact on deployment scripts, IaC, monitoring setup, etc.
-- [ ] **Summarize Artifact Impact:** List all artifacts requiring updates and the nature of the changes needed.
-
-## 4. Path Forward Evaluation
-
-[[LLM: Present options clearly with pros/cons. For each path:
-
-1. What's the effort required?
-2. What work gets thrown away?
-3. What risks are we taking?
-4. How does this affect timeline?
-5. Is this sustainable long-term?
-
-Be honest about trade-offs. There's rarely a perfect solution.]]
-
-- [ ] **Option 1: Direct Adjustment / Integration:**
-  - [ ] Can the issue be addressed by modifying/adding future stories within the existing plan?
-  - [ ] Define the scope and nature of these adjustments.
-  - [ ] Assess feasibility, effort, and risks of this path.
-- [ ] **Option 2: Potential Rollback:**
-  - [ ] Would reverting completed stories significantly simplify addressing the issue?
-  - [ ] Identify specific @{docs.subdirs.stories}/commits to consider for rollback.
-  - [ ] Assess the effort required for rollback.
-  - [ ] Assess the impact of rollback (lost work, data implications).
-  - [ ] Compare the net benefit/cost vs. Direct Adjustment.
-- [ ] **Option 3: PRD MVP Review & Potential Re-scoping:**
-  - [ ] Is the original PRD MVP still achievable given the issue and constraints?
-  - [ ] Does the MVP scope need reduction (removing features/epics)?
-  - [ ] Do the core MVP goals need modification?
-  - [ ] Are alternative approaches needed to meet the original MVP intent?
-  - [ ] **Extreme Case:** Does the issue necessitate a fundamental replan or potentially a new PRD V2 (to be handled by the Analyst)?
-- [ ] **Select Recommended Path:** Based on the evaluation, agree on the most viable path forward.
-
-## 5. Sprint Change Proposal Components
-
-[[LLM: The proposal must be actionable and clear. Ensure:
-
-1. The issue is explained in plain language
-2. Impacts are quantified where possible
-3. The recommended path has clear rationale
-4. Next steps are specific and assigned
-5. Success criteria for the change are defined
-
-This proposal guides all subsequent work.]]
-
-(Ensure all agreed-upon points from previous sections are captured in the proposal)
-
-- [ ] **Identified Issue Summary:** Clear, concise problem statement.
-- [ ] **Epic Impact Summary:** How epics are affected.
-- [ ] **Artifact Adjustment Needs:** List of documents to change.
-- [ ] **Recommended Path Forward:** Chosen solution with rationale.
-- [ ] **PRD MVP Impact:** Changes to scope/goals (if any).
-- [ ] **High-Level Action Plan:** Next steps for @{docs.subdirs.stories}/updates.
-- [ ] **Agent Handoff Plan:** Identify roles needed (Analyst, Arch, Design Arch, PDM).
-
-## 6. Final Review & Handoff
-
-[[LLM: Changes require coordination. Before concluding:
-
-1. Is the user fully aligned with the plan?
-2. Do all stakeholders understand the impacts?
-3. Are handoffs to other agents clear?
-4. Is there a rollback plan if the change fails?
-5. How will we validate the change worked?
-
-Get explicit approval - implicit agreement causes problems.
-
-FINAL REPORT:
-After completing the checklist, provide a concise summary:
-
-- What changed and why
-- What we're doing about it
-- Who needs to do what
-- When we'll know if it worked
-
-Keep it action-oriented and forward-looking.]]
-
-- [ ] **Review Checklist:** Confirm all relevant items were discussed.
-- [ ] **Review Sprint Change Proposal:** Ensure it accurately reflects the discussion and decisions.
-- [ ] **User Approval:** Obtain explicit user approval for the proposal.
-- [ ] **Confirm Next Steps:** Reiterate the handoff plan and the next actions to be taken by specific agents.
-
----
-
-
-
-# Dependency: tasks/correct-course.yaml
-
-$schema: ../../.internal/task.schema.json
-id: correct-course
-title: Correct Course Task
-purpose: Guide structured response to change triggers using change-checklist to analyze impacts, explore solutions, and produce a Sprint Change Proposal document
-category: planning
-agent: pdm
-
-inputs:
-  required:
-    - name: change_trigger
-      type: string
-      examples:
-        [
-          "Bug discovered",
-          "Scope change request",
-          "Technical constraint identified",
-        ]
-    - name: initial_impact
-      type: string
-  optional:
-    - name: interaction_mode
-      type: string
-      default: "incremental"
-      examples: ["incremental", "yolo"]
-
-outputs:
-  updates:
-    - target: "@{docs.subdirs.epics}/*.yaml"
-      sections: ["User Stories", "Acceptance Criteria", "Priority"]
-      restrictions: Only as specified in approved change proposal
-    - target: "@{docs.files.prd}"
-      sections: ["Requirements", "Scope", "Technical Constraints"]
-      restrictions: Only as specified in approved change proposal
-    - target: "@{docs.dir}/?(*-)architecture.md"
-      sections: ["Components", "Diagrams", "Technology Stack"]
-      restrictions: Only as specified in approved change proposal
-
-process:
-  mode: sequential
-  steps:
-    - id: SETUP-1
-      title: Initial Setup & Mode Selection
-      description: Acknowledge task, verify inputs, and establish interaction mode
-      action:
-        type: elicit
-        prompt: |
-          Correct Course Task (Change Navigation & Integration) initiated.
-
-          Please confirm:
-          1. Change trigger: {change_trigger}
-          2. Initial impact assessment: {initial_impact}
-
-          Select interaction mode:
-          - Incremental (Default & Recommended): Work through change-checklist section by section
-          - YOLO Mode: Conduct batched analysis with consolidated findings
-        options:
-          - "Incremental - section by section with detailed refinement"
-          - "YOLO - batched analysis for quick assessment"
-
-    - id: SETUP-2
-      title: Verify Access to Artifacts
-      conditions:
-        - move_to_step: ANALYSIS-1
-          when: "project artifacts are accessible"
-      action:
-        type: validation
-        target: "project artifacts"
-      description: Confirm access to PRD, Epics/Stories, Architecture Documents, and change-checklist
-
-    - id: ANALYSIS-1
-      title: Execute Change Context Analysis
-      description: Work through Section 1 of change-checklist - Change Context
-      action:
-        type: analysis
-        target: checklists/change-checklist.md#section-1
-        prompt: Analyze change context including trigger, timing, and initial assessment
-
-    - id: ANALYSIS-2
-      title: Epic/Story Impact Analysis
-      description: Work through Section 2 of change-checklist - Epic/Story Impact
-      action:
-        type: analysis
-        target: checklists/change-checklist.md#section-2
-        prompt: Assess impact on current epics, stories, and sprint work
-
-    - id: ANALYSIS-3
-      title: Artifact Conflict Resolution
-      description: Work through Section 3 of change-checklist - Artifact Conflicts
-      action:
-        type: analysis
-        target: checklists/change-checklist.md#section-3
-        prompt: Identify and resolve conflicts in project artifacts
-
-    - id: ANALYSIS-4
-      title: Path Evaluation & Recommendation
-      description: Work through Section 4 of change-checklist - Path Forward
-      action:
-        type: decision
-        prompt: |
-          Based on analysis, determine recommended path:
-          1. Adjust scope within current sprint
-          2. Rollback specific elements
-          3. Re-scope features
-          4. Defer to next sprint
-          5. Fundamental replan needed (handoff to Analyst/Architect)
-
-    - id: DRAFT-1
-      title: Draft Proposed Changes
-      description: Create specific, actionable proposed updates to affected artifacts
-      action:
-        type: analysis
-        content: |
-          Based on checklist analysis and chosen path:
-          - Identify specific artifacts requiring updates
-          - Draft explicit changes for each artifact
-          - Include:
-            * User story revisions with before/after text
-            * Acceptance criteria modifications
-            * PRD section updates
-            * Architecture diagram changes
-            * Technology/configuration updates
-      condition:
-        if: "path != 'fundamental_replan'"
-        then: "DRAFT-2"
-        else: "HANDOFF-1"
-
-    - id: DRAFT-2
-      title: Review and Refine Proposed Changes
-      description: Iterate on proposed changes based on interaction mode
-      action:
-        type: elicit
-        prompt: Review proposed changes and refine as needed
-      condition:
-        if: "interaction_mode == 'incremental'"
-
-    - id: REVIEW-1
-      title: Present Sprint Change Proposal for Review
-      description: Present complete proposal to user for feedback
-      action:
-        type: elicit
-        prompt: |
-          Sprint Change Proposal complete. Please review:
-
-          {proposal_summary}
-
-          Would you like to:
-          1. Approve as-is
-          2. Request specific adjustments
-          3. Reject and restart analysis
-
-    - id: HANDOFF-1
-      title: Handoff for Fundamental Replan
-      description: Provide handoff guidance when fundamental replanning is needed
-      action:
-        type: hand_off
-        prompt: |
-          Change analysis indicates fundamental replanning is required.
-
-          This change exceeds the scope of sprint-level adjustments and requires:
-          - Architectural review
-          - Product management reassessment
-          - Timeline impact analysis
-
-          Recommended next steps:
-          1. Schedule architecture review session
-          2. Engage product stakeholders for scope discussion
-          3. Conduct impact assessment on current sprint commitments
-
-          Please coordinate with Analyst/Architect for next steps.
-
-    - id: FINALIZE-1
-      title: Finalize and Determine Next Steps
-      description: Obtain approval and provide guidance on next steps
-      action:
-        type: decision
-        prompt: Determine if changes can be implemented directly or require fundamental replan
-      on_failure: halt
-
-blocking_conditions:
-  - condition: Missing critical project artifacts
-    message: Cannot proceed without access to PRD, Epics, and Architecture documents
-    severity: critical
-  - condition: Change requires capabilities beyond current sprint
-    message: Change scope exceeds current sprint capacity - requires replanning
-    severity: error
-
-completion:
-  checklist: change-checklist
-  criteria:
-    - All sections of change-checklist addressed
-    - User approval obtained
-    - Next steps clearly defined
 
 
 
@@ -1441,6 +1050,23 @@ steps:
         - Definition of Done covering success criteria
         - Dependencies understood and documented
 
+  - id: HANDOFF-EPIC
+    title: Provide Epic Summary
+    description: Communicate epic creation status and next steps
+    action:
+      type: hand_off
+      prompt_user: |
+        Epic created: !{epic_file_target}
+
+        Review the epic for:
+        - Goal and scope alignment with PRD
+        - Story list coverage and sequencing
+        - Scope boundaries and Definition of Done completeness
+
+        Next steps:
+        - Confirm priorities with stakeholders
+        - Proceed to story creation once approved
+
 completion:
   criteria:
     - Epic scope aligns with PRD epic definition
@@ -1874,8 +1500,8 @@ steps:
     title: Provide Summary and Next Steps
     description: Communicate story creation results to the user
     action:
-      type: hand_off
-      prompt_user: |
+      type: handoff
+      report_user: |
         Story created: !{story_file_target}
 
         Key technical components included from architecture docs:
@@ -2253,8 +1879,8 @@ steps:
     title: Provide Summary
     description: Summarize created epic file and next steps
     action:
-      type: hand_off
-      prompt_user: |
+      type: handoff
+      report_user: |
         Epic created: !{epic_file_candidate}
         Status: Draft
         Stories proposed: {{story_count}}
@@ -2448,8 +2074,8 @@ steps:
     title: Provide Summary and Next Steps
     description: Communicate story creation results and follow-ups
     action:
-      type: hand_off
-      prompt_user: |
+      type: handoff
+      report_user: |
         Story created: !{story_file_target}
 
         Checklist results: {{checklist_results}}
@@ -2627,6 +2253,23 @@ steps:
         - Acceptance criteria include existing functionality verification
         - Story file created at @{docs.subdirs.stories}/standln-{{story_enhancement_number_resolved}}-*.yaml
         - Documentation updates recorded or explicitly not required
+
+  - id: HANDOFF-STANDALONE
+    title: Provide Story Summary
+    description: Communicate story creation outcome and next steps
+    action:
+      type: hand_off
+      prompt_user: |
+        Story created: !{story_file_target}
+
+        Summary of key details:
+        - Enhancement goal and scope boundaries are documented
+        - Pattern alignment and integration constraints captured
+        - Documentation impact: !{impact_assessment}
+
+        Next steps:
+        - Review the story for completeness
+        - Move to implementation or schedule validation as needed
 
 completion:
   criteria:

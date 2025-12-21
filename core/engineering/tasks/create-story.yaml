@@ -242,8 +242,8 @@ steps:
     title: Provide Summary and Next Steps
     description: Communicate story creation results to the user
     action:
-      type: hand_off
-      prompt_user: |
+      type: handoff
+      report_user: |
         Story created: !{story_file_target}
 
         Key technical components included from architecture docs:

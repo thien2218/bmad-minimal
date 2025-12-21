@@ -149,6 +149,23 @@ steps:
         - Definition of Done covering success criteria
         - Dependencies understood and documented
 
+  - id: HANDOFF-EPIC
+    title: Provide Epic Summary
+    description: Communicate epic creation status and next steps
+    action:
+      type: hand_off
+      prompt_user: |
+        Epic created: !{epic_file_target}
+
+        Review the epic for:
+        - Goal and scope alignment with PRD
+        - Story list coverage and sequencing
+        - Scope boundaries and Definition of Done completeness
+
+        Next steps:
+        - Confirm priorities with stakeholders
+        - Proceed to story creation once approved
+
 completion:
   criteria:
     - Epic scope aligns with PRD epic definition

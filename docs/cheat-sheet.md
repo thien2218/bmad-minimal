@@ -39,10 +39,6 @@ Use for epic management, backlog prioritization, sprint planning, and orchestrat
 - `switch-agent`: Switch to a different supported agent persona. If no agent parameter is provided, list available agents and request selection. If an unsupported agent is provided, show the available list and prompt again.
   - optional: agent
 
-- `correct-course`: Execute task correct-course.yaml
-  - required: change_trigger, initial_impact
-  - optional: interaction_mode
-
 - `yolo`: Toggle YOLO Mode (when ON will skip doc section confirmations)
 
 - `create-epic`: Create the next highest order epic for project

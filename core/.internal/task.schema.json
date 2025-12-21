@@ -273,9 +273,13 @@
 								"type": "string",
 								"description": "Path to a predefined schema file to load and populate"
 							},
+							"report_user": {
+								"type": "string",
+								"description": "Report findings or task completion to user"
+							},
 							"prompt_user": {
 								"type": "string",
-								"description": "Prompt for user elicitation (an interactive mode that allows user to select how to proceed)"
+								"description": "Prompt for user elicitation (interactive mode that allows user to select how to proceed)"
 							},
 							"options": {
 								"type": "array",

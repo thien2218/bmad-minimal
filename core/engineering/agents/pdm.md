@@ -165,13 +165,6 @@
 			"optionalParameters": ["agent"]
 		},
 		{
-			"name": "correct-course",
-			"description": "Execute task correct-course.yaml",
-			"parameters": ["change_trigger", "initial_impact"],
-			"optionalParameters": ["interaction_mode"],
-			"steps": ["checklists/change-checklist.md", "tasks/correct-course.yaml"]
-		},
-		{
 			"name": "yolo",
 			"description": "Toggle YOLO Mode (when ON will skip doc section confirmations)"
 		},

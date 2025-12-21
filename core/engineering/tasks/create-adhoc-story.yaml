@@ -174,8 +174,8 @@ steps:
     title: Provide Summary and Next Steps
     description: Communicate story creation results and follow-ups
     action:
-      type: hand_off
-      prompt_user: |
+      type: handoff
+      report_user: |
         Story created: !{story_file_target}
 
         Checklist results: {{checklist_results}}

@@ -180,8 +180,8 @@ steps:
     title: Provide Summary
     description: Summarize created epic file and next steps
     action:
-      type: hand_off
-      prompt_user: |
+      type: handoff
+      report_user: |
         Epic created: !{epic_file_candidate}
         Status: Draft
         Stories proposed: {{story_count}}
