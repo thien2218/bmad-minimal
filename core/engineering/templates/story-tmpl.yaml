@@ -1,0 +1,132 @@
+template:
+  id: engineering-story-template-v1
+  name: Engineering Story Template
+  version: 1.0
+  output:
+    format: markdown
+    filename: "@{docs.subdirs.stories}/{{epic_num}}.{{story_num}}.{{story_title_short}}.md"
+    title: "Story {{epic_num}}.{{story_num}}: {{story_title}}"
+
+workflow:
+  mode: interactive
+
+sections:
+  - id: status
+    title: Status
+    type: choice
+    choices: ["WIP", "Review", "Done"]
+    default: "WIP"
+    instruction: Select the current story state for the product team.
+    owner: product-development-master
+    editors: ["product-development-master", "developer"]
+
+  - id: priority
+    title: Priority
+    type: choice
+    choices: ["1", "2", "3", "4", "5"]
+    instruction: Assign sequencing priority (1 = highest) defined by PDM.
+    owner: product-development-master
+    editors: ["product-development-master", "product-master"]
+
+  - id: story
+    title: Story
+    type: template-text
+    instruction: Capture the user story using role, action, and benefit.
+    owner: product-development-master
+    editors: ["product-development-master", "product-master"]
+    template: "**As a** {{role}},\n**I want** {{action}},\n**so that** {{benefit}}"
+
+  - id: acceptance-criteria
+    title: Acceptance Criteria
+    type: numbered-list
+    instruction: Copy the acceptance criteria from the epic and adapt if needed.
+    owner: product-development-master
+    editors: ["product-development-master", "product-master"]
+    template: "{{criterion_number}}. {{acceptance_criterion}}"
+
+  - id: tasks
+    title: Tasks / Subtasks
+    type: bullet-list
+    instruction: Break down implementation work, referencing applicable AC numbers and difficulty.
+    owner: product-development-master
+    editors: ["product-development-master", "product-master", "developer"]
+    template: "- [ ] {{task_description}} (AC: {{ac_reference}}) [Diff: {{difficulty}}]\n  - [ ] {{optional_subtask_description}} [Diff: {{subtask_difficulty}}]"
+
+  - id: dev-notes
+    title: Dev Notes
+    instruction: Leave blank initially; populate only with verified references from docs and prior stories.
+    owner: product-development-master
+    editors: ["product-development-master", "product-master"]
+    template: "{{dev_notes}}"
+
+  - id: testing-standards
+    title: Testing
+    instruction: List testing locations, standards, frameworks, and special requirements the dev must follow.
+    owner: product-development-master
+    editors: ["product-development-master", "product-master"]
+    template: "{{testing_guidance}}"
+
+  - id: test-specs
+    title: Test Specs
+    instruction: Maintain specifications plus associated artifacts for QA.
+    owner: qa-agent
+    editors: ["qa-agent", "developer"]
+    sections:
+      - id: specs
+        title: Specifications
+        type: numbered-list
+        instruction: Use concise Given-When-Then specs with AC references.
+        template: "{{spec_number}}. [AC {{ac_numbers}}] {{short_description}} — Given {{given}}, When {{when}}, Then {{then}}"
+      - id: artifacts
+        title: Artifacts
+        type: bullet-list
+        instruction: Reference relevant or planned test files with purpose statements.
+        template: "- {{path}} — {{purpose}}"
+
+  - id: risk-mitigation
+    title: Risk Mitigation
+    instruction: Document primary risk, mitigation actions, and rollback plan.
+    owner: product-development-master
+    editors: ["product-development-master", "product-master"]
+    sections:
+      - id: primary-risk
+        title: Primary Risk
+        type: paragraph
+        instruction: Describe the leading implementation or user risk.
+        template: "{{primary_risk}}"
+      - id: mitigation-strategies
+        title: Mitigation Strategies
+        type: bullet-list
+        instruction: List concrete steps to reduce risk likelihood or impact.
+        template: "- {{mitigation_action}}"
+      - id: rollback-plan
+        title: Rollback Plan
+        type: paragraph
+        instruction: Outline the rollback trigger, prerequisites, and steps.
+        template: "{{rollback_plan}}"
+
+  - id: developer-record
+    title: Dev Agent Record
+    instruction: Reserved for the development agent to document implementation details.
+    owner: developer
+    editors: ["developer"]
+    sections:
+      - id: agent-model
+        title: Agent Model Used
+        template: "{{agent_model_name_version}}"
+      - id: debug-log-references
+        title: Debug Log References
+        template: "{{debug_logs}}"
+      - id: completion-notes
+        title: Completion Notes List
+        template: "{{completion_notes}}"
+      - id: file-list
+        title: File List
+        template: "{{modified_files}}"
+
+  - id: qa-results
+    title: QA Results
+    instruction: QA agent records validation results and findings for the completed story.
+    owner: qa-agent
+    editors: ["qa-agent"]
+    template: "{{qa_results}}"

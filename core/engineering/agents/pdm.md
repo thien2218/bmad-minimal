@@ -173,7 +173,7 @@
 			"description": "Create the next highest order epic for project",
 			"parameters": ["epic_number", "enhancement_name"],
 			"steps": [
-				"schemas/epic.json",
+				"templates/epic-tmpl.yaml",
 				"checklists/pdm-checklist.md",
 				"tasks/create-epic.yaml"
 			]
@@ -182,7 +182,7 @@
 			"name": "create-epics",
 			"description": "Create epics from PRD epic list",
 			"steps": [
-				"schemas/epic.json",
+				"templates/epic-tmpl.yaml",
 				"checklists/pdm-checklist.md",
 				"tasks/create-epic.yaml"
 			]
@@ -192,7 +192,7 @@
 			"description": "Create the next story for the highest ordered epic or the one specified by user.",
 			"parameters": ["epic"],
 			"steps": [
-				"schemas/story.json",
+				"templates/story-tmpl.yaml",
 				"tasks/create-story.yaml",
 				"checklists/story-draft-checklist.md"
 			]
@@ -202,7 +202,7 @@
 			"description": "Create all stories for the highest ordered epic or targeted epic",
 			"parameters": ["epic"],
 			"steps": [
-				"schemas/story.json",
+				"templates/story-tmpl.yaml",
 				"tasks/create-story.yaml",
 				"checklists/story-draft-checklist.md"
 			]
@@ -213,7 +213,7 @@
 			"parameters": ["change_description"],
 			"optionalParameters": ["epic_adhoc_number"],
 			"steps": [
-				"schemas/epic.json",
+				"templates/epic-tmpl.yaml",
 				"checklists/pdm-checklist.md",
 				"tasks/create-adhoc-epic.yaml"
 			]
@@ -224,7 +224,7 @@
 			"parameters": ["adhoc_epic"],
 			"optionalParameters": ["adhoc_number"],
 			"steps": [
-				"schemas/story.json",
+				"templates/story-tmpl.yaml",
 				"tasks/create-adhoc-story.yaml",
 				"checklists/story-draft-checklist.md"
 			]
@@ -234,7 +234,7 @@
 			"description": "Create all adhoc stories for the highest ordered adhoc epic or targeted adhoc epic",
 			"parameters": ["adhoc_epic"],
 			"steps": [
-				"schemas/story.json",
+				"templates/story-tmpl.yaml",
 				"tasks/create-adhoc-story.yaml",
 				"checklists/story-draft-checklist.md"
 			]
@@ -245,7 +245,7 @@
 			"parameters": ["change_description"],
 			"optionalParameters": ["enhancement_number"],
 			"steps": [
-				"schemas/story.json",
+				"templates/story-tmpl.yaml",
 				"tasks/create-standalone-story.yaml",
 				"checklists/story-draft-checklist.md"
 			]

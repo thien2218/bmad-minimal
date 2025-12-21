@@ -168,7 +168,7 @@
 			"parameters": ["story"],
 			"optionalParameters": ["architecture_refs", "coding_standards"],
 			"steps": [
-				"schemas/story.json",
+				"templates/story-tmpl.yaml",
 				"schemas/qa-gate.json",
 				"tasks/review-story.yaml"
 			]
@@ -178,7 +178,7 @@
 			"description": "Review a plain-English outline of test cases for clarity, coverage, and traceability (optional story), and produce an actionable improvement report.",
 			"parameters": ["outline", "story"],
 			"steps": [
-				"schemas/story.json",
+				"templates/story-tmpl.yaml",
 				"data/test-levels-framework.yaml",
 				"data/test-priorities-matrix.yaml",
 				"tasks/spec-outline-review.yaml"

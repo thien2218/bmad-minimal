@@ -113,7 +113,7 @@ steps:
       type: file_operation
       operation: create
       target: "!{story_file_target}"
-      schema: "core/engineering/schemas/story.json"
+      schema: "core/engineering/templates/story-tmpl.yaml"
 
   - id: ASSESS-DOCUMENT-IMPACT
     title: Assess impact on PRD and architecture documents

@@ -128,12 +128,12 @@ steps:
 
   - id: CREATE-1
     title: Create Epic YAML (schema-aligned)
-    description: Initialize the epic file following core/engineering/schemas/epic.json sections
+    description: Initialize the epic file following core/engineering/templates/epic-tmpl.yaml sections
     action:
       type: file_operation
       operation: create
       target: "!{epic_file_candidate}"
-      schema: "core/engineering/schemas/epic.json"
+      schema: "core/engineering/templates/epic-tmpl.yaml"
 
   - id: VALIDATE-2
     title: Validate Epic Completeness

@@ -192,7 +192,7 @@ steps:
       type: file_operation
       operation: create
       target: "!{story_file_target}"
-      schema: "core/engineering/schemas/story.json"
+      schema: "core/engineering/templates/story-tmpl.yaml"
 
   - id: RISK-ASSESS
     title: Assess Story Risk

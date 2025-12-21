@@ -1,0 +1,110 @@
+template:
+  id: engineering-epic-template-v1
+  name: Engineering Epic Template
+  version: 1.0
+  output:
+    format: markdown
+    filename: "@{docs.subdirs.epics}/{{epic_number}}.{{epic_title_short}}.md"
+    title: "Epic {{epic_number}}: {{epic_title}}"
+
+workflow:
+  mode: interactive
+
+sections:
+  - id: status
+    title: Status
+    type: choice
+    choices: ["Review", "WIP", "Approved"]
+    instruction: Select the current epic status for stakeholder visibility.
+    owner: product-development-master
+    editors: ["product-development-master"]
+
+  - id: epic-overview
+    title: Overview
+    instruction: Define goal, rich context, and completion criteria for this epic.
+    owner: product-development-master
+    editors: ["product-development-master"]
+    sections:
+      - id: goal
+        title: Goal
+        type: paragraph
+        instruction: Summarize what the epic delivers, why it matters, and how it aligns to PRD goals.
+        template: "This epic delivers {{epic_objective}} by implementing {{solution_approach}}, enabling {{user_value}} and advancing {{product_alignment}}."
+      - id: description
+        title: Description
+        type: paragraphs
+        instruction: Provide 2-3 paragraphs detailing problem context, solution approach, enabled user scenarios, and expected outcomes.
+        template: "{{epic_description}}"
+      - id: definition_of_done
+        title: Definition of Done
+        type: numbered-list
+        instruction: List measurable criteria proving the epic is complete.
+        template: "{{criterion_number}}. {{acceptance_criterion}}"
+
+  - id: scope-boundaries
+    title: Scope and Boundaries
+    instruction: Clarify what is included and excluded to prevent scope creep.
+    owner: product-development-master
+    editors: ["product-development-master"]
+    sections:
+      - id: in-scope
+        title: In Scope
+        type: bullet-list
+        instruction: Identify features, components, and PRD references delivered by this epic.
+        template: "- {{scope_item}} ({{prd_reference}})"
+      - id: out-of-scope
+        title: Out of Scope
+        type: bullet-list
+        instruction: List related items intentionally deferred or handled elsewhere and why.
+        template: "- {{excluded_item}} — {{deferral_reason}}"
+
+  - id: requirements-mapping
+    title: Requirements Mapping
+    instruction: Link epic scope to PRD requirements for traceability.
+    owner: product-development-master
+    editors: ["product-development-master"]
+    sections:
+      - id: functional-requirements
+        title: Functional Requirements Addressed
+        type: bullet-list
+        instruction: Reference specific FR IDs, note coverage scope, and summarize intent.
+        template: "- **{{fr_id}}:** {{requirement_summary}} — {{implementation_scope}}"
+      - id: non-functional-requirements
+        title: Non-Functional Requirements
+        type: bullet-list
+        instruction: Reference applicable NFR IDs with acceptance thresholds for quality gates.
+        template: "- **{{nfr_id}}:** {{requirement_summary}} — {{acceptance_threshold}}"
+
+  - id: story-breakdown
+    title: Story Breakdown
+    instruction: Provide the ordered list of stories plus sequencing rationale.
+    owner: product-development-master
+    editors: ["product-development-master"]
+    sections:
+      - id: story-list
+        title: Story List
+        type: numbered-list
+        instruction: Sequence stories by dependency first, then priority, noting brief goals and dependencies.
+        template: "{{story_number}}. **{{story_title}}** — {{story_goal}} {{dependency_note}} [Priority: {{priority}}]"
+      - id: story-sequencing-rationale
+        title: Story Sequencing Rationale
+        type: paragraph
+        instruction: Explain ordering logic, critical path, and possible parallelization.
+        template: "{{sequencing_notes}}"
+
+  - id: dependencies
+    title: Dependencies
+    instruction: Capture external and intra-epic dependencies impacting delivery.
+    owner: product-development-master
+    editors: ["product-development-master"]
+    sections:
+      - id: dependencies
+        title: Dependencies
+        type: bullet-list
+        instruction: List external epics, teams, or components required before or during this epic.
+        template: "- **{{dependency_type}}:** {{dependency_description}} — {{impact_on_epic}}"
+      - id: story-dependencies
+        title: Story Dependencies
+        type: bullet-list
+        instruction: Document relationships between stories and prerequisite foundations.
+        template: "- **Story {{story_id}}** depends on **Story {{prerequisite_story_id}}:** {{dependency_reason}}"
