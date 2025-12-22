@@ -21,111 +21,353 @@ sections:
       Ensure the foundational environment matches project type—greenfield needs clean scaffolding; brownfield must integrate safely with existing systems.
     required: true
     items:
-      - text: Project scaffolding is defined (template usage or from-scratch steps, README, repo setup).
-        condition: greenfield
-      - text: Existing system analysis and integration points are documented with rollback coverage.
-        condition: brownfield
-      - text: Local development environment setup, tooling, dependency install steps, and configs are clear.
-      - text: Core dependencies are listed early with package management strategy and version constraints.
-      - text: Compatibility with the existing stack is validated when layering onto brownfield systems.
-        condition: brownfield
+      - text: Project Scaffolding
+        condition: "@{project.type} == 'greenfield'"
+        subItems:
+          - text: Epic 1 includes explicit steps for project creation or initialization.
+          - text: Starter template cloning steps are documented when applicable.
+          - text: From-scratch scaffolding activities are fully enumerated.
+          - text: Initial README or documentation setup is included.
+          - text: Repository setup and initial commit processes are defined.
+      - text: Existing System Integration
+        condition: "@{project.type} == 'brownfield'"
+        subItems:
+          - text: Existing project analysis has been completed and documented.
+          - text: Integration points with the current system are identified.
+          - text: Development environment setup preserves existing functionality.
+          - text: Local testing approach validates existing features.
+          - text: Rollback procedures exist for each integration point.
+      - text: Development Environment
+        subItems:
+          - text: Local development environment steps are clearly defined.
+          - text: Required tools and versions are specified.
+          - text: Dependency installation steps are documented.
+          - text: Configuration file expectations are addressed.
+          - text: Development server setup is included.
+      - text: Core Dependencies
+        subItems:
+          - text: Critical packages or libraries are listed early.
+          - text: Package management strategy is documented.
+          - text: Version specifications are provided where necessary.
+          - text: Dependency conflicts or special requirements are identified.
+          - text: Version compatibility with the existing stack is validated.
+            condition: "@{project.type} == 'brownfield'"
   - id: INFRASTRUCTURE
     title: Infrastructure & Deployment
     llm_hint: |
       Infrastructure must precede usage: databases, APIs, deployment, and testing environments need sequencing, especially to avoid brownfield regressions.
     required: true
     items:
-      - text: Database/data-store setup (selection, schema, migrations, seed data) is planned before use, with migration/compat risks handled.
-      - text: API/service configuration covers frameworks, auth, middleware, and compatibility with existing systems where applicable.
-      - text: Deployment pipeline (CI/CD, IaC, env configs, strategies) is defined with downtime mitigation for brownfield.
-      - text: Testing infrastructure (frameworks, environments, mocks) is in place, including regression coverage for legacy behavior.
+      - text: Database & Data Store Setup
+        subItems:
+          - text: Database selection or setup occurs before any operations.
+          - text: Schema definitions exist before manipulating data.
+          - text: Migration strategies are defined when applicable.
+          - text: Seed data or initial data setup is covered when needed.
+          - text: Database migration risks are identified and mitigated.
+            condition: "@{project.type} == 'brownfield'"
+          - text: Backward compatibility requirements are satisfied.
+            condition: "@{project.type} == 'brownfield'"
+      - text: API & Service Configuration
+        subItems:
+          - text: API frameworks are set up before implementing endpoints.
+          - text: Service architecture is defined prior to building services.
+          - text: Authentication framework is implemented ahead of protected routes.
+          - text: Middleware and shared utilities are created before consumption.
+          - text: API compatibility with the existing system is maintained.
+            condition: "@{project.type} == 'brownfield'"
+          - text: Existing authentication integrations remain intact.
+            condition: "@{project.type} == 'brownfield'"
+      - text: Deployment Pipeline
+        subItems:
+          - text: CI/CD pipeline is established before deployment work.
+          - text: Infrastructure as Code is configured before execution.
+          - text: Environment configuration requirements are defined early.
+          - text: Deployment strategies are documented ahead of implementation.
+          - text: Deployment minimizes downtime for existing users.
+            condition: "@{project.type} == 'brownfield'"
+          - text: Blue-green or canary strategies are outlined where needed.
+            condition: "@{project.type} == 'brownfield'"
+      - text: Testing Infrastructure
+        subItems:
+          - text: Testing frameworks are installed before writing tests.
+          - text: Dedicated test environments are configured in advance.
+          - text: Mock services or data are prepared before execution.
+          - text: Regression testing covers legacy functionality.
+            condition: "@{project.type} == 'brownfield'"
+          - text: Integration testing validates new-to-existing system connections.
+            condition: "@{project.type} == 'brownfield'"
   - id: EXTERNAL-DEPS
     title: External Dependencies & Integrations
     llm_hint: |
       External services, APIs, and infra dependencies often block teams—confirm credentials, sequencing, and backward compatibility.
     required: true
     items:
-      - text: Third-party services have account/key setup steps, credential storage, fallbacks, and compatibility checks for existing integrations.
-      - text: External API integrations define endpoints, auth, limits, failure handling, and maintain current dependencies.
-      - text: Infrastructure services (cloud resources, DNS, messaging, CDNs) are provisioned before use and preserve existing setups when required.
+      - text: Third-Party Services
+        subItems:
+          - text: Account creation steps for required services are identified.
+          - text: API key acquisition processes are defined.
+          - text: Credential storage practices are specified.
+          - text: Fallback or offline development options are considered.
+          - text: Compatibility with existing services is verified.
+            condition: "@{project.type} == 'brownfield'"
+          - text: Impact on current integrations is assessed.
+            condition: "@{project.type} == 'brownfield'"
+      - text: External APIs
+        subItems:
+          - text: Integration points with external APIs are clearly identified.
+          - text: Authentication sequencing with external services is documented.
+          - text: API limits or constraints are acknowledged.
+          - text: Backup strategies for API failures are defined.
+          - text: Existing API dependencies are preserved.
+            condition: "@{project.type} == 'brownfield'"
+      - text: Infrastructure Services
+        subItems:
+          - text: Cloud resource provisioning is sequenced ahead of use.
+          - text: DNS or domain registration needs are captured.
+          - text: Email or messaging setup steps exist when required.
+          - text: CDN or static asset hosting preparation precedes usage.
+          - text: Existing infrastructure services remain unaffected.
+            condition: "@{project.type} == 'brownfield'"
   - id: UI-UX
     title: UI/UX Considerations
     llm_hint: |
       Run this section only when UI/UX is in scope; confirm design systems, frontend pipelines, and UX flows align with accessibility and existing experiences.
     required: true
     items:
-      - text: UI framework, design system, styling approach, responsive strategy, and accessibility requirements are established.
+      - text: Design System Setup
         condition: ui
-      - text: Frontend infrastructure (build pipeline, asset strategy, testing, workflow) is prepared, retaining consistency with existing UI when relevant.
+        subItems:
+          - text: UI framework and libraries are selected and installed early.
+          - text: Design system or component library is established.
+          - text: Styling approach is defined (CSS modules, styled-components, etc.).
+          - text: Responsive design strategy is outlined.
+          - text: Accessibility requirements are defined upfront.
+      - text: Frontend Infrastructure
         condition: ui
-      - text: User journeys, navigation, error/loading states, and validation patterns are mapped, preserving prior workflows on brownfield fronts.
+        subItems:
+          - text: Frontend build pipeline is configured before development.
+          - text: Asset optimization strategy is defined.
+          - text: Frontend testing framework is set up.
+          - text: Component development workflow is established.
+          - text: UI consistency with existing systems is maintained.
+            condition: "@{project.type} == 'brownfield'"
+      - text: User Experience Flow
         condition: ui
+        subItems:
+          - text: User journeys are mapped before implementation.
+          - text: Navigation patterns are defined early.
+          - text: Error and loading states are planned.
+          - text: Form validation patterns are established.
+          - text: Existing user workflows are preserved or migrated appropriately.
+            condition: "@{project.type} == 'brownfield'"
   - id: RESPONSIBILITY
     title: User/Agent Responsibility
     llm_hint: |
       Assign human-only tasks to users and technical work to agents so ownership is unambiguous.
     required: true
     items:
-      - text: Human-only activities (account creation, purchases, credential provision) are assigned to users.
-      - text: Code/config/testing responsibilities are allocated to dev agents with automation opportunities noted.
+      - text: User Actions
+        subItems:
+          - text: Human-only tasks like account creation or purchases are assigned to users.
+          - text: External credential provision remains a user responsibility.
+          - text: Required approvals or access grants are coordinated by users.
+      - text: Developer Agent Actions
+        subItems:
+          - text: Code-focused work is allocated to developer agents.
+          - text: Automation or scripting opportunities are noted for agents.
+          - text: Configuration management responsibilities are assigned to agents.
+          - text: Testing and validation ownership is defined per agent.
   - id: SEQUENCING
     title: Feature Sequencing & Dependencies
     llm_hint: |
       Validate functional, technical, and cross-epic dependencies so the plan respects critical paths and protects existing behavior.
     required: true
     items:
-      - text: Functional dependencies are sequenced logically (shared components, auth before protected flows, etc.).
-      - text: Technical dependencies (services, libraries, data models, APIs) are built before consumers rely on them.
-      - text: Cross-epic dependencies ensure later epics rely only on completed earlier work while delivering incremental value.
-      - text: Existing functionality remains intact throughout the sequence for brownfield efforts.
-        condition: brownfield
+      - text: Functional Dependencies
+        subItems:
+          - text: Dependent features are sequenced logically.
+          - text: Shared components are built before consuming features.
+          - text: User flows follow logical progression.
+          - text: Authentication precedes protected capabilities.
+          - text: Existing functionality stays intact throughout the rollout.
+            condition: "@{project.type} == 'brownfield'"
+      - text: Technical Dependencies
+        subItems:
+          - text: Lower-level services are built before higher-level ones.
+          - text: Libraries or utilities exist before use.
+          - text: Data models are defined before operations manipulate them.
+          - text: API endpoints are implemented before clients consume them.
+          - text: Integration points are tested at each step.
+            condition: "@{project.type} == 'brownfield'"
+      - text: Cross-Epic Dependencies
+        subItems:
+          - text: Later epics only build on completed earlier work.
+          - text: No epic depends on future epics.
+          - text: Early-epic infrastructure is leveraged consistently.
+          - text: Incremental value delivery is maintained.
+          - text: Each epic maintains overall system integrity.
+            condition: "@{project.type} == 'brownfield'"
   - id: RISK
     title: Risk Management
     llm_hint: |
       Brownfield projects demand pessimistic risk analysis—identify breaking changes, rollback readiness, and user impact mitigations.
     required: true
     items:
-      - text: Breaking change risks (functionality, migrations, APIs, performance, security) are logged with mitigations.
-        condition: brownfield
-      - text: Rollback strategy covers per-story procedures, feature flags, backups, monitoring, and triggers.
-        condition: brownfield
-      - text: User impact mitigation (workflow analysis, communication, training, support, data migration) is defined.
-        condition: brownfield
+      - text: Breaking Change Risks
+        condition: "@{project.type} == 'brownfield'"
+        subItems:
+          - text: Risks to existing functionality are captured with mitigations.
+          - text: Database migration risks are documented.
+          - text: API breaking change risks are evaluated.
+          - text: Performance degradation risks are assessed.
+          - text: Security vulnerabilities are considered.
+      - text: Rollback Strategy
+        condition: "@{project.type} == 'brownfield'"
+        subItems:
+          - text: Rollback procedures exist per story or change.
+          - text: Feature flag strategy is defined.
+          - text: Backup and recovery procedures are updated.
+          - text: Monitoring covers new components.
+          - text: Rollback triggers and thresholds are defined.
+      - text: User Impact Mitigation
+        condition: "@{project.type} == 'brownfield'"
+        subItems:
+          - text: Existing user workflows are analyzed for impact.
+          - text: Communication plan to users is documented.
+          - text: Training materials are updated.
+          - text: Support documentation reflects changes.
+          - text: User data migration path is validated.
   - id: MVP
     title: MVP Scope Alignment
     llm_hint: |
       Reaffirm that planned work strictly serves MVP goals, with brownfield enhancements justified and user journeys complete.
     required: true
     items:
-      - text: All PRD core goals are addressed without scope creep, with enhancements justified for brownfield complexity.
-      - text: Critical user journeys, edge cases, and error scenarios are covered, including accessibility when UI is involved.
-      - text: Technical constraints, NFRs, and compatibility requirements are satisfied.
+      - text: Core Goals Alignment
+        subItems:
+          - text: All PRD core goals are addressed.
+          - text: Features directly support MVP objectives.
+          - text: Extraneous features beyond MVP scope are excluded.
+          - text: Critical features are prioritized appropriately.
+          - text: Enhancement complexity is justified for brownfield scenarios.
+            condition: "@{project.type} == 'brownfield'"
+      - text: User Journey Completeness
+        subItems:
+          - text: Critical user journeys are fully implemented.
+          - text: Edge cases and error scenarios are addressed.
+          - text: User experience considerations are included.
+          - text: Accessibility requirements are incorporated.
+            condition: ui
+          - text: Existing workflows are preserved or improved where needed.
+            condition: "@{project.type} == 'brownfield'"
+      - text: Technical Requirements
+        subItems:
+          - text: Technical constraints from the PRD are satisfied.
+          - text: Non-functional requirements are incorporated.
+          - text: Architecture decisions align with constraints.
+          - text: Performance considerations are addressed.
+          - text: Compatibility requirements are fulfilled.
+            condition: "@{project.type} == 'brownfield'"
   - id: DOCUMENTATION
     title: Documentation & Handoff
     llm_hint: |
       Good documentation keeps teams aligned; ensure dev/user docs, integration notes, and LLM-ready context packets exist.
     required: true
     items:
-      - text: Developer documentation (API refs, setup instructions, architecture decisions, patterns) is current, with integration points detailed for brownfield.
-      - text: User documentation (guides, messaging, onboarding) is updated when user-facing behavior changes.
-      - text: Knowledge transfer artifacts capture existing system context, integration details, review plans, operations handoff, and historical rationale.
-      - text: Handoff packages are optimized for LLM agents with concise, labeled context and minimal excess narrative.
+      - text: Developer Documentation
+        subItems:
+          - text: API references are current.
+          - text: Setup instructions remain accurate.
+          - text: Architecture decisions are documented.
+          - text: Patterns and conventions are recorded.
+          - text: Integration points are detailed for brownfield compatibility.
+            condition: "@{project.type} == 'brownfield'"
+      - text: User Documentation
+        subItems:
+          - text: User guides or help documentation are updated when required.
+          - text: Error messaging and user feedback paths are addressed.
+          - text: Onboarding flows are fully specified.
+          - text: Changes to existing features are communicated.
+            condition: "@{project.type} == 'brownfield'"
+      - text: Knowledge Transfer
+        subItems:
+          - text: Existing system knowledge is captured.
+            condition: "@{project.type} == 'brownfield'"
+          - text: Integration knowledge is documented.
+            condition: "@{project.type} == 'brownfield'"
+          - text: Code review knowledge sharing is planned.
+          - text: Deployment knowledge is transferred to operations.
+          - text: Historical context is preserved.
+      - text: LLM-Ready Handoff
+        subItems:
+          - text: Handoff packages are concise and well-labeled.
+          - text: Context packets avoid unnecessary narrative.
+          - text: Required artifacts are easy for LLM agents to consume.
   - id: POST-MVP
     title: Post-MVP Considerations
     llm_hint: |
       Plan for future success: separate MVP vs future, document technical debt, ensure monitoring and feedback loops, and keep brownfield integrations extensible.
     required: true
     items:
-      - text: Future enhancements are decoupled from MVP scope with extensibility points noted.
-      - text: Technical debt and reuse patterns (especially for integrations) are documented.
-      - text: Monitoring, analytics, feedback collection, and performance tracking are planned, preserving existing telemetry when needed.
+      - text: Future Enhancements
+        subItems:
+          - text: MVP scope is clearly separated from future features.
+          - text: Architecture supports planned enhancements.
+          - text: Technical debt considerations are documented.
+          - text: Extensibility points are identified.
+          - text: Integration patterns remain reusable for brownfield contexts.
+            condition: "@{project.type} == 'brownfield'"
+      - text: Technical Debt & Reuse
+        subItems:
+          - text: Technical debt items are cataloged.
+          - text: Reuse patterns, especially for integrations, are documented.
+          - text: Follow-up work is prioritized appropriately.
+      - text: Monitoring & Feedback
+        subItems:
+          - text: Monitoring and analytics requirements are planned.
+          - text: User feedback collection mechanisms are defined.
+          - text: Performance tracking is incorporated.
+          - text: Existing telemetry is preserved or enhanced.
+            condition: "@{project.type} == 'brownfield'"
   - id: VALIDATION
     title: Validation Summary
     llm_hint: |
       Conclude with a structured report covering readiness, project-type specifics, risks, MVP completeness, and implementation readiness.
     required: true
     items:
-      - text: Compile the executive summary (project type, readiness percentage, go/no-go, blocking issues, skipped sections).
-      - text: Document project-type analysis (setup/completeness/timeline for greenfield; integration risk/impact/rollback/user disruption for brownfield).
-      - text: Record top risks with mitigations and timeline impacts, including brownfield-specific integration risks where applicable.
-      - text: Evaluate MVP completeness (core coverage, missing essentials, scope creep) and implementation readiness (developer clarity, ambiguous requirements, missing tech details).
+      - text: Executive Summary
+        subItems:
+          - text: Record project type, UI scope, readiness percentage, and go/no-go recommendation.
+          - text: Count critical blocking issues.
+          - text: Note sections skipped due to project constraints.
+      - text: Project-Specific Analysis
+        subItems:
+          - text: Summarize setup completeness, dependency sequencing, MVP scope, and timeline feasibility.
+            condition: "@{project.type} == 'greenfield'"
+          - text: Assess integration risk level, system impact, rollback readiness, and user disruption potential.
+            condition: "@{project.type} == 'brownfield'"
+      - text: Risk Assessment
+        subItems:
+          - text: List top risks with mitigations and timeline impacts.
+          - text: Highlight brownfield-specific integration risks when applicable.
+            condition: "@{project.type} == 'brownfield'"
+      - text: MVP Completeness & Implementation Readiness
+        subItems:
+          - text: Evaluate core feature coverage, missing essentials, and scope creep.
+          - text: Provide developer clarity score and ambiguous requirement count.
+          - text: Capture missing technical details or dependencies.
+          - text: Document integration point clarity for brownfield work.
+            condition: "@{project.type} == 'brownfield'"
+      - text: Recommendations
+        subItems:
+          - text: List must-fix items before development.
+          - text: Capture should-fix improvements for quality.
+          - text: Suggest optional enhancements or post-MVP deferrals.
+      - text: Integration Confidence
+        condition: "@{project.type} == 'brownfield'"
+        subItems:
+          - text: Rate confidence in preserving existing functionality.
+          - text: Confirm rollback procedure completeness.
+          - text: Verify monitoring coverage for integration points.
+          - text: Assess support team readiness.
