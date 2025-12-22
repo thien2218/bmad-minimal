@@ -249,7 +249,7 @@
 $schema: ../../.internal/task.schema.json
 id: develop-story
 title: Develop Story Task
-purpose: Implement a story end-to-end using an implementation-first workflow; execute tasks/subtasks sequentially, then validate and document results.
+purpose: Build the story with an implementation-first flow
 category: development
 agent: dev
 
@@ -487,7 +487,7 @@ Be honest - it's better to flag issues now than have them discovered later.]]
 $schema: ../../.internal/task.schema.json
 id: develop-story-test-first
 title: Develop Story (Test-First)
-purpose: "Follow a TDD workflow to implement a story: read specs, write failing tests, implement to green, then update the story record."
+purpose: Run a strict TDD cycle to develop a story
 category: development
 agent: dev
 
@@ -918,7 +918,7 @@ usage:
 $schema: ../../.internal/task.schema.json
 id: apply-qa-fixes
 title: Apply QA Fixes
-purpose: Implement fixes based on QA results (gate and assessments) for a specific story while only updating allowed sections in the story file
+purpose: Apply fixes for a story based on QA review findings
 category: quality
 agent: dev
 
@@ -1078,7 +1078,7 @@ completion:
 $schema: ../../.internal/task.schema.json
 id: update-docs
 title: Update Project Documentation
-purpose: Update or create project documentation (API docs via Swagger/OpenAPI for backend, component docs via Storybook for frontend) with an in-place-first philosophy.
+purpose: Refresh or create project's API/component docs
 category: documentation
 agent: dev
 
@@ -1130,8 +1130,8 @@ steps:
     title: Select documentation strategy
     description: Choose the documentation approach based on analysis and user preferences
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Based on project analysis:
         Backend: {{detected_backend}}
         Frontend: {{detected_frontend}}

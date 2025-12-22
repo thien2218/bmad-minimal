@@ -1,7 +1,7 @@
 $schema: ../../.internal/task.schema.json
 id: create-standalone-story
 title: Create Standalone Story
-purpose: Create a single user story for very small standalone enhancements that can be completed in one focused development session while following existing system patterns.
+purpose: Capture a tiny standalone enhancement as a story that fits one focused dev session
 category: planning
 agent: pdm
 
@@ -49,8 +49,8 @@ steps:
     title: Assess if standalone story is appropriate
     description: Confirm the enhancement meets the criteria for a standalone story
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Before creating a standalone story, confirm this enhancement meets ALL criteria:
 
         Use standalone story when:
@@ -98,8 +98,8 @@ steps:
     title: Validate standalone change understanding with user
     description: Ensure the interpreted enhancement description matches user intent before writing the story
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Provide a concise summary covering the standalone change goal, scope boundaries, dependencies, and any open questions.
         Confirm whether this summary aligns with the original change description:
         1) Yes, it is accurate — continue
@@ -119,8 +119,8 @@ steps:
     title: Assess impact on PRD and architecture documents
     description: Determine if documentation updates are needed for this standalone story
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Evaluate whether this story impacts PRD and/or architecture documents:
         1. No impact
         2. PRD impact only
@@ -161,8 +161,8 @@ steps:
     title: Provide Story Summary
     description: Communicate story creation outcome and next steps
     action:
-      type: hand_off
-      prompt_user: |
+      type: report_user
+      template: |
         Story created: !{story_file_target}
 
         Summary of key details:
@@ -178,6 +178,6 @@ completion:
   criteria:
     - Story enhancement meets standalone criteria
     - Story file created with proper schema structure
-    - All required sections populated with elicited content
+    - All required sections populated with user prompted content
     - Documentation impact assessed and updated as needed
     - Completion validation executed successfully

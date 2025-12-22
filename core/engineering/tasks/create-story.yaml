@@ -1,7 +1,7 @@
 $schema: ../../.internal/task.schema.json
 id: create-story
 title: Create Next Story Task
-purpose: Identify the next logical story based on project progress and epic definitions, then prepare a comprehensive, self-contained story file ready for implementation
+purpose: Author the next epic story as a self-contained implementation-ready file
 category: planning
 agent: pdm
 
@@ -97,8 +97,8 @@ steps:
     title: Handle Epic Completion Scenario
     description: Confirm next action when the current epic is complete
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Epic {{epic_number}} complete: all stories in epic {{epic_number}} are finished.
 
         Select an option:
@@ -242,8 +242,8 @@ steps:
     title: Provide Summary and Next Steps
     description: Communicate story creation results to the user
     action:
-      type: handoff
-      report_user: |
+      type: report_user
+      template: |
         Story created: !{story_file_target}
 
         Key technical components included from architecture docs:

@@ -1,7 +1,7 @@
 $schema: ../../.internal/task.schema.json
 id: create-epic
 title: Create Epic Task
-purpose: Create a single epic for an initiative listed in the PRD, aligned with architecture constraints and ready for downstream story creation
+purpose: Draft a PRD-aligned epic that respects architecture constraints
 category: planning
 agent: pdm
 
@@ -94,7 +94,7 @@ steps:
 
   - id: ADD-STORIES
     title: Add Stories to Epic
-    description: Update story-breakdown with the elicited stories and sequencing rationale
+    description: Update story-breakdown with stories and sequencing rationale
     action:
       type: file_operation
       operation: update

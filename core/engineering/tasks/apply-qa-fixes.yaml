@@ -1,7 +1,7 @@
 $schema: ../../.internal/task.schema.json
 id: apply-qa-fixes
 title: Apply QA Fixes
-purpose: Implement fixes based on QA results (gate and assessments) for a specific story while only updating allowed sections in the story file
+purpose: Apply fixes for a story based on QA review findings
 category: quality
 agent: dev
 

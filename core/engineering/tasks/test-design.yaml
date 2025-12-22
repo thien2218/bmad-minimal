@@ -1,7 +1,7 @@
 $schema: ../../.internal/task.schema.json
 id: test-design
 title: Test Design
-purpose: Create comprehensive test scenarios with appropriate test level recommendations for story implementation.
+purpose: Design prioritized test scenarios per story ACs with level recommendations
 category: quality
 agent: qa
 

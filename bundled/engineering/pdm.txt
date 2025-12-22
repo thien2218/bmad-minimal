@@ -869,7 +869,7 @@ After presenting the report, ask if the user wants:
 $schema: ../../.internal/task.schema.json
 id: create-epic
 title: Create Epic Task
-purpose: Create a single epic for an initiative listed in the PRD, aligned with architecture constraints and ready for downstream story creation
+purpose: Draft a PRD-aligned epic that respects architecture constraints
 category: planning
 agent: pdm
 
@@ -962,7 +962,7 @@ steps:
 
   - id: ADD-STORIES
     title: Add Stories to Epic
-    description: Update story-breakdown with the elicited stories and sequencing rationale
+    description: Update story-breakdown with stories and sequencing rationale
     action:
       type: file_operation
       operation: update
@@ -1186,7 +1186,7 @@ sections:
 $schema: ../../.internal/task.schema.json
 id: create-story
 title: Create Next Story Task
-purpose: Identify the next logical story based on project progress and epic definitions, then prepare a comprehensive, self-contained story file ready for implementation
+purpose: Author the next epic story as a self-contained implementation-ready file
 category: planning
 agent: pdm
 
@@ -1282,8 +1282,8 @@ steps:
     title: Handle Epic Completion Scenario
     description: Confirm next action when the current epic is complete
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Epic {{epic_number}} complete: all stories in epic {{epic_number}} are finished.
 
         Select an option:
@@ -1427,8 +1427,8 @@ steps:
     title: Provide Summary and Next Steps
     description: Communicate story creation results to the user
     action:
-      type: handoff
-      report_user: |
+      type: report_user
+      template: |
         Story created: !{story_file_target}
 
         Key technical components included from architecture docs:
@@ -1626,8 +1626,8 @@ Be pragmatic - perfect documentation doesn't exist, but it must be enough to pro
 
 $schema: ../../.internal/task.schema.json
 id: create-adhoc-epic
-title: Create Enhancement Epic from Brownfield Docs
-purpose: Create a single epic for the highest-order enhancement using PRD and Architecture docs in @{docs.subdirs.epics} as authoritative references. Output YAML strictly follows the epic schema.
+title: Create Adhoc Epic
+purpose: Create a single epic for out-of-scope enhancements
 category: planning
 agent: pdm
 
@@ -1700,8 +1700,8 @@ steps:
     title: Validate Epic Non-Existence or Confirm Overwrite
     description: Ensure we do not overwrite an existing epic unintentionally
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Check if epic file exists: !{epic_file_candidate}
         If it exists, choose:
         1) Skip (do not create)
@@ -1744,8 +1744,8 @@ steps:
     title: Confirm enhancement understanding with user
     description: Sanity-check the interpreted change description and resolve ambiguities before drafting the epic
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Summarize the enhancement goal, key constraints, and proposed scope based on the provided change description and extracted context.
         Confirm there are no misunderstandings or missing details:
         1) Summary matches intent — proceed
@@ -1778,8 +1778,8 @@ steps:
     title: Assess impact on PRD and architecture documents
     description: Evaluate if this epic requires updates to existing documentation
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Evaluate whether this epic impacts the PRD and/or architecture documents:
 
         1. No impact on PRD or Architecture
@@ -1806,8 +1806,8 @@ steps:
     title: Provide Summary
     description: Summarize created epic file and next steps
     action:
-      type: handoff
-      report_user: |
+      type: report_user
+      template: |
         Epic created: !{epic_file_candidate}
         Status: Draft
         Stories proposed: {{story_count}}
@@ -1828,7 +1828,7 @@ completion:
 $schema: ../../.internal/task.schema.json
 id: create-adhoc-story
 title: Create Enhancement Story from Enhancement Epic
-purpose: Create one story for the highest-order enhancement epic, referencing its epic YAML and PRD/Architecture docs. Output YAML strictly follows the story schema.
+purpose: Draft the next adhoc enhancement story using the defined template
 category: planning
 agent: pdm
 
@@ -1974,8 +1974,8 @@ steps:
     title: Assess impact on PRD and architecture documents
     description: Determine whether supporting docs need updates for this story
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Evaluate whether this story impacts PRD and/or architecture documents:
         1. No impact
         2. PRD impact only
@@ -2001,8 +2001,8 @@ steps:
     title: Provide Summary and Next Steps
     description: Communicate story creation results and follow-ups
     action:
-      type: handoff
-      report_user: |
+      type: report_user
+      template: |
         Story created: !{story_file_target}
 
         Checklist results: {{checklist_results}}
@@ -2025,7 +2025,7 @@ completion:
 $schema: ../../.internal/task.schema.json
 id: create-standalone-story
 title: Create Standalone Story
-purpose: Create a single user story for very small standalone enhancements that can be completed in one focused development session while following existing system patterns.
+purpose: Capture a tiny standalone enhancement as a story that fits one focused dev session
 category: planning
 agent: pdm
 
@@ -2073,8 +2073,8 @@ steps:
     title: Assess if standalone story is appropriate
     description: Confirm the enhancement meets the criteria for a standalone story
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Before creating a standalone story, confirm this enhancement meets ALL criteria:
 
         Use standalone story when:
@@ -2122,8 +2122,8 @@ steps:
     title: Validate standalone change understanding with user
     description: Ensure the interpreted enhancement description matches user intent before writing the story
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Provide a concise summary covering the standalone change goal, scope boundaries, dependencies, and any open questions.
         Confirm whether this summary aligns with the original change description:
         1) Yes, it is accurate — continue
@@ -2143,8 +2143,8 @@ steps:
     title: Assess impact on PRD and architecture documents
     description: Determine if documentation updates are needed for this standalone story
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Evaluate whether this story impacts PRD and/or architecture documents:
         1. No impact
         2. PRD impact only
@@ -2185,8 +2185,8 @@ steps:
     title: Provide Story Summary
     description: Communicate story creation outcome and next steps
     action:
-      type: hand_off
-      prompt_user: |
+      type: report_user
+      template: |
         Story created: !{story_file_target}
 
         Summary of key details:
@@ -2202,6 +2202,6 @@ completion:
   criteria:
     - Story enhancement meets standalone criteria
     - Story file created with proper schema structure
-    - All required sections populated with elicited content
+    - All required sections populated with user prompted content
     - Documentation impact assessed and updated as needed
     - Completion validation executed successfully

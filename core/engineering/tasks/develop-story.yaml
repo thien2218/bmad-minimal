@@ -1,7 +1,7 @@
 $schema: ../../.internal/task.schema.json
 id: develop-story
 title: Develop Story Task
-purpose: Implement a story end-to-end using an implementation-first workflow; execute tasks/subtasks sequentially, then validate and document results.
+purpose: Build the story with an implementation-first flow
 category: development
 agent: dev
 

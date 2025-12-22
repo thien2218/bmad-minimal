@@ -242,8 +242,8 @@
 									"validation",
 									"decision",
 									"subtask",
-									"elicit",
-									"hand_off",
+									"prompt_user",
+									"report_to_user",
 									"analysis",
 									"tool_call"
 								]
@@ -263,7 +263,7 @@
 							},
 							"template": {
 								"type": "string",
-								"description": "Template to use to fill out content of some file/report"
+								"description": "Template used to fill out content of some file, or to output a prompt/report to user"
 							},
 							"instruction": {
 								"type": "string",
@@ -272,14 +272,6 @@
 							"schema": {
 								"type": "string",
 								"description": "Path to a predefined schema file to load and populate"
-							},
-							"report_user": {
-								"type": "string",
-								"description": "Report findings or task completion to user"
-							},
-							"prompt_user": {
-								"type": "string",
-								"description": "Prompt for user elicitation (interactive mode that allows user to select how to proceed)"
 							},
 							"options": {
 								"type": "array",

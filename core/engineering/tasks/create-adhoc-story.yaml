@@ -1,7 +1,7 @@
 $schema: ../../.internal/task.schema.json
 id: create-adhoc-story
 title: Create Enhancement Story from Enhancement Epic
-purpose: Create one story for the highest-order enhancement epic, referencing its epic YAML and PRD/Architecture docs. Output YAML strictly follows the story schema.
+purpose: Draft the next adhoc enhancement story using the defined template
 category: planning
 agent: pdm
 
@@ -147,8 +147,8 @@ steps:
     title: Assess impact on PRD and architecture documents
     description: Determine whether supporting docs need updates for this story
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Evaluate whether this story impacts PRD and/or architecture documents:
         1. No impact
         2. PRD impact only
@@ -174,8 +174,8 @@ steps:
     title: Provide Summary and Next Steps
     description: Communicate story creation results and follow-ups
     action:
-      type: handoff
-      report_user: |
+      type: report_user
+      template: |
         Story created: !{story_file_target}
 
         Checklist results: {{checklist_results}}

@@ -1,7 +1,7 @@
 $schema: ../../.internal/task.schema.json
 id: review-story
 title: Review Story
-purpose: Perform a comprehensive test architecture review with quality gate decision. This adaptive, risk-aware review creates both a story update and a detailed gate file.
+purpose: Run a risk-based QA review on a story
 category: quality
 agent: qa
 

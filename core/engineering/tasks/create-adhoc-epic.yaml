@@ -1,7 +1,7 @@
 $schema: ../../.internal/task.schema.json
 id: create-adhoc-epic
-title: Create Enhancement Epic from Brownfield Docs
-purpose: Create a single epic for the highest-order enhancement using PRD and Architecture docs in @{docs.subdirs.epics} as authoritative references. Output YAML strictly follows the epic schema.
+title: Create Adhoc Epic
+purpose: Create a single epic for out-of-scope enhancements
 category: planning
 agent: pdm
 
@@ -74,8 +74,8 @@ steps:
     title: Validate Epic Non-Existence or Confirm Overwrite
     description: Ensure we do not overwrite an existing epic unintentionally
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Check if epic file exists: !{epic_file_candidate}
         If it exists, choose:
         1) Skip (do not create)
@@ -118,8 +118,8 @@ steps:
     title: Confirm enhancement understanding with user
     description: Sanity-check the interpreted change description and resolve ambiguities before drafting the epic
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Summarize the enhancement goal, key constraints, and proposed scope based on the provided change description and extracted context.
         Confirm there are no misunderstandings or missing details:
         1) Summary matches intent — proceed
@@ -152,8 +152,8 @@ steps:
     title: Assess impact on PRD and architecture documents
     description: Evaluate if this epic requires updates to existing documentation
     action:
-      type: elicit
-      prompt_user: |
+      type: prompt_user
+      template: |
         Evaluate whether this epic impacts the PRD and/or architecture documents:
 
         1. No impact on PRD or Architecture
@@ -180,8 +180,8 @@ steps:
     title: Provide Summary
     description: Summarize created epic file and next steps
     action:
-      type: handoff
-      report_user: |
+      type: report_user
+      template: |
         Epic created: !{epic_file_candidate}
         Status: Draft
         Stories proposed: {{story_count}}

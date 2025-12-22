@@ -558,7 +558,7 @@ sections:
 $schema: ../../.internal/task.schema.json
 id: review-story
 title: Review Story
-purpose: Perform a comprehensive test architecture review with quality gate decision. This adaptive, risk-aware review creates both a story update and a detailed gate file.
+purpose: Run a risk-based QA review on a story
 category: quality
 agent: qa
 
@@ -1128,7 +1128,7 @@ usage:
 $schema: ../../.internal/task.schema.json
 id: spec-outline-review
 title: Spec Outline Review
-purpose: Review a plain-English outline of test cases for clarity, completeness, coverage, and traceability (when a story is provided). Produce an immediate, actionable improvement report without creating files or requiring full test implementations.
+purpose: Critique a plain-English test outline for coverage, clarity, and traceability
 category: quality
 agent: qa
 
@@ -1313,7 +1313,7 @@ completion:
 $schema: ../../.internal/task.schema.json
 id: test-design
 title: Test Design
-purpose: Create comprehensive test scenarios with appropriate test level recommendations for story implementation.
+purpose: Design prioritized test scenarios per story ACs with level recommendations
 category: quality
 agent: qa
 
@@ -1498,7 +1498,7 @@ completion:
 $schema: ../../.internal/task.schema.json
 id: nfr-assess
 title: Non-Functional Requirements Assessment
-purpose: Quick NFR validation focused on the core four (security, performance, reliability, maintainability). Assess non-functional requirements for a story and generate YAML blocks for gate files plus markdown assessment reports.
+purpose: Assess core story NFRs, emit both gate-ready YAML and an assessment report
 category: quality
 agent: qa
 
@@ -1531,7 +1531,7 @@ steps:
 
   - id: CHECK-INTERACTION-MODE
     title: Check Interaction Mode
-    description: Skip elicitation if not in interactive mode
+    description: Skip interactive confirmation if not in interactive mode
     action:
       type: decision
       target: "${interaction_mode}"
@@ -1539,14 +1539,14 @@ steps:
       - when: "${interaction_mode} != 'interactive'"
         move_to_step: "CHECK-THRESHOLDS"
 
-  - id: ELICIT-SCOPE
-    title: Elicit NFR Scope
+  - id: CONFIRM-SCOPE
+    title: Confirm NFR Scope
     description: Determine which NFRs to assess
     action:
-      type: elicit
+      type: prompt_user
       target: "user_input"
-      prompt_user: |
-        Which NFRs should I assess? (Enter numbers or press Enter for default)
+      template: |
+        Which NFRs should I assess? (Enter numbers or type 'None' to select default)
         [1] Security (default)
         [2] Performance (default) 
         [3] Reliability (default)
@@ -1556,16 +1556,7 @@ steps:
         [7] Portability
         [8] Functional Suitability
 
-        > [Enter for 1-4]
-      options:
-        - "security"
-        - "performance"
-        - "reliability"
-        - "maintainability"
-        - "usability"
-        - "compatibility"
-        - "portability"
-        - "functional_suitability"
+        > [Type 'None' for 1-4]
 
   - id: CHECK-THRESHOLDS
     title: Check for NFR Thresholds
