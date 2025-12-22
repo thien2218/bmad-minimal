@@ -177,6 +177,16 @@ async function gatherConfiguration(options, cwd) {
 		throw new Error("No app/backend/frontend directory provided");
 	}
 
+	const { isNewProject } = await inquirer.prompt([
+		{
+			type: "confirm",
+			name: "isNewProject",
+			message: "Is this a new project?",
+			default: true,
+		},
+	]);
+	answers.projectType = isNewProject ? "greenfield" : "brownfield";
+
 	return answers;
 }
 

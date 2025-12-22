@@ -214,7 +214,7 @@
 			"title": "Workflow execution",
 			"enforcements": [
 				"Only load dependency files when user selects them",
-				"Tasks (or steps of a task) with elicit=true require exact-format user interaction",
+				"Task step with action=prompt_user require exact-format user interaction",
 				"Stay in character"
 			],
 			"severity": "hard",

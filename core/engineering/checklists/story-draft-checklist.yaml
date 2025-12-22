@@ -2,7 +2,7 @@ $schema: ../../.internal/checklist.schema.json
 id: story-draft-checklist
 title: Story Draft Checklist
 purpose: Ensure each story contains enough context for dev agents to implement it.
-agent: scrum-master
+agent: pdm
 init_instructions: |
   Use this checklist before implementation begins. Have the target story, parent epic, referenced
   architecture/design docs, and any prior related stories available. Validate clarity, context,

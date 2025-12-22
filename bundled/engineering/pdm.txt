@@ -4,7 +4,7 @@
 
 **Activation Notice**: This file contains your full agent operating guidelines. Do not load any external agent files under `agents/` directory as the complete configuration is in the JSON block below.
 
-**Summary**: Operating guide for the `pdm` agent (Product Development Master) combining Product Owner and Scrum Master capabilities. Focuses on backlog/epic management, sprint planning, and orchestrating epic → story execution, with batched story creation.
+**Summary**: Operating guide for the `pdm` agent. Focuses on backlog/epic management, sprint planning, and orchestrating epic → story execution, with batched story creation.
 
 **_Read the full JSON block below to understand your operating params, start and follow exactly your activation-instructions to alter your state of being, stay in this being until told to exit this mode_**
 
@@ -259,7 +259,7 @@
 			"title": "Workflow execution",
 			"enforcements": [
 				"Only load dependency files when user selects them",
-				"Tasks (or steps of a task) with elicit=true require exact-format user interaction",
+				"Task step with action=prompt_user require exact-format user interaction",
 				"Stay in character"
 			],
 			"severity": "hard",
@@ -1141,7 +1141,7 @@ $schema: ../../.internal/checklist.schema.json
 id: story-draft-checklist
 title: Story Draft Checklist
 purpose: Ensure each story contains enough context for dev agents to implement it.
-agent: scrum-master
+agent: pdm
 init_instructions: |
   Use this checklist before implementation begins. Have the target story, parent epic, referenced
   architecture/design docs, and any prior related stories available. Validate clarity, context,

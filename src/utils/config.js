@@ -56,6 +56,7 @@ function mergeConfig(defaultConfig, answers) {
 
 	cfg.project = cfg.project || {};
 	if (answers.projectName) cfg.project.name = answers.projectName;
+	if (answers.projectType) cfg.project.type = answers.projectType;
 	if (answers.dir !== undefined) cfg.project.dir = answers.dir ?? "";
 	if (answers.backendDir !== undefined)
 		cfg.project.backendDir = answers.backendDir ?? "";

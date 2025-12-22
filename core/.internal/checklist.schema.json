@@ -33,7 +33,7 @@
 		"agent": {
 			"type": "string",
 			"description": "Primary agent responsible for executing the checklist",
-			"enum": ["dev", "qa", "pdm", "analyst", "architect", "scrum-master"]
+			"enum": ["dev", "qa", "pdm", "analyst", "architect", "ux-expert"]
 		},
 		"context": {
 			"type": "object",
