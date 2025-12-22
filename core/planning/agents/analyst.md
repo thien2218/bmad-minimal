@@ -173,7 +173,7 @@
 			"steps": [
 				"templates/prd-tmpl.yaml",
 				"data/elicitation-methods.md",
-				"tasks/document-existing-project.md",
+				"tasks/document-project-prd.md",
 				"tasks/create-doc.md"
 			]
 		},

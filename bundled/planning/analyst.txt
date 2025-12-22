@@ -175,7 +175,7 @@
 			"steps": [
 				"templates/prd-tmpl.yaml",
 				"data/elicitation-methods.md",
-				"tasks/document-existing-project.md",
+				"tasks/document-project-prd.md",
 				"tasks/create-doc.md"
 			]
 		},
@@ -1075,9 +1075,9 @@ Keep it action-oriented and forward-looking.]]
 
 
 
-# Dependency: tasks/document-existing-project.md
+# Dependency: tasks/document-project-prd.md
 
-# Document Existing Project Task
+# Document Project Task
 
 This task defines a systematic workflow to analyze existing project artifacts and create a comprehensive PRD using the established template-driven process.
 

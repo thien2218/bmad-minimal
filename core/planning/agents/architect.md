@@ -188,7 +188,10 @@
 				"templates/architecture-tmpl.yaml",
 				"templates/backend-architecture-tmpl.yaml",
 				"templates/frontend-architecture-tmpl.yaml",
-				"templates/fullstack-architecture-tmpl.yaml"
+				"templates/fullstack-architecture-tmpl.yaml",
+				"data/elicitation-methods.md",
+				"tasks/document-project-architecture.md",
+				"tasks/create-doc.md"
 			]
 		},
 		{
