@@ -1,0 +1,131 @@
+$schema: ../../.internal/checklist.schema.json
+id: pdm-checklist
+title: Product Development Master Checklist
+purpose: Validate project plans before execution across project types.
+agent: pdm
+context:
+  notes: Detect project type (greenfield vs brownfield) and UI scope; skip items not applicable and note skips.
+init_instructions: |
+  Determine project type (greenfield vs brownfield) and whether UI/UX is involved, then load the
+  corresponding PRD, architecture, FE specs, existing codebases, and infrastructure docs. Confirm
+  with the user whether to run the checklist interactively or independently, and cite evidence for
+  every validation.
+report_instructions: |
+  Produce a PDM validation report with executive summary (project type, readiness, go/no-go,
+  skipped sections), project-specific analysis, risk assessment, MVP completeness, and
+  implementation readiness highlights.
+sections:
+  - id: SETUP
+    title: Project Setup & Initialization
+    llm_hint: |
+      Ensure the foundational environment matches project type—greenfield needs clean scaffolding; brownfield must integrate safely with existing systems.
+    required: true
+    items:
+      - text: Project scaffolding is defined (template usage or from-scratch steps, README, repo setup).
+        condition: greenfield
+      - text: Existing system analysis and integration points are documented with rollback coverage.
+        condition: brownfield
+      - text: Local development environment setup, tooling, dependency install steps, and configs are clear.
+      - text: Core dependencies are listed early with package management strategy and version constraints.
+      - text: Compatibility with the existing stack is validated when layering onto brownfield systems.
+        condition: brownfield
+  - id: INFRASTRUCTURE
+    title: Infrastructure & Deployment
+    llm_hint: |
+      Infrastructure must precede usage: databases, APIs, deployment, and testing environments need sequencing, especially to avoid brownfield regressions.
+    required: true
+    items:
+      - text: Database/data-store setup (selection, schema, migrations, seed data) is planned before use, with migration/compat risks handled.
+      - text: API/service configuration covers frameworks, auth, middleware, and compatibility with existing systems where applicable.
+      - text: Deployment pipeline (CI/CD, IaC, env configs, strategies) is defined with downtime mitigation for brownfield.
+      - text: Testing infrastructure (frameworks, environments, mocks) is in place, including regression coverage for legacy behavior.
+  - id: EXTERNAL-DEPS
+    title: External Dependencies & Integrations
+    llm_hint: |
+      External services, APIs, and infra dependencies often block teams—confirm credentials, sequencing, and backward compatibility.
+    required: true
+    items:
+      - text: Third-party services have account/key setup steps, credential storage, fallbacks, and compatibility checks for existing integrations.
+      - text: External API integrations define endpoints, auth, limits, failure handling, and maintain current dependencies.
+      - text: Infrastructure services (cloud resources, DNS, messaging, CDNs) are provisioned before use and preserve existing setups when required.
+  - id: UI-UX
+    title: UI/UX Considerations
+    llm_hint: |
+      Run this section only when UI/UX is in scope; confirm design systems, frontend pipelines, and UX flows align with accessibility and existing experiences.
+    required: true
+    items:
+      - text: UI framework, design system, styling approach, responsive strategy, and accessibility requirements are established.
+        condition: ui
+      - text: Frontend infrastructure (build pipeline, asset strategy, testing, workflow) is prepared, retaining consistency with existing UI when relevant.
+        condition: ui
+      - text: User journeys, navigation, error/loading states, and validation patterns are mapped, preserving prior workflows on brownfield fronts.
+        condition: ui
+  - id: RESPONSIBILITY
+    title: User/Agent Responsibility
+    llm_hint: |
+      Assign human-only tasks to users and technical work to agents so ownership is unambiguous.
+    required: true
+    items:
+      - text: Human-only activities (account creation, purchases, credential provision) are assigned to users.
+      - text: Code/config/testing responsibilities are allocated to dev agents with automation opportunities noted.
+  - id: SEQUENCING
+    title: Feature Sequencing & Dependencies
+    llm_hint: |
+      Validate functional, technical, and cross-epic dependencies so the plan respects critical paths and protects existing behavior.
+    required: true
+    items:
+      - text: Functional dependencies are sequenced logically (shared components, auth before protected flows, etc.).
+      - text: Technical dependencies (services, libraries, data models, APIs) are built before consumers rely on them.
+      - text: Cross-epic dependencies ensure later epics rely only on completed earlier work while delivering incremental value.
+      - text: Existing functionality remains intact throughout the sequence for brownfield efforts.
+        condition: brownfield
+  - id: RISK
+    title: Risk Management
+    llm_hint: |
+      Brownfield projects demand pessimistic risk analysis—identify breaking changes, rollback readiness, and user impact mitigations.
+    required: true
+    items:
+      - text: Breaking change risks (functionality, migrations, APIs, performance, security) are logged with mitigations.
+        condition: brownfield
+      - text: Rollback strategy covers per-story procedures, feature flags, backups, monitoring, and triggers.
+        condition: brownfield
+      - text: User impact mitigation (workflow analysis, communication, training, support, data migration) is defined.
+        condition: brownfield
+  - id: MVP
+    title: MVP Scope Alignment
+    llm_hint: |
+      Reaffirm that planned work strictly serves MVP goals, with brownfield enhancements justified and user journeys complete.
+    required: true
+    items:
+      - text: All PRD core goals are addressed without scope creep, with enhancements justified for brownfield complexity.
+      - text: Critical user journeys, edge cases, and error scenarios are covered, including accessibility when UI is involved.
+      - text: Technical constraints, NFRs, and compatibility requirements are satisfied.
+  - id: DOCUMENTATION
+    title: Documentation & Handoff
+    llm_hint: |
+      Good documentation keeps teams aligned; ensure dev/user docs, integration notes, and LLM-ready context packets exist.
+    required: true
+    items:
+      - text: Developer documentation (API refs, setup instructions, architecture decisions, patterns) is current, with integration points detailed for brownfield.
+      - text: User documentation (guides, messaging, onboarding) is updated when user-facing behavior changes.
+      - text: Knowledge transfer artifacts capture existing system context, integration details, review plans, operations handoff, and historical rationale.
+      - text: Handoff packages are optimized for LLM agents with concise, labeled context and minimal excess narrative.
+  - id: POST-MVP
+    title: Post-MVP Considerations
+    llm_hint: |
+      Plan for future success: separate MVP vs future, document technical debt, ensure monitoring and feedback loops, and keep brownfield integrations extensible.
+    required: true
+    items:
+      - text: Future enhancements are decoupled from MVP scope with extensibility points noted.
+      - text: Technical debt and reuse patterns (especially for integrations) are documented.
+      - text: Monitoring, analytics, feedback collection, and performance tracking are planned, preserving existing telemetry when needed.
+  - id: VALIDATION
+    title: Validation Summary
+    llm_hint: |
+      Conclude with a structured report covering readiness, project-type specifics, risks, MVP completeness, and implementation readiness.
+    required: true
+    items:
+      - text: Compile the executive summary (project type, readiness percentage, go/no-go, blocking issues, skipped sections).
+      - text: Document project-type analysis (setup/completeness/timeline for greenfield; integration risk/impact/rollback/user disruption for brownfield).
+      - text: Record top risks with mitigations and timeline impacts, including brownfield-specific integration risks where applicable.
+      - text: Evaluate MVP completeness (core coverage, missing essentials, scope creep) and implementation readiness (developer clarity, ambiguous requirements, missing tech details).

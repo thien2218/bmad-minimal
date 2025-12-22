@@ -1,0 +1,136 @@
+$schema: ../../.internal/checklist.schema.json
+id: change-checklist
+title: Change Navigation Checklist
+purpose: Guide agents and users through significant project changes.
+agent: pdm
+init_instructions: |
+  Use only for major pivots that alter project direction; minor story tweaks skip this flow.
+  Gather before starting:
+    - Triggering story or issue
+    - Current execution state (done stories, active epic)
+    - PRD, architecture, FE specs, and other key docs
+    - Remaining planned work
+  Run the checklist live with the user: you provide feasibility/impact guidance, they make decisions.
+  Stay evidence-driven and treat change as iterative improvement, not failure.
+report_instructions: |
+  Final summary must cover:
+    - What changed and why
+    - Chosen path and reasoning
+    - Owners / handoffs and immediate actions
+    - Validation plan and timeline for confirming success
+sections:
+  - id: UNDERSTAND-CONTEXT
+    title: Understand the Trigger & Context
+    llm_hint: |
+      Fully understand what went wrong and why. Don't jump to solutions yet. Ask probing questions:
+
+      - What exactly happened that triggered this review?
+      - Is this a one-time issue or symptomatic of a larger problem?
+      - Could this have been anticipated earlier?
+      - What assumptions were incorrect?
+
+      Be specific and factual, not blame-oriented.
+    required: true
+    items:
+      - text: Identify the story or stories that surfaced the issue.
+      - text: Articulate the core problem precisely.
+        subItems:
+          - text: Determine if the issue is a technical limitation or dead end.
+          - text: Determine if it stems from a newly discovered requirement.
+          - text: Determine if it reveals a misunderstanding of existing requirements.
+          - text: Determine if it is a necessary pivot based on feedback or new information.
+          - text: Determine if it indicates a failed or abandoned story needing a new approach.
+      - text: Describe the immediate observed impact (blocked progress, incorrect functionality, tech infeasibility, etc.).
+      - text: Gather supporting evidence such as logs, error messages, user feedback, or analysis notes.
+  - id: EPIC-IMPACT
+    title: Epic Impact Assessment
+    llm_hint: |
+      Trace ripple effects across epics before changing scope:
+
+      - Current epic: Can it finish as-is? Does it need story adds/removals? Should it be abandoned or redefined?
+      - Downstream epics: Review all remaining plans; mark any stories or entire epics that must change or be dropped.
+      - Sequencing: Decide whether ordering or priority needs reshuffling and whether new epics must be introduced.
+
+      Capture both immediate and downstream implications so the program plan stays coherent.
+    required: true
+    items:
+      - text: Assess whether the current epic containing the trigger story can still be completed.
+      - text: Determine if the current epic needs story additions, removals, or modifications.
+      - text: Decide if the current epic must be abandoned or fundamentally redefined.
+      - text: Review all remaining planned epics to gauge downstream impacts.
+      - text: Identify planned stories in future epics that need updates due to the issue.
+      - text: Determine if any future epics are now invalid.
+      - text: Determine if entirely new epics are required.
+      - text: Decide whether the order or priority of future epics should change.
+      - text: Summarize the overall effect on the epic structure and flow.
+  - id: ARTIFACT-IMPACT
+    title: Artifact Conflict & Impact Analysis
+    llm_hint: |
+      Documentation drives execution—identify every artifact the change invalidates:
+
+      - PRD goals/requirements: what conflicts or clarifications are needed?
+      - Architecture: components, diagrams, tech choices, data models, external APIs.
+      - Frontend specs (if UI involved): component library, UX flows, FE architecture.
+      - Other assets: deployment scripts, IaC, monitoring, ops runbooks.
+
+      List each artifact plus the exact updates required so nothing drifts.
+    required: true
+    items:
+      - text: Review the PRD for conflicts with goals or requirements and note needed clarifications or updates.
+      - text: Review architecture documents for impacted components, patterns, tech choices, data models, or external APIs.
+      - text: Review frontend specifications, if applicable, for impacted components, user flows, or UX decisions.
+      - text: Review other artifacts such as deployment scripts, IaC, or monitoring to determine required adjustments.
+      - text: Summarize all artifacts that need changes and describe the updates required.
+  - id: PATH-FORWARD
+    title: Path Forward Evaluation
+    llm_hint: |
+      Present the three canonical options with comparable detail:
+
+      1. Direct adjustment/integration: scope of extra stories or modifications, effort, risk, wasted work avoided.
+      2. Rollback: which stories/commits to revert, cost, impact on data, net value vs option 1.
+      3. PRD/MVP re-scope: whether MVP still holds, features to drop, goals to revise, whether a PRD V2 is needed.
+
+      For each, spell out effort, discarded work, risks, timeline effects, and sustainability, then pick the best path.
+    required: true
+    items:
+      - text: Evaluate Option 1 (Direct adjustment or integration) by defining scope, feasibility, effort, and risks.
+      - text: Evaluate Option 2 (Potential rollback) by identifying candidate stories or commits, effort, impact, and net benefit.
+      - text: Evaluate Option 3 (PRD MVP review or re-scoping) by assessing MVP viability, scope reductions, goal changes, alternative approaches, or need for a PRD V2.
+      - text: Select and document the recommended path based on the comparative evaluation.
+  - id: CHANGE-PROPOSAL
+    title: Sprint Change Proposal Components
+    llm_hint: |
+      Produce an actionable proposal that downstream agents can follow:
+
+      - Explain the issue in plain language.
+      - Quantify epic/artifact impacts.
+      - State the recommended path and why it wins.
+      - Note PRD/MVP scope changes, if any.
+      - Outline next steps tied to specific agents with success criteria.
+
+      This document becomes the contract for the revised plan—keep it crisp and directive.
+    required: true
+    items:
+      - text: Draft the identified issue summary in clear, concise language.
+      - text: Capture the epic impact summary reflecting agreed decisions.
+      - text: List all artifacts requiring adjustments.
+      - text: Describe the recommended path forward with rationale.
+      - text: Specify PRD MVP impacts to scope or goals, if any.
+      - text: Outline the high-level action plan for story updates or new work.
+      - text: Define the agent handoff plan, noting required roles (Analyst, Architect, Design Architect, PDM, etc.).
+  - id: FINAL-REVIEW
+    title: Final Review & Handoff
+    llm_hint: |
+      Close the change loop:
+
+      - Verify every relevant checklist item and proposal section is complete.
+      - Confirm the user explicitly approves the plan and understands impacts.
+      - Reiterate handoffs, rollback safety nets, and how success will be validated (who, when, signals).
+
+      Finish with an action-oriented summary so no follow-up is ambiguous.
+    required: true
+    items:
+      - text: Review the checklist to confirm all relevant items were covered.
+      - text: Review the sprint change proposal for accuracy.
+      - text: Obtain explicit user approval for the proposal.
+      - text: Reiterate next steps and agent handoffs, including rollback or validation plans if needed.

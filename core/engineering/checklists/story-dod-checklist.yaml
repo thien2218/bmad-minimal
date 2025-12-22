@@ -1,0 +1,85 @@
+$schema: ../../.internal/checklist.schema.json
+id: story-dod-checklist
+title: Story Definition of Done Checklist
+purpose: Ensure dev agents self-validate stories before QA handoff.
+agent: dev
+init_instructions: |
+  Use this checklist to self-audit before marking a story complete. Work section by section,
+  marking each item as done, not done, or N/A, and note any gaps honestly so they can be
+  addressed before QA review.
+report_instructions: |
+  After completing the checklist, summarize accomplished work, any unchecked items with
+  explanations, remaining technical debt, notable challenges, and readiness for QA.
+sections:
+  - id: REQUIREMENTS
+    title: Requirements Met
+    llm_hint: |
+      List each requirement and confirm it is actually implemented; vague assurances are not acceptable.
+    required: true
+    items:
+      - text: All functional requirements in the story are implemented.
+      - text: All acceptance criteria in the story are met.
+  - id: CODE-QUALITY
+    title: Coding Standards & Project Structure
+    llm_hint: |
+      Code quality underpins maintainability—verify alignment with guidelines, structure, stack, data models, linting, and security hygiene.
+    required: true
+    items:
+      - text: New or modified code adheres to Operational Guidelines.
+      - text: File locations and naming follow Project Structure rules.
+      - text: Technologies match the approved tech stack, especially when introducing changes.
+      - text: API references and data models are honored when interfaces or schemas change.
+      - text: Security basics (input validation, error handling, no secrets) are applied.
+      - text: No new linter errors or warnings were introduced.
+      - text: Complex logic carries clarifying comments where needed.
+  - id: TESTING
+    title: Testing
+    llm_hint: |
+      Tests prove the story works; be candid about coverage depth and pass/fail status.
+    required: true
+    items:
+      - text: Required unit tests (per story and Operational Guidelines) are implemented.
+      - text: Required integration tests (if applicable) are implemented.
+      - text: All automated tests run and pass.
+      - text: Test coverage meets defined project standards, if any.
+  - id: FUNCTIONALITY
+    title: Functionality & Verification
+    llm_hint: |
+      Confirm the functionality was exercised manually and edge cases were handled, not just
+      assumed.
+    required: true
+    items:
+      - text: Functionality was manually verified (UI run, API exercised, etc.).
+      - text: Edge cases and error conditions are handled gracefully.
+  - id: STORY-ADMIN
+    title: Story Administration
+    llm_hint: |
+      Keep the story artifact current so the next agent understands context and decisions.
+    required: true
+    items:
+      - text: All tasks/subtasks in the story file are marked complete.
+      - text: Clarifications or decisions made during development are documented or linked.
+      - text: Wrap-up notes and the primary agent model used are recorded in the story file.
+  - id: DEPENDENCIES
+    title: Dependencies, Build & Configuration
+    llm_hint: |
+      Build health and dependency governance prevent team-wide blockers—ensure everything is
+      green and documented.
+    required: true
+    items:
+      - text: Project builds successfully without errors.
+      - text: Linting passes.
+      - text: New dependencies were pre-approved or explicitly approved and documented.
+      - text: Dependency files (package manifests, etc.) capture any additions with justification.
+      - text: No known security vulnerabilities accompany new dependencies.
+      - text: Newly introduced environment variables or configs are documented and secured.
+  - id: DOCUMENTATION
+    title: Documentation (If Applicable)
+    llm_hint: |
+      Provide enough documentation that others can understand public APIs, user impact, or major architectural shifts.
+    required: true
+    items:
+      - text: Inline documentation (JSDoc/TSDoc/docstrings) was added for new public APIs or complex logic.
+      - text: User-facing docs were updated if behavior impacting users changed.
+      - text: Technical docs (README, diagrams) were updated for significant architectural changes.
+      - text: I, the Developer Agent, confirm that all applicable items above have been addressed.

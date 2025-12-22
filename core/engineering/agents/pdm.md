@@ -174,7 +174,7 @@
 			"parameters": ["epic_number", "enhancement_name"],
 			"steps": [
 				"templates/epic-tmpl.yaml",
-				"checklists/pdm-checklist.md",
+				"checklists/pdm-checklist.yaml",
 				"tasks/create-epic.yaml"
 			]
 		},
@@ -183,7 +183,7 @@
 			"description": "Create epics from PRD epic list",
 			"steps": [
 				"templates/epic-tmpl.yaml",
-				"checklists/pdm-checklist.md",
+				"checklists/pdm-checklist.yaml",
 				"tasks/create-epic.yaml"
 			]
 		},
@@ -194,7 +194,7 @@
 			"steps": [
 				"templates/story-tmpl.yaml",
 				"tasks/create-story.yaml",
-				"checklists/story-draft-checklist.md"
+				"checklists/story-draft-checklist.yaml"
 			]
 		},
 		{
@@ -204,7 +204,7 @@
 			"steps": [
 				"templates/story-tmpl.yaml",
 				"tasks/create-story.yaml",
-				"checklists/story-draft-checklist.md"
+				"checklists/story-draft-checklist.yaml"
 			]
 		},
 		{
@@ -214,7 +214,7 @@
 			"optionalParameters": ["epic_adhoc_number"],
 			"steps": [
 				"templates/epic-tmpl.yaml",
-				"checklists/pdm-checklist.md",
+				"checklists/pdm-checklist.yaml",
 				"tasks/create-adhoc-epic.yaml"
 			]
 		},
@@ -226,7 +226,7 @@
 			"steps": [
 				"templates/story-tmpl.yaml",
 				"tasks/create-adhoc-story.yaml",
-				"checklists/story-draft-checklist.md"
+				"checklists/story-draft-checklist.yaml"
 			]
 		},
 		{
@@ -236,7 +236,7 @@
 			"steps": [
 				"templates/story-tmpl.yaml",
 				"tasks/create-adhoc-story.yaml",
-				"checklists/story-draft-checklist.md"
+				"checklists/story-draft-checklist.yaml"
 			]
 		},
 		{
@@ -247,7 +247,7 @@
 			"steps": [
 				"templates/story-tmpl.yaml",
 				"tasks/create-standalone-story.yaml",
-				"checklists/story-draft-checklist.md"
+				"checklists/story-draft-checklist.yaml"
 			]
 		}
 	],

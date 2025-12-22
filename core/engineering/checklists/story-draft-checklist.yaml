@@ -1,0 +1,86 @@
+$schema: ../../.internal/checklist.schema.json
+id: story-draft-checklist
+title: Story Draft Checklist
+purpose: Ensure each story contains enough context for dev agents to implement it.
+agent: scrum-master
+init_instructions: |
+  Use this checklist before implementation begins. Have the target story, parent epic, referenced
+  architecture/design docs, and any prior related stories available. Validate clarity, context,
+  guidance, and testability—not exhaustive detail.
+report_instructions: |
+  Produce a validation summary capturing readiness (READY/NEEDS REVISION/BLOCKED), clarity score,
+  major gaps, per-category status, specific fixups, and whether you could implement the story as
+  written.
+sections:
+  - id: GOAL-CONTEXT
+    title: Goal & Context Clarity
+    llm_hint: |
+      Developers must know what to build, why, how it ties to the epic, dependencies, and what success means—verify those are explicit.
+    required: true
+    items:
+      - text: Story goal and purpose are clearly stated.
+      - text: Relationship to epic goals is evident.
+      - text: Placement within the overall system flow is explained.
+      - text: Dependencies on previous stories are identified when relevant.
+      - text: Business context and value are clear.
+  - id: TECH-GUIDANCE
+    title: Technical Implementation Guidance
+    llm_hint: |
+      Provide enough technical direction that a competent developer can start without guesswork: files, tech choices, integration points, data models, and exceptions.
+    required: true
+    items:
+      - text: Key files or components to create/modify are identified (not necessarily exhaustive).
+      - text: Required technologies or tooling for this story are called out when non-obvious.
+      - text: Critical APIs or interfaces are described sufficiently.
+      - text: Necessary data models or structures are referenced.
+      - text: Required environment variables are listed, if applicable.
+      - text: Exceptions to standard patterns are documented.
+  - id: REFERENCES
+    title: Reference Effectiveness
+    llm_hint: |
+      References should accelerate, not hinder—point to exact sections, explain relevance, and summarize critical prior context.
+    required: true
+    items:
+      - text: References link to specific sections, not entire documents.
+      - text: Critical details from previous stories are summarized, not just linked.
+      - text: Each reference includes context on why it matters.
+      - text: References use a consistent, accessible format (e.g., docs/file.md#section).
+  - id: SELF-CONTAINMENT
+    title: Self-Containment Assessment
+    llm_hint: |
+      Stories should stand alone: include core requirements, explain domain terms, state assumptions, and mention edge cases so devs avoid context thrash.
+    required: true
+    items:
+      - text: Core information lives in the story instead of solely in external docs.
+      - text: Implicit assumptions are stated explicitly.
+      - text: Domain-specific terms or concepts are explained or obvious.
+      - text: Edge cases or error scenarios are acknowledged.
+  - id: TEST-GUIDANCE
+    title: Testing Guidance
+    llm_hint: |
+      Make tests obvious: spell out approach, scenarios, success criteria, and any special considerations so devs can verify their work.
+    required: true
+    items:
+      - text: Required testing approach (unit/integration/e2e) is outlined.
+      - text: Key test scenarios are enumerated.
+      - text: Success criteria are measurable and explicit.
+      - text: Special testing considerations are captured when applicable.
+  - id: LLM-EFFICIENCY
+    title: LLM Context Efficiency
+    llm_hint: |
+      Stories must remain concise but complete so downstream LLM agents stay within context budgets—highlight constraints up front and trim fluff.
+    required: true
+    items:
+      - text: Story text focuses on necessary context only.
+      - text: Key constraints, dependencies, and assumptions are highlighted up front with labels.
+      - text: Redundant prose or unrelated background is minimized without losing comprehension.
+  - id: VALIDATION-RESULT
+    title: Validation Result
+    llm_hint: |
+      Summarize readiness, category statuses, concrete issues, and whether you could implement the story as written—be pragmatic rather than perfectionist.
+    required: true
+    items:
+      - text: Record the readiness state (READY/NEEDS REVISION/BLOCKED) plus clarity score and major gaps.
+      - text: Fill the validation table per category (PASS/PARTIAL/FAIL) with noted issues.
+      - text: List specific problems to fix with suggested improvements and dependencies, if any.
+      - text: Capture the developer perspective (could you implement it, what questions remain, likely sources of rework).

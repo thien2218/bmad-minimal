@@ -170,7 +170,10 @@
 			"description": "Execute develop-story (implementation-first flow; write tests at the end during validation) on the highest ordered story ready for development or the story specified by the user",
 			"parameters": ["story"],
 			"optionalParameters": ["test_command", "lint_command", "other_commands"],
-			"steps": ["tasks/develop-story.yaml", "checklists/story-dod-checklist.md"]
+			"steps": [
+				"tasks/develop-story.yaml",
+				"checklists/story-dod-checklist.yaml"
+			]
 		},
 		{
 			"name": "develop-story-test-first",
@@ -179,7 +182,7 @@
 			"optionalParameters": ["test_command", "lint_command", "other_commands"],
 			"steps": [
 				"tasks/develop-story-test-first.yaml",
-				"checklists/story-dod-checklist.md"
+				"checklists/story-dod-checklist.yaml"
 			]
 		},
 		{

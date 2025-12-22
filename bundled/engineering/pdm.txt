@@ -176,7 +176,7 @@
 			"parameters": ["epic_number", "enhancement_name"],
 			"steps": [
 				"templates/epic-tmpl.yaml",
-				"checklists/pdm-checklist.md",
+				"checklists/pdm-checklist.yaml",
 				"tasks/create-epic.yaml"
 			]
 		},
@@ -185,7 +185,7 @@
 			"description": "Create epics from PRD epic list",
 			"steps": [
 				"templates/epic-tmpl.yaml",
-				"checklists/pdm-checklist.md",
+				"checklists/pdm-checklist.yaml",
 				"tasks/create-epic.yaml"
 			]
 		},
@@ -196,7 +196,7 @@
 			"steps": [
 				"templates/story-tmpl.yaml",
 				"tasks/create-story.yaml",
-				"checklists/story-draft-checklist.md"
+				"checklists/story-draft-checklist.yaml"
 			]
 		},
 		{
@@ -206,7 +206,7 @@
 			"steps": [
 				"templates/story-tmpl.yaml",
 				"tasks/create-story.yaml",
-				"checklists/story-draft-checklist.md"
+				"checklists/story-draft-checklist.yaml"
 			]
 		},
 		{
@@ -216,7 +216,7 @@
 			"optionalParameters": ["epic_adhoc_number"],
 			"steps": [
 				"templates/epic-tmpl.yaml",
-				"checklists/pdm-checklist.md",
+				"checklists/pdm-checklist.yaml",
 				"tasks/create-adhoc-epic.yaml"
 			]
 		},
@@ -228,7 +228,7 @@
 			"steps": [
 				"templates/story-tmpl.yaml",
 				"tasks/create-adhoc-story.yaml",
-				"checklists/story-draft-checklist.md"
+				"checklists/story-draft-checklist.yaml"
 			]
 		},
 		{
@@ -238,7 +238,7 @@
 			"steps": [
 				"templates/story-tmpl.yaml",
 				"tasks/create-adhoc-story.yaml",
-				"checklists/story-draft-checklist.md"
+				"checklists/story-draft-checklist.yaml"
 			]
 		},
 		{
@@ -249,7 +249,7 @@
 			"steps": [
 				"templates/story-tmpl.yaml",
 				"tasks/create-standalone-story.yaml",
-				"checklists/story-draft-checklist.md"
+				"checklists/story-draft-checklist.yaml"
 			]
 		}
 	],
@@ -410,457 +410,139 @@ sections:
 
 
 
-# Dependency: checklists/pdm-checklist.md
-
-# Product Development Master Validation Checklist
-
-This checklist serves as a comprehensive framework for the Product Development Master to validate project plans before development execution. It adapts intelligently based on project type (greenfield vs brownfield) and includes UI/UX considerations when applicable.
-
-[[LLM: INITIALIZATION INSTRUCTIONS - PDM CHECKLIST
-
-PROJECT TYPE DETECTION:
-First, determine the project type by checking:
-
-1. Is this a GREENFIELD project (new from scratch)?
-
-   - Look for: New project initialization, no existing codebase references
-   - Check for: prd.md, architecture.md, new project setup stories
-
-2. Is this a BROWNFIELD project (enhancing existing system)?
-
-   - Look for: References to existing codebase, enhancement/modification language
-   - Check for: brownfield-prd.md, brownfield-architecture.md, existing system analysis
-
-3. Does the project include UI/UX components?
-   - Check for: frontend-architecture.md, UI/UX specifications, design files
-   - Look for: Frontend stories, component specifications, user interface mentions
-
-DOCUMENT REQUIREMENTS:
-Based on project type, ensure you have access to:
-
-For GREENFIELD projects:
-
-- prd.md - The Product Requirements Document
-- architecture.md - The system architecture
-- frontend-architecture.md - If UI/UX is involved
-- All epic and story definitions
-
-For BROWNFIELD projects:
-
-- brownfield-prd.md - The brownfield enhancement requirements
-- brownfield-architecture.md - The enhancement architecture
-- Existing project codebase access (CRITICAL - cannot proceed without this)
-- Current deployment configuration and infrastructure details
-- Database schemas, API documentation, monitoring setup
-
-SKIP INSTRUCTIONS:
-
-- Skip sections marked [[BROWNFIELD ONLY]] for greenfield projects
-- Skip sections marked [[GREENFIELD ONLY]] for brownfield projects
-- Skip sections marked [[UI/UX ONLY]] for backend-only projects
-- Note all skipped sections in your final report
-
-VALIDATION APPROACH:
-
-1. Deep Analysis - Thoroughly analyze each item against documentation
-2. Evidence-Based - Cite specific sections or code when validating
-3. Critical Thinking - Question assumptions and identify gaps
-4. Risk Assessment - Consider what could go wrong with each decision
-
-EXECUTION MODE:
-Ask the user if they want to work through the checklist:
-
-- Section by section (interactive mode) - Review each section, get confirmation before proceeding
-- All at once (comprehensive mode) - Complete full analysis and present report at end]]
-
-## 1. PROJECT SETUP & INITIALIZATION
-
-[[LLM: Project setup is the foundation. For greenfield, ensure clean start. For brownfield, ensure safe integration with existing system. Verify setup matches project type.]]
-
-### 1.1 Project Scaffolding [[GREENFIELD ONLY]]
-
-- [ ] Epic 1 includes explicit steps for project creation/initialization
-- [ ] If using a starter template, steps for cloning/setup are included
-- [ ] If building from scratch, all necessary scaffolding steps are defined
-- [ ] Initial README or documentation setup is included
-- [ ] Repository setup and initial commit processes are defined
-
-### 1.2 Existing System Integration [[BROWNFIELD ONLY]]
-
-- [ ] Existing project analysis has been completed and documented
-- [ ] Integration points with current system are identified
-- [ ] Development environment preserves existing functionality
-- [ ] Local testing approach validated for existing features
-- [ ] Rollback procedures defined for each integration point
-
-### 1.3 Development Environment
-
-- [ ] Local development environment setup is clearly defined
-- [ ] Required tools and versions are specified
-- [ ] Steps for installing dependencies are included
-- [ ] Configuration files are addressed appropriately
-- [ ] Development server setup is included
-
-### 1.4 Core Dependencies
-
-- [ ] All critical packages/libraries are installed early
-- [ ] Package management is properly addressed
-- [ ] Version specifications are appropriately defined
-- [ ] Dependency conflicts or special requirements are noted
-- [ ] [[BROWNFIELD ONLY]] Version compatibility with existing stack verified
-
-## 2. INFRASTRUCTURE & DEPLOYMENT
-
-[[LLM: Infrastructure must exist before use. For brownfield, must integrate with existing infrastructure without breaking it.]]
-
-### 2.1 Database & Data Store Setup
-
-- [ ] Database selection/setup occurs before any operations
-- [ ] Schema definitions are created before data operations
-- [ ] Migration strategies are defined if applicable
-- [ ] Seed data or initial data setup is included if needed
-- [ ] [[BROWNFIELD ONLY]] Database migration risks identified and mitigated
-- [ ] [[BROWNFIELD ONLY]] Backward compatibility ensured
-
-### 2.2 API & Service Configuration
-
-- [ ] API frameworks are set up before implementing endpoints
-- [ ] Service architecture is established before implementing services
-- [ ] Authentication framework is set up before protected routes
-- [ ] Middleware and common utilities are created before use
-- [ ] [[BROWNFIELD ONLY]] API compatibility with existing system maintained
-- [ ] [[BROWNFIELD ONLY]] Integration with existing authentication preserved
-
-### 2.3 Deployment Pipeline
-
-- [ ] CI/CD pipeline is established before deployment actions
-- [ ] Infrastructure as Code (IaC) is set up before use
-- [ ] Environment configurations are defined early
-- [ ] Deployment strategies are defined before implementation
-- [ ] [[BROWNFIELD ONLY]] Deployment minimizes downtime
-- [ ] [[BROWNFIELD ONLY]] Blue-green or canary deployment implemented
-
-### 2.4 Testing Infrastructure
-
-- [ ] Testing frameworks are installed before writing tests
-- [ ] Test environment setup precedes test implementation
-- [ ] Mock services or data are defined before testing
-- [ ] [[BROWNFIELD ONLY]] Regression testing covers existing functionality
-- [ ] [[BROWNFIELD ONLY]] Integration testing validates new-to-existing connections
-
-## 3. EXTERNAL DEPENDENCIES & INTEGRATIONS
-
-[[LLM: External dependencies often block progress. For brownfield, ensure new dependencies don't conflict with existing ones.]]
-
-### 3.1 Third-Party Services
-
-- [ ] Account creation steps are identified for required services
-- [ ] API key acquisition processes are defined
-- [ ] Steps for securely storing credentials are included
-- [ ] Fallback or offline development options are considered
-- [ ] [[BROWNFIELD ONLY]] Compatibility with existing services verified
-- [ ] [[BROWNFIELD ONLY]] Impact on existing integrations assessed
-
-### 3.2 External APIs
-
-- [ ] Integration points with external APIs are clearly identified
-- [ ] Authentication with external services is properly sequenced
-- [ ] API limits or constraints are acknowledged
-- [ ] Backup strategies for API failures are considered
-- [ ] [[BROWNFIELD ONLY]] Existing API dependencies maintained
-
-### 3.3 Infrastructure Services
-
-- [ ] Cloud resource provisioning is properly sequenced
-- [ ] DNS or domain registration needs are identified
-- [ ] Email or messaging service setup is included if needed
-- [ ] CDN or static asset hosting setup precedes their use
-- [ ] [[BROWNFIELD ONLY]] Existing infrastructure services preserved
-
-## 4. UI/UX CONSIDERATIONS [[UI/UX ONLY]]
-
-[[LLM: Only evaluate this section if the project includes user interface components. Skip entirely for backend-only projects.]]
-
-### 4.1 Design System Setup
-
-- [ ] UI framework and libraries are selected and installed early
-- [ ] Design system or component library is established
-- [ ] Styling approach (CSS modules, styled-components, etc.) is defined
-- [ ] Responsive design strategy is established
-- [ ] Accessibility requirements are defined upfront
-
-### 4.2 Frontend Infrastructure
-
-- [ ] Frontend build pipeline is configured before development
-- [ ] Asset optimization strategy is defined
-- [ ] Frontend testing framework is set up
-- [ ] Component development workflow is established
-- [ ] [[BROWNFIELD ONLY]] UI consistency with existing system maintained
-
-### 4.3 User Experience Flow
-
-- [ ] User journeys are mapped before implementation
-- [ ] Navigation patterns are defined early
-- [ ] Error states and loading states are planned
-- [ ] Form validation patterns are established
-- [ ] [[BROWNFIELD ONLY]] Existing user workflows preserved or migrated
-
-## 5. USER/AGENT RESPONSIBILITY
-
-[[LLM: Clear ownership prevents confusion. Ensure tasks are assigned appropriately based on what only humans can do.]]
-
-### 5.1 User Actions
-
-- [ ] User responsibilities limited to human-only tasks
-- [ ] Account creation on external services assigned to users
-- [ ] Purchasing or payment actions assigned to users
-- [ ] Credential provision appropriately assigned to users
-
-### 5.2 Developer Agent Actions
-
-- [ ] All code-related tasks assigned to developer agents
-- [ ] Automated processes identified as agent responsibilities
-- [ ] Configuration management properly assigned
-- [ ] Testing and validation assigned to appropriate agents
-
-## 6. FEATURE SEQUENCING & DEPENDENCIES
-
-[[LLM: Dependencies create the critical path. For brownfield, ensure new features don't break existing ones.]]
-
-### 6.1 Functional Dependencies
-
-- [ ] Features depending on others are sequenced correctly
-- [ ] Shared components are built before their use
-- [ ] User flows follow logical progression
-- [ ] Authentication features precede protected features
-- [ ] [[BROWNFIELD ONLY]] Existing functionality preserved throughout
-
-### 6.2 Technical Dependencies
-
-- [ ] Lower-level services built before higher-level ones
-- [ ] Libraries and utilities created before their use
-- [ ] Data models defined before operations on them
-- [ ] API endpoints defined before client consumption
-- [ ] [[BROWNFIELD ONLY]] Integration points tested at each step
-
-### 6.3 Cross-Epic Dependencies
-
-- [ ] Later epics build upon earlier epic functionality
-- [ ] No epic requires functionality from later epics
-- [ ] Infrastructure from early epics utilized consistently
-- [ ] Incremental value delivery maintained
-- [ ] [[BROWNFIELD ONLY]] Each epic maintains system integrity
-
-## 7. RISK MANAGEMENT [[BROWNFIELD ONLY]]
-
-[[LLM: This section is CRITICAL for brownfield projects. Think pessimistically about what could break.]]
-
-### 7.1 Breaking Change Risks
-
-- [ ] Risk of breaking existing functionality assessed
-- [ ] Database migration risks identified and mitigated
-- [ ] API breaking change risks evaluated
-- [ ] Performance degradation risks identified
-- [ ] Security vulnerability risks evaluated
-
-### 7.2 Rollback Strategy
-
-- [ ] Rollback procedures clearly defined per story
-- [ ] Feature flag strategy implemented
-- [ ] Backup and recovery procedures updated
-- [ ] Monitoring enhanced for new components
-- [ ] Rollback triggers and thresholds defined
-
-### 7.3 User Impact Mitigation
-
-- [ ] Existing user workflows analyzed for impact
-- [ ] User communication plan developed
-- [ ] Training materials updated
-- [ ] Support documentation comprehensive
-- [ ] Migration path for user data validated
-
-## 8. MVP SCOPE ALIGNMENT
-
-[[LLM: MVP means MINIMUM viable product. For brownfield, ensure enhancements are truly necessary.]]
-
-### 8.1 Core Goals Alignment
-
-- [ ] All core goals from PRD are addressed
-- [ ] Features directly support MVP goals
-- [ ] No extraneous features beyond MVP scope
-- [ ] Critical features prioritized appropriately
-- [ ] [[BROWNFIELD ONLY]] Enhancement complexity justified
-
-### 8.2 User Journey Completeness
-
-- [ ] All critical user journeys fully implemented
-- [ ] Edge cases and error scenarios addressed
-- [ ] User experience considerations included
-- [ ] [[UI/UX ONLY]] Accessibility requirements incorporated
-- [ ] [[BROWNFIELD ONLY]] Existing workflows preserved or improved
-
-### 8.3 Technical Requirements
-
-- [ ] All technical constraints from PRD addressed
-- [ ] Non-functional requirements incorporated
-- [ ] Architecture decisions align with constraints
-- [ ] Performance considerations addressed
-- [ ] [[BROWNFIELD ONLY]] Compatibility requirements met
-
-## 9. DOCUMENTATION & HANDOFF
-
-[[LLM: Good documentation enables smooth development. For brownfield, documentation of integration points is critical.]]
-
-### 9.1 Developer Documentation
-
-- [ ] API documentation created alongside implementation
-- [ ] Setup instructions are comprehensive
-- [ ] Architecture decisions documented
-- [ ] Patterns and conventions documented
-- [ ] [[BROWNFIELD ONLY]] Integration points documented in detail
-
-### 9.2 User Documentation
-
-- [ ] User guides or help documentation included if required
-- [ ] Error messages and user feedback considered
-- [ ] Onboarding flows fully specified
-- [ ] [[BROWNFIELD ONLY]] Changes to existing features documented
-
-### 9.3 Knowledge Transfer
-
-- [ ] [[BROWNFIELD ONLY]] Existing system knowledge captured
-- [ ] [[BROWNFIELD ONLY]] Integration knowledge documented
-- [ ] Code review knowledge sharing planned
-- [ ] Deployment knowledge transferred to operations
-- [ ] Historical context preserved
-
-## 9.4 LLM CONTEXT EFFICIENCY
-
-[[LLM: Deliverables must prioritize compact, self-contained context packages so downstream LLM agents can act without extra clarification.]]
-
-- [ ] Handoff docs are structured for LLM agents, containing only required context while remaining complete
-- [ ] Key constraints, dependencies, and assumptions are stated up front with clear labels for parsing
-- [ ] Unnecessary narrative is removed so each artifact stays within tight context budgets
-
-## 10. POST-MVP CONSIDERATIONS
-
-[[LLM: Planning for success prevents technical debt. For brownfield, ensure enhancements don't limit future growth.]]
-
-### 10.1 Future Enhancements
-
-- [ ] Clear separation between MVP and future features
-- [ ] Architecture supports planned enhancements
-- [ ] Technical debt considerations documented
-- [ ] Extensibility points identified
-- [ ] [[BROWNFIELD ONLY]] Integration patterns reusable
-
-### 10.2 Monitoring & Feedback
-
-- [ ] Analytics or usage tracking included if required
-- [ ] User feedback collection considered
-- [ ] Monitoring and alerting addressed
-- [ ] Performance measurement incorporated
-- [ ] [[BROWNFIELD ONLY]] Existing monitoring preserved/enhanced
-
-## VALIDATION SUMMARY
-
-[[LLM: FINAL PDM VALIDATION REPORT GENERATION
-
-Generate a comprehensive validation report that adapts to project type:
-
-1. Executive Summary
-
-   - Project type: [Greenfield/Brownfield] with [UI/No UI]
-   - Overall readiness (percentage)
-   - Go/No-Go recommendation
-   - Critical blocking issues count
-   - Sections skipped due to project type
-
-2. Project-Specific Analysis
-
-   FOR GREENFIELD:
-
-   - Setup completeness
-   - Dependency sequencing
-   - MVP scope appropriateness
-   - Development timeline feasibility
-
-   FOR BROWNFIELD:
-
-   - Integration risk level (High/Medium/Low)
-   - Existing system impact assessment
-   - Rollback readiness
-   - User disruption potential
-
-3. Risk Assessment
-
-   - Top 5 risks by severity
-   - Mitigation recommendations
-   - Timeline impact of addressing issues
-   - [BROWNFIELD] Specific integration risks
-
-4. MVP Completeness
-
-   - Core features coverage
-   - Missing essential functionality
-   - Scope creep identified
-   - True MVP vs over-engineering
-
-5. Implementation Readiness
-
-   - Developer clarity score (1-10)
-   - Ambiguous requirements count
-   - Missing technical details
-   - [BROWNFIELD] Integration point clarity
-
-6. Recommendations
-
-   - Must-fix before development
-   - Should-fix for quality
-   - Consider for improvement
-   - Post-MVP deferrals
-
-7. [BROWNFIELD ONLY] Integration Confidence
-   - Confidence in preserving existing functionality
-   - Rollback procedure completeness
-   - Monitoring coverage for integration points
-   - Support team readiness
-
-After presenting the report, ask if the user wants:
-
-- Detailed analysis of any failed sections
-- Specific story reordering suggestions
-- Risk mitigation strategies
-- [BROWNFIELD] Integration risk deep-dive]]
-
-### Category Statuses
-
-| Category                                | Status | Critical Issues |
-| --------------------------------------- | ------ | --------------- |
-| 1. Project Setup & Initialization       | _TBD_  |                 |
-| 2. Infrastructure & Deployment          | _TBD_  |                 |
-| 3. External Dependencies & Integrations | _TBD_  |                 |
-| 4. UI/UX Considerations                 | _TBD_  |                 |
-| 5. User/Agent Responsibility            | _TBD_  |                 |
-| 6. Feature Sequencing & Dependencies    | _TBD_  |                 |
-| 7. Risk Management (Brownfield)         | _TBD_  |                 |
-| 8. MVP Scope Alignment                  | _TBD_  |                 |
-| 9. Documentation & Handoff              | _TBD_  |                 |
-| 10. Post-MVP Considerations             | _TBD_  |                 |
-
-### Critical Deficiencies
-
-(To be populated during validation)
-
-### Recommendations
-
-(To be populated during validation)
-
-### Final Decision
-
-- **APPROVED**: The plan is comprehensive, properly sequenced, and ready for implementation.
-- **CONDITIONAL**: The plan requires specific adjustments before proceeding.
-- **REJECTED**: The plan requires significant revision to address critical deficiencies.
+# Dependency: checklists/pdm-checklist.yaml
+
+$schema: ../../.internal/checklist.schema.json
+id: pdm-checklist
+title: Product Development Master Checklist
+purpose: Validate project plans before execution across project types.
+agent: pdm
+context:
+  notes: Detect project type (greenfield vs brownfield) and UI scope; skip items not applicable and note skips.
+init_instructions: |
+  Determine project type (greenfield vs brownfield) and whether UI/UX is involved, then load the
+  corresponding PRD, architecture, FE specs, existing codebases, and infrastructure docs. Confirm
+  with the user whether to run the checklist interactively or independently, and cite evidence for
+  every validation.
+report_instructions: |
+  Produce a PDM validation report with executive summary (project type, readiness, go/no-go,
+  skipped sections), project-specific analysis, risk assessment, MVP completeness, and
+  implementation readiness highlights.
+sections:
+  - id: SETUP
+    title: Project Setup & Initialization
+    llm_hint: |
+      Ensure the foundational environment matches project type—greenfield needs clean scaffolding; brownfield must integrate safely with existing systems.
+    required: true
+    items:
+      - text: Project scaffolding is defined (template usage or from-scratch steps, README, repo setup).
+        condition: greenfield
+      - text: Existing system analysis and integration points are documented with rollback coverage.
+        condition: brownfield
+      - text: Local development environment setup, tooling, dependency install steps, and configs are clear.
+      - text: Core dependencies are listed early with package management strategy and version constraints.
+      - text: Compatibility with the existing stack is validated when layering onto brownfield systems.
+        condition: brownfield
+  - id: INFRASTRUCTURE
+    title: Infrastructure & Deployment
+    llm_hint: |
+      Infrastructure must precede usage: databases, APIs, deployment, and testing environments need sequencing, especially to avoid brownfield regressions.
+    required: true
+    items:
+      - text: Database/data-store setup (selection, schema, migrations, seed data) is planned before use, with migration/compat risks handled.
+      - text: API/service configuration covers frameworks, auth, middleware, and compatibility with existing systems where applicable.
+      - text: Deployment pipeline (CI/CD, IaC, env configs, strategies) is defined with downtime mitigation for brownfield.
+      - text: Testing infrastructure (frameworks, environments, mocks) is in place, including regression coverage for legacy behavior.
+  - id: EXTERNAL-DEPS
+    title: External Dependencies & Integrations
+    llm_hint: |
+      External services, APIs, and infra dependencies often block teams—confirm credentials, sequencing, and backward compatibility.
+    required: true
+    items:
+      - text: Third-party services have account/key setup steps, credential storage, fallbacks, and compatibility checks for existing integrations.
+      - text: External API integrations define endpoints, auth, limits, failure handling, and maintain current dependencies.
+      - text: Infrastructure services (cloud resources, DNS, messaging, CDNs) are provisioned before use and preserve existing setups when required.
+  - id: UI-UX
+    title: UI/UX Considerations
+    llm_hint: |
+      Run this section only when UI/UX is in scope; confirm design systems, frontend pipelines, and UX flows align with accessibility and existing experiences.
+    required: true
+    items:
+      - text: UI framework, design system, styling approach, responsive strategy, and accessibility requirements are established.
+        condition: ui
+      - text: Frontend infrastructure (build pipeline, asset strategy, testing, workflow) is prepared, retaining consistency with existing UI when relevant.
+        condition: ui
+      - text: User journeys, navigation, error/loading states, and validation patterns are mapped, preserving prior workflows on brownfield fronts.
+        condition: ui
+  - id: RESPONSIBILITY
+    title: User/Agent Responsibility
+    llm_hint: |
+      Assign human-only tasks to users and technical work to agents so ownership is unambiguous.
+    required: true
+    items:
+      - text: Human-only activities (account creation, purchases, credential provision) are assigned to users.
+      - text: Code/config/testing responsibilities are allocated to dev agents with automation opportunities noted.
+  - id: SEQUENCING
+    title: Feature Sequencing & Dependencies
+    llm_hint: |
+      Validate functional, technical, and cross-epic dependencies so the plan respects critical paths and protects existing behavior.
+    required: true
+    items:
+      - text: Functional dependencies are sequenced logically (shared components, auth before protected flows, etc.).
+      - text: Technical dependencies (services, libraries, data models, APIs) are built before consumers rely on them.
+      - text: Cross-epic dependencies ensure later epics rely only on completed earlier work while delivering incremental value.
+      - text: Existing functionality remains intact throughout the sequence for brownfield efforts.
+        condition: brownfield
+  - id: RISK
+    title: Risk Management
+    llm_hint: |
+      Brownfield projects demand pessimistic risk analysis—identify breaking changes, rollback readiness, and user impact mitigations.
+    required: true
+    items:
+      - text: Breaking change risks (functionality, migrations, APIs, performance, security) are logged with mitigations.
+        condition: brownfield
+      - text: Rollback strategy covers per-story procedures, feature flags, backups, monitoring, and triggers.
+        condition: brownfield
+      - text: User impact mitigation (workflow analysis, communication, training, support, data migration) is defined.
+        condition: brownfield
+  - id: MVP
+    title: MVP Scope Alignment
+    llm_hint: |
+      Reaffirm that planned work strictly serves MVP goals, with brownfield enhancements justified and user journeys complete.
+    required: true
+    items:
+      - text: All PRD core goals are addressed without scope creep, with enhancements justified for brownfield complexity.
+      - text: Critical user journeys, edge cases, and error scenarios are covered, including accessibility when UI is involved.
+      - text: Technical constraints, NFRs, and compatibility requirements are satisfied.
+  - id: DOCUMENTATION
+    title: Documentation & Handoff
+    llm_hint: |
+      Good documentation keeps teams aligned; ensure dev/user docs, integration notes, and LLM-ready context packets exist.
+    required: true
+    items:
+      - text: Developer documentation (API refs, setup instructions, architecture decisions, patterns) is current, with integration points detailed for brownfield.
+      - text: User documentation (guides, messaging, onboarding) is updated when user-facing behavior changes.
+      - text: Knowledge transfer artifacts capture existing system context, integration details, review plans, operations handoff, and historical rationale.
+      - text: Handoff packages are optimized for LLM agents with concise, labeled context and minimal excess narrative.
+  - id: POST-MVP
+    title: Post-MVP Considerations
+    llm_hint: |
+      Plan for future success: separate MVP vs future, document technical debt, ensure monitoring and feedback loops, and keep brownfield integrations extensible.
+    required: true
+    items:
+      - text: Future enhancements are decoupled from MVP scope with extensibility points noted.
+      - text: Technical debt and reuse patterns (especially for integrations) are documented.
+      - text: Monitoring, analytics, feedback collection, and performance tracking are planned, preserving existing telemetry when needed.
+  - id: VALIDATION
+    title: Validation Summary
+    llm_hint: |
+      Conclude with a structured report covering readiness, project-type specifics, risks, MVP completeness, and implementation readiness.
+    required: true
+    items:
+      - text: Compile the executive summary (project type, readiness percentage, go/no-go, blocking issues, skipped sections).
+      - text: Document project-type analysis (setup/completeness/timeline for greenfield; integration risk/impact/rollback/user disruption for brownfield).
+      - text: Record top risks with mitigations and timeline impacts, including brownfield-specific integration risks where applicable.
+      - text: Evaluate MVP completeness (core coverage, missing essentials, scope creep) and implementation readiness (developer clarity, ambiguous requirements, missing tech details).
 
 
 
@@ -1453,172 +1135,94 @@ completion:
 
 
 
-# Dependency: checklists/story-draft-checklist.md
+# Dependency: checklists/story-draft-checklist.yaml
 
-# Story Draft Checklist
-
-The Scrum Master should use this checklist to validate that each story contains sufficient context for a developer agent to implement it successfully, while assuming the dev agent has reasonable capabilities to figure things out.
-
-[[LLM: INITIALIZATION INSTRUCTIONS - STORY DRAFT VALIDATION
-
-Before proceeding with this checklist, ensure you have access to:
-
-1. The story document being validated (usually in docs/stories/ or provided directly)
-2. The parent epic context
-3. Any referenced architecture or design documents
-4. Previous related stories if this builds on prior work
-
-IMPORTANT: This checklist validates individual stories BEFORE implementation begins.
-
-VALIDATION PRINCIPLES:
-
-1. Clarity - A developer should understand WHAT to build
-2. Context - WHY this is being built and how it fits
-3. Guidance - Key technical decisions and patterns to follow
-4. Testability - How to verify the implementation works
-5. Self-Contained - Most info needed is in the story itself
-
-REMEMBER: We assume competent developer agents who can:
-
-- Research documentation and codebases
-- Make reasonable technical decisions
-- Follow established patterns
-- Ask for clarification when truly stuck
-
-We're checking for SUFFICIENT guidance, not exhaustive detail.]]
-
-## 1. GOAL & CONTEXT CLARITY
-
-[[LLM: Without clear goals, developers build the wrong thing. Verify:
-
-1. The story states WHAT functionality to implement
-2. The business value or user benefit is clear
-3. How this fits into the larger epic/product is explained
-4. Dependencies are explicit ("requires Story X to be complete")
-5. Success looks like something specific, not vague]]
-
-- [ ] Story goal/purpose is clearly stated
-- [ ] Relationship to epic goals is evident
-- [ ] How the story fits into overall system flow is explained
-- [ ] Dependencies on previous stories are identified (if applicable)
-- [ ] Business context and value are clear
-
-## 2. TECHNICAL IMPLEMENTATION GUIDANCE
-
-[[LLM: Developers need enough technical context to start coding. Check:
-
-1. Key files/components to create or modify are mentioned
-2. Technology choices are specified where non-obvious
-3. Integration points with existing code are identified
-4. Data models or API contracts are defined or referenced
-5. Non-standard patterns or exceptions are called out
-
-Note: We don't need every file listed - just the important ones.]]
-
-- [ ] Key files to create/modify are identified (not necessarily exhaustive)
-- [ ] Technologies specifically needed for this story are mentioned
-- [ ] Critical APIs or interfaces are sufficiently described
-- [ ] Necessary data models or structures are referenced
-- [ ] Required environment variables are listed (if applicable)
-- [ ] Any exceptions to standard coding patterns are noted
-
-## 3. REFERENCE EFFECTIVENESS
-
-[[LLM: References should help, not create a treasure hunt. Ensure:
-
-1. References point to specific sections, not whole documents
-2. The relevance of each reference is explained
-3. Critical information is summarized in the story
-4. References are accessible (not broken links)
-5. Previous story context is summarized if needed]]
-
-- [ ] References to external documents point to specific relevant sections
-- [ ] Critical information from previous stories is summarized (not just referenced)
-- [ ] Context is provided for why references are relevant
-- [ ] References use consistent format (e.g., `docs/filename.md#section`)
-
-## 4. SELF-CONTAINMENT ASSESSMENT
-
-[[LLM: Stories should be mostly self-contained to avoid context switching. Verify:
-
-1. Core requirements are in the story, not just in references
-2. Domain terms are explained or obvious from context
-3. Assumptions are stated explicitly
-4. Edge cases are mentioned (even if deferred)
-5. The story could be understood without reading 10 other documents]]
-
-- [ ] Core information needed is included (not overly reliant on external docs)
-- [ ] Implicit assumptions are made explicit
-- [ ] Domain-specific terms or concepts are explained
-- [ ] Edge cases or error scenarios are addressed
-
-## 5. TESTING GUIDANCE
-
-[[LLM: Testing ensures the implementation actually works. Check:
-
-1. Test approach is specified (unit, integration, e2e)
-2. Key test scenarios are listed
-3. Success criteria are measurable
-4. Special test considerations are noted
-5. Acceptance criteria in the story are testable]]
-
-- [ ] Required testing approach is outlined
-- [ ] Key test scenarios are identified
-- [ ] Success criteria are defined
-- [ ] Special testing considerations are noted (if applicable)
-
-## 6. LLM CONTEXT EFFICIENCY
-
-[[LLM: Stories must wrap precisely the context downstream LLM agents need without extra narrative weight.]]
-
-- [ ] Story text focuses only on necessary context so the downstream agent stays under tight budget
-- [ ] Key constraints, dependencies, and assumptions are highlighted up front with explicit labels
-- [ ] Redundant prose or unrelated background is minimized while preserving comprehension
-
-## VALIDATION RESULT
-
-[[LLM: FINAL STORY VALIDATION REPORT
-
-Generate a concise validation report:
-
-1. Quick Summary
-
-   - Story readiness: READY / NEEDS REVISION / BLOCKED
-   - Clarity score (1-10)
-   - Major gaps identified
-
-2. Fill in the validation table with:
-
-   - PASS: Requirements clearly met
-   - PARTIAL: Some gaps but workable
-   - FAIL: Critical information missing
-
-3. Specific Issues (if any)
-
-   - List concrete problems to fix
-   - Suggest specific improvements
-   - Identify any blocking dependencies
-
-4. Developer Perspective
-   - Could YOU implement this story as written?
-   - What questions would you have?
-   - What might cause delays or rework?
-
-Be pragmatic - perfect documentation doesn't exist, but it must be enough to provide the extreme context a dev agent needs to get the work down and not create a mess.]]
-
-| Category                             | Status | Issues |
-| ------------------------------------ | ------ | ------ |
-| 1. Goal & Context Clarity            | _TBD_  |        |
-| 2. Technical Implementation Guidance | _TBD_  |        |
-| 3. Reference Effectiveness           | _TBD_  |        |
-| 4. Self-Containment Assessment       | _TBD_  |        |
-| 5. Testing Guidance                  | _TBD_  |        |
-
-**Final Assessment:**
-
-- READY: The story provides sufficient context for implementation
-- NEEDS REVISION: The story requires updates (see issues)
-- BLOCKED: External information required (specify what information)
+$schema: ../../.internal/checklist.schema.json
+id: story-draft-checklist
+title: Story Draft Checklist
+purpose: Ensure each story contains enough context for dev agents to implement it.
+agent: scrum-master
+init_instructions: |
+  Use this checklist before implementation begins. Have the target story, parent epic, referenced
+  architecture/design docs, and any prior related stories available. Validate clarity, context,
+  guidance, and testability—not exhaustive detail.
+report_instructions: |
+  Produce a validation summary capturing readiness (READY/NEEDS REVISION/BLOCKED), clarity score,
+  major gaps, per-category status, specific fixups, and whether you could implement the story as
+  written.
+sections:
+  - id: GOAL-CONTEXT
+    title: Goal & Context Clarity
+    llm_hint: |
+      Developers must know what to build, why, how it ties to the epic, dependencies, and what success means—verify those are explicit.
+    required: true
+    items:
+      - text: Story goal and purpose are clearly stated.
+      - text: Relationship to epic goals is evident.
+      - text: Placement within the overall system flow is explained.
+      - text: Dependencies on previous stories are identified when relevant.
+      - text: Business context and value are clear.
+  - id: TECH-GUIDANCE
+    title: Technical Implementation Guidance
+    llm_hint: |
+      Provide enough technical direction that a competent developer can start without guesswork: files, tech choices, integration points, data models, and exceptions.
+    required: true
+    items:
+      - text: Key files or components to create/modify are identified (not necessarily exhaustive).
+      - text: Required technologies or tooling for this story are called out when non-obvious.
+      - text: Critical APIs or interfaces are described sufficiently.
+      - text: Necessary data models or structures are referenced.
+      - text: Required environment variables are listed, if applicable.
+      - text: Exceptions to standard patterns are documented.
+  - id: REFERENCES
+    title: Reference Effectiveness
+    llm_hint: |
+      References should accelerate, not hinder—point to exact sections, explain relevance, and summarize critical prior context.
+    required: true
+    items:
+      - text: References link to specific sections, not entire documents.
+      - text: Critical details from previous stories are summarized, not just linked.
+      - text: Each reference includes context on why it matters.
+      - text: References use a consistent, accessible format (e.g., docs/file.md#section).
+  - id: SELF-CONTAINMENT
+    title: Self-Containment Assessment
+    llm_hint: |
+      Stories should stand alone: include core requirements, explain domain terms, state assumptions, and mention edge cases so devs avoid context thrash.
+    required: true
+    items:
+      - text: Core information lives in the story instead of solely in external docs.
+      - text: Implicit assumptions are stated explicitly.
+      - text: Domain-specific terms or concepts are explained or obvious.
+      - text: Edge cases or error scenarios are acknowledged.
+  - id: TEST-GUIDANCE
+    title: Testing Guidance
+    llm_hint: |
+      Make tests obvious: spell out approach, scenarios, success criteria, and any special considerations so devs can verify their work.
+    required: true
+    items:
+      - text: Required testing approach (unit/integration/e2e) is outlined.
+      - text: Key test scenarios are enumerated.
+      - text: Success criteria are measurable and explicit.
+      - text: Special testing considerations are captured when applicable.
+  - id: LLM-EFFICIENCY
+    title: LLM Context Efficiency
+    llm_hint: |
+      Stories must remain concise but complete so downstream LLM agents stay within context budgets—highlight constraints up front and trim fluff.
+    required: true
+    items:
+      - text: Story text focuses on necessary context only.
+      - text: Key constraints, dependencies, and assumptions are highlighted up front with labels.
+      - text: Redundant prose or unrelated background is minimized without losing comprehension.
+  - id: VALIDATION-RESULT
+    title: Validation Result
+    llm_hint: |
+      Summarize readiness, category statuses, concrete issues, and whether you could implement the story as written—be pragmatic rather than perfectionist.
+    required: true
+    items:
+      - text: Record the readiness state (READY/NEEDS REVISION/BLOCKED) plus clarity score and major gaps.
+      - text: Fill the validation table per category (PASS/PARTIAL/FAIL) with noted issues.
+      - text: List specific problems to fix with suggested improvements and dependencies, if any.
+      - text: Capture the developer perspective (could you implement it, what questions remain, likely sources of rework).
 
 
 
