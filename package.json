@@ -2,23 +2,24 @@
 	"name": "bmad-minimal",
 	"version": "1.4.0",
 	"description": "A minimal version of BMad Method, streamlined for developers",
-	"main": "src/index.js",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
 	"bin": {
-		"bmad-minimal": "./bin/cli.js"
+		"bmad-minimal": "./dist/cli.js"
 	},
 	"files": [
-		"bin/",
 		"src/",
-		"core/"
+		"core/",
+		"dist/"
 	],
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"prepare": "chmod +x bin/cli.js",
-		"start": "node bin/cli.js",
-		"dev": "node bin/cli.js",
-		"lint": "echo \"No linter configured\"",
-		"build": "node src/scripts/build.js",
-		"prepack": "npm run prepare",
+		"start": "ts-node src/cli.ts",
+		"dev": "ts-node src/cli.ts",
+		"lint": "npx tsc --noEmit",
+		"compile": "tsc",
+		"build": "node dist/scripts/build.js",
+		"prepack": "npm run compile && npm run build && chmod +x dist/cli.js",
 		"postpack": "echo \"Package created successfully\""
 	},
 	"dependencies": {
@@ -26,6 +27,13 @@
 		"inquirer": "^8.2.6",
 		"chalk": "^4.1.2",
 		"fs-extra": "^11.1.1"
+	},
+	"devDependencies": {
+		"@types/fs-extra": "^11.0.4",
+		"@types/inquirer": "^9.0.7",
+		"@types/node": "^20.11.20",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.4.5"
 	},
 	"repository": {
 		"type": "git",

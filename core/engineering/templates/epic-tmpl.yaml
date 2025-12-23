@@ -14,7 +14,8 @@ sections:
   - id: status
     title: Status
     type: choice
-    choices: ["Review", "WIP", "Approved"]
+    choices: ["WIP", "Review", "Done"]
+    default: "WIP"
     instruction: Select the current epic status for stakeholder visibility.
     owner: product-development-master
     editors: ["product-development-master"]

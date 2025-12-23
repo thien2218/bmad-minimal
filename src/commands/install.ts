@@ -1,45 +1,40 @@
-const inquirer = require("inquirer");
-const chalk = require("chalk");
-const path = require("path");
-const fs = require("fs-extra");
-const { writeJson, exists, getPath } = require("../utils/fileOperations");
-const { ensureIgnored } = require("../utils/gitignore");
-const {
+import inquirer from "inquirer";
+import chalk from "chalk";
+import path from "path";
+import fs from "fs-extra";
+import { writeJson, exists, getPath } from "../utils/fileOperations";
+import { ensureIgnored } from "../utils/gitignore";
+import {
 	getConfigFields,
 	shouldGenerateCSPrompt,
 	loadDefaultConfig,
 	mergeConfig,
-} = require("../utils/config");
-const {
+	ConfigAnswers,
+} from "../utils/config";
+import {
 	copyCoreDirectories,
 	ensureDocsStructure,
 	copyCheatSheetToWorkspace,
-} = require("../utils/docs");
-const { compressAgentConfigs } = require("../utils/compress");
+} from "../utils/docs";
+import { compressAgentConfigs } from "../utils/compress";
 
-/**
- * Install BMad Minimal into the current workspace.
- * - Prompts for configuration
- * - Copies core templates
- * - Writes config.json
- * - Ensures docs structure and updates .gitignore
- *
- * @param {Object} options - CLI options parsed upstream.
- * @returns {Promise<void>}
- */
-async function install(options) {
+export interface InstallCommandOptions {
+	project?: string;
+	dir?: string;
+}
+
+export async function install(
+	options: InstallCommandOptions = {}
+): Promise<void> {
 	console.log(chalk.blue("🚀 BMad Minimal Installation\n"));
-
 	const cwd = process.cwd();
 	const coreDir = getPath("core");
-
-	// Check if already installed
 	const existingConfigs = await findExistingConfigs(cwd);
+
 	if (existingConfigs.length > 0) {
 		console.log(chalk.yellow("⚠️ BMad Minimal configuration already exists:"));
 		existingConfigs.forEach((config) => console.log(`   - ${config}`));
-
-		const { proceed } = await inquirer.prompt([
+		const { proceed } = await inquirer.prompt<{ proceed: boolean }>([
 			{
 				type: "confirm",
 				name: "proceed",
@@ -47,44 +42,29 @@ async function install(options) {
 				default: false,
 			},
 		]);
-
 		if (!proceed) {
 			console.log(chalk.gray("Installation cancelled."));
 			return;
 		}
 	}
 
-	// Gather configuration
-	const config = await gatherConfiguration(options, cwd);
-
+	const configAnswers = await gatherConfiguration(options, cwd);
 	console.log(chalk.blue("\n📦 Installing BMad Minimal files...\n"));
 
 	try {
-		// Create base directory structure
-		const baseDir = path.join(cwd, config.baseDir);
+		const baseDir = path.join(cwd, configAnswers.baseDir ?? "bmad-minimal");
 		await fs.ensureDir(baseDir);
-
-		// Copy core directories
-		console.log(chalk.gray(`  Copying engineering and planning files...`));
+		console.log(chalk.gray("  Copying engineering and planning files..."));
 		await copyCoreDirectories(coreDir, baseDir);
-
-		// Compress agent JSON configurations
-		console.log(chalk.gray(`  Compressing agent configurations...`));
+		console.log(chalk.gray("  Compressing agent configurations..."));
 		await compressAgentConfigs(baseDir);
-
-		// Write config.json
 		const configPath = path.join(baseDir, "config.json");
-		// Load defaults and merge with gathered configuration
 		const defaultConfig = await loadDefaultConfig(coreDir);
-		const configData = mergeConfig(defaultConfig, config);
-
-		console.log(chalk.gray(`  Writing configuration...`));
+		const configData = mergeConfig(defaultConfig, configAnswers);
+		console.log(chalk.gray("  Writing configuration..."));
 		await writeJson(configPath, configData);
-
-		// Create docs directory structure (use merged defaults)
 		await ensureDocsStructure(cwd, configData);
 
-		// Write cheat sheet
 		try {
 			await copyCheatSheetToWorkspace(cwd, configData);
 			console.log(
@@ -92,15 +72,16 @@ async function install(options) {
 					`  Copied cheat sheet to ${configData.docs.dir}/cheat-sheet.md`
 				)
 			);
-		} catch (e) {
+		} catch (error) {
 			console.log(
-				chalk.yellow(`  Warning: failed to copy cheat sheet: ${e.message}`)
+				chalk.yellow(
+					`  Warning: failed to copy cheat sheet: ${(error as Error).message}`
+				)
 			);
 		}
 
-		// After all files are written, ensure baseDir is ignored by git
 		try {
-			const entry = String(config.baseDir || "").trim();
+			const entry = String(configAnswers.baseDir ?? "").trim();
 			const modified = await ensureIgnored({ cwd, entry });
 			if (entry) {
 				console.log(
@@ -111,63 +92,70 @@ async function install(options) {
 					)
 				);
 			}
-		} catch (e) {
+		} catch (error) {
 			console.log(
-				chalk.yellow(`  Warning: failed to update .gitignore: ${e.message}`)
+				chalk.yellow(
+					`  Warning: failed to update .gitignore: ${(error as Error).message}`
+				)
 			);
 		}
 
 		await shouldGenerateCSPrompt(configData);
-
 		console.log(chalk.green("\n✅ BMad Minimal installation complete!\n"));
 		console.log(chalk.cyan("📁 Structure created:"));
-		console.log(`   ${config.baseDir}/`);
-		console.log(`   ├── config.json`);
-		console.log(`   ├── engineering/`);
-		console.log(`   └── planning/`);
+		console.log(`   ${configAnswers.baseDir ?? "bmad-minimal"}/`);
+		console.log("   ├── config.json");
+		console.log("   ├── engineering/");
+		console.log("   └── planning/");
 		console.log(`   ${configData.docs.dir}/`);
 		console.log(`   ├── ${configData.docs.subdirs.epics}/`);
 		console.log(`   ├── ${configData.docs.subdirs.stories}/`);
 		console.log(`   ├── ${configData.docs.subdirs.qa}/`);
 		console.log(`   ├── ${configData.docs.subdirs.prds}/`);
-		console.log(`   └── coding-standards.md`);
+		console.log("   └── coding-standards.md");
 	} catch (error) {
-		console.error(chalk.red("❌ Installation failed:"), error.message);
+		console.error(
+			chalk.red("❌ Installation failed:"),
+			(error as Error).message
+		);
 		throw error;
 	}
 }
 
-async function findExistingConfigs(cwd) {
-	const configs = [];
+async function findExistingConfigs(cwd: string): Promise<string[]> {
+	const configs: string[] = [];
 	const possibleDirs = ["bmad-minimal"];
-
 	for (const dir of possibleDirs) {
 		const configPath = path.join(cwd, dir, "config.json");
 		if (await exists(configPath)) {
 			configs.push(`${dir}/config.json`);
 		}
 	}
-
 	return configs;
 }
 
-async function gatherConfiguration(options, cwd) {
-	const answers = await inquirer.prompt(getConfigFields(cwd, options));
+async function gatherConfiguration(
+	options: InstallCommandOptions,
+	cwd: string
+): Promise<ConfigAnswers> {
+	const answers = await inquirer.prompt<ConfigAnswers>(
+		getConfigFields(cwd, options)
+	);
 
 	if (!answers.projectName) {
-		const { projectName } = await inquirer.prompt([
+		const response = await inquirer.prompt<{ projectName: string }>([
 			{
 				type: "input",
 				name: "projectName",
 				message: "Project name:",
 				default: path.basename(cwd),
-				validate: (input) => input.trim() !== "" || "Project name is required",
+				validate: (input: string) =>
+					input.trim() !== "" || "Project name is required",
 			},
 		]);
-		answers.projectName = projectName;
+		answers.projectName = response.projectName;
 	}
 
-	// Ensure at least one of dir, backendDir, or frontendDir is provided
 	if (!answers.dir && !answers.backendDir && !answers.frontendDir) {
 		console.error(
 			chalk.red(
@@ -177,7 +165,7 @@ async function gatherConfiguration(options, cwd) {
 		throw new Error("No app/backend/frontend directory provided");
 	}
 
-	const { isNewProject } = await inquirer.prompt([
+	const { isNewProject } = await inquirer.prompt<{ isNewProject: boolean }>([
 		{
 			type: "confirm",
 			name: "isNewProject",
@@ -186,8 +174,7 @@ async function gatherConfiguration(options, cwd) {
 		},
 	]);
 	answers.projectType = isNewProject ? "greenfield" : "brownfield";
-
 	return answers;
 }
 
-module.exports = install;
+export default install;

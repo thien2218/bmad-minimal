@@ -1,25 +1,28 @@
-const fs = require("fs-extra");
-const path = require("path");
-const chalk = require("chalk");
-const { getPath } = require("../utils/fileOperations");
+import fs from "fs-extra";
+import path from "path";
+import chalk from "chalk";
 
-/**
- * Compress the JSON configuration block in a single agent markdown file.
- *
- * @param {string} filePath - Path to the agent markdown file
- * @returns {Promise<{changed: boolean, error: Error|null}>} - Result indicating if file was changed and any error
- */
-async function compressAgentConfigInFile(filePath) {
+interface CompressionResult {
+	changed: boolean;
+	error: Error | null;
+}
+
+interface CompressionStats {
+	processed: number;
+	modified: number;
+	errors: number;
+}
+
+async function compressAgentConfigInFile(
+	filePath: string
+): Promise<CompressionResult> {
 	try {
 		const content = await fs.readFile(filePath, "utf-8");
-
-		// Find the marker comment
 		const markerIndex = content.indexOf("<!-- INSTRUCTIONS_AND_RULES:JSON -->");
 		if (markerIndex === -1) {
 			return { changed: false, error: null };
 		}
 
-		// Find the first ```json block after the marker
 		const jsonBlockStart = content.indexOf("```json", markerIndex);
 		if (jsonBlockStart === -1) {
 			return { changed: false, error: null };
@@ -31,7 +34,6 @@ async function compressAgentConfigInFile(filePath) {
 			return { changed: false, error: null };
 		}
 
-		// Extract the JSON content
 		const jsonContent = content
 			.substring(jsonContentStart, jsonBlockEnd)
 			.trim();
@@ -39,48 +41,35 @@ async function compressAgentConfigInFile(filePath) {
 			return { changed: false, error: null };
 		}
 
-		// Parse and minify the JSON
-		let parsedJson;
+		let parsedJson: unknown;
 		try {
 			parsedJson = JSON.parse(jsonContent);
 		} catch (parseError) {
-			// Soft fail: skip compression but don't throw
 			console.warn(
 				chalk.yellow(
-					`Warning: Failed to parse JSON in ${filePath}: ${parseError.message}`
+					`Warning: Failed to parse JSON in ${filePath}: ${
+						(parseError as Error).message
+					}`
 				)
 			);
-			return { changed: false, error: parseError };
+			return { changed: false, error: parseError as Error };
 		}
 
 		const minifiedJson = JSON.stringify(parsedJson);
-
-		// Replace the JSON content in the file
 		const beforeBlock = content.substring(0, jsonContentStart);
 		const afterBlock = content.substring(jsonBlockEnd);
-
-		const newContent = beforeBlock + "\n" + minifiedJson + "\n" + afterBlock;
-
-		// Write back to file
+		const newContent = `${beforeBlock}\n${minifiedJson}\n${afterBlock}`;
 		await fs.writeFile(filePath, newContent, "utf-8");
-
 		return { changed: true, error: null };
 	} catch (error) {
-		return { changed: false, error };
+		return { changed: false, error: error as Error };
 	}
 }
 
-/**
- * Compress JSON configuration blocks in all agent markdown files under a directory.
- * Processes both engineering/agents and planning/agents subdirectories.
- *
- * @param {string} rootDir - Root directory containing engineering and/or planning subdirs
- * @returns {Promise<{processed: number, modified: number, errors: number}>} - Statistics
- */
-async function compressAgentConfigs(rootDir) {
-	const stats = { processed: 0, modified: 0, errors: 0 };
-
-	// Agent subdirectories to process
+export async function compressAgentConfigs(
+	rootDir: string
+): Promise<CompressionStats> {
+	const stats: CompressionStats = { processed: 0, modified: 0, errors: 0 };
 	const agentDirs = [
 		path.join(rootDir, "engineering", "agents"),
 		path.join(rootDir, "planning", "agents"),
@@ -88,21 +77,17 @@ async function compressAgentConfigs(rootDir) {
 
 	for (const agentDir of agentDirs) {
 		try {
-			// Check if directory exists
 			if (!(await fs.pathExists(agentDir))) {
 				continue;
 			}
 
-			// Get all markdown files
 			const files = await fs.readdir(agentDir);
 			const markdownFiles = files.filter((file) => file.endsWith(".md"));
 
 			for (const file of markdownFiles) {
 				const filePath = path.join(agentDir, file);
 				stats.processed++;
-
 				const result = await compressAgentConfigInFile(filePath);
-
 				if (result.error) {
 					stats.errors++;
 				}
@@ -113,7 +98,9 @@ async function compressAgentConfigs(rootDir) {
 		} catch (error) {
 			console.warn(
 				chalk.yellow(
-					`Warning: Failed to process directory ${agentDir}: ${error.message}`
+					`Warning: Failed to process directory ${agentDir}: ${
+						(error as Error).message
+					}`
 				)
 			);
 			stats.errors++;
@@ -122,6 +109,3 @@ async function compressAgentConfigs(rootDir) {
 
 	return stats;
 }
-
-// Export the function for use in other modules
-module.exports = { compressAgentConfigs };

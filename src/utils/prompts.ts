@@ -1,27 +1,18 @@
-/**
- * Builders for dynamic prompts displayed to users/LLMs.
- */
+interface CodingStandardsPromptOptions {
+	projectName: string;
+	docsDir: string;
+	projectDir?: string;
+	backendDir?: string;
+	frontendDir?: string;
+}
 
-/**
- * Build a prompt for creating/updating docs/coding-standards.md.
- * Focuses on conventions (not technology selection), referencing
- * Architecture docs for tech choices.
- *
- * @param {Object} params
- * @param {string} params.projectName
- * @param {string} params.docsDir
- * @param {string} [params.projectDir]
- * @param {string} [params.backendDir]
- * @param {string} [params.frontendDir]
- * @returns {string}
- */
-function buildCodingStandardsPrompt({
+export function buildCodingStandardsPrompt({
 	projectName,
 	docsDir,
 	projectDir,
 	backendDir,
 	frontendDir,
-}) {
+}: CodingStandardsPromptOptions): string {
 	const displayPath = `${docsDir}/coding-standards.md`;
 	const contextLines = [`- Project name: ${projectName}`];
 	if (projectDir) contextLines.push(`- App directory: ${projectDir}`);
@@ -41,7 +32,3 @@ function buildCodingStandardsPrompt({
 		`\n\nOutput: Provide either the markdown content of ${displayPath} or a unified diff that creates/updates only that file.`
 	);
 }
-
-module.exports = {
-	buildCodingStandardsPrompt,
-};

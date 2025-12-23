@@ -1,11 +1,51 @@
-const path = require("path");
-const inquirer = require("inquirer");
-const chalk = require("chalk");
-const fs = require("fs-extra");
-const { exists } = require("./fileOperations");
-const { buildCodingStandardsPrompt } = require("./prompts");
+import path from "path";
+import inquirer from "inquirer";
+import type { Answers, Question } from "inquirer";
+import chalk from "chalk";
+import fs from "fs-extra";
+import { exists } from "./fileOperations";
+import { buildCodingStandardsPrompt } from "./prompts";
 
-const DEFAULT_DOCS_CONFIG = {
+export interface DocsSubdirs {
+	[key: string]: string;
+}
+
+export interface DocsConfig {
+	dir: string;
+	subdirs: DocsSubdirs;
+}
+
+export interface ProjectConfig {
+	name?: string;
+	type?: string;
+	dir?: string;
+	backendDir?: string;
+	frontendDir?: string;
+	testDirs?: string[];
+}
+
+export interface BmadConfig {
+	baseDir?: string;
+	project?: ProjectConfig;
+	docs: DocsConfig;
+	[key: string]: unknown;
+}
+
+export interface ConfigAnswers extends Answers {
+	projectName?: string;
+	isMonolithic?: boolean;
+	dir?: string;
+	frontendDir?: string;
+	backendDir?: string;
+	testDirs?: string[];
+	baseDir?: string;
+	docsDir?: string;
+	projectType?: string;
+}
+
+export type ConfigQuestion = Question<ConfigAnswers> & { accessKey?: string };
+
+const DEFAULT_DOCS_CONFIG: DocsConfig = {
 	dir: "docs",
 	subdirs: {
 		qa: "qa",
@@ -14,12 +54,12 @@ const DEFAULT_DOCS_CONFIG = {
 	},
 };
 
-/**
- * Locate an existing BMAD configuration file under common directories.
- * @param {string} cwd - Current working directory
- * @returns {Promise<{dir: string, path: string}|null>} The found directory and path or null
- */
-async function findConfig(cwd) {
+interface ConfigLocation {
+	dir: string;
+	path: string;
+}
+
+export async function findConfig(cwd: string): Promise<ConfigLocation | null> {
 	const possibleDirs = ["bmad-minimal", ".bmad", "bmad"];
 	for (const dir of possibleDirs) {
 		const configPath = path.join(cwd, dir, "config.json");
@@ -31,30 +71,22 @@ async function findConfig(cwd) {
 	return null;
 }
 
-/**
- * Load the default config.json bundled under core/.
- * @param {string} coreDir - Absolute path to core directory
- * @returns {Promise<object>} default config object
- */
-async function loadDefaultConfig(coreDir) {
+export async function loadDefaultConfig(coreDir: string): Promise<BmadConfig> {
 	const defaultConfigPath = path.join(coreDir, "config.json");
-	const config = await fs.readJson(defaultConfigPath);
+	const config = (await fs.readJson(defaultConfigPath)) as BmadConfig;
 	return ensureDocsDefaults(config);
 }
 
-/**
- * Merge installation answers into the default config structure.
- * @param {object} defaultConfig
- * @param {object} answers - Gathered answers from prompts
- * @returns {object} merged config
- */
-function mergeConfig(defaultConfig, answers) {
-	const cfg = JSON.parse(JSON.stringify(defaultConfig));
+export function mergeConfig(
+	defaultConfig: BmadConfig,
+	answers: ConfigAnswers
+): BmadConfig {
+	const cfg: BmadConfig = JSON.parse(JSON.stringify(defaultConfig));
 	ensureDocsDefaults(cfg);
 
 	if (answers.baseDir) cfg.baseDir = answers.baseDir;
-
 	cfg.project = cfg.project || {};
+
 	if (answers.projectName) cfg.project.name = answers.projectName;
 	if (answers.projectType) cfg.project.type = answers.projectType;
 	if (answers.dir !== undefined) cfg.project.dir = answers.dir ?? "";
@@ -66,17 +98,23 @@ function mergeConfig(defaultConfig, answers) {
 		cfg.project.testDirs = answers.testDirs;
 	}
 
-	if (!cfg.docs) cfg.docs = {};
+	if (!cfg.docs) {
+		cfg.docs = { ...DEFAULT_DOCS_CONFIG };
+	}
 	if (answers.docsDir) cfg.docs.dir = answers.docsDir;
 
 	return ensureDocsDefaults(cfg);
 }
 
-function ensureDocsDefaults(config) {
-	if (!config || typeof config !== "object") return config;
+export function ensureDocsDefaults<T extends BmadConfig | null | undefined>(
+	config: T
+): T {
+	if (!config || typeof config !== "object") {
+		return config;
+	}
 
 	if (!config.docs || typeof config.docs !== "object") {
-		config.docs = {};
+		config.docs = { ...DEFAULT_DOCS_CONFIG };
 	}
 
 	if (!config.docs.dir || typeof config.docs.dir !== "string") {
@@ -89,14 +127,11 @@ function ensureDocsDefaults(config) {
 		config.docs.subdirs = { ...DEFAULT_DOCS_CONFIG.subdirs };
 	} else {
 		for (const [key, value] of Object.entries(DEFAULT_DOCS_CONFIG.subdirs)) {
-			if (
-				!config.docs.subdirs[key] ||
-				typeof config.docs.subdirs[key] !== "string" ||
-				config.docs.subdirs[key].trim() === ""
-			) {
+			const current = config.docs.subdirs[key];
+			if (typeof current !== "string" || current.trim() === "") {
 				config.docs.subdirs[key] = value;
 			} else {
-				config.docs.subdirs[key] = config.docs.subdirs[key].trim();
+				config.docs.subdirs[key] = current.trim();
 			}
 		}
 	}
@@ -104,15 +139,10 @@ function ensureDocsDefaults(config) {
 	return config;
 }
 
-/**
- * Build interactive prompts used to gather installation configuration.
- * This returns plain question objects consumable by inquirer.
- *
- * @param {string} cwd - Current working directory used for defaults.
- * @param {Object} [options]
- * @returns {Array<Object>} Inquirer-style question definitions.
- */
-function getConfigFields(cwd, options) {
+export function getConfigFields(
+	cwd: string,
+	options?: { project?: string; dir?: string }
+): ConfigQuestion[] {
 	return [
 		{
 			type: "input",
@@ -120,7 +150,8 @@ function getConfigFields(cwd, options) {
 			accessKey: "project.name",
 			message: "Project name:",
 			default: path.basename(cwd),
-			validate: (input) => input.trim() !== "" || "Project name is required",
+			validate: (input: string) =>
+				input.trim() !== "" || "Project name is required",
 			when: () => !options?.project,
 		},
 		{
@@ -135,7 +166,7 @@ function getConfigFields(cwd, options) {
 			accessKey: "project.dir",
 			message: "Monolithic app directory (relative to current directory):",
 			default: () => "./",
-			when: (answers) => answers.isMonolithic,
+			when: (answers: ConfigAnswers) => answers.isMonolithic === true,
 		},
 		{
 			type: "input",
@@ -143,7 +174,7 @@ function getConfigFields(cwd, options) {
 			accessKey: "project.frontendDir",
 			message: "Frontend directory (relative to current directory):",
 			default: () => "./frontend/",
-			when: (answers) => !answers.isMonolithic,
+			when: (answers: ConfigAnswers) => answers.isMonolithic === false,
 		},
 		{
 			type: "input",
@@ -151,7 +182,7 @@ function getConfigFields(cwd, options) {
 			accessKey: "project.backendDir",
 			message: "Backend directory (relative to current directory):",
 			default: () => "./backend/",
-			when: (answers) => !answers.isMonolithic,
+			when: (answers: ConfigAnswers) => answers.isMonolithic === false,
 		},
 		{
 			type: "input",
@@ -160,14 +191,14 @@ function getConfigFields(cwd, options) {
 			message:
 				"Test directories (comma-separated, relative to current directory):",
 			default: "None",
-			filter: (input) => {
+			filter: (input: string) => {
 				if (input.toLowerCase() === "none") {
 					return [];
 				}
 				return input
 					.split(",")
-					.map((d) => d.trim())
-					.filter((d) => d.length > 0);
+					.map((dir) => dir.trim())
+					.filter((dir) => dir.length > 0);
 			},
 		},
 		{
@@ -187,17 +218,13 @@ function getConfigFields(cwd, options) {
 	];
 }
 
-/**
- * Optionally create coding-standards.md from a template and display
- * a ready-to-use LLM prompt to complete it.
- *
- * @param {object} configData - The merged configuration data that will be written to config.json
- * @returns {Promise<void>}
- */
-async function shouldGenerateCSPrompt(configData) {
-	const codingStdsPath = path.join(configData.docs.dir, "coding-standards.md");
+export async function shouldGenerateCSPrompt(
+	configData: BmadConfig
+): Promise<void> {
+	const docsDir = configData.docs?.dir ?? DEFAULT_DOCS_CONFIG.dir;
+	const codingStdsPath = path.join(docsDir, "coding-standards.md");
+	const project = configData.project || {};
 
-	// Write coding standards from template if file doesn't exist
 	if (!(await exists(codingStdsPath))) {
 		console.log(chalk.gray("  Writing coding standards template..."));
 		const templateTechPrefsPath = path.join(
@@ -216,13 +243,12 @@ async function shouldGenerateCSPrompt(configData) {
 		]);
 
 		if (generateCSPrompt) {
-			// Ready-to-use prompt for an LLM/agent to help fill coding-preferences.md (coding standards)
 			const llmPrompt = buildCodingStandardsPrompt({
-				projectName: configData.project.name,
-				docsDir: configData.docs.dir,
-				projectDir: configData.project.dir,
-				backendDir: configData.project.backendDir,
-				frontendDir: configData.project.frontendDir,
+				projectName: project.name ?? "",
+				docsDir,
+				projectDir: project.dir,
+				backendDir: project.backendDir,
+				frontendDir: project.frontendDir,
 			});
 
 			console.log("\n" + chalk.cyan("Prompt for your LLM/agent (copy/paste):"));
@@ -230,12 +256,3 @@ async function shouldGenerateCSPrompt(configData) {
 		}
 	}
 }
-
-module.exports = {
-	findConfig,
-	loadDefaultConfig,
-	mergeConfig,
-	ensureDocsDefaults,
-	getConfigFields,
-	shouldGenerateCSPrompt,
-};

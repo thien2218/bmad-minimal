@@ -1,40 +1,35 @@
-const inquirer = require("inquirer");
-const chalk = require("chalk");
-const path = require("path");
-const fs = require("fs-extra");
-const {
+import inquirer from "inquirer";
+import chalk from "chalk";
+import path from "path";
+import fs from "fs-extra";
+import {
 	copyDirectory,
 	readJson,
 	writeJson,
 	exists,
 	getPath,
-} = require("../utils/fileOperations");
-const {
-	ensureDocsStructure,
-	copyCheatSheetToWorkspace,
-} = require("../utils/docs");
-const {
+} from "../utils/fileOperations";
+import { ensureDocsStructure, copyCheatSheetToWorkspace } from "../utils/docs";
+import {
 	findConfig,
 	ensureDocsDefaults,
 	getConfigFields,
 	shouldGenerateCSPrompt,
-} = require("../utils/config");
-const { compressAgentConfigs } = require("../utils/compress");
+	ConfigAnswers,
+	BmadConfig,
+} from "../utils/config";
+import { compressAgentConfigs } from "../utils/compress";
 
-/**
- * Update existing BMad Minimal installation to latest core templates,
- * preserving config.json and ensuring docs structure.
- *
- * @param {Object} options - CLI options parsed upstream.
- * @returns {Promise<void>}
- */
-async function update(options) {
+export interface UpdateCommandOptions {
+	force?: boolean;
+}
+
+export async function update(
+	options: UpdateCommandOptions = {}
+): Promise<void> {
 	console.log(chalk.blue("🔄 BMad Minimal Update\n"));
-
 	const cwd = process.cwd();
 	const coreDir = getPath("core");
-
-	// Find existing configuration
 	const configLocation = await findConfig(cwd);
 
 	if (!configLocation) {
@@ -49,19 +44,16 @@ async function update(options) {
 		chalk.gray(`Found configuration at: ${configLocation.dir}/config.json`)
 	);
 
-	// Read existing config
 	const configPath = path.join(cwd, configLocation.dir, "config.json");
-	const config = await readJson(configPath);
+	const config = await readJson<BmadConfig>(configPath);
 
 	if (!config) {
 		console.error(chalk.red("❌ Failed to read configuration file."));
 		return;
 	}
 
-	// Prompt for any missing configurable fields before proceeding
 	const configUpdated = await promptMissingConfig({ cwd, config, configPath });
 
-	// Confirm update
 	if (!options.force) {
 		console.log(
 			chalk.yellow(
@@ -72,8 +64,7 @@ async function update(options) {
 			? "   Your config.json was updated with missing fields and other fields will be preserved; all other files will be overwritten."
 			: "   Your config.json will be preserved, but all other files will be overwritten.";
 		console.log(chalk.yellow(preserveMessage));
-
-		const { proceed } = await inquirer.prompt([
+		const { proceed } = await inquirer.prompt<{ proceed: boolean }>([
 			{
 				type: "confirm",
 				name: "proceed",
@@ -81,7 +72,6 @@ async function update(options) {
 				default: true,
 			},
 		]);
-
 		if (!proceed) {
 			console.log(chalk.gray("Update cancelled."));
 			return;
@@ -92,13 +82,8 @@ async function update(options) {
 
 	try {
 		const baseDir = path.join(cwd, configLocation.dir);
-
 		ensureDocsDefaults(config);
-
-		// Backup config.json
-		const configBackup = { ...config };
-
-		// Update engineering directory
+		const configBackup: BmadConfig = JSON.parse(JSON.stringify(config));
 		const engineeringSource = path.join(coreDir, "engineering");
 		const engineeringDest = path.join(baseDir, "engineering");
 
@@ -111,7 +96,6 @@ async function update(options) {
 			await copyDirectory(engineeringSource, engineeringDest);
 		}
 
-		// Update planning directory if it exists
 		const planningDest = path.join(baseDir, "planning");
 		if (await exists(planningDest)) {
 			const planningSource = path.join(coreDir, "planning");
@@ -120,98 +104,112 @@ async function update(options) {
 			await copyDirectory(planningSource, planningDest);
 		}
 
-		// Compress agent JSON configurations
 		console.log(chalk.gray("  Compressing agent configurations..."));
 		await compressAgentConfigs(baseDir);
-
-		// Restore config.json
 		console.log(chalk.gray("  Preserving configuration..."));
 		await writeJson(configPath, configBackup);
+		await shouldGenerateCSPrompt(configBackup);
 
-		// Add coding standards if it doesn't exists
-		await shouldGenerateCSPrompt(config);
-
-		// Write cheat sheet
 		try {
-			await copyCheatSheetToWorkspace(cwd, config);
+			await copyCheatSheetToWorkspace(cwd, configBackup);
 			console.log(
-				chalk.gray(`  Copied cheat sheet to ${config.docs.dir}/cheat-sheet.md`)
+				chalk.gray(
+					`  Copied cheat sheet to ${configBackup.docs.dir}/cheat-sheet.md`
+				)
 			);
-		} catch (e) {
+		} catch (error) {
 			console.log(
-				chalk.yellow(`  Warning: failed to copy cheat sheet: ${e.message}`)
+				chalk.yellow(
+					`  Warning: failed to copy cheat sheet: ${(error as Error).message}`
+				)
 			);
 		}
 
-		// Ensure all doc directories still exist
-		await ensureDocsStructure(cwd, config);
-
+		await ensureDocsStructure(cwd, configBackup);
 		console.log(chalk.green("\n✅ BMad Minimal update complete!"));
-
-		// Show what was updated
 		console.log(chalk.cyan("\n📋 Updated components:"));
 		console.log("   ✓ Engineering files");
 		console.log("   ✓ Planning files");
 		console.log("   ✓ Coding standards");
 		console.log("   ✓ Configuration");
 
-		// Check for version differences if possible
 		const packageJsonPath = path.join(coreDir, "../package.json");
 		if (await exists(packageJsonPath)) {
-			const packageJson = await readJson(packageJsonPath);
-			console.log(chalk.gray(`\nVersion: ${packageJson.version}`));
+			const packageJson = await readJson<{ version?: string }>(packageJsonPath);
+			if (packageJson?.version) {
+				console.log(chalk.gray(`\nVersion: ${packageJson.version}`));
+			}
 		}
 	} catch (error) {
-		console.error(chalk.red("❌ Update failed:"), error.message);
+		console.error(chalk.red("❌ Update failed:"), (error as Error).message);
 		throw error;
 	}
 }
 
-function getValueByPath(object, accessKey) {
+function getValueByPath(
+	object: Record<string, unknown>,
+	accessKey: string
+): unknown {
 	const parts = accessKey.split(".");
-	let current = object;
+	let current: unknown = object;
 	for (const part of parts) {
 		if (current == null || typeof current !== "object") return undefined;
-		current = current[part];
+		current = (current as Record<string, unknown>)[part];
 	}
 	return current;
 }
 
-function setValueByPath(object, accessKey, value) {
+function setValueByPath(
+	object: Record<string, unknown>,
+	accessKey: string,
+	value: unknown
+): void {
 	const parts = accessKey.split(".");
-	let current = object;
+	let current: Record<string, unknown> = object;
 	for (let i = 0; i < parts.length - 1; i++) {
 		const part = parts[i];
 		if (current[part] == null || typeof current[part] !== "object") {
 			current[part] = {};
 		}
-		current = current[part];
+		current = current[part] as Record<string, unknown>;
 	}
 	current[parts[parts.length - 1]] = value;
 }
 
-async function promptMissingConfig({ cwd, config, configPath }) {
+async function promptMissingConfig({
+	cwd,
+	config,
+	configPath,
+}: {
+	cwd: string;
+	config: BmadConfig;
+	configPath: string;
+}): Promise<boolean> {
 	const allFields = getConfigFields(cwd);
-	const configurable = allFields.filter((f) => !!f.accessKey);
-
+	const configurable = allFields.filter((field) => !!field.accessKey);
 	const missing = configurable.filter((field) => {
-		const val = getValueByPath(config, field.accessKey);
+		const val = field.accessKey
+			? getValueByPath(config as Record<string, unknown>, field.accessKey)
+			: undefined;
 		return val === undefined;
 	});
 
 	if (missing.length === 0) return false;
 
-	const answers = await inquirer.prompt(missing);
+	const answers = await inquirer.prompt<ConfigAnswers>(missing);
 
 	for (const field of missing) {
-		const rawValue = answers[field.name];
+		if (!field.accessKey) continue;
+		const rawValue = answers[field.name as keyof ConfigAnswers];
 		const value =
-			typeof field.filter === "function" ? field.filter(rawValue) : rawValue;
-		setValueByPath(config, field.accessKey, value);
+			typeof field.filter === "function"
+				? field.filter(rawValue, answers as ConfigAnswers)
+				: rawValue;
+		setValueByPath(config as Record<string, unknown>, field.accessKey, value);
 	}
 
 	await writeJson(configPath, config);
 	return true;
 }
 
-module.exports = update;
+export default update;
