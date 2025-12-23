@@ -1,6 +1,6 @@
-# SWAAD (Software Agile Development with AI)
+# SWAAD framework (Software Agile Development with AI)
 
-SWAAD (Software Agile Development with AI) draws its foundation from the [BMAD Method](https://github.com/bmad-code-org/BMAD-METHOD). It is a lightweight, developer-centric implementation of that methodology, focused solely on software development workflows and guided by the following core principles:
+SWAAD framework draws its foundation from the [BMAD Method](https://github.com/bmad-code-org/BMAD-METHOD). It is a lightweight, developer-centric implementation of that methodology, focused solely on software development workflows and guided by the following core principles:
 
 - **Context efficiency**: Keeps related logic and files closely coupled, reducing the overhead of context switching.
 - **Developer-focused**: An intuitive design and guides are prioritized for a seamless DX.
@@ -57,13 +57,13 @@ But at the same time, we don't want to shoo away any non-coder who would like to
 
 ### Flexible at all scales
 
-The set of workflows we offer can be switch in between flexibily depending on your need.
+Not every project needs a full-blown agile process. SWAAD is built to be modular and agnostic to project size.
 
-- You need to start a new project? Kickstart immediately with the Greenfield Worflow.
-- You have a change of plan for the direction of your existing project? Shift the rail with the Brownfield workflow.
-- You have a small change to implement as improvement? Ask the analyst agent directly.
+For solo developers or small teams, you can lean on the lightweight engineering workflows to speed up implementation without getting bogged down in heavy planning. As projects grow in complexity or team size, the planning agents and structured documentation become powerful tools to maintain alignment and quality.
 
-Ultimately, the tool can only work well in the right hands of the right user. Your decisions are what drive these workflows forward.
+This adaptability extends to existing codebases as well. You don't need to rewrite your entire project to start using SWAAD. You can introduce it incrementally — starting with just the engineering agents for new features, or using the planning agents to document your current architecture. The framework is designed to meet you where you are, not force you into a rigid structure from day one.
+
+You are free to adopt as much or as little of the framework as your project requires, scaling the process up or down to match your project current state.
 
 ### Simplicity is key
 

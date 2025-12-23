@@ -8,13 +8,20 @@ Planning is the entry point for (almost) all software development activities. Ma
 
 That said, in the context of AI-driven development, planning typically represents the most token-intensive phase. And accordingly, distinct planning methods and optimization strategies are employed at different context scopes to ensure efficiency.
 
-## Greenfield Flow
+### Project Brief
 
-The Greenfield Flow is designed for new initiatives where there are no legacy constraints, offering maximum flexibility in technical and architectural decisions. This section provides a comprehensive framework for navigating the greenfield planning process, from initial concept to a fully-realized project plan.
+The Project Brief is the initial high-level document that captures the core idea, goals, and scope of the project. It serves as the precursor to the PRD, consolidating research, brainstorming, and analysis into a concise summary.
 
-The workflow is structured around the creation and refinement of several key documents. These documents serve as the primary context for agents, providing a high-level overview and essential knowledge for all subsequent tasks.
+The `analyst` agent is responsible for creating the Project Brief. As shown in the Flow Graph, this typically happens after an optional research and brainstorming phase where the agent explores the project domain.
 
-<!-- ### Project Brief -->
+The Project Brief typically includes:
+
+- **Project Overview:** A summary of what the project is and why it is being built.
+- **Target Audience:** Who the users are and what problems the project solves for them.
+- **Key Features:** A high-level list of desired functionality and capabilities.
+- **Success Metrics:** How the success of the project will be measured.
+
+This document allows for a "Fast-Track" creation of the PRD, providing the `analyst` with sufficient context to generate detailed requirements without starting from scratch.
 
 ### PRD
 
@@ -30,9 +37,9 @@ The `analyst` agent is responsible for creating the PRD and can do so in three w
 
 In all scenarios, the final output is a complete PRD that includes:
 
--  **Functional Requirements (FRs):** The specific behaviors and capabilities of the system.
--  **Non-Functional Requirements (NFRs):** The quality attributes of the system, such as performance, security, and usability.
--  **Epics and Stories:** A hierarchical breakdown of the work to be done.
+- **Functional Requirements (FRs):** The specific behaviors and capabilities of the system.
+- **Non-Functional Requirements (NFRs):** The quality attributes of the system, such as performance, security, and usability.
+- **Epics and Stories:** A hierarchical breakdown of the work to be done.
 
 **Migration Note:** If you have multiple PRD files (prd-1-_.md, prd-2-_.md, etc.), consolidate them into a single `docs/prd.md` file. Merge requirements, epics, and stories chronologically, preserving the most recent versions and creating a unified Change Log.
 
@@ -44,10 +51,10 @@ The `architect` agent is responsible for creating the Architecture document. As 
 
 The Architecture document typically includes:
 
--  **System Overview:** A high-level description of the system's components and their relationships.
--  **Component Design:** Detailed design of each component, including its responsibilities and interfaces.
--  **Data Model:** The structure of the data that the system will manage.
--  **Technology Stack:** The technologies that will be used to build the system.
+- **System Overview:** A high-level description of the system's components and their relationships.
+- **Component Design:** Detailed design of each component, including its responsibilities and interfaces.
+- **Data Model:** The structure of the data that the system will manage.
+- **Technology Stack:** The technologies that will be used to build the system.
 
 ### UI/UX
 
