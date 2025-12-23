@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 This format follows Keep a Changelog and the project adheres to Semantic Versioning.
 
+## [2.0.0] - 2025-12-24
+
+### Added
+
+- introduce a project type option in `config.json` so installs can tailor scaffolding for backend, frontend, or fullstack repos
+- add confirmation steps to adhoc epic and standalone story workflows to prevent accidental file creation
+
+### Changed
+
+- rename the published package and CLI to **swaad** to reflect the framework’s identity
+- migrate the CLI and build pipeline fully to TypeScript for maintainability and type-safe releases
+- convert engineering checklists plus story and epic templates to consistent YAML/Markdown formats
+- streamline task schemas, action types, and command parameters across planning and engineering agents
+- enhance developer workflows by improving course-correction guidance, restoring story status tracking, and refining dev agent behavior
+
+### Fixed
+
+- patch the PDM checklist to include the missing verification step and tighten its conditional logic
+
+### Removed
+
+- trim unused elicitation data, redundant fields, and stale changelog/story status tokens to keep agent contexts lightweight
+
+### Docs
+
+- refresh documentation to swap PM references for the analyst agent and align content with the new SWAAD branding
+
 ## [1.4.0] - 2025-12-13
 
 ### Added
@@ -294,7 +321,8 @@ This format follows Keep a Changelog and the project adheres to Semantic Version
 - final touches
 - apply formatting
 
-[Unreleased]: https://github.com/thien2218/swaad/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/thien2218/swaad/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/thien2218/swaad/compare/v1.4.0...v2.0.0
 [1.4.0]: https://github.com/thien2218/swaad/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/thien2218/swaad/compare/v1.2.6...v1.3.0
 [1.2.6]: https://github.com/thien2218/swaad/compare/v1.2.5...v1.2.6
