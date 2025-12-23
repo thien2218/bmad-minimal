@@ -5,6 +5,7 @@ import chalk from "chalk";
 import fs from "fs-extra";
 import { exists } from "./fileOperations";
 import { buildCodingStandardsPrompt } from "./prompts";
+import { POSSIBLE_DIRS } from "../constants";
 
 export interface DocsSubdirs {
 	[key: string]: string;
@@ -24,7 +25,7 @@ export interface ProjectConfig {
 	testDirs?: string[];
 }
 
-export interface BmadConfig {
+export interface SwaadConfig {
 	baseDir?: string;
 	project?: ProjectConfig;
 	docs: DocsConfig;
@@ -60,7 +61,7 @@ interface ConfigLocation {
 }
 
 export async function findConfig(cwd: string): Promise<ConfigLocation | null> {
-	const possibleDirs = ["bmad-minimal", ".bmad", "bmad"];
+	const possibleDirs = POSSIBLE_DIRS;
 	for (const dir of possibleDirs) {
 		const configPath = path.join(cwd, dir, "config.json");
 		try {
@@ -71,17 +72,17 @@ export async function findConfig(cwd: string): Promise<ConfigLocation | null> {
 	return null;
 }
 
-export async function loadDefaultConfig(coreDir: string): Promise<BmadConfig> {
+export async function loadDefaultConfig(coreDir: string): Promise<SwaadConfig> {
 	const defaultConfigPath = path.join(coreDir, "config.json");
-	const config = (await fs.readJson(defaultConfigPath)) as BmadConfig;
+	const config = (await fs.readJson(defaultConfigPath)) as SwaadConfig;
 	return ensureDocsDefaults(config);
 }
 
 export function mergeConfig(
-	defaultConfig: BmadConfig,
+	defaultConfig: SwaadConfig,
 	answers: ConfigAnswers
-): BmadConfig {
-	const cfg: BmadConfig = JSON.parse(JSON.stringify(defaultConfig));
+): SwaadConfig {
+	const cfg: SwaadConfig = JSON.parse(JSON.stringify(defaultConfig));
 	ensureDocsDefaults(cfg);
 
 	if (answers.baseDir) cfg.baseDir = answers.baseDir;
@@ -106,7 +107,7 @@ export function mergeConfig(
 	return ensureDocsDefaults(cfg);
 }
 
-export function ensureDocsDefaults<T extends BmadConfig | null | undefined>(
+export function ensureDocsDefaults<T extends SwaadConfig | null | undefined>(
 	config: T
 ): T {
 	if (!config || typeof config !== "object") {
@@ -205,8 +206,8 @@ export function getConfigFields(
 			type: "input",
 			name: "baseDir",
 			accessKey: "baseDir",
-			message: "Base directory for BMad files:",
-			default: options?.dir || "bmad-minimal",
+			message: "Base directory for SWAAD files:",
+			default: options?.dir || "swaad",
 		},
 		{
 			type: "input",
@@ -219,7 +220,7 @@ export function getConfigFields(
 }
 
 export async function shouldGenerateCSPrompt(
-	configData: BmadConfig
+	configData: SwaadConfig
 ): Promise<void> {
 	const docsDir = configData.docs?.dir ?? DEFAULT_DOCS_CONFIG.dir;
 	const codingStdsPath = path.join(docsDir, "coding-standards.md");

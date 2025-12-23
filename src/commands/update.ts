@@ -16,7 +16,7 @@ import {
 	getConfigFields,
 	shouldGenerateCSPrompt,
 	ConfigAnswers,
-	BmadConfig,
+	SwaadConfig,
 } from "../utils/config";
 import { compressAgentConfigs } from "../utils/compress";
 
@@ -27,16 +27,14 @@ export interface UpdateCommandOptions {
 export async function update(
 	options: UpdateCommandOptions = {}
 ): Promise<void> {
-	console.log(chalk.blue("🔄 BMad Minimal Update\n"));
+	console.log(chalk.blue("🔄 SWAAD Update\n"));
 	const cwd = process.cwd();
 	const coreDir = getPath("core");
 	const configLocation = await findConfig(cwd);
 
 	if (!configLocation) {
-		console.error(chalk.red("❌ No BMad Minimal configuration found."));
-		console.log(
-			chalk.gray('Run "bmad-minimal install" to set up BMad Minimal first.')
-		);
+		console.error(chalk.red("❌ No SWAAD configuration found."));
+		console.log(chalk.gray('Run "swaad install" to set up SWAAD first.'));
 		return;
 	}
 
@@ -45,7 +43,7 @@ export async function update(
 	);
 
 	const configPath = path.join(cwd, configLocation.dir, "config.json");
-	const config = await readJson<BmadConfig>(configPath);
+	const config = await readJson<SwaadConfig>(configPath);
 
 	if (!config) {
 		console.error(chalk.red("❌ Failed to read configuration file."));
@@ -57,7 +55,7 @@ export async function update(
 	if (!options.force) {
 		console.log(
 			chalk.yellow(
-				"\n⚠️  This will update all BMad files to the latest version."
+				"\n⚠️  This will update all SWAAD files to the latest version."
 			)
 		);
 		const preserveMessage = configUpdated
@@ -78,12 +76,12 @@ export async function update(
 		}
 	}
 
-	console.log(chalk.blue("\n📦 Updating BMad Minimal files...\n"));
+	console.log(chalk.blue("\n📦 Updating SWAAD files...\n"));
 
 	try {
 		const baseDir = path.join(cwd, configLocation.dir);
 		ensureDocsDefaults(config);
-		const configBackup: BmadConfig = JSON.parse(JSON.stringify(config));
+		const configBackup: SwaadConfig = JSON.parse(JSON.stringify(config));
 		const engineeringSource = path.join(coreDir, "engineering");
 		const engineeringDest = path.join(baseDir, "engineering");
 
@@ -126,7 +124,7 @@ export async function update(
 		}
 
 		await ensureDocsStructure(cwd, configBackup);
-		console.log(chalk.green("\n✅ BMad Minimal update complete!"));
+		console.log(chalk.green("\n✅ SWAAD update complete!"));
 		console.log(chalk.cyan("\n📋 Updated components:"));
 		console.log("   ✓ Engineering files");
 		console.log("   ✓ Planning files");
@@ -182,7 +180,7 @@ async function promptMissingConfig({
 	configPath,
 }: {
 	cwd: string;
-	config: BmadConfig;
+	config: SwaadConfig;
 	configPath: string;
 }): Promise<boolean> {
 	const allFields = getConfigFields(cwd);

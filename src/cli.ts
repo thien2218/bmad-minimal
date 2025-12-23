@@ -9,20 +9,17 @@ const packageJson = require("../package.json") as { version?: string };
 const program = new Command();
 
 program
-	.name("bmad-minimal")
+	.name("swaad")
 	.description(
-		"BMad Minimal - A streamlined development workflow for AI-assisted projects, designed for developers"
+		"SWAAD (Software Agile Development with AI) - A streamlined development workflow for AI-assisted projects, designed for developers"
 	)
 	.version(packageJson.version ?? "0.0.0");
 
 program
 	.command("install")
-	.description("Install BMad Minimal configuration and documentation structure")
+	.description("Install SWAAD configuration and documentation structure")
 	.option("-p, --project <name>", "Specify project name")
-	.option(
-		"-d, --dir <path>",
-		"Base directory for BMad files (default: bmad-minimal)"
-	)
+	.option("-d, --dir <path>", "Base directory for SWAAD files (default: swaad)")
 	.action(async (options: InstallCommandOptions) => {
 		try {
 			await install(options);

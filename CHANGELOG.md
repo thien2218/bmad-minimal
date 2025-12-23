@@ -162,7 +162,7 @@ This format follows Keep a Changelog and the project adheres to Semantic Version
 - add a step to enforce brownfield file creation when needed
 - add new generic architecture template
 - add new tasks for brownfield enhancement
-- complete cli app for installing bmad-minimal
+- complete cli app for installing SWAAD
 - add new rule for planning agents to prioritize attached files
 - add new rule for planning agents to prioritize attached files
 - added new task for qa agent to review test specs
@@ -219,7 +219,7 @@ This format follows Keep a Changelog and the project adheres to Semantic Version
 ### Changed
 
 - enforce stricter steps to create source tree/project structure
-- default ignore bmad-minimal dir
+- default ignore SWAAD dir
 - update dev rule ids and fix qa gate overlapping qa result
 - update missing sections in prd and architecture templates
 - use normal file anem to avoid hidden constraint
@@ -294,15 +294,15 @@ This format follows Keep a Changelog and the project adheres to Semantic Version
 - final touches
 - apply formatting
 
-[Unreleased]: https://github.com/thien2218/bmad-minimal/compare/v1.4.0...HEAD
-[1.4.0]: https://github.com/thien2218/bmad-minimal/compare/v1.3.0...v1.4.0
-[1.3.0]: https://github.com/thien2218/bmad-minimal/compare/v1.2.6...v1.3.0
-[1.2.6]: https://github.com/thien2218/bmad-minimal/compare/v1.2.5...v1.2.6
-[1.2.5]: https://github.com/thien2218/bmad-minimal/compare/v1.2.0...v1.2.5
-[1.2.0]: https://github.com/thien2218/bmad-minimal/compare/v1.1.0...v1.2.0
-[1.1.0]: https://github.com/thien2218/bmad-minimal/compare/v1.0.11...v1.1.0
-[1.0.11]: https://github.com/thien2218/bmad-minimal/compare/v1.0.10...v1.0.11
-[1.0.10]: https://github.com/thien2218/bmad-minimal/compare/v1.0.9...v1.0.10
-[1.0.9]: https://github.com/thien2218/bmad-minimal/compare/v1.0.8...v1.0.9
-[1.0.8]: https://github.com/thien2218/bmad-minimal/compare/v1.0.7...v1.0.8
-[1.0.7]: https://github.com/thien2218/bmad-minimal/tree/v1.0.7
+[Unreleased]: https://github.com/thien2218/swaad/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/thien2218/swaad/compare/v1.3.0...v1.4.0
+[1.3.0]: https://github.com/thien2218/swaad/compare/v1.2.6...v1.3.0
+[1.2.6]: https://github.com/thien2218/swaad/compare/v1.2.5...v1.2.6
+[1.2.5]: https://github.com/thien2218/swaad/compare/v1.2.0...v1.2.5
+[1.2.0]: https://github.com/thien2218/swaad/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/thien2218/swaad/compare/v1.0.11...v1.1.0
+[1.0.11]: https://github.com/thien2218/swaad/compare/v1.0.10...v1.0.11
+[1.0.10]: https://github.com/thien2218/swaad/compare/v1.0.9...v1.0.10
+[1.0.9]: https://github.com/thien2218/swaad/compare/v1.0.8...v1.0.9
+[1.0.8]: https://github.com/thien2218/swaad/compare/v1.0.7...v1.0.8
+[1.0.7]: https://github.com/thien2218/swaad/tree/v1.0.7

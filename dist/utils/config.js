@@ -15,6 +15,7 @@ const chalk_1 = __importDefault(require("chalk"));
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const fileOperations_1 = require("./fileOperations");
 const prompts_1 = require("./prompts");
+const constants_1 = require("../constants");
 const DEFAULT_DOCS_CONFIG = {
     dir: "docs",
     subdirs: {
@@ -24,7 +25,7 @@ const DEFAULT_DOCS_CONFIG = {
     },
 };
 async function findConfig(cwd) {
-    const possibleDirs = ["bmad-minimal", ".bmad", "bmad"];
+    const possibleDirs = constants_1.POSSIBLE_DIRS;
     for (const dir of possibleDirs) {
         const configPath = path_1.default.join(cwd, dir, "config.json");
         try {
@@ -156,8 +157,8 @@ function getConfigFields(cwd, options) {
             type: "input",
             name: "baseDir",
             accessKey: "baseDir",
-            message: "Base directory for BMad files:",
-            default: (options === null || options === void 0 ? void 0 : options.dir) || "bmad-minimal",
+            message: "Base directory for SWAAD files:",
+            default: (options === null || options === void 0 ? void 0 : options.dir) || "swaad",
         },
         {
             type: "input",

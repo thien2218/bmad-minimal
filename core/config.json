@@ -1,13 +1,13 @@
 {
 	"project": {
-		"name": "bmad-minimal",
+		"name": "swaad",
 		"type": "",
 		"dir": "./",
 		"backendDir": "",
 		"frontendDir": "",
 		"testDirs": []
 	},
-	"baseDir": "bmad-minimal",
+	"baseDir": "swaad",
 	"customTechnicalDocuments": {},
 	"docs": {
 		"dir": "docs",

@@ -249,7 +249,7 @@ This task defines a repeatable method to evaluate a proposed change/implementati
 - Classify a request into an actionable planning scope level
 - Provide a transparent rationale through impact and risk scoring
 - Identify which artifacts (PRD, architecture, frontend spec) should be updated
-- Recommend next steps aligned with your existing BMAD Minimal workflows
+- Recommend next steps aligned with your existing SWAAD workflows
 
 ## Supported Scope Levels (Select Exactly One)
 
@@ -406,7 +406,6 @@ Offer numbered options (user picks by number), for example:
   - Consider: Brainstorming session → Deep Research Prompt → Project Brief
   - Expect: PRD and architecture substantial updates
   - Coordinate: Analyst, Architect, UX, and PDM for alignment
-  - Choose a Greenfield workflow (fullstack/ui/service/generic) if direction is shifting
 
 - Scope 2 (Epic level)
 

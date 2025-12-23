@@ -41,14 +41,12 @@ sections:
           - Note any architectural decisions already made
           - Identify what can be modified vs what must be retained
 
-          3. If no starter is mentioned but this is greenfield:
+          3. If no starter is mentioned but this is a completely fresh project:
           - Suggest appropriate fullstack starters based on tech preferences
           - Consider platform-specific options (Vercel, AWS, etc.)
           - Let user decide whether to use one
 
           4. Document the decision and any constraints it imposes
-
-          If none, state "N/A - Greenfield project"
 
   - id: high-level-architecture
     title: High Level Architecture

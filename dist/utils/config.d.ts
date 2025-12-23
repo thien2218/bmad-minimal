@@ -14,7 +14,7 @@ export interface ProjectConfig {
     frontendDir?: string;
     testDirs?: string[];
 }
-export interface BmadConfig {
+export interface SwaadConfig {
     baseDir?: string;
     project?: ProjectConfig;
     docs: DocsConfig;
@@ -39,12 +39,12 @@ interface ConfigLocation {
     path: string;
 }
 export declare function findConfig(cwd: string): Promise<ConfigLocation | null>;
-export declare function loadDefaultConfig(coreDir: string): Promise<BmadConfig>;
-export declare function mergeConfig(defaultConfig: BmadConfig, answers: ConfigAnswers): BmadConfig;
-export declare function ensureDocsDefaults<T extends BmadConfig | null | undefined>(config: T): T;
+export declare function loadDefaultConfig(coreDir: string): Promise<SwaadConfig>;
+export declare function mergeConfig(defaultConfig: SwaadConfig, answers: ConfigAnswers): SwaadConfig;
+export declare function ensureDocsDefaults<T extends SwaadConfig | null | undefined>(config: T): T;
 export declare function getConfigFields(cwd: string, options?: {
     project?: string;
     dir?: string;
 }): ConfigQuestion[];
-export declare function shouldGenerateCSPrompt(configData: BmadConfig): Promise<void>;
+export declare function shouldGenerateCSPrompt(configData: SwaadConfig): Promise<void>;
 export {};

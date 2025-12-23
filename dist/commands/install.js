@@ -13,14 +13,15 @@ const gitignore_1 = require("../utils/gitignore");
 const config_1 = require("../utils/config");
 const docs_1 = require("../utils/docs");
 const compress_1 = require("../utils/compress");
+const constants_1 = require("../constants");
 async function install(options = {}) {
     var _a, _b, _c;
-    console.log(chalk_1.default.blue("🚀 BMad Minimal Installation\n"));
+    console.log(chalk_1.default.blue("🚀 SWAAD Installation\n"));
     const cwd = process.cwd();
     const coreDir = (0, fileOperations_1.getPath)("core");
     const existingConfigs = await findExistingConfigs(cwd);
     if (existingConfigs.length > 0) {
-        console.log(chalk_1.default.yellow("⚠️ BMad Minimal configuration already exists:"));
+        console.log(chalk_1.default.yellow("⚠️ SWAAD configuration already exists:"));
         existingConfigs.forEach((config) => console.log(`   - ${config}`));
         const { proceed } = await inquirer_1.default.prompt([
             {
@@ -36,9 +37,9 @@ async function install(options = {}) {
         }
     }
     const configAnswers = await gatherConfiguration(options, cwd);
-    console.log(chalk_1.default.blue("\n📦 Installing BMad Minimal files...\n"));
+    console.log(chalk_1.default.blue("\n📦 Installing SWAAD files...\n"));
     try {
-        const baseDir = path_1.default.join(cwd, (_a = configAnswers.baseDir) !== null && _a !== void 0 ? _a : "bmad-minimal");
+        const baseDir = path_1.default.join(cwd, (_a = configAnswers.baseDir) !== null && _a !== void 0 ? _a : "swaad");
         await fs_extra_1.default.ensureDir(baseDir);
         console.log(chalk_1.default.gray("  Copying engineering and planning files..."));
         await (0, docs_1.copyCoreDirectories)(coreDir, baseDir);
@@ -70,9 +71,9 @@ async function install(options = {}) {
             console.log(chalk_1.default.yellow(`  Warning: failed to update .gitignore: ${error.message}`));
         }
         await (0, config_1.shouldGenerateCSPrompt)(configData);
-        console.log(chalk_1.default.green("\n✅ BMad Minimal installation complete!\n"));
+        console.log(chalk_1.default.green("\n✅ SWAAD installation complete!\n"));
         console.log(chalk_1.default.cyan("📁 Structure created:"));
-        console.log(`   ${(_c = configAnswers.baseDir) !== null && _c !== void 0 ? _c : "bmad-minimal"}/`);
+        console.log(`   ${(_c = configAnswers.baseDir) !== null && _c !== void 0 ? _c : "swaad"}/`);
         console.log("   ├── config.json");
         console.log("   ├── engineering/");
         console.log("   └── planning/");
@@ -90,8 +91,7 @@ async function install(options = {}) {
 }
 async function findExistingConfigs(cwd) {
     const configs = [];
-    const possibleDirs = ["bmad-minimal"];
-    for (const dir of possibleDirs) {
+    for (const dir of constants_1.POSSIBLE_DIRS) {
         const configPath = path_1.default.join(cwd, dir, "config.json");
         if (await (0, fileOperations_1.exists)(configPath)) {
             configs.push(`${dir}/config.json`);

@@ -293,10 +293,9 @@ sections:
         title: Starter Template or Existing Project
         required: false
         instruction: |
-          Determine if a starter, engine, or an existing codebase will be used:
+          Determine if a starter, or an existing codebase will be used:
           - If using a starter/tooling scaffold (e.g., game engine, CLI scaffolder, SDK templates), analyze its constraints and conventions.
           - If extending an existing project, analyze its structure, patterns, and technology choices.
-          - If none, proceed as greenfield and document implications.
         elicit: true
 
   - id: high-level-architecture
@@ -899,14 +898,12 @@ sections:
           - Note any architectural decisions already made
           - Identify what can be modified vs what must be retained
 
-          3. If no starter is mentioned but this is greenfield:
+          3. If no starter is mentioned but this is a completely fresh project:
           - Suggest appropriate fullstack starters based on tech preferences
           - Consider platform-specific options (Vercel, AWS, etc.)
           - Let user decide whether to use one
 
           4. Document the decision and any constraints it imposes
-
-          If none, state "N/A - Greenfield project"
 
   - id: high-level-architecture
     title: High Level Architecture
@@ -1978,7 +1975,7 @@ sections:
             - Any limitations or constraints imposed by the starter
           - Use this analysis to inform and align your architecture decisions
 
-          3. If no starter template is mentioned but this is a greenfield project:
+          3. If no starter template is mentioned but this is a starter project:
           - Suggest appropriate starter templates based on the tech stack preferences
           - Explain the benefits (faster setup, best practices, community support)
           - Let the user decide whether to use one

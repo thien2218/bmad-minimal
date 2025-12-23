@@ -1,6 +1,6 @@
-# BMAD Minimal
+# SWAAD (Software Agile Development with AI)
 
-A lightweight, developer-centric implementation of the [BMAD Method](https://github.com/bmad-code-org/BMAD-METHOD), designed solely for software development workflow. This package aims to improve on a couple of aspects of the OG BMAD Method and delivers them as our core philosophy:
+SWAAD (Software Agile Development with AI) draws its foundation from the [BMAD Method](https://github.com/bmad-code-org/BMAD-METHOD). It is a lightweight, developer-centric implementation of that methodology, focused solely on software development workflows and guided by the following core principles:
 
 - **Context efficiency**: Keeps related logic and files closely coupled, reducing the overhead of context switching.
 - **Developer-focused**: An intuitive design and guides are prioritized for a seamless DX.
@@ -34,7 +34,7 @@ Using the latest spec-driven workflows of the BMAD Method as the central foundat
 2. **Context-Efficient IDE Development**: Development tasks use LLM-friendly formats and have clearly defined scopes, reducing token consumption, repetition, and unnecessary context switching.
 3. **Brownfield Development**: Comprehensive guides support flexible project adaptation, making it straightforward to opt in or out of features or extend your project beyond the original plan.
 
-The unified approach behind BMAD Minimal emphasizes clarity and flexibility, enabling teams to focus on meaningful work without unnecessary overhead. By distilling workflows to their essential components and supporting adaptable project evolution, this methodology ensures that both new and existing projects maintain consistent quality and momentum.
+The unified approach behind SWAAD emphasizes clarity and flexibility, enabling teams to focus on meaningful work without unnecessary overhead. By distilling workflows to their essential components and supporting adaptable project evolution, this methodology ensures that both new and existing projects maintain consistent quality and momentum.
 
 ## Philosophy & Principles
 
@@ -87,7 +87,7 @@ Further more, the command list is also modified to be as minimal, but enough to 
 ### Installation
 
 ```
-npx -y bmad-minimal install
+npx -y swaad install
 ```
 
 During installation, you will be prompted for:
@@ -95,7 +95,7 @@ During installation, you will be prompted for:
 - Project name
 - Whether your app is singular or split into backend/frontend
 - App directory (or backend/frontend directories)
-- Base directory for BMAD files
+- Base directory for SWAAD files
 - Whether to include planning templates
 - Documentation directory
 - Whether to generate a prompt for your local agent to fill out your own set of coding standards
@@ -103,14 +103,14 @@ During installation, you will be prompted for:
 ### Update
 
 ```
-npx -y bmad-minimal update
+npx -y swaad update
 ```
 
 The update process will be more straight forward. You will be prompted for any missing information in your config.json if any and update confirmation.
 
 ## Inspiration & Key Improvements
 
-BMAD Minimal is inspired by the original BMAD-METHOD, but is purposefully refined to make your software development journey happier, faster, and more efficient. Here’s how we make it easier and more delightful to build great projects:
+SWAAD is inspired by the original BMAD Method, but is purposefully refined to make your software development journey happier, faster, and more efficient. Here’s how we make it easier and more delightful to build great projects:
 
 ### 1. Minifying the Workflows and Documents
 
@@ -134,7 +134,7 @@ To keep things both friendly for humans and clear for LLM agents, every artifact
 
 This hierarchy keeps collaboration smooth and keeps everyone (and every agent) on the same page.
 
-**With these improvements, BMAD Minimal gives you the tools you need to move quickly, collaborate confidently, and enjoy building your next project. The process is lighter, the learning curve is shorter, and the experience is genuinely more fun for teams of any size.**
+**With these improvements, SWAAD gives you the tools you need to move quickly, collaborate confidently, and enjoy building your next project. The process is lighter, the learning curve is shorter, and the experience is genuinely more fun for teams of any size.**
 
 ## Acknowledgements
 
@@ -146,6 +146,6 @@ This project is licensed under the ISC License - see the [LICENSE](LICENSE) file
 
 ## FAQ & Support
 
-If you have any questions or need support, please open an issue on the [GitHub repository](https://github.com/thien2218/bmad-minimal/issues).
+If you have any questions or need support, please open an issue on the [GitHub repository](https://github.com/thien2218/swaad/issues).
 
 Or contact me via [Gmail](bmad.thienhuynh@gmail.com).

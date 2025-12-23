@@ -13,14 +13,14 @@ const update_1 = require("./commands/update");
 const packageJson = require("../package.json");
 const program = new commander_1.Command();
 program
-    .name("bmad-minimal")
-    .description("BMad Minimal - A streamlined development workflow for AI-assisted projects, designed for developers")
+    .name("swaad")
+    .description("SWAAD (Software Agile Development with AI) - A streamlined development workflow for AI-assisted projects, designed for developers")
     .version((_a = packageJson.version) !== null && _a !== void 0 ? _a : "0.0.0");
 program
     .command("install")
-    .description("Install BMad Minimal configuration and documentation structure")
+    .description("Install SWAAD configuration and documentation structure")
     .option("-p, --project <name>", "Specify project name")
-    .option("-d, --dir <path>", "Base directory for BMad files (default: bmad-minimal)")
+    .option("-d, --dir <path>", "Base directory for SWAAD files (default: swaad)")
     .action(async (options) => {
     try {
         await (0, install_1.install)(options);

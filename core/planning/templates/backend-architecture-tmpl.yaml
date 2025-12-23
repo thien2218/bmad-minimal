@@ -50,7 +50,7 @@ sections:
             - Any limitations or constraints imposed by the starter
           - Use this analysis to inform and align your architecture decisions
 
-          3. If no starter template is mentioned but this is a greenfield project:
+          3. If no starter template is mentioned but this is a starter project:
           - Suggest appropriate starter templates based on the tech stack preferences
           - Explain the benefits (faster setup, best practices, community support)
           - Let the user decide whether to use one

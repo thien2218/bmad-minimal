@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import { getPath } from "./fileOperations";
-import type { BmadConfig } from "./config";
+import type { SwaadConfig } from "./config";
 
 export async function copyCoreDirectories(
 	coreDir: string,
@@ -18,7 +18,7 @@ export async function copyCoreDirectories(
 
 export async function ensureDocsStructure(
 	cwd: string,
-	configData: BmadConfig
+	configData: SwaadConfig
 ): Promise<void> {
 	const docsDir = path.join(cwd, configData.docs.dir);
 	await fs.ensureDir(docsDir);
@@ -29,7 +29,7 @@ export async function ensureDocsStructure(
 
 export async function copyCheatSheetToWorkspace(
 	cwd: string,
-	configData: BmadConfig
+	configData: SwaadConfig
 ): Promise<void> {
 	const packageCheatSheetPath = getPath("docs/cheat-sheet.md");
 	const workspaceCheatSheetPath = path.join(

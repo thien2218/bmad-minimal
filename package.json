@@ -1,11 +1,11 @@
 {
-	"name": "bmad-minimal",
+	"name": "swaad",
 	"version": "1.4.0",
-	"description": "A minimal version of BMad Method, streamlined for developers",
+	"description": "Software Agile Development with AI (SWAAD) — a streamlined developer workflow built on the BMAD Method",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"bin": {
-		"bmad-minimal": "./dist/cli.js"
+		"swaad": "./dist/cli.js"
 	},
 	"files": [
 		"src/",
@@ -37,13 +37,11 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/thien2218/bmad-minimal.git"
+		"url": "git+https://github.com/thien2218/swaad.git"
 	},
 	"keywords": [
-		"bmad",
-		"bmad-minimal",
-		"bmad-dev",
-		"bmad-developer",
+		"swaad",
+		"software-agile",
 		"ai",
 		"llm",
 		"workflow",
@@ -55,7 +53,7 @@
 	"author": "Thien Huynh",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/thien2218/bmad-minimal/issues"
+		"url": "https://github.com/thien2218/swaad/issues"
 	},
-	"homepage": "https://github.com/thien2218/bmad-minimal#readme"
+	"homepage": "https://github.com/thien2218/swaad#readme"
 }

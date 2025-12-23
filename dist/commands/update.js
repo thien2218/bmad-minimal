@@ -13,13 +13,13 @@ const docs_1 = require("../utils/docs");
 const config_1 = require("../utils/config");
 const compress_1 = require("../utils/compress");
 async function update(options = {}) {
-    console.log(chalk_1.default.blue("🔄 BMad Minimal Update\n"));
+    console.log(chalk_1.default.blue("🔄 SWAAD Update\n"));
     const cwd = process.cwd();
     const coreDir = (0, fileOperations_1.getPath)("core");
     const configLocation = await (0, config_1.findConfig)(cwd);
     if (!configLocation) {
-        console.error(chalk_1.default.red("❌ No BMad Minimal configuration found."));
-        console.log(chalk_1.default.gray('Run "bmad-minimal install" to set up BMad Minimal first.'));
+        console.error(chalk_1.default.red("❌ No SWAAD configuration found."));
+        console.log(chalk_1.default.gray('Run "swaad install" to set up SWAAD first.'));
         return;
     }
     console.log(chalk_1.default.gray(`Found configuration at: ${configLocation.dir}/config.json`));
@@ -31,7 +31,7 @@ async function update(options = {}) {
     }
     const configUpdated = await promptMissingConfig({ cwd, config, configPath });
     if (!options.force) {
-        console.log(chalk_1.default.yellow("\n⚠️  This will update all BMad files to the latest version."));
+        console.log(chalk_1.default.yellow("\n⚠️  This will update all SWAAD files to the latest version."));
         const preserveMessage = configUpdated
             ? "   Your config.json was updated with missing fields and other fields will be preserved; all other files will be overwritten."
             : "   Your config.json will be preserved, but all other files will be overwritten.";
@@ -49,7 +49,7 @@ async function update(options = {}) {
             return;
         }
     }
-    console.log(chalk_1.default.blue("\n📦 Updating BMad Minimal files...\n"));
+    console.log(chalk_1.default.blue("\n📦 Updating SWAAD files...\n"));
     try {
         const baseDir = path_1.default.join(cwd, configLocation.dir);
         (0, config_1.ensureDocsDefaults)(config);
@@ -85,7 +85,7 @@ async function update(options = {}) {
             console.log(chalk_1.default.yellow(`  Warning: failed to copy cheat sheet: ${error.message}`));
         }
         await (0, docs_1.ensureDocsStructure)(cwd, configBackup);
-        console.log(chalk_1.default.green("\n✅ BMad Minimal update complete!"));
+        console.log(chalk_1.default.green("\n✅ SWAAD update complete!"));
         console.log(chalk_1.default.cyan("\n📋 Updated components:"));
         console.log("   ✓ Engineering files");
         console.log("   ✓ Planning files");

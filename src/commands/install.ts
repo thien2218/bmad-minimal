@@ -17,6 +17,7 @@ import {
 	copyCheatSheetToWorkspace,
 } from "../utils/docs";
 import { compressAgentConfigs } from "../utils/compress";
+import { POSSIBLE_DIRS } from "../constants";
 
 export interface InstallCommandOptions {
 	project?: string;
@@ -26,13 +27,13 @@ export interface InstallCommandOptions {
 export async function install(
 	options: InstallCommandOptions = {}
 ): Promise<void> {
-	console.log(chalk.blue("🚀 BMad Minimal Installation\n"));
+	console.log(chalk.blue("🚀 SWAAD Installation\n"));
 	const cwd = process.cwd();
 	const coreDir = getPath("core");
 	const existingConfigs = await findExistingConfigs(cwd);
 
 	if (existingConfigs.length > 0) {
-		console.log(chalk.yellow("⚠️ BMad Minimal configuration already exists:"));
+		console.log(chalk.yellow("⚠️ SWAAD configuration already exists:"));
 		existingConfigs.forEach((config) => console.log(`   - ${config}`));
 		const { proceed } = await inquirer.prompt<{ proceed: boolean }>([
 			{
@@ -49,10 +50,10 @@ export async function install(
 	}
 
 	const configAnswers = await gatherConfiguration(options, cwd);
-	console.log(chalk.blue("\n📦 Installing BMad Minimal files...\n"));
+	console.log(chalk.blue("\n📦 Installing SWAAD files...\n"));
 
 	try {
-		const baseDir = path.join(cwd, configAnswers.baseDir ?? "bmad-minimal");
+		const baseDir = path.join(cwd, configAnswers.baseDir ?? "swaad");
 		await fs.ensureDir(baseDir);
 		console.log(chalk.gray("  Copying engineering and planning files..."));
 		await copyCoreDirectories(coreDir, baseDir);
@@ -101,9 +102,9 @@ export async function install(
 		}
 
 		await shouldGenerateCSPrompt(configData);
-		console.log(chalk.green("\n✅ BMad Minimal installation complete!\n"));
+		console.log(chalk.green("\n✅ SWAAD installation complete!\n"));
 		console.log(chalk.cyan("📁 Structure created:"));
-		console.log(`   ${configAnswers.baseDir ?? "bmad-minimal"}/`);
+		console.log(`   ${configAnswers.baseDir ?? "swaad"}/`);
 		console.log("   ├── config.json");
 		console.log("   ├── engineering/");
 		console.log("   └── planning/");
@@ -124,8 +125,7 @@ export async function install(
 
 async function findExistingConfigs(cwd: string): Promise<string[]> {
 	const configs: string[] = [];
-	const possibleDirs = ["bmad-minimal"];
-	for (const dir of possibleDirs) {
+	for (const dir of POSSIBLE_DIRS) {
 		const configPath = path.join(cwd, dir, "config.json");
 		if (await exists(configPath)) {
 			configs.push(`${dir}/config.json`);
