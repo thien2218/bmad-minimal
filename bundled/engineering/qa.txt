@@ -274,14 +274,6 @@ sections:
     owner: product-development-master
     editors: ["product-development-master", "developer"]
 
-  - id: priority
-    title: Priority
-    type: choice
-    choices: ["1", "2", "3", "4", "5"]
-    instruction: Assign sequencing priority (1 = highest) defined by PDM.
-    owner: product-development-master
-    editors: ["product-development-master", "product-master"]
-
   - id: story
     title: Story
     type: template-text
@@ -365,9 +357,6 @@ sections:
     owner: developer
     editors: ["developer"]
     sections:
-      - id: agent-model
-        title: Agent Model Used
-        template: "{{agent_model_name_version}}"
       - id: debug-log-references
         title: Debug Log References
         template: "{{debug_logs}}"
@@ -402,14 +391,10 @@ sections:
 	},
 	"required_fields": {
 		"comment": "Keep these first",
-		"schema": 1,
 		"story": "{{epic_num}}.{{story_num}}",
 		"story_title": "{{story_title}}",
-		"gate": "{{gate_status}}",
-		"gate_comment": "PASS|CONCERNS|FAIL|WAIVED",
-		"status_reason": "{{status_reason}}",
-		"status_reason_comment": "1-2 sentence summary of why this gate decision",
-		"reviewer": "Quinn (Test Architect)",
+		"gate": "PASS|CONCERNS|FAIL|WAIVED",
+		"status_reason": "1-2 sentence summary of why this gate decision",
 		"updated": "{{iso_timestamp}}"
 	},
 	"default_fields": {

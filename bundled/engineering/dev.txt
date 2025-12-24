@@ -1031,7 +1031,6 @@ steps:
         Update ONLY these sections:
         - Tasks / Subtasks Checkboxes (mark any fix subtask as done)
         - Dev Agent Record:
-          - Agent Model Used (if changed)
           - Debug Log References (commands/results, e.g., lint/tests)
           - Completion Notes List (what changed, why, how)
           - File List (all added/modified/deleted files)

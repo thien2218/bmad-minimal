@@ -20,14 +20,6 @@ sections:
     owner: product-development-master
     editors: ["product-development-master", "developer"]
 
-  - id: priority
-    title: Priority
-    type: choice
-    choices: ["1", "2", "3", "4", "5"]
-    instruction: Assign sequencing priority (1 = highest) defined by PDM.
-    owner: product-development-master
-    editors: ["product-development-master", "product-master"]
-
   - id: story
     title: Story
     type: template-text
@@ -111,9 +103,6 @@ sections:
     owner: developer
     editors: ["developer"]
     sections:
-      - id: agent-model
-        title: Agent Model Used
-        template: "{{agent_model_name_version}}"
       - id: debug-log-references
         title: Debug Log References
         template: "{{debug_logs}}"

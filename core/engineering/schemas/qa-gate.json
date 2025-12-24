@@ -11,14 +11,10 @@
 	},
 	"required_fields": {
 		"comment": "Keep these first",
-		"schema": 1,
 		"story": "{{epic_num}}.{{story_num}}",
 		"story_title": "{{story_title}}",
-		"gate": "{{gate_status}}",
-		"gate_comment": "PASS|CONCERNS|FAIL|WAIVED",
-		"status_reason": "{{status_reason}}",
-		"status_reason_comment": "1-2 sentence summary of why this gate decision",
-		"reviewer": "Quinn (Test Architect)",
+		"gate": "PASS|CONCERNS|FAIL|WAIVED",
+		"status_reason": "1-2 sentence summary of why this gate decision",
 		"updated": "{{iso_timestamp}}"
 	},
 	"default_fields": {

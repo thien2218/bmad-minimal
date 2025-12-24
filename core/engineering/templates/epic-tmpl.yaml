@@ -86,7 +86,7 @@ sections:
         title: Story List
         type: numbered-list
         instruction: Sequence stories by dependency first, then priority, noting brief goals and dependencies.
-        template: "{{story_number}}. **{{story_title}}** — {{story_goal}} {{dependency_note}} [Priority: {{priority}}]"
+        template: "{{story_number}}. **{{story_title}}** — {{story_goal}} {{dependency_note}}"
       - id: story-sequencing-rationale
         title: Story Sequencing Rationale
         type: paragraph
