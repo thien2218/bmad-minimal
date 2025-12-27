@@ -240,7 +240,7 @@ steps:
         Output integration information:
 
         1. NFR assessment: @{docs.subdirs.qa}/assessments/${story}-nfr-{{YYYYMMDD}}.md
-        2. Gate NFR block ready → paste into @{docs.subdirs.qa}/gates/${story}-*.yaml under nfr_validation
+        2. Gate NFR block ready → paste into @{docs.subdirs.qa}/gates/${story}-*.json under nfr_validation
 
 outputs:
   artifacts:
@@ -249,11 +249,11 @@ outputs:
       path: "@{docs.subdirs.qa}/assessments/${story}-nfr-{{YYYYMMDD}}.md"
       format: markdown
       description: Brief NFR assessment report with findings and recommendations
-    - name: gate_yaml_block
+    - name: gate_json_block
       type: assessment
       path: "console_output"
-      format: yaml
-      description: YAML block for quality gate file integration
+      format: json
+      description: JSON block for quality gate file integration
 
 completion:
   criteria:
@@ -261,5 +261,5 @@ completion:
     - All selected NFRs assessed with status
     - Quality score calculated
     - Assessment report created
-    - Gate YAML block generated
+    - Gate JSON block generated
     - Integration information provided

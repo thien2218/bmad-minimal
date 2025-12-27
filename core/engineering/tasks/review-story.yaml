@@ -236,19 +236,19 @@ steps:
     action:
       type: file_operation
       operation: create
-      target: "@{docs.subdirs.qa}/gates/${story}-*.yaml"
+      target: "@{docs.subdirs.qa}/gates/${story}-*.json"
       instruction: |
         Load schemas/qa-gate.json as the contract.
         Populate decision, evidence, risks, test design, and NFR sections based on prior steps.
-        Serialize as YAML and write to @{docs.subdirs.qa}/gates/${story}-{story_slug}.yaml (match existing slug convention).
+        Serialize as JSON and write to @{docs.subdirs.qa}/gates/${story}-{story_slug}.json (match existing slug convention).
         Do not modify the story file when generating the gate artifact.
 
 outputs:
   artifacts:
     - name: quality_gate
       type: gate
-      path: "@{docs.subdirs.qa}/gates/${story}-*.yaml"
-      format: yaml
+      path: "@{docs.subdirs.qa}/gates/${story}-*.json"
+      format: json
       description: Quality gate assessment file with pass/concerns/fail decision
   updates:
     - target: "!{story_path}"

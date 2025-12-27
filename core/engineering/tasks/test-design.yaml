@@ -134,12 +134,12 @@ steps:
         5. P2+ as time permits
 
   - id: CREATE-GATE-BLOCK
-    title: Generate Gate YAML Block
+    title: Generate Gate JSON Block
     description: Create `test_design` block for the quality gate artifact.
     action:
       type: file_operation
       operation: create
-      target: "@{docs.subdirs.qa}/gates/${story}-test-design-block.yaml"
+      target: "@{docs.subdirs.qa}/gates/${story}-test-design-block.json"
       template: |
         test_design:
           scenarios_total: {{scenario_totals.total}}
@@ -163,8 +163,8 @@ outputs:
       description: Comprehensive test design document with scenarios
     - name: gate_test_block
       type: gate
-      path: "@{docs.subdirs.qa}/gates/${story}-test-design-block.yaml"
-      format: yaml
+      path: "@{docs.subdirs.qa}/gates/${story}-test-design-block.json"
+      format: json
       description: Test design block for inclusion in quality gate files
 
 completion:
