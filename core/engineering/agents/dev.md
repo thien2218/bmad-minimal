@@ -48,20 +48,13 @@
 		]
 	},
 	"activation": {
-		"preconditions": {
-			"loadAlwaysFiles": [
-				"@{baseDir}/config.json",
-				"@{docs.dir}/coding-standards.md",
-				"@{docs.dir}/?(*-)architecture.md#Tech Stack",
-				"@{docs.dir}/?(*-)architecture.md#Source Tree"
-			],
-			"onMissingFiles": "ask_user"
-		},
-		"initialActions": [
-			"Greet and announce agent activation",
-			"Display the numbered list of available commands",
-			"Await explicit user command"
-		]
+		"loadAlwaysFiles": [
+			"@{baseDir}/config.json",
+			"@{docs.dir}/coding-standards.md",
+			"@{docs.dir}/?(*-)architecture.md#Tech Stack",
+			"@{docs.dir}/?(*-)architecture.md#Source Tree"
+		],
+		"onMissingFiles": "ask_user"
 	},
 	"workflow": {
 		"resolvePaths": {
@@ -150,6 +143,10 @@
 		"onMissingDependency": "ask_user"
 	},
 	"commandPrefix": "*",
+	"onUnknownCommand": {
+		"action": "reject_and_notify",
+		"message": "Command not supported; retry from the available commands."
+	},
 	"commands": [
 		{
 			"name": "help",

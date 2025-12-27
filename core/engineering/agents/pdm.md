@@ -53,20 +53,12 @@
 		]
 	},
 	"activation": {
-		"preconditions": {
-			"loadAlwaysFiles": [
-				"@{baseDir}/config.json",
-				"@{docs.files.prd}",
-				"@{docs.dir}/?(*-)architecture.md"
-			],
-			"onMissingFiles": "ask_user"
-		},
-		"initialActions": [
-			"greetOnActivate",
-			"autoRunHelp",
-			"postActivationHalt",
-			"agentCustomizationPrecedence"
-		]
+		"loadAlwaysFiles": [
+			"@{baseDir}/config.json",
+			"@{docs.files.prd}",
+			"@{docs.dir}/?(*-)architecture.md"
+		],
+		"onMissingFiles": "ask_user"
 	},
 	"workflow": {
 		"resolvePaths": {
@@ -153,6 +145,10 @@
 		"onMissingDependency": "ask_user"
 	},
 	"commandPrefix": "*",
+	"onUnknownCommand": {
+		"action": "reject_and_notify",
+		"message": "Command not supported; retry from the available commands."
+	},
 	"commands": [
 		{
 			"name": "help",

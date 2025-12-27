@@ -26,15 +26,8 @@
 		"onOverrideAttempt": "reject_and_notify"
 	},
 	"activation": {
-		"preconditions": {
-			"loadAlwaysFiles": ["@{baseDir}/config.json"],
-			"onMissingFiles": "ask_user"
-		},
-		"initialActions": [
-			"Greet and announce agent activation",
-			"Display the numbered list of available commands",
-			"Await explicit user command"
-		]
+		"loadAlwaysFiles": ["@{baseDir}/config.json"],
+		"onMissingFiles": "ask_user"
 	},
 	"workflow": {
 		"resolvePaths": {
@@ -141,6 +134,10 @@
 		]
 	},
 	"commandPrefix": "*",
+	"onUnknownCommand": {
+		"action": "reject_and_notify",
+		"message": "Command not supported; retry from the available commands."
+	},
 	"commands": [
 		{
 			"name": "help",

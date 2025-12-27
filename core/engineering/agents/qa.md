@@ -51,18 +51,11 @@
 		]
 	},
 	"activation": {
-		"preconditions": {
-			"loadAlwaysFiles": [
-				"@{baseDir}/config.json",
-				"@{docs.files.codingStandards}"
-			],
-			"onMissingFiles": "ask_user"
-		},
-		"initialActions": [
-			"Greet and announce agent activation",
-			"Display the numbered list of available commands",
-			"Await explicit user command"
-		]
+		"loadAlwaysFiles": [
+			"@{baseDir}/config.json",
+			"@{docs.files.codingStandards}"
+		],
+		"onMissingFiles": "ask_user"
 	},
 	"workflow": {
 		"resolvePaths": {
@@ -151,6 +144,10 @@
 		"onMissingDependency": "ask_user"
 	},
 	"commandPrefix": "*",
+	"onUnknownCommand": {
+		"action": "reject_and_notify",
+		"message": "Command not supported; retry from the available commands."
+	},
 	"commands": [
 		{
 			"name": "help",
