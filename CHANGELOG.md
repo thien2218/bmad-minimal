@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 This format follows Keep a Changelog and the project adheres to Semantic Versioning.
 
+## [2.0.2] - 2025-12-29
+
+### Added
+
+- add `continue` command to dev agent to allow resuming work with user notes
+- add optional `note` parameter to `develop-story` command for contextual development
+
+### Fixed
+
+- resolve incorrect file formats
+
 ## [2.0.1] - 2025-12-29
 
 ### Fixed
@@ -333,7 +344,8 @@ This format follows Keep a Changelog and the project adheres to Semantic Version
 - final touches
 - apply formatting
 
-[Unreleased]: https://github.com/thien2218/swaad/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/thien2218/swaad/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/thien2218/swaad/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/thien2218/swaad/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/thien2218/swaad/compare/v1.4.0...v2.0.0
 [1.4.0]: https://github.com/thien2218/swaad/compare/v1.3.0...v1.4.0
