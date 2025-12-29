@@ -165,10 +165,20 @@
 			"description": "Explain recent actions and rationale as if you are training a junior engineer"
 		},
 		{
+			"name": "continue",
+			"description": "Continue what the agent was doing while taking into account the user's note",
+			"parameters": ["note"]
+		},
+		{
 			"name": "develop-story",
 			"description": "Execute develop-story (implementation-first flow; write tests at the end during validation) on the highest ordered story ready for development or the story specified by the user",
 			"parameters": ["story"],
-			"optionalParameters": ["test_command", "lint_command", "other_commands"],
+			"optionalParameters": [
+				"note",
+				"test_command",
+				"lint_command",
+				"other_commands"
+			],
 			"steps": [
 				"tasks/develop-story.yaml",
 				"checklists/story-dod-checklist.yaml"

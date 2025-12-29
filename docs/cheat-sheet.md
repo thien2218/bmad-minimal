@@ -11,9 +11,12 @@ Expert who implements stories by reading requirements and executing tasks sequen
 
 - `explain`: Explain recent actions and rationale as if you are training a junior engineer
 
+- `continue`: Continue what the agent was doing while taking into account the user's note
+  - required: note
+
 - `develop-story`: Execute develop-story (implementation-first flow; write tests at the end during validation) on the highest ordered story ready for development or the story specified by the user
   - required: story
-  - optional: test_command, lint_command, other_commands
+  - optional: note, test_command, lint_command, other_commands
 
 - `develop-story-test-first`: Execute develop-story with a test-first flow (TDD approach): implement test cases from the story's Test Specs section first, then implement the feature until tests pass.
   - required: story
