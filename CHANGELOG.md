@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 This format follows Keep a Changelog and the project adheres to Semantic Versioning.
 
+## [2.0.1] - 2025-12-29
+
+### Fixed
+
+- fix inconsistency surfaced in recent automation updates
+- fix gate file format so workflows resolve the correct schema variant
+
+### Removed
+
+- remove greet on activation enforcement for cleaner startup flows
+- remove more unused fields from configs to keep bundles light
+
 ## [2.0.0] - 2025-12-24
 
 ### Added
@@ -321,7 +333,8 @@ This format follows Keep a Changelog and the project adheres to Semantic Version
 - final touches
 - apply formatting
 
-[Unreleased]: https://github.com/thien2218/swaad/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/thien2218/swaad/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/thien2218/swaad/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/thien2218/swaad/compare/v1.4.0...v2.0.0
 [1.4.0]: https://github.com/thien2218/swaad/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/thien2218/swaad/compare/v1.2.6...v1.3.0
