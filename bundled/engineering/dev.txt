@@ -308,7 +308,7 @@ steps:
       target: "@{baseDir}/config.json"
       instruction: |
         Extract:
-        - docs.subdirs.stories
+        - @{docs.subdirs.stories}
         - qa.* settings
         - workflow.* settings
         Resolve !{story_path_resolved} using ${story}.
@@ -927,7 +927,7 @@ prerequisites:
     value: "found"
     operator: "="
     on_violate: "halt_and_report"
-  - field: "@{docs.subdirs.qa}/{story}-gate.yaml"
+  - field: "@{docs.subdirs.qa}/gates/${story}-*.json"
     value: "available"
     operator: "="
     on_violate: "continue_with_warning"

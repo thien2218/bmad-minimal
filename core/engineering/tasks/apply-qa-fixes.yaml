@@ -26,7 +26,7 @@ prerequisites:
     value: "found"
     operator: "="
     on_violate: "halt_and_report"
-  - field: "@{docs.subdirs.qa}/{story}-gate.yaml"
+  - field: "@{docs.subdirs.qa}/gates/${story}-*.json"
     value: "available"
     operator: "="
     on_violate: "continue_with_warning"

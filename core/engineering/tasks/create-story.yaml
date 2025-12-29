@@ -73,8 +73,8 @@ steps:
       type: validation
       instruction: |
         Extract and validate:
-        - docs.subdirs.stories
-        - docs.subdirs.epics
+        - @{docs.subdirs.stories}
+        - @{docs.subdirs.epics}
         - prd.* settings
         - architecture.* settings
         - workflow.* settings

@@ -28,7 +28,7 @@ steps:
       operation: read
       target: "@{baseDir}/config.json"
       instruction: |
-        Extract config.docs.subdirs.qa and docs.subdirs.stories settings.
+        Extract @{docs.subdirs.qa} and @{docs.subdirs.stories} settings.
         Resolve !{story_file} if not provided.
     on_failure: halt
 

@@ -60,7 +60,7 @@ steps:
       target: "@{baseDir}/config.json"
       instruction: |
         Extract:
-        - docs.subdirs.stories
+        - @{docs.subdirs.stories}
         - qa.* settings
         - workflow.* settings
         Resolve !{story_path_resolved} using ${story}.
