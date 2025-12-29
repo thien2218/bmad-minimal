@@ -9,7 +9,7 @@ derived:
   - name: story_path
     type: path
     source: parameters
-    pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
+    pattern: "@{docs.subdirs.stories}/{story}-*.md"
     description: "Story file path resolved from provided story identifier"
     required: true
   - name: story_file_ready
@@ -232,7 +232,7 @@ steps:
 
   - id: CREATE-GATE
     title: Create Quality Gate File
-    description: Generate quality gate YAML file
+    description: Generate quality gate JSON file
     action:
       type: file_operation
       operation: create
@@ -263,5 +263,5 @@ completion:
     - All findings documented
     - Actionable recommendations provided
   validations:
-    - command: "test -f @{docs.subdirs.qa}/gates/${story}-*.yaml"
+    - command: "test -f @{docs.subdirs.qa}/gates/${story}-*.md"
       expected_output: "file exists"

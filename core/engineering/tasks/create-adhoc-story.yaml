@@ -19,12 +19,12 @@ derived:
   - name: epic_file_path
     type: path
     source: context
-    pattern: "@{docs.subdirs.epics}/adhoc-{epic_enhancement_number_resolved}-*.yaml"
+    pattern: "@{docs.subdirs.epics}/adhoc-{epic_enhancement_number_resolved}-*.md"
     required: true
-  - name: story_file_target
+  - name: story_file
     type: path
     source: context
-    pattern: "@{docs.subdirs.stories}/adhoc-{epic_enhancement_number_resolved}.{story_enhancement_number_resolved}-*.yaml"
+    pattern: "@{docs.subdirs.stories}/adhoc-{epic_enhancement_number_resolved}.{story_enhancement_number_resolved}-*.md"
     required: true
   - name: previous_story_file
     type: path
@@ -41,14 +41,14 @@ outputs:
   artifacts:
     - name: Story File
       type: file
-      path: "!{story_file_target}"
-      format: yaml
+      path: "!{story_file}"
+      format: md
     - name: Documentation Updates
       type: file
       path: "@{docs.dir}/"
       format: markdown
   updates:
-    - target: "!{story_file_target}"
+    - target: "!{story_file}"
       sections:
         - "Dev Notes"
         - "Tasks / Subtasks"
@@ -80,7 +80,7 @@ steps:
     action:
       type: analysis
       instruction: |
-        Scan @{docs.subdirs.epics} for files named adhoc-*.yaml.
+        Scan @{docs.subdirs.epics} for files named adhoc-*.md.
         - If ${enhancement_epic} is provided, set !{epic_enhancement_number_resolved} to that value.
         - Otherwise choose the maximum enhancement number and set !{epic_enhancement_number_resolved} accordingly.
         Resolve !{epic_file_path} for downstream steps.
@@ -91,13 +91,13 @@ steps:
     action:
       type: analysis
       instruction: |
-        Scan @{docs.subdirs.stories} for adhoc-!{epic_enhancement_number_resolved}.*-*.yaml.
+        Scan @{docs.subdirs.stories} for adhoc-!{epic_enhancement_number_resolved}.*-*.md.
         - Compute the next sequential story number (start at 1 if none exist).
         - If ${story_enhancement_number} is provided, honor it instead.
-        - Record !{previous_story_file} and resolve !{story_file_target}.
+        - Record !{previous_story_file} and resolve !{story_file}.
 
   - id: READ-EPIC
-    title: Read Epic YAML
+    title: Read Epic Markdown
     description: Extract story-level requirements from the enhancement epic
     action:
       type: file_operation
@@ -135,12 +135,12 @@ steps:
         Cite doc references for every extracted detail.
 
   - id: CREATE-STORY
-    title: Create Story YAML (schema-aligned)
+    title: Create Story Markdown (schema-aligned)
     description: Create the adhoc story file using the canonical story schema
     action:
       type: file_operation
       operation: create
-      target: "!{story_file_target}"
+      target: "!{story_file}"
       schema: "core/engineering/templates/story-tmpl.yaml"
 
   - id: ASSESS-DOCUMENT-IMPACT
@@ -176,7 +176,7 @@ steps:
     action:
       type: report_user
       template: |
-        Story created: !{story_file_target}
+        Story created: !{story_file}
 
         Checklist results: {{checklist_results}}
 
@@ -186,7 +186,7 @@ steps:
 
 completion:
   criteria:
-    - Story YAML created in draft form
+    - Story Markdown created in draft form
     - Story content aligned with epic and PRD
     - Checklist executed
     - Documentation impact assessed and updates recorded when needed

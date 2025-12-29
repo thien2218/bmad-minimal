@@ -6,15 +6,15 @@ category: quality
 agent: qa
 
 derived:
-  - name: story_path
+  - name: story_file
     type: path
     source: parameters
-    pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
+    pattern: "@{docs.subdirs.stories}/{story}-*.md"
     description: "Story file path used for AC extraction"
     required: true
 
 prerequisites:
-  - field: "!{story_path}"
+  - field: "!{story_file}"
     value: "found"
     operator: "="
     on_violate: "halt_and_report"
@@ -26,7 +26,7 @@ steps:
     action:
       type: file_operation
       operation: read
-      target: "!{story_path}"
+      target: "!{story_file}"
     on_failure: halt
 
   - id: ANALYZE-REQ

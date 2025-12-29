@@ -16,10 +16,10 @@ derived:
     source: context
     description: "Identifier used in story filename (uses ${story_enhancement_number} when provided, otherwise auto-increments)."
     required: true
-  - name: story_file_target
+  - name: story_file
     type: path
     source: context
-    pattern: "@{docs.subdirs.stories}/standln-{story_enhancement_number_resolved}-*.yaml"
+    pattern: "@{docs.subdirs.stories}/standln-!{story_enhancement_number_resolved}-*.md"
     required: true
   - name: impact_assessment
     type: string
@@ -31,8 +31,8 @@ outputs:
   artifacts:
     - name: Standalone Story
       type: file
-      path: "!{story_file_target}"
-      format: yaml
+      path: "!{story_file}"
+      format: md
     - name: Documentation Updates
       type: file
       path: "@{docs.dir}/"
@@ -107,12 +107,12 @@ steps:
       options: ["1", "2"]
 
   - id: CREATE-STORY-FILE
-    title: Create standalone story YAML file
+    title: Create standalone story Markdown file
     description: Create the story using the canonical story schema
     action:
       type: file_operation
       operation: create
-      target: "!{story_file_target}"
+      target: "!{story_file}"
       schema: "core/engineering/templates/story-tmpl.yaml"
 
   - id: ASSESS-DOCUMENT-IMPACT
@@ -154,7 +154,7 @@ steps:
         - Existing patterns are identified and followed
         - Rollback plan is simple and feasible
         - Acceptance criteria include existing functionality verification
-        - Story file created at @{docs.subdirs.stories}/standln-{{story_enhancement_number_resolved}}-*.yaml
+        - Story file created at @{docs.subdirs.stories}/standln-!{story_enhancement_number_resolved}-*.md
         - Documentation updates recorded or explicitly not required
 
   - id: HANDOFF-STANDALONE
@@ -163,7 +163,7 @@ steps:
     action:
       type: report_user
       template: |
-        Story created: !{story_file_target}
+        Story created: !{story_file}
 
         Summary of key details:
         - Enhancement goal and scope boundaries are documented

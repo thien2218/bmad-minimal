@@ -9,7 +9,7 @@ derived:
   - name: story_file
     type: path
     source: parameters
-    pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
+    pattern: "@{docs.subdirs.stories}/{story}-*.md"
     description: "Path to the story file"
     required: true
 

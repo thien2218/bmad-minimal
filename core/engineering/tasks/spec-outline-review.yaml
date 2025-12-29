@@ -11,10 +11,10 @@ derived:
     source: parameters
     description: "Plain-English test outline input"
     required: true
-  - name: story_path
+  - name: story_file
     type: path
     source: parameters
-    pattern: "@{docs.subdirs.stories}/{story}-*.yaml"
+    pattern: "@{docs.subdirs.stories}/{story}-*.md"
     description: "Optional story file path for traceability"
     required: false
 
@@ -52,7 +52,7 @@ steps:
     action:
       type: file_operation
       operation: read
-      target: "!{story_path}"
+      target: "!{story_file}"
     on_failure: continue
 
   - id: TRACEABILITY
@@ -74,7 +74,7 @@ steps:
     action:
       type: file_operation
       operation: update
-      target: "!{story_path}"
+      target: "!{story_file}"
       instruction: |
         Update the "Test Specs" section as follows:
         - Under "Specifications", write a numbered list from the normalized outline with concise test-intent sentences.
@@ -165,7 +165,7 @@ steps:
 
 outputs:
   updates:
-    - target: "!{story_path}"
+    - target: "!{story_file}"
       sections:
         - "Test Specs"
       restrictions: "QA agent may edit only the 'Test Specs' field; do not modify other sections"

@@ -11,7 +11,7 @@ derived:
     source: context
     description: "Use optional ${epic_enhancement_number}; otherwise detect the highest adhoc enhancement number and increment it."
     required: true
-  - name: epic_file_candidate
+  - name: epic_file
     type: path
     source: context
     description: "Resolved target file path for the epic being created (adhoc-<number>-<slug>.yaml)."
@@ -36,8 +36,8 @@ outputs:
   artifacts:
     - name: Epic File
       type: file
-      path: "!{epic_file_candidate}"
-      format: yaml
+      path: "!{epic_file}"
+      format: md
     - name: Documentation Updates
       type: file
       path: "@{docs.dir}/"
@@ -65,10 +65,10 @@ steps:
     action:
       type: analysis
       instruction: |
-        Inspect @{docs.subdirs.epics} for files named adhoc-*.yaml.
+        Inspect @{docs.subdirs.epics} for files named adhoc-*.md.
         If ${epic_enhancement_number} is supplied, set !{epic_enhancement_number_resolved} to that value.
         Otherwise compute the maximum enhancement number from the existing files and increment it to populate !{epic_enhancement_number_resolved}.
-        Record the resolved number and the associated slug candidates so downstream steps can reference !{epic_file_candidate}.
+        Record the resolved number and the associated slug candidates so downstream steps can reference !{epic_file}.
 
   - id: VALIDATE-1
     title: Validate Epic Non-Existence or Confirm Overwrite
@@ -76,7 +76,7 @@ steps:
     action:
       type: prompt_user
       template: |
-        Check if epic file exists: !{epic_file_candidate}
+        Check if epic file exists: !{epic_file}
         If it exists, choose:
         1) Skip (do not create)
         2) Overwrite (replace content)
@@ -127,12 +127,12 @@ steps:
       options: ["1", "2"]
 
   - id: CREATE-1
-    title: Create Epic YAML (schema-aligned)
+    title: Create Epic Markdown (schema-aligned)
     description: Initialize the epic file following core/engineering/templates/epic-tmpl.yaml sections
     action:
       type: file_operation
       operation: create
-      target: "!{epic_file_candidate}"
+      target: "!{epic_file}"
       schema: "core/engineering/templates/epic-tmpl.yaml"
 
   - id: VALIDATE-2
@@ -174,7 +174,7 @@ steps:
         Otherwise, update the affected documents:
         - PRD: revise relevant sections when scope, requirements, or constraints change.
         - Architecture: update affected files/sections when component responsibilities, data models, APIs, or patterns change.
-        - Record a brief note in the epic YAML summarizing documentation updates.
+        - Record a brief note in the epic Markdown summarizing documentation updates.
 
   - id: HANDOFF-1
     title: Provide Summary
@@ -182,7 +182,7 @@ steps:
     action:
       type: report_user
       template: |
-        Epic created: !{epic_file_candidate}
+        Epic created: !{epic_file}
         Status: Draft
         Stories proposed: {{story_count}}
 

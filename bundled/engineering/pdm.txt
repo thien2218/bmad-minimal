@@ -805,19 +805,19 @@ derived:
     source: parameters
     description: "Enhancement name provided via ${enhancement_name}."
     required: true
-  - name: epic_file_target
+  - name: epic_file
     type: path
     source: context
-    pattern: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
-    description: "Path for the epic YAML to create/update."
+    pattern: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.md"
+    description: "Path for the epic Markdown to create/update."
     required: true
 
 outputs:
   artifacts:
     - name: Epic Document
       type: file
-      path: "!{epic_file_target}"
-      format: yaml
+      path: "!{epic_file}"
+      format: md
 
 prerequisites:
   - field: "@{docs.subdirs.epics}"
@@ -855,11 +855,11 @@ steps:
 
   - id: CREATE-EPIC-FILE
     title: Create Epic File with Schema Structure
-    description: Initialize the epic YAML using the canonical epic schema
+    description: Initialize the epic Markdown using the canonical epic schema
     action:
       type: file_operation
       operation: create
-      target: "!{epic_file_target}"
+      target: "!{epic_file}"
       schema: "core/engineering/templates/epic-tmpl.yaml"
 
   - id: ADD-EPIC-DESCRIPTION
@@ -868,7 +868,7 @@ steps:
     action:
       type: file_operation
       operation: update
-      target: "!{epic_file_target}"
+      target: "!{epic_file}"
 
   - id: DEFINE-STORIES
     title: Define Stories
@@ -887,7 +887,7 @@ steps:
     action:
       type: file_operation
       operation: update
-      target: "!{epic_file_target}"
+      target: "!{epic_file}"
       template: |
         story-breakdown:
           story-list:
@@ -901,7 +901,7 @@ steps:
     action:
       type: file_operation
       operation: update
-      target: "!{epic_file_target}"
+      target: "!{epic_file}"
       template: |
         scope-boundaries:
           in-scope:
@@ -915,7 +915,7 @@ steps:
     action:
       type: file_operation
       operation: update
-      target: "!{epic_file_target}"
+      target: "!{epic_file}"
       template: |
         epic-overview:
           definition_of_done:
@@ -944,7 +944,7 @@ steps:
     action:
       type: hand_off
       prompt_user: |
-        Epic created: !{epic_file_target}
+        Epic created: !{epic_file}
 
         Review the epic for:
         - Goal and scope alignment with PRD
@@ -1114,13 +1114,13 @@ derived:
   - name: epic_file_path
     type: path
     source: context
-    pattern: "@{docs.subdirs.epics}/{epic_resolved}-*.yaml"
-    description: "Epic YAML file that defines the requirements for the story."
+    pattern: "@{docs.subdirs.epics}/{epic_resolved}-*.md"
+    description: "Epic MD file that defines the requirements for the story."
     required: true
-  - name: story_file_target
+  - name: story_file
     type: path
     source: context
-    description: "Resolved output path for the new story file ({epic_resolved}.{story_resolved}-*.yaml)."
+    description: "Resolved output path for the new story file ({epic_resolved}.{story_resolved}-*.md)."
     required: true
   - name: previous_story_file
     type: path
@@ -1132,10 +1132,10 @@ outputs:
   artifacts:
     - name: Story File
       type: file
-      path: "!{story_file_target}"
-      format: yaml
+      path: "!{story_file}"
+      format: md
   updates:
-    - target: "!{story_file_target}"
+    - target: "!{story_file}"
       sections:
         - "Dev Notes"
         - "Tasks / Subtasks"
@@ -1184,9 +1184,9 @@ steps:
       instruction: |
         Based on configured PRD/epic locations:
         - Locate epic files (either dedicated epics path or sections in PRD).
-        - If @{docs.subdirs.stories} already has files for epic !{epic_resolved}, load the highest `{epic}.{story}-*.yaml` to determine !{previous_story_file} and compute !{story_resolved}.
+        - If @{docs.subdirs.stories} already has files for epic !{epic_resolved}, load the highest `{epic}.{story}-*.md` to determine !{previous_story_file} and compute !{story_resolved}.
         - If ${story} is supplied, set !{story_resolved} accordingly.
-        - Resolve !{story_file_target} for downstream steps.
+        - Resolve !{story_file} for downstream steps.
 
   - id: HANDLE-EPIC-COMPLETE
     title: Handle Epic Completion Scenario
@@ -1206,7 +1206,7 @@ steps:
 
   - id: GATHER-EPIC
     title: Gather Story Requirements from Epic
-    description: Read the epic YAML to extract requirements for the story
+    description: Read the epic Markdown to extract requirements for the story
     action:
       type: file_operation
       operation: read
@@ -1286,7 +1286,7 @@ steps:
     action:
       type: file_operation
       operation: create
-      target: "!{story_file_target}"
+      target: "!{story_file}"
       schema: "core/engineering/templates/story-tmpl.yaml"
 
   - id: RISK-ASSESS
@@ -1339,7 +1339,7 @@ steps:
     action:
       type: report_user
       template: |
-        Story created: !{story_file_target}
+        Story created: !{story_file}
 
         Key technical components included from architecture docs:
         {{component_summary}}
@@ -1469,7 +1469,7 @@ derived:
     source: context
     description: "Use optional ${epic_enhancement_number}; otherwise detect the highest adhoc enhancement number and increment it."
     required: true
-  - name: epic_file_candidate
+  - name: epic_file
     type: path
     source: context
     description: "Resolved target file path for the epic being created (adhoc-<number>-<slug>.yaml)."
@@ -1494,8 +1494,8 @@ outputs:
   artifacts:
     - name: Epic File
       type: file
-      path: "!{epic_file_candidate}"
-      format: yaml
+      path: "!{epic_file}"
+      format: md
     - name: Documentation Updates
       type: file
       path: "@{docs.dir}/"
@@ -1523,10 +1523,10 @@ steps:
     action:
       type: analysis
       instruction: |
-        Inspect @{docs.subdirs.epics} for files named adhoc-*.yaml.
+        Inspect @{docs.subdirs.epics} for files named adhoc-*.md.
         If ${epic_enhancement_number} is supplied, set !{epic_enhancement_number_resolved} to that value.
         Otherwise compute the maximum enhancement number from the existing files and increment it to populate !{epic_enhancement_number_resolved}.
-        Record the resolved number and the associated slug candidates so downstream steps can reference !{epic_file_candidate}.
+        Record the resolved number and the associated slug candidates so downstream steps can reference !{epic_file}.
 
   - id: VALIDATE-1
     title: Validate Epic Non-Existence or Confirm Overwrite
@@ -1534,7 +1534,7 @@ steps:
     action:
       type: prompt_user
       template: |
-        Check if epic file exists: !{epic_file_candidate}
+        Check if epic file exists: !{epic_file}
         If it exists, choose:
         1) Skip (do not create)
         2) Overwrite (replace content)
@@ -1585,12 +1585,12 @@ steps:
       options: ["1", "2"]
 
   - id: CREATE-1
-    title: Create Epic YAML (schema-aligned)
+    title: Create Epic Markdown (schema-aligned)
     description: Initialize the epic file following core/engineering/templates/epic-tmpl.yaml sections
     action:
       type: file_operation
       operation: create
-      target: "!{epic_file_candidate}"
+      target: "!{epic_file}"
       schema: "core/engineering/templates/epic-tmpl.yaml"
 
   - id: VALIDATE-2
@@ -1632,7 +1632,7 @@ steps:
         Otherwise, update the affected documents:
         - PRD: revise relevant sections when scope, requirements, or constraints change.
         - Architecture: update affected files/sections when component responsibilities, data models, APIs, or patterns change.
-        - Record a brief note in the epic YAML summarizing documentation updates.
+        - Record a brief note in the epic Markdown summarizing documentation updates.
 
   - id: HANDOFF-1
     title: Provide Summary
@@ -1640,7 +1640,7 @@ steps:
     action:
       type: report_user
       template: |
-        Epic created: !{epic_file_candidate}
+        Epic created: !{epic_file}
         Status: Draft
         Stories proposed: {{story_count}}
 
@@ -1678,12 +1678,12 @@ derived:
   - name: epic_file_path
     type: path
     source: context
-    pattern: "@{docs.subdirs.epics}/adhoc-{epic_enhancement_number_resolved}-*.yaml"
+    pattern: "@{docs.subdirs.epics}/adhoc-{epic_enhancement_number_resolved}-*.md"
     required: true
-  - name: story_file_target
+  - name: story_file
     type: path
     source: context
-    pattern: "@{docs.subdirs.stories}/adhoc-{epic_enhancement_number_resolved}.{story_enhancement_number_resolved}-*.yaml"
+    pattern: "@{docs.subdirs.stories}/adhoc-{epic_enhancement_number_resolved}.{story_enhancement_number_resolved}-*.md"
     required: true
   - name: previous_story_file
     type: path
@@ -1700,14 +1700,14 @@ outputs:
   artifacts:
     - name: Story File
       type: file
-      path: "!{story_file_target}"
-      format: yaml
+      path: "!{story_file}"
+      format: md
     - name: Documentation Updates
       type: file
       path: "@{docs.dir}/"
       format: markdown
   updates:
-    - target: "!{story_file_target}"
+    - target: "!{story_file}"
       sections:
         - "Dev Notes"
         - "Tasks / Subtasks"
@@ -1739,7 +1739,7 @@ steps:
     action:
       type: analysis
       instruction: |
-        Scan @{docs.subdirs.epics} for files named adhoc-*.yaml.
+        Scan @{docs.subdirs.epics} for files named adhoc-*.md.
         - If ${enhancement_epic} is provided, set !{epic_enhancement_number_resolved} to that value.
         - Otherwise choose the maximum enhancement number and set !{epic_enhancement_number_resolved} accordingly.
         Resolve !{epic_file_path} for downstream steps.
@@ -1750,13 +1750,13 @@ steps:
     action:
       type: analysis
       instruction: |
-        Scan @{docs.subdirs.stories} for adhoc-!{epic_enhancement_number_resolved}.*-*.yaml.
+        Scan @{docs.subdirs.stories} for adhoc-!{epic_enhancement_number_resolved}.*-*.md.
         - Compute the next sequential story number (start at 1 if none exist).
         - If ${story_enhancement_number} is provided, honor it instead.
-        - Record !{previous_story_file} and resolve !{story_file_target}.
+        - Record !{previous_story_file} and resolve !{story_file}.
 
   - id: READ-EPIC
-    title: Read Epic YAML
+    title: Read Epic Markdown
     description: Extract story-level requirements from the enhancement epic
     action:
       type: file_operation
@@ -1794,12 +1794,12 @@ steps:
         Cite doc references for every extracted detail.
 
   - id: CREATE-STORY
-    title: Create Story YAML (schema-aligned)
+    title: Create Story Markdown (schema-aligned)
     description: Create the adhoc story file using the canonical story schema
     action:
       type: file_operation
       operation: create
-      target: "!{story_file_target}"
+      target: "!{story_file}"
       schema: "core/engineering/templates/story-tmpl.yaml"
 
   - id: ASSESS-DOCUMENT-IMPACT
@@ -1835,7 +1835,7 @@ steps:
     action:
       type: report_user
       template: |
-        Story created: !{story_file_target}
+        Story created: !{story_file}
 
         Checklist results: {{checklist_results}}
 
@@ -1845,7 +1845,7 @@ steps:
 
 completion:
   criteria:
-    - Story YAML created in draft form
+    - Story Markdown created in draft form
     - Story content aligned with epic and PRD
     - Checklist executed
     - Documentation impact assessed and updates recorded when needed
@@ -1872,10 +1872,10 @@ derived:
     source: context
     description: "Identifier used in story filename (uses ${story_enhancement_number} when provided, otherwise auto-increments)."
     required: true
-  - name: story_file_target
+  - name: story_file
     type: path
     source: context
-    pattern: "@{docs.subdirs.stories}/standln-{story_enhancement_number_resolved}-*.yaml"
+    pattern: "@{docs.subdirs.stories}/standln-!{story_enhancement_number_resolved}-*.md"
     required: true
   - name: impact_assessment
     type: string
@@ -1887,8 +1887,8 @@ outputs:
   artifacts:
     - name: Standalone Story
       type: file
-      path: "!{story_file_target}"
-      format: yaml
+      path: "!{story_file}"
+      format: md
     - name: Documentation Updates
       type: file
       path: "@{docs.dir}/"
@@ -1963,12 +1963,12 @@ steps:
       options: ["1", "2"]
 
   - id: CREATE-STORY-FILE
-    title: Create standalone story YAML file
+    title: Create standalone story Markdown file
     description: Create the story using the canonical story schema
     action:
       type: file_operation
       operation: create
-      target: "!{story_file_target}"
+      target: "!{story_file}"
       schema: "core/engineering/templates/story-tmpl.yaml"
 
   - id: ASSESS-DOCUMENT-IMPACT
@@ -2010,7 +2010,7 @@ steps:
         - Existing patterns are identified and followed
         - Rollback plan is simple and feasible
         - Acceptance criteria include existing functionality verification
-        - Story file created at @{docs.subdirs.stories}/standln-{{story_enhancement_number_resolved}}-*.yaml
+        - Story file created at @{docs.subdirs.stories}/standln-!{story_enhancement_number_resolved}-*.md
         - Documentation updates recorded or explicitly not required
 
   - id: HANDOFF-STANDALONE
@@ -2019,7 +2019,7 @@ steps:
     action:
       type: report_user
       template: |
-        Story created: !{story_file_target}
+        Story created: !{story_file}
 
         Summary of key details:
         - Enhancement goal and scope boundaries are documented

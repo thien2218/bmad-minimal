@@ -19,13 +19,13 @@ derived:
   - name: epic_file_path
     type: path
     source: context
-    pattern: "@{docs.subdirs.epics}/{epic_resolved}-*.yaml"
-    description: "Epic YAML file that defines the requirements for the story."
+    pattern: "@{docs.subdirs.epics}/{epic_resolved}-*.md"
+    description: "Epic MD file that defines the requirements for the story."
     required: true
-  - name: story_file_target
+  - name: story_file
     type: path
     source: context
-    description: "Resolved output path for the new story file ({epic_resolved}.{story_resolved}-*.yaml)."
+    description: "Resolved output path for the new story file ({epic_resolved}.{story_resolved}-*.md)."
     required: true
   - name: previous_story_file
     type: path
@@ -37,10 +37,10 @@ outputs:
   artifacts:
     - name: Story File
       type: file
-      path: "!{story_file_target}"
-      format: yaml
+      path: "!{story_file}"
+      format: md
   updates:
-    - target: "!{story_file_target}"
+    - target: "!{story_file}"
       sections:
         - "Dev Notes"
         - "Tasks / Subtasks"
@@ -89,9 +89,9 @@ steps:
       instruction: |
         Based on configured PRD/epic locations:
         - Locate epic files (either dedicated epics path or sections in PRD).
-        - If @{docs.subdirs.stories} already has files for epic !{epic_resolved}, load the highest `{epic}.{story}-*.yaml` to determine !{previous_story_file} and compute !{story_resolved}.
+        - If @{docs.subdirs.stories} already has files for epic !{epic_resolved}, load the highest `{epic}.{story}-*.md` to determine !{previous_story_file} and compute !{story_resolved}.
         - If ${story} is supplied, set !{story_resolved} accordingly.
-        - Resolve !{story_file_target} for downstream steps.
+        - Resolve !{story_file} for downstream steps.
 
   - id: HANDLE-EPIC-COMPLETE
     title: Handle Epic Completion Scenario
@@ -111,7 +111,7 @@ steps:
 
   - id: GATHER-EPIC
     title: Gather Story Requirements from Epic
-    description: Read the epic YAML to extract requirements for the story
+    description: Read the epic Markdown to extract requirements for the story
     action:
       type: file_operation
       operation: read
@@ -191,7 +191,7 @@ steps:
     action:
       type: file_operation
       operation: create
-      target: "!{story_file_target}"
+      target: "!{story_file}"
       schema: "core/engineering/templates/story-tmpl.yaml"
 
   - id: RISK-ASSESS
@@ -244,7 +244,7 @@ steps:
     action:
       type: report_user
       template: |
-        Story created: !{story_file_target}
+        Story created: !{story_file}
 
         Key technical components included from architecture docs:
         {{component_summary}}

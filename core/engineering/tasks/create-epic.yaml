@@ -16,19 +16,19 @@ derived:
     source: parameters
     description: "Enhancement name provided via ${enhancement_name}."
     required: true
-  - name: epic_file_target
+  - name: epic_file
     type: path
     source: context
-    pattern: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.yaml"
-    description: "Path for the epic YAML to create/update."
+    pattern: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.md"
+    description: "Path for the epic Markdown to create/update."
     required: true
 
 outputs:
   artifacts:
     - name: Epic Document
       type: file
-      path: "!{epic_file_target}"
-      format: yaml
+      path: "!{epic_file}"
+      format: md
 
 prerequisites:
   - field: "@{docs.subdirs.epics}"
@@ -66,11 +66,11 @@ steps:
 
   - id: CREATE-EPIC-FILE
     title: Create Epic File with Schema Structure
-    description: Initialize the epic YAML using the canonical epic schema
+    description: Initialize the epic Markdown using the canonical epic schema
     action:
       type: file_operation
       operation: create
-      target: "!{epic_file_target}"
+      target: "!{epic_file}"
       schema: "core/engineering/templates/epic-tmpl.yaml"
 
   - id: ADD-EPIC-DESCRIPTION
@@ -79,7 +79,7 @@ steps:
     action:
       type: file_operation
       operation: update
-      target: "!{epic_file_target}"
+      target: "!{epic_file}"
 
   - id: DEFINE-STORIES
     title: Define Stories
@@ -98,7 +98,7 @@ steps:
     action:
       type: file_operation
       operation: update
-      target: "!{epic_file_target}"
+      target: "!{epic_file}"
       template: |
         story-breakdown:
           story-list:
@@ -112,7 +112,7 @@ steps:
     action:
       type: file_operation
       operation: update
-      target: "!{epic_file_target}"
+      target: "!{epic_file}"
       template: |
         scope-boundaries:
           in-scope:
@@ -126,7 +126,7 @@ steps:
     action:
       type: file_operation
       operation: update
-      target: "!{epic_file_target}"
+      target: "!{epic_file}"
       template: |
         epic-overview:
           definition_of_done:
@@ -155,7 +155,7 @@ steps:
     action:
       type: hand_off
       prompt_user: |
-        Epic created: !{epic_file_target}
+        Epic created: !{epic_file}
 
         Review the epic for:
         - Goal and scope alignment with PRD

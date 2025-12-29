@@ -9,7 +9,7 @@ derived:
   - name: story_path_resolved
     type: path
     source: context
-    pattern: "@{docs.subdirs.stories}/${story}-*.yaml"
+    pattern: "@{docs.subdirs.stories}/${story}-*.md"
     description: "Concrete story file path resolved from ${story}."
     required: true
   - name: story_status
