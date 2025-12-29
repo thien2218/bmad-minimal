@@ -1,6 +1,6 @@
 {
 	"name": "swaad",
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"description": "Software Agile Development with AI (SWAAD) — a streamlined developer workflow built on the BMAD Method",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
