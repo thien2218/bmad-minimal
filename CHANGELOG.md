@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 This format follows Keep a Changelog and the project adheres to Semantic Versioning.
 
+## [2.0.3] - 2025-12-30
+
+### Removed
+
+- remove redundant tasks and commands
+
+### Fixed
+
+- fix inconsistent section name and update new help email in readme
+
 ## [2.0.2] - 2025-12-29
 
 ### Added
@@ -344,7 +354,8 @@ This format follows Keep a Changelog and the project adheres to Semantic Version
 - final touches
 - apply formatting
 
-[Unreleased]: https://github.com/thien2218/swaad/compare/v2.0.2...HEAD
+[Unreleased]: https://github.com/thien2218/swaad/compare/v2.0.3...HEAD
+[2.0.3]: https://github.com/thien2218/swaad/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/thien2218/swaad/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/thien2218/swaad/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/thien2218/swaad/compare/v1.4.0...v2.0.0
