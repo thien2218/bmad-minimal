@@ -51,7 +51,7 @@ outputs:
     - target: "!{story_file}"
       sections:
         - "Dev Notes"
-        - "Tasks / Subtasks"
+        - "Tasks"
       restrictions: Only create a new story; do not modify existing stories
 
 prerequisites:

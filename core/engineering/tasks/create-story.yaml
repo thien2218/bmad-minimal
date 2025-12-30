@@ -43,7 +43,7 @@ outputs:
     - target: "!{story_file}"
       sections:
         - "Dev Notes"
-        - "Tasks / Subtasks"
+        - "Tasks"
       restrictions: Only create new story files; do not modify existing stories
 
 prerequisites:
@@ -173,7 +173,7 @@ steps:
         - Testing requirements and standards
         - Security or performance considerations
 
-        Always cite the architecture source (e.g., [Source: architecture/<file>.md#{section}]). Do not invent details.
+        Always cite the source (e.g., architecture/<file>.md#{section}) in Sources section. Do not invent details.
 
   - id: STRUCTURE-CHECK
     title: Verify Project Structure Alignment

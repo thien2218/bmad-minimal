@@ -37,7 +37,7 @@ sections:
     template: "{{criterion_number}}. {{acceptance_criterion}}"
 
   - id: tasks
-    title: Tasks / Subtasks
+    title: Tasks
     type: bullet-list
     instruction: Break down implementation work, referencing applicable AC numbers and difficulty.
     owner: product-development-master
@@ -50,6 +50,14 @@ sections:
     owner: product-development-master
     editors: ["product-development-master", "product-master"]
     template: "{{dev_notes}}"
+
+  - id: sources
+    title: Sources
+    type: bullet-list
+    instruction: List all reference sources used for tasks, subtasks, and implementation guidance.
+    owner: product-development-master
+    editors: ["product-development-master", "product-master", "developer"]
+    template: "- {{source_description}} — {{source_link_or_reference}}"
 
   - id: testing-standards
     title: Testing

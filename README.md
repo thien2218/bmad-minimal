@@ -148,4 +148,4 @@ This project is licensed under the ISC License - see the [LICENSE](LICENSE) file
 
 If you have any questions or need support, please open an issue on the [GitHub repository](https://github.com/thien2218/swaad/issues).
 
-Or contact me via [Gmail](bmad.thienhuynh@gmail.com).
+Or contact me via [Gmail](mailto:help.swaad@gmail.com).

@@ -17,7 +17,7 @@ outputs:
   updates:
     - target: "!{story_file}"
       sections:
-        - "Tasks / Subtasks Checkboxes"
+        - "Tasks Checkboxes"
         - "Dev Agent Record"
       restrictions: Dev agent is ONLY authorized to update these sections
 
@@ -124,7 +124,7 @@ steps:
       target: "!{story_file}"
       instruction: |
         Update ONLY these sections:
-        - Tasks / Subtasks Checkboxes (mark any fix subtask as done)
+        - Tasks Checkboxes (mark any fix subtask as done)
         - Dev Agent Record:
           - Debug Log References (commands/results, e.g., lint/tests)
           - Completion Notes List (what changed, why, how)
