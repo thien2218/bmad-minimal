@@ -167,7 +167,7 @@
 		{
 			"name": "create-epic",
 			"description": "Create the next highest order epic for project",
-			"parameters": ["epic_number", "enhancement_name"],
+			"optionalParameters": ["epic_number", "enhancement_name"],
 			"steps": [
 				"templates/epic-tmpl.yaml",
 				"checklists/pdm-checklist.yaml",
@@ -187,6 +187,7 @@
 			"name": "create-story",
 			"description": "Create the next story for the highest ordered epic or the one specified by user.",
 			"parameters": ["epic"],
+			"optionalParameters": ["story"],
 			"steps": [
 				"templates/story-tmpl.yaml",
 				"tasks/create-story.yaml",
@@ -212,27 +213,6 @@
 				"templates/epic-tmpl.yaml",
 				"checklists/pdm-checklist.yaml",
 				"tasks/create-adhoc-epic.yaml"
-			]
-		},
-		{
-			"name": "create-adhoc-story",
-			"description": "Create next adhoc story for highest order or targeted adhoc epic",
-			"parameters": ["adhoc_epic"],
-			"optionalParameters": ["adhoc_number"],
-			"steps": [
-				"templates/story-tmpl.yaml",
-				"tasks/create-adhoc-story.yaml",
-				"checklists/story-draft-checklist.yaml"
-			]
-		},
-		{
-			"name": "create-adhoc-stories",
-			"description": "Create all adhoc stories for the highest ordered adhoc epic or targeted adhoc epic",
-			"parameters": ["adhoc_epic"],
-			"steps": [
-				"templates/story-tmpl.yaml",
-				"tasks/create-adhoc-story.yaml",
-				"checklists/story-draft-checklist.yaml"
 			]
 		},
 		{

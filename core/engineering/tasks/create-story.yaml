@@ -6,26 +6,21 @@ category: planning
 agent: pdm
 
 derived:
-  - name: epic_resolved
-    type: number
-    source: parameters
-    description: "Epic number provided via ${epic}."
-    required: true
   - name: story_resolved
     type: number
     source: context
     description: "Story number to create. Uses ${story} when provided; otherwise determined from existing files."
     required: true
-  - name: epic_file_path
+  - name: epic_file
     type: path
     source: context
-    pattern: "@{docs.subdirs.epics}/{epic_resolved}-*.md"
+    pattern: "@{docs.subdirs.epics}/${epic}-*.md"
     description: "Epic MD file that defines the requirements for the story."
     required: true
   - name: story_file
     type: path
     source: context
-    description: "Resolved output path for the new story file ({epic_resolved}.{story_resolved}-*.md)."
+    description: "Resolved output path for the new story file (${epic}.!{story_resolved}-*.md)."
     required: true
   - name: previous_story_file
     type: path
@@ -89,7 +84,7 @@ steps:
       instruction: |
         Based on configured PRD/epic locations:
         - Locate epic files (either dedicated epics path or sections in PRD).
-        - If @{docs.subdirs.stories} already has files for epic !{epic_resolved}, load the highest `{epic}.{story}-*.md` to determine !{previous_story_file} and compute !{story_resolved}.
+        - If @{docs.subdirs.stories} already has files for epic ${epic}, load the highest order `${epic}.{{story_number}}-*.md` to determine !{previous_story_file} and compute !{story_resolved}.
         - If ${story} is supplied, set !{story_resolved} accordingly.
         - Resolve !{story_file} for downstream steps.
 
@@ -99,7 +94,7 @@ steps:
     action:
       type: prompt_user
       template: |
-        Epic {{epic_number}} complete: all stories in epic {{epic_number}} are finished.
+        Epic ${epic} complete: all stories in epic ${epic} are finished.
 
         Select an option:
         1) Begin epic {{next_epic_number}} with story 1
@@ -115,7 +110,7 @@ steps:
     action:
       type: file_operation
       operation: read
-      target: "!{epic_file_path}"
+      target: "!{epic_file}"
       instruction: |
         Extract:
         - Story title and description

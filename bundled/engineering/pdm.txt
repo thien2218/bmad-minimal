@@ -169,7 +169,7 @@
 		{
 			"name": "create-epic",
 			"description": "Create the next highest order epic for project",
-			"parameters": ["epic_number", "enhancement_name"],
+			"optionalParameters": ["epic_number", "enhancement_name"],
 			"steps": [
 				"templates/epic-tmpl.yaml",
 				"checklists/pdm-checklist.yaml",
@@ -189,6 +189,7 @@
 			"name": "create-story",
 			"description": "Create the next story for the highest ordered epic or the one specified by user.",
 			"parameters": ["epic"],
+			"optionalParameters": ["story"],
 			"steps": [
 				"templates/story-tmpl.yaml",
 				"tasks/create-story.yaml",
@@ -214,27 +215,6 @@
 				"templates/epic-tmpl.yaml",
 				"checklists/pdm-checklist.yaml",
 				"tasks/create-adhoc-epic.yaml"
-			]
-		},
-		{
-			"name": "create-adhoc-story",
-			"description": "Create next adhoc story for highest order or targeted adhoc epic",
-			"parameters": ["adhoc_epic"],
-			"optionalParameters": ["adhoc_number"],
-			"steps": [
-				"templates/story-tmpl.yaml",
-				"tasks/create-adhoc-story.yaml",
-				"checklists/story-draft-checklist.yaml"
-			]
-		},
-		{
-			"name": "create-adhoc-stories",
-			"description": "Create all adhoc stories for the highest ordered adhoc epic or targeted adhoc epic",
-			"parameters": ["adhoc_epic"],
-			"steps": [
-				"templates/story-tmpl.yaml",
-				"tasks/create-adhoc-story.yaml",
-				"checklists/story-draft-checklist.yaml"
 			]
 		},
 		{
@@ -798,17 +778,17 @@ derived:
   - name: epic_number
     type: number
     source: parameters
-    description: "Epic number requested via ${epic_number}."
+    description: "Epic number requested via ${epic}."
     required: true
   - name: enhancement_name
     type: string
     source: parameters
-    description: "Enhancement name provided via ${enhancement_name}."
+    description: "Enhancement name, which user may provide via ${enhancement_name}."
     required: true
   - name: epic_file
     type: path
     source: context
-    pattern: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.md"
+    pattern: "@{docs.subdirs.epics}/!{epic_number}-!{enhancement_name}.md"
     description: "Path for the epic Markdown to create/update."
     required: true
 
@@ -1006,7 +986,7 @@ sections:
     template: "{{criterion_number}}. {{acceptance_criterion}}"
 
   - id: tasks
-    title: Tasks / Subtasks
+    title: Tasks
     type: bullet-list
     instruction: Break down implementation work, referencing applicable AC numbers and difficulty.
     owner: product-development-master
@@ -1019,6 +999,14 @@ sections:
     owner: product-development-master
     editors: ["product-development-master", "product-master"]
     template: "{{dev_notes}}"
+
+  - id: sources
+    title: Sources
+    type: bullet-list
+    instruction: List all reference sources used for tasks, subtasks, and implementation guidance.
+    owner: product-development-master
+    editors: ["product-development-master", "product-master", "developer"]
+    template: "- {{source_description}} — {{source_link_or_reference}}"
 
   - id: testing-standards
     title: Testing
@@ -1101,26 +1089,21 @@ category: planning
 agent: pdm
 
 derived:
-  - name: epic_resolved
-    type: number
-    source: parameters
-    description: "Epic number provided via ${epic}."
-    required: true
   - name: story_resolved
     type: number
     source: context
     description: "Story number to create. Uses ${story} when provided; otherwise determined from existing files."
     required: true
-  - name: epic_file_path
+  - name: epic_file
     type: path
     source: context
-    pattern: "@{docs.subdirs.epics}/{epic_resolved}-*.md"
+    pattern: "@{docs.subdirs.epics}/${epic}-*.md"
     description: "Epic MD file that defines the requirements for the story."
     required: true
   - name: story_file
     type: path
     source: context
-    description: "Resolved output path for the new story file ({epic_resolved}.{story_resolved}-*.md)."
+    description: "Resolved output path for the new story file (${epic}.!{story_resolved}-*.md)."
     required: true
   - name: previous_story_file
     type: path
@@ -1138,7 +1121,7 @@ outputs:
     - target: "!{story_file}"
       sections:
         - "Dev Notes"
-        - "Tasks / Subtasks"
+        - "Tasks"
       restrictions: Only create new story files; do not modify existing stories
 
 prerequisites:
@@ -1184,7 +1167,7 @@ steps:
       instruction: |
         Based on configured PRD/epic locations:
         - Locate epic files (either dedicated epics path or sections in PRD).
-        - If @{docs.subdirs.stories} already has files for epic !{epic_resolved}, load the highest `{epic}.{story}-*.md` to determine !{previous_story_file} and compute !{story_resolved}.
+        - If @{docs.subdirs.stories} already has files for epic ${epic}, load the highest order `${epic}.{{story_number}}-*.md` to determine !{previous_story_file} and compute !{story_resolved}.
         - If ${story} is supplied, set !{story_resolved} accordingly.
         - Resolve !{story_file} for downstream steps.
 
@@ -1194,7 +1177,7 @@ steps:
     action:
       type: prompt_user
       template: |
-        Epic {{epic_number}} complete: all stories in epic {{epic_number}} are finished.
+        Epic ${epic} complete: all stories in epic ${epic} are finished.
 
         Select an option:
         1) Begin epic {{next_epic_number}} with story 1
@@ -1210,7 +1193,7 @@ steps:
     action:
       type: file_operation
       operation: read
-      target: "!{epic_file_path}"
+      target: "!{epic_file}"
       instruction: |
         Extract:
         - Story title and description
@@ -1268,7 +1251,7 @@ steps:
         - Testing requirements and standards
         - Security or performance considerations
 
-        Always cite the architecture source (e.g., [Source: architecture/<file>.md#{section}]). Do not invent details.
+        Always cite the source (e.g., architecture/<file>.md#{section}) in Sources section. Do not invent details.
 
   - id: STRUCTURE-CHECK
     title: Verify Project Structure Alignment
@@ -1652,203 +1635,6 @@ completion:
     - Sections present per epic schema
     - Story list proposed with priorities
     - Documentation impact is assessed and updates are made if needed
-
-
-
-# Dependency: tasks/create-adhoc-story.yaml
-
-$schema: ../../.internal/task.schema.json
-id: create-adhoc-story
-title: Create Enhancement Story from Enhancement Epic
-purpose: Draft the next adhoc enhancement story using the defined template
-category: planning
-agent: pdm
-
-derived:
-  - name: epic_enhancement_number_resolved
-    type: number
-    source: parameters
-    description: "Enhancement epic number (uses ${enhancement_epic}; auto-detects highest adhoc epic when not provided)."
-    required: true
-  - name: story_enhancement_number_resolved
-    type: number
-    source: context
-    description: "Story enhancement number (uses ${story_enhancement_number} or next sequential adhoc story)."
-    required: true
-  - name: epic_file_path
-    type: path
-    source: context
-    pattern: "@{docs.subdirs.epics}/adhoc-{epic_enhancement_number_resolved}-*.md"
-    required: true
-  - name: story_file
-    type: path
-    source: context
-    pattern: "@{docs.subdirs.stories}/adhoc-{epic_enhancement_number_resolved}.{story_enhancement_number_resolved}-*.md"
-    required: true
-  - name: previous_story_file
-    type: path
-    source: context
-    description: "Highest existing adhoc story file for the enhancement."
-    required: false
-  - name: impact_assessment
-    type: string
-    source: context
-    pattern: "^[1-4]$"
-    description: "Response captured during Assess Document Impact (1-4)."
-
-outputs:
-  artifacts:
-    - name: Story File
-      type: file
-      path: "!{story_file}"
-      format: md
-    - name: Documentation Updates
-      type: file
-      path: "@{docs.dir}/"
-      format: markdown
-  updates:
-    - target: "!{story_file}"
-      sections:
-        - "Dev Notes"
-        - "Tasks / Subtasks"
-      restrictions: Only create a new story; do not modify existing stories
-
-prerequisites:
-  - field: "@{docs.subdirs.epics}"
-    value: "readable"
-    operator: "="
-    on_violate: "halt_and_report"
-  - field: "@{docs.subdirs.stories}"
-    value: "writable"
-    operator: "="
-    on_violate: "halt_and_report"
-
-steps:
-  - id: CONFIG-1
-    title: Load Core Configuration
-    description: Load config.json and verify docs paths needed for adhoc enhancement work
-    action:
-      type: file_operation
-      operation: read
-      target: "@{baseDir}/config.json"
-    on_failure: halt
-
-  - id: IDENTIFY-EPIC
-    title: Locate Highest Enhancement Epic
-    description: Determine the target enhancement epic number and file
-    action:
-      type: analysis
-      instruction: |
-        Scan @{docs.subdirs.epics} for files named adhoc-*.md.
-        - If ${enhancement_epic} is provided, set !{epic_enhancement_number_resolved} to that value.
-        - Otherwise choose the maximum enhancement number and set !{epic_enhancement_number_resolved} accordingly.
-        Resolve !{epic_file_path} for downstream steps.
-
-  - id: IDENTIFY-STORY
-    title: Determine Next Story Number
-    description: Select the next adhoc story number within the enhancement
-    action:
-      type: analysis
-      instruction: |
-        Scan @{docs.subdirs.stories} for adhoc-!{epic_enhancement_number_resolved}.*-*.md.
-        - Compute the next sequential story number (start at 1 if none exist).
-        - If ${story_enhancement_number} is provided, honor it instead.
-        - Record !{previous_story_file} and resolve !{story_file}.
-
-  - id: READ-EPIC
-    title: Read Epic Markdown
-    description: Extract story-level requirements from the enhancement epic
-    action:
-      type: file_operation
-      operation: read
-      target: "!{epic_file_path}"
-      instruction: |
-        Extract from story-breakdown:
-        - Candidate titles/goals
-        - Acceptance criteria references and priorities
-        - Dependencies
-
-  - id: READ-DOCS
-    title: Read PRD and Architecture for Enhancement
-    description: Collect supporting context from PRD and architecture docs
-    action:
-      type: file_operation
-      operation: read
-      target: "@{docs.files.prd}"
-      instruction: |
-        Load @{docs.files.prd} plus relevant architecture documents (@{docs.dir}/?(*-)architecture.md) before extracting technical details for the story.
-
-  - id: EXTRACT-TECH
-    title: Extract Technical Details for Story
-    description: Capture only doc-sourced technical context to guide implementation
-    action:
-      type: analysis
-      instruction: |
-        Extract strictly from PRD/architecture (never invent):
-        - Data models or schemas relevant to the story
-        - API endpoints and contracts
-        - Component specifications (UI)
-        - File paths and naming conventions
-        - Testing requirements
-        - Security/performance considerations
-        Cite doc references for every extracted detail.
-
-  - id: CREATE-STORY
-    title: Create Story Markdown (schema-aligned)
-    description: Create the adhoc story file using the canonical story schema
-    action:
-      type: file_operation
-      operation: create
-      target: "!{story_file}"
-      schema: "core/engineering/templates/story-tmpl.yaml"
-
-  - id: ASSESS-DOCUMENT-IMPACT
-    title: Assess impact on PRD and architecture documents
-    description: Determine whether supporting docs need updates for this story
-    action:
-      type: prompt_user
-      template: |
-        Evaluate whether this story impacts PRD and/or architecture documents:
-        1. No impact
-        2. PRD impact only
-        3. Architecture impact only
-        4. Both PRD and Architecture impact
-
-        Select the impact assessment (1-4).
-      options: ["1", "2", "3", "4"]
-
-  - id: UPDATE-DOCUMENTS
-    title: Update affected documentation if needed
-    description: Apply PRD/architecture updates based on the selected impact assessment
-    action:
-      type: analysis
-      instruction: |
-        If !{impact_assessment} == "1": record "No PRD/Architecture changes" in dev notes.
-        Otherwise:
-        - Update PRD sections for scope, requirements, or constraints changes.
-        - Update Architecture docs when components, data models, APIs, or patterns change.
-        - Summarize updates in the story dev_notes (doc_impact_summary).
-
-  - id: HANDOFF-1
-    title: Provide Summary and Next Steps
-    description: Communicate story creation results and follow-ups
-    action:
-      type: report_user
-      template: |
-        Story created: !{story_file}
-
-        Checklist results: {{checklist_results}}
-
-        Next steps:
-        - Review the draft story and approve
-        - Proceed to implementation when ready
-
-completion:
-  criteria:
-    - Story Markdown created in draft form
-    - Story content aligned with epic and PRD
-    - Checklist executed
-    - Documentation impact assessed and updates recorded when needed
 
 
 

@@ -9,17 +9,17 @@ derived:
   - name: epic_number
     type: number
     source: parameters
-    description: "Epic number requested via ${epic_number}."
+    description: "Epic number requested via ${epic}."
     required: true
   - name: enhancement_name
     type: string
     source: parameters
-    description: "Enhancement name provided via ${enhancement_name}."
+    description: "Enhancement name, which user may provide via ${enhancement_name}."
     required: true
   - name: epic_file
     type: path
     source: context
-    pattern: "@{docs.subdirs.epics}/{epic_number}-{enhancement_name}.md"
+    pattern: "@{docs.subdirs.epics}/!{epic_number}-!{enhancement_name}.md"
     description: "Path for the epic Markdown to create/update."
     required: true
 

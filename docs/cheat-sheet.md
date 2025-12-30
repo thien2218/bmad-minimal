@@ -45,12 +45,13 @@ Use for epic management, backlog prioritization, sprint planning, and orchestrat
 - `yolo`: Toggle YOLO Mode (when ON will skip doc section confirmations)
 
 - `create-epic`: Create the next highest order epic for project
-  - required: epic_number, enhancement_name
+  - optional: epic_number, enhancement_name
 
 - `create-epics`: Create epics from PRD epic list
 
 - `create-story`: Create the next story for the highest ordered epic or the one specified by user.
   - required: epic
+  - optional: story
 
 - `create-stories`: Create all stories for the highest ordered epic or targeted epic
   - required: epic
@@ -58,13 +59,6 @@ Use for epic management, backlog prioritization, sprint planning, and orchestrat
 - `create-adhoc-epic`: Create the next highest order adhoc epic
   - required: change_description
   - optional: epic_adhoc_number
-
-- `create-adhoc-story`: Create next adhoc story for highest order or targeted adhoc epic
-  - required: adhoc_epic
-  - optional: adhoc_number
-
-- `create-adhoc-stories`: Create all adhoc stories for the highest ordered adhoc epic or targeted adhoc epic
-  - required: adhoc_epic
 
 - `create-standalone-story`: Create a single standalone story for very small enhancements that can be completed in one focused development session
   - required: change_description
